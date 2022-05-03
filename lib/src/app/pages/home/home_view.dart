@@ -17,6 +17,14 @@ class HomePage extends View {
 class _HomePageState extends ViewState<HomePage, HomeController> {
   _HomePageState() : super(HomeController(DataUsersRepository()));
 
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget get view {
     return Scaffold(
@@ -83,6 +91,18 @@ class _HomePageState extends ViewState<HomePage, HomeController> {
           );
         },
       ), // This trailing comma makes auto-formatting nicer for build methods.
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: "首頁"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.favorite_outline_outlined), label: "我的收藏"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "會員中心"),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: "搜尋"),
+        ],
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
     );
   }
 }
