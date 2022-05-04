@@ -33,7 +33,7 @@ class HttpUtils {
           // "authorization": "Bearer <your token>",
           'content-Type': 'application/json',
           'brand_id': 5,
-          'device': 'android'
+          'device': Platform.isIOS ? "ios" : "android",
         });
 
     // 實例化 Dio

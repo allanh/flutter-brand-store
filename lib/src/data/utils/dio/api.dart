@@ -8,4 +8,6 @@ class Api {
 
   // Help Center
   static const about = '/udi/v1/cms/about';
+
+  static const siteSetting = '/udi/v1/site/init';
 }

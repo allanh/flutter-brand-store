@@ -1,6 +1,7 @@
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
-import './src/app/pages/home/home_view.dart';
+// import './src/app/pages/home/home_view.dart';
+import './src/app/main/main_view.dart';
 import 'package:flutter/material.dart';
 
 import 'src/data/utils/dio/api.dart';
@@ -62,7 +63,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(title: 'Flutter Demo Home Page'),
+      home: MainPage(title: 'Flutter Demo Home Page'),
     );
   }
 }
