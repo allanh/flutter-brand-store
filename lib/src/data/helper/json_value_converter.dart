@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../domain/entities/sort_option.dart';
 
 class JsonValueConverter {
+  // convert bool
   static bool boolFromInt(int value) => value == 1;
   static int boolToInt(bool success) => success ? 1 : 0;
   static bool boolFromString(String? string) {
@@ -15,6 +17,7 @@ class JsonValueConverter {
     }
     return "NO";
   }
+  // convert color
   static Color fromHex(String hexString) {
     final buffer = StringBuffer();
     if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
@@ -27,6 +30,51 @@ class JsonValueConverter {
     '${color.red.toRadixString(16).padLeft(2, '0')}'
     '${color.green.toRadixString(16).padLeft(2, '0')}'
     '${color.blue.toRadixString(16).padLeft(2, '0')}';
+  }
+  // convert SortOptions
+  static SortOptions sortOptionsFromString(String done) {
+    SortOptions option = SortOptions.priceAscending;
+    if (done == 'price_asc' || done == 'PRICE_ASC') {
+      option = SortOptions.priceAscending;
+    } else if (done == 'price_desc' || done == 'PRICE_DESC') {
+      option = SortOptions.priceDescending;
+    } else if (done == 'new' || done == 'NEW') {
+      option = SortOptions.newArrival;
+    } else if (done == 'hot' || done == 'HOT') {
+      option = SortOptions.hot;
+    }
+    return option;
+  }
+  static String sortOptionToString(SortOptions done)  {
+    String result = 'price_asc';
+    switch (done) {
+      case SortOptions.priceAscending:
+        result = 'price_asc';
+        break;
+      case SortOptions.priceDescending:
+        result = 'price_desc';
+        break;
+      case SortOptions.newArrival:
+        result = 'new';
+        break;
+      case SortOptions.hot:
+        result = 'hot';
+        break;
+    }
+    return result;
+  }
+  // convert int
+  static int intFromString(String? string) {
+    if (string != null) {
+      return int.parse(string);
+    }
+    return 0;
+  } 
+  static String intToString(int? value) {
+    if (value != null) {
+      return value.toString();
+    }
+    return '';
   }
 
 }

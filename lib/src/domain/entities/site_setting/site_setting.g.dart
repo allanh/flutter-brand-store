@@ -25,7 +25,9 @@ SiteSetting _$SiteSettingFromJson(Map<String, dynamic> json) => SiteSetting(
       DateTime.parse(json['date'] as String),
       json['anonkey'] as String,
       SiteStatus.fromJson(json['site'] as Map<String, dynamic>),
+      StoreSetting.fromJson(json['store_setting'] as Map<String, dynamic>),
       LayoutSetting.fromJson(json['layout_setting'] as Map<String, dynamic>),
+      MenuSetting.fromJson(json['menu_setting'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$SiteSettingToJson(SiteSetting instance) =>
@@ -33,27 +35,7 @@ Map<String, dynamic> _$SiteSettingToJson(SiteSetting instance) =>
       'date': instance.date.toIso8601String(),
       'anonkey': instance.annonmousKey,
       'site': instance.status,
+      'store_setting': instance.store,
       'layout_setting': instance.layout,
+      'menu_setting': instance.menu,
     };
-
-SiteSettingResponse _$SiteSettingResponseFromJson(Map<String, dynamic> json) =>
-    SiteSettingResponse(
-      SiteSetting.fromJson(json['data'] as Map<String, dynamic>),
-    )
-      ..id = json['id'] as String
-      ..message = json['message'] as String?
-      ..status = $enumDecode(_$ResponseStatusEnumMap, json['status']);
-
-Map<String, dynamic> _$SiteSettingResponseToJson(
-        SiteSettingResponse instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'message': instance.message,
-      'status': _$ResponseStatusEnumMap[instance.status],
-      'data': instance.setting,
-    };
-
-const _$ResponseStatusEnumMap = {
-  ResponseStatus.success: 'SUCCESS',
-  ResponseStatus.failure: 'FAILURE',
-};

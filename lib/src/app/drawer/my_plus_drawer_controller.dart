@@ -1,51 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
-import './main_presenter.dart';
+import './my_plus_drawer_presenter.dart';
 import '../../domain/entities/site_setting/site_setting.dart';
 
-class MainController extends Controller {
-
+class MyPlusDrawerController extends Controller {
   SiteSetting? _siteSetting;
+  // int set selected(int value) {
+  //   selected = value
+  // };
+  int selected = 3;
+  // int get selected {
+  //   return _selected;
+  // }
+  // set selected(int value) {
+  //   _selected = value;
+  //   refreshUI();
+  // }
   SiteSetting? get siteSetting => _siteSetting; // data used by the View
-  final MainPresenter mainPresenter;
-  // Presenter should always be initialized this way
-  MainController(siteSettingRepo)
-      : mainPresenter = MainPresenter(siteSettingRepo),
+  final MyPlusDrawerPresenter myPlusDrawerPresenter;
+  MyPlusDrawerController(drawerInfoRepo)
+      : myPlusDrawerPresenter = MyPlusDrawerPresenter(drawerInfoRepo),
         super();
-
   @override
   void onInitState() {
-    getSiteSetting();
+    getDrawerInfo();
   }
   @override
-  // this is called automatically by the parent class
   void initListeners() {
-    mainPresenter.getSiteSettingOnNext = (SiteSetting siteSetting) {
+    myPlusDrawerPresenter.getDrawerOnNext = (SiteSetting siteSetting) {
       debugPrint(siteSetting.toString());
       _siteSetting = siteSetting;
       refreshUI(); // Refreshes the UI manually
     };
-    mainPresenter.getSiteSettingOnComplete = () {
-      debugPrint('Site setting retrieved');
+    myPlusDrawerPresenter.getDrawerOnComplete = () {
+      debugPrint('Drawer info retrieved');
     };
 
     // On error, show a snackbar, remove the user, and refresh the UI
-    mainPresenter.getSiteSettingOnError = (e) {
-      debugPrint('Could not retrieve site setting.');
+    myPlusDrawerPresenter.getDrawerOnError = (e) {
+      debugPrint('Could not retrieve drawer info.');
       ScaffoldMessenger.of(getContext())
           .showSnackBar(SnackBar(content: Text(e.message)));
       _siteSetting = SiteSetting.current;
       refreshUI(); // Refreshes the UI manually
     };
+    // void updateSelected(int index) {
+    //   selected = index;
+    //   refreshUI();
+    // }
   }
-
-  void getSiteSetting() => mainPresenter.getSiteSetting();
-  void getUserwithError() => mainPresenter.getSiteSetting();
-
-  void buttonPressed() {
-    refreshUI();
-  }
+  void getDrawerInfo() => myPlusDrawerPresenter.getDrawerInfo();
 
   @override
   void onResumed() => debugPrint('On resumed');
@@ -58,7 +63,7 @@ class MainController extends Controller {
 
   @override
   void onDisposed() {
-    mainPresenter.dispose(); // don't forget to dispose of the presenter
+    myPlusDrawerPresenter.dispose(); // don't forget to dispose of the presenter
     super.onDisposed();
   }
 }

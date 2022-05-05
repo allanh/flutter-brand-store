@@ -1,9 +1,11 @@
-import './main_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
-import '../../data/repositories/data_site_setting_resposotory.dart';
-import '../../domain/entities/site_setting.dart';
+
+import './main_controller.dart';
+import '../../data/repositories/data_site_setting_repository.dart';
+import '../drawer/my_plus_drawer_view.dart';
 import '../pages/home/home_view.dart';
+import '../../domain/entities/site_setting/layout_setting/sidebar.dart';
 
 class MainPage extends View {
   MainPage({Key? key, this.title}) : super(key: key);
@@ -11,13 +13,13 @@ class MainPage extends View {
   final String? title;
 
   @override
-  _MainPagetate createState() =>
+  _MainPageState createState() =>
       // inject dependencies inwards
-      _MainPagetate();
+      _MainPageState();
 
 }
-class _MainPagetate extends ViewState<MainPage, MainController> {
-  _MainPagetate() : super(MainController(DataSiteSettingRepository()));
+class _MainPageState extends ViewState<MainPage, MainController> {
+  _MainPageState() : super(MainController(DataSiteSettingRepository()));
 
   int _selectedIndex = 0;
 
@@ -62,12 +64,11 @@ class _MainPagetate extends ViewState<MainPage, MainController> {
     return ControlledWidgetBuilder<MainController>(
       builder: (context, controller) {
         if (controller.siteSetting != null) {
-          if (SiteSetting.current.layout.sidebar.direction == SidebarDirection.left) {
+          if (controller.siteSetting!.layout.sidebar.direction == SidebarDirection.left) {
             return Scaffold(
+              key: globalKey,
               appBar: AppBar(
                 title: _currentTitle(SidebarDirection.left),
-                backgroundColor: ThemeColor.navagationBackground,
-                foregroundColor: ThemeColor.navigationTint,
                 leading: Builder(
                   builder: (context) {
                     return IconButton(
@@ -78,7 +79,7 @@ class _MainPagetate extends ViewState<MainPage, MainController> {
                     );
                   }),
               ),
-              drawer: const Drawer(),
+              drawer: MyPlusDrawer(),
               body: _currentPage(SidebarDirection.left),
               bottomNavigationBar: BottomNavigationBar(items: 
                 const <BottomNavigationBarItem>[
@@ -87,9 +88,6 @@ class _MainPagetate extends ViewState<MainPage, MainController> {
                   BottomNavigationBarItem(icon: Icon(Icons.person), label: '會員中心'),
                   BottomNavigationBarItem(icon: Icon(Icons.search), label: '搜尋'),
                 ],
-                selectedItemColor: ThemeColor.bottomBarTint,
-                unselectedItemColor: ThemeColor.bottomBarTint.withAlpha(192),
-                backgroundColor: ThemeColor.bottomBarBackground,
                 type: BottomNavigationBarType.fixed,
                 currentIndex: _selectedIndex,
                 onTap: _onItemTapped,
@@ -98,14 +96,12 @@ class _MainPagetate extends ViewState<MainPage, MainController> {
           } else {
             return Scaffold(
               appBar: AppBar(
-                backgroundColor: ThemeColor.navagationBackground,
-                foregroundColor: ThemeColor.navigationTint,
                 title: _currentTitle(SidebarDirection.right),
                 actions: [
                   Container()
                 ],
               ),
-              endDrawer: const Drawer(),
+              endDrawer: MyPlusDrawer(),
               body: _currentPage(SidebarDirection.right),
               bottomNavigationBar: BottomNavigationBar(items: 
                 const <BottomNavigationBarItem>[
@@ -114,9 +110,6 @@ class _MainPagetate extends ViewState<MainPage, MainController> {
                   BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: '會員中心'),
                   BottomNavigationBarItem(icon: Icon(Icons.menu), label: '更多'),
                 ],
-                selectedItemColor: ThemeColor.bottomBarTint,
-                unselectedItemColor: ThemeColor.bottomBarTint.withAlpha(192),
-                backgroundColor: ThemeColor.bottomBarBackground,
                 type: BottomNavigationBarType.fixed,
                 currentIndex: _selectedIndex,
                 onTap: _onItemTapped,
@@ -127,72 +120,5 @@ class _MainPagetate extends ViewState<MainPage, MainController> {
         return const CircularProgressIndicator();
       },
     );
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     title: Text(widget.title ?? 'Test'),
-    //   ),
-    //   body: Scaffold(
-    //     key:
-    //         globalKey, // built in global key for the ViewState for easy access in the controller
-    //     body: Center(
-    //       child: Column(
-    //         mainAxisAlignment: MainAxisAlignment.center,
-    //         children: <Widget>[
-    //           ControlledWidgetBuilder<MainController>(
-    //             builder: (context, controller) {
-    //               return Text(
-    //                 controller.siteSetting == null ? '' : '${controller.siteSetting}',
-    //                 style: Theme.of(context).textTheme.headline4,
-    //               );
-    //             },
-    //           ),
-    //           ControlledWidgetBuilder<MainController>(
-    //             builder: (context, controller) {
-    //               return ElevatedButton(
-    //                 onPressed: controller.getSiteSetting,
-    //                 child: const Text(
-    //                   'Get User',
-    //                   style: TextStyle(color: Colors.white),
-    //                 ),
-    //               );
-    //             },
-    //           ),
-    //           ControlledWidgetBuilder<MainController>(
-    //             builder: (context, controller) {
-    //               return ElevatedButton(
-    //                 onPressed: controller.getUserwithError,
-    //                 child: const Text(
-    //                   'Get User Error',
-    //                   style: TextStyle(color: Colors.white),
-    //                 ),
-    //               );
-    //             },
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //   ),
-    //   floatingActionButton: ControlledWidgetBuilder<MainController>(
-    //     builder: (context, controller) {
-    //       return FloatingActionButton(
-    //         onPressed: () => controller.buttonPressed(),
-    //         tooltip: 'Increment',
-    //         child: const Icon(Icons.add),
-    //       );
-    //     },
-    //   ), // This trailing comma makes auto-formatting nicer for build methods.
-    //   bottomNavigationBar: BottomNavigationBar(
-    //     items: const <BottomNavigationBarItem>[
-    //       BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: "首頁"),
-    //       BottomNavigationBarItem(
-    //           icon: Icon(Icons.favorite_outline_outlined), label: "我的收藏"),
-    //       BottomNavigationBarItem(icon: Icon(Icons.person), label: "會員中心"),
-    //       BottomNavigationBarItem(icon: Icon(Icons.search), label: "搜尋"),
-    //     ],
-    //     type: BottomNavigationBarType.fixed,
-    //     currentIndex: _selectedIndex,
-    //     onTap: _onItemTapped,
-    //   ),
-    // );
   }
 }

@@ -16,8 +16,9 @@ enum LinkType {
 class Link {
   Link(this.type, this.value);
   
-  LinkType type;
-  String value;
+  final LinkType type;
+  final String value;
+  
   factory Link.fromJson(Map<String, dynamic> json) => _$LinkFromJson(json);
   Map<String, dynamic> toJson() => _$LinkToJson(this);
 }

@@ -1,9 +1,7 @@
-import '../../domain/entities/site_setting.dart';
+import '../../domain/entities/site_setting/site_setting.dart';
 import '../../domain/repositories/site_setting_respository.dart';
 import '../../data/utils/dio/api.dart';
 import '../../data/utils/dio/dio_utils.dart';
-
-export '../../domain/entities/site_setting.dart';
 
 class DataSiteSettingRepository extends SiteSettingRepository {
   late SiteSetting siteSetting;
@@ -18,7 +16,7 @@ class DataSiteSettingRepository extends SiteSettingRepository {
     final response = await HttpUtils.instance.get(Api.siteSetting);
     if (response.isSuccess) {
       // Map<String, dynamic> siteSettingResponseMap = response.data;
-      SiteSetting.current = SiteSetting.fromJson(response.data);
+      // SiteSetting.current = SiteSetting.fromJson(response.data);
       return SiteSetting.fromJson(response.data);
     } else {
       throw Exception('Failed to load site setting');
