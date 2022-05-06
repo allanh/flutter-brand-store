@@ -2,6 +2,7 @@ import 'package:brandstores/src/data/repositories/data_helper_center_repository.
 import 'package:brandstores/src/domain/entities/helper_center.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 import 'article_controller.dart';
 
@@ -29,7 +30,7 @@ class _ArticlePageState extends ViewState<ArticlePage, ArticleController> {
       body: SingleChildScrollView(
         child: ControlledWidgetBuilder<ArticleController>(
           builder: (context, controller) {
-            return Text(controller.article?.body ?? '');
+            return Html(data: controller.article?.body ?? '');
           },
         ),
       ),
