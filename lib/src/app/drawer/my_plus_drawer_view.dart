@@ -66,7 +66,6 @@ class _MyPlusDrawerState extends ViewState<MyPlusDrawer, MyPlusDrawerController>
     if (expanding) {
       setState(() {
         const Duration(seconds: 2000);
-        debugPrint('expanding $indexPath');
         categorySelectedIndexPath = indexPath;
     });
     } else {
@@ -77,10 +76,8 @@ class _MyPlusDrawerState extends ViewState<MyPlusDrawer, MyPlusDrawerController>
   }
 
   Widget _buildCategoryItem(SidebarItem item, IndexPath indexPath, int level) {
-    final expanded = categorySelectedIndexPath == indexPath || indexPath == IndexPath(categorySelectedIndexPath.section, -1, -1) || indexPath == IndexPath(categorySelectedIndexPath.section, categorySelectedIndexPath.row, -1);
-    debugPrint('$categorySelectedIndexPath $indexPath $expanded');
     if (item.children.isEmpty) return ListTile(title: Text(item.title));
-    // final expanded = categorySelectedIndex == indexPath || indexPath == IndexPath(categorySelectedIndex.section, -1);
+    final expanded = categorySelectedIndexPath == indexPath || indexPath == IndexPath(categorySelectedIndexPath.section, -1, -1) || indexPath == IndexPath(categorySelectedIndexPath.section, categorySelectedIndexPath.row, -1);
     return ExpansionTile(
       key: Key(indexPath.toString()),
       initiallyExpanded: expanded,

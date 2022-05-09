@@ -1,49 +1,46 @@
-import './home_presenter.dart';
-import '../../../domain/entities/user.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
+import './home_presenter.dart';
+import '../../../domain/entities/module/module.dart';
 class HomeController extends Controller {
-  int _counter;
-  User? _user;
-  int get counter => _counter;
-  User? get user => _user; // data used by the View
+  ModuleList? _moduleList;
+  ModuleList? get moduleList => _moduleList; // data used by the View
   final HomePresenter homePresenter;
   // Presenter should always be initialized this way
-  HomeController(usersRepo)
-      : _counter = 0,
-        homePresenter = HomePresenter(usersRepo),
+  HomeController(modulesRepo)
+      : homePresenter = HomePresenter(modulesRepo),
         super();
+
+  @override
+  void onInitState() {
+    getModules();
+  }
 
   @override
   // this is called automatically by the parent class
   void initListeners() {
-    homePresenter.getUserOnNext = (User user) {
-      debugPrint(user.toString());
-      _user = user;
+    homePresenter.getModulesOnNext = (ModuleList moduleList) {
+      debugPrint(moduleList.toString());
+      _moduleList = moduleList;
       refreshUI(); // Refreshes the UI manually
     };
-    homePresenter.getUserOnComplete = () {
+    homePresenter.getModulesOnComplete = () {
       debugPrint('User retrieved');
     };
 
     // On error, show a snackbar, remove the user, and refresh the UI
-    homePresenter.getUserOnError = (e) {
+    homePresenter.getModulesOnError = (e) {
       debugPrint('Could not retrieve user.');
       ScaffoldMessenger.of(getContext())
           .showSnackBar(SnackBar(content: Text(e.message)));
-      _user = null;
+      _moduleList = null;
       refreshUI(); // Refreshes the UI manually
     };
   }
 
-  void getUser() => homePresenter.getUser('test-uid');
-  void getUserwithError() => homePresenter.getUser('test-uid231243');
-
-  void buttonPressed() {
-    _counter++;
-    refreshUI();
-  }
+  void getModules() => homePresenter.getModules();
 
   @override
   void onResumed() => debugPrint('On resumed');

@@ -10,4 +10,6 @@ class Api {
   static const about = '/udi/v1/cms/about';
 
   static const siteSetting = '/udi/v1/site/init';
+
+  static const modules = '/udi/v1/app_layout/published/source';
 }

@@ -1,44 +1,44 @@
-import '../../../domain/usecases/get_user_usecase.dart';
+import '../../../domain/usecases/get_modules_usecase.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
 class HomePresenter extends Presenter {
-  late Function getUserOnNext;
-  late Function getUserOnComplete;
-  late Function getUserOnError;
+  late Function getModulesOnNext;
+  late Function getModulesOnComplete;
+  late Function getModulesOnError;
 
-  final GetUserUseCase getUserUseCase;
-  HomePresenter(usersRepo) : getUserUseCase = GetUserUseCase(usersRepo);
+  final GetModulesUseCase getModulesUseCase;
+  HomePresenter(modulesRepo) : getModulesUseCase = GetModulesUseCase(modulesRepo);
 
-  void getUser(String uid) {
+  void getModules() {
     // execute getUseruserCase
-    getUserUseCase.execute(
-        _GetUserUseCaseObserver(this), GetUserUseCaseParams(uid));
+    getModulesUseCase.execute(
+        _GetModulesUseCaseObserver(this), GetModulesUseCaseParams());
   }
 
   @override
   void dispose() {
-    getUserUseCase.dispose();
+    getModulesUseCase.dispose();
   }
 }
 
-class _GetUserUseCaseObserver extends Observer<GetUserUseCaseResponse> {
+class _GetModulesUseCaseObserver extends Observer<GetModulesUseCaseResponse> {
   final HomePresenter presenter;
-  _GetUserUseCaseObserver(this.presenter);
+  _GetModulesUseCaseObserver(this.presenter);
   @override
   void onComplete() {
     // assert(presenter.getUserOnComplete != null);
-    presenter.getUserOnComplete();
+    presenter.getModulesOnComplete();
   }
 
   @override
   void onError(e) {
     // assert(presenter.getUserOnError != null);
-    presenter.getUserOnError(e);
+    presenter.getModulesOnError(e);
   }
 
   @override
   void onNext(response) {
     // assert(presenter.getUserOnNext != null);
-    presenter.getUserOnNext(response?.user);
+    presenter.getModulesOnNext(response?.moduleList);
   }
 }
