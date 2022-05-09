@@ -6,17 +6,6 @@ import '../../domain/entities/site_setting/site_setting.dart';
 
 class MyPlusDrawerController extends Controller {
   SiteSetting? _siteSetting;
-  // int set selected(int value) {
-  //   selected = value
-  // };
-  int selected = 3;
-  // int get selected {
-  //   return _selected;
-  // }
-  // set selected(int value) {
-  //   _selected = value;
-  //   refreshUI();
-  // }
   SiteSetting? get siteSetting => _siteSetting; // data used by the View
   final MyPlusDrawerPresenter myPlusDrawerPresenter;
   MyPlusDrawerController(drawerInfoRepo)
@@ -45,10 +34,6 @@ class MyPlusDrawerController extends Controller {
       _siteSetting = SiteSetting.current;
       refreshUI(); // Refreshes the UI manually
     };
-    // void updateSelected(int index) {
-    //   selected = index;
-    //   refreshUI();
-    // }
   }
   void getDrawerInfo() => myPlusDrawerPresenter.getDrawerInfo();
 

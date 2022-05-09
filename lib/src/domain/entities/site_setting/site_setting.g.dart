@@ -28,6 +28,14 @@ SiteSetting _$SiteSettingFromJson(Map<String, dynamic> json) => SiteSetting(
       StoreSetting.fromJson(json['store_setting'] as Map<String, dynamic>),
       LayoutSetting.fromJson(json['layout_setting'] as Map<String, dynamic>),
       MenuSetting.fromJson(json['menu_setting'] as Map<String, dynamic>),
+      json['new_event_title'] == null
+          ? null
+          : EventListItem.fromJson(
+              json['new_event_title'] as Map<String, dynamic>),
+      (json['new_event_list'] as List<dynamic>?)
+              ?.map((e) => EventListItem.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
 
 Map<String, dynamic> _$SiteSettingToJson(SiteSetting instance) =>
@@ -38,4 +46,6 @@ Map<String, dynamic> _$SiteSettingToJson(SiteSetting instance) =>
       'store_setting': instance.store,
       'layout_setting': instance.layout,
       'menu_setting': instance.menu,
+      'new_event_title': instance.listTitle,
+      'new_event_list': instance.listItems,
     };

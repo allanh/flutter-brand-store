@@ -33,6 +33,8 @@ const _$LinkTypeEnumMap = {
   LinkType.cart: 'cart',
   LinkType.order: 'orderlist',
   LinkType.favorite: 'favorite',
+  LinkType.allEvent: 'newevent',
+  LinkType.event: 'neweventview',
 };
 
 Sidebar _$SidebarFromJson(Map<String, dynamic> json) => Sidebar(

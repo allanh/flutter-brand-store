@@ -1,19 +1,23 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'link.dart';
+part of 'event_list.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Link _$LinkFromJson(Map<String, dynamic> json) => Link(
-      $enumDecode(_$LinkTypeEnumMap, json['type']),
-      json['value'] as String,
+EventListItem _$EventListItemFromJson(Map<String, dynamic> json) =>
+    EventListItem(
+      json['title'] as String,
+      $enumDecode(_$LinkTypeEnumMap, json['link']),
+      json['link_data'],
     );
 
-Map<String, dynamic> _$LinkToJson(Link instance) => <String, dynamic>{
-      'type': _$LinkTypeEnumMap[instance.type],
-      'value': instance.value,
+Map<String, dynamic> _$EventListItemToJson(EventListItem instance) =>
+    <String, dynamic>{
+      'title': instance.title,
+      'link': _$LinkTypeEnumMap[instance.type],
+      'link_data': instance.value,
     };
 
 const _$LinkTypeEnumMap = {

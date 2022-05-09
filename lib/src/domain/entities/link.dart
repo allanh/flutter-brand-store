@@ -11,6 +11,8 @@ enum LinkType {
   @JsonValue('cart') cart,
   @JsonValue('orderlist') order,
   @JsonValue('favorite') favorite,
+  @JsonValue('newevent') allEvent,
+  @JsonValue('neweventview') event,
 }
 @JsonSerializable()
 class Link {

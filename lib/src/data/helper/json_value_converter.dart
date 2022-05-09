@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import '../../domain/entities/sort_option.dart';
 
 class JsonValueConverter {
-  // convert bool
+  // int <==> bool
   static bool boolFromInt(int value) => value == 1;
   static int boolToInt(bool success) => success ? 1 : 0;
+  // string <==> bool
   static bool boolFromString(String? string) {
     if (string != null) {
       return string == "YES";
@@ -17,7 +18,7 @@ class JsonValueConverter {
     }
     return "NO";
   }
-  // convert color
+  // hex string <==> color
   static Color fromHex(String hexString) {
     final buffer = StringBuffer();
     if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
@@ -31,7 +32,7 @@ class JsonValueConverter {
     '${color.green.toRadixString(16).padLeft(2, '0')}'
     '${color.blue.toRadixString(16).padLeft(2, '0')}';
   }
-  // convert SortOptions
+  // string <==> SortOptions
   static SortOptions sortOptionsFromString(String done) {
     SortOptions option = SortOptions.priceAscending;
     if (done == 'price_asc' || done == 'PRICE_ASC') {
@@ -63,7 +64,7 @@ class JsonValueConverter {
     }
     return result;
   }
-  // convert int
+  // string <==> int
   static int intFromString(String? string) {
     if (string != null) {
       return int.parse(string);
@@ -76,5 +77,4 @@ class JsonValueConverter {
     }
     return '';
   }
-
 }

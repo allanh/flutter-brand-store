@@ -41,6 +41,10 @@ void main() {
 //     debugPrint('異常:$e');
 //   }
 // }
+  // final Color memberBackground;
+  // mem_back_color
+  // icon
+  // final Color borderTitleBackground;
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -57,10 +61,12 @@ class MyApp extends StatelessWidget {
         unselectedItemColor: setting.layout.sidebar.footerTint.withAlpha(192),
         backgroundColor: setting.layout.sidebar.footerBackground,
       ),
+      primaryColor: setting.layout.setting.theme,
+      focusColor: setting.layout.setting.focus,
       textTheme: _buildMyPlusTextTheme(base.textTheme, setting),
       textSelectionTheme: const TextSelectionThemeData(
         selectionColor: Colors.lightGreen
-      )
+      ),
     );
   }
 
@@ -77,6 +83,7 @@ class MyApp extends StatelessWidget {
       caption: base.caption!.copyWith(
         fontWeight: FontWeight.w400,
         fontSize: 14.0,
+        color: setting.layout.setting.title,
       ),
       bodyText1: base.bodyText1!.copyWith(
         fontWeight: FontWeight.w500,
@@ -84,6 +91,8 @@ class MyApp extends StatelessWidget {
       ),
     ).apply(
       fontFamily: 'PingFang TC',
+      // bodyColor: setting.layout.setting.title,
+      // displayColor: setting.layout.setting.title,
     );
   }
 

@@ -15,6 +15,10 @@ MenuSettingItem _$MenuSettingItemFromJson(Map<String, dynamic> json) =>
       json['title'] as String,
       $enumDecode(_$LinkTypeEnumMap, json['link']),
       json['link_data'] as String,
+      (json['children'] as List<dynamic>?)
+              ?.map((e) => MenuSettingItem.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
 
 Map<String, dynamic> _$MenuSettingItemToJson(MenuSettingItem instance) =>
@@ -26,6 +30,7 @@ Map<String, dynamic> _$MenuSettingItemToJson(MenuSettingItem instance) =>
       'title': instance.title,
       'link': _$LinkTypeEnumMap[instance.linkType],
       'link_data': instance.linkData,
+      'children': instance.children,
     };
 
 const _$MenuCategoryEnumMap = {
@@ -43,6 +48,29 @@ const _$LinkTypeEnumMap = {
   LinkType.cart: 'cart',
   LinkType.order: 'orderlist',
   LinkType.favorite: 'favorite',
+  LinkType.allEvent: 'newevent',
+  LinkType.event: 'neweventview',
+};
+
+MenuSettingSwitchItem _$MenuSettingSwitchItemFromJson(
+        Map<String, dynamic> json) =>
+    MenuSettingSwitchItem(
+      $enumDecode(_$MenuSettingSwitchTypeEnumMap, json['name']),
+      JsonValueConverter.boolFromString(json['status'] as String?),
+    );
+
+Map<String, dynamic> _$MenuSettingSwitchItemToJson(
+        MenuSettingSwitchItem instance) =>
+    <String, dynamic>{
+      'name': _$MenuSettingSwitchTypeEnumMap[instance.type],
+      'status': JsonValueConverter.boolToString(instance.enabled),
+    };
+
+const _$MenuSettingSwitchTypeEnumMap = {
+  MenuSettingSwitchType.footer: 'menu_footer',
+  MenuSettingSwitchType.news: 'news',
+  MenuSettingSwitchType.category: 'prod_cat',
+  MenuSettingSwitchType.menu: 'menu',
 };
 
 MenuSetting _$MenuSettingFromJson(Map<String, dynamic> json) => MenuSetting(
@@ -55,6 +83,9 @@ MenuSetting _$MenuSettingFromJson(Map<String, dynamic> json) => MenuSetting(
       (json['hotkey_mobile'] as List<dynamic>)
           .map((e) => MenuSettingItem.fromJson(e as Map<String, dynamic>))
           .toList(),
+      (json['switch_mobile'] as List<dynamic>)
+          .map((e) => MenuSettingSwitchItem.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$MenuSettingToJson(MenuSetting instance) =>
@@ -62,4 +93,5 @@ Map<String, dynamic> _$MenuSettingToJson(MenuSetting instance) =>
       'header': instance.headers,
       'footer': instance.footers,
       'hotkey_mobile': instance.hotKeys,
+      'switch_mobile': instance.switchs,
     };
