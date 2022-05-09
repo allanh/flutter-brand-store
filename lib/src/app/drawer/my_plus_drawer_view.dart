@@ -61,24 +61,24 @@ class _MyPlusDrawerState extends ViewState<MyPlusDrawer, MyPlusDrawerController>
     );
   }
   // category
-    IndexPath categorySelectedIndex = IndexPath(-1, -1);
-    _onExpansion(bool expanding, IndexPath indexPath) {
+  IndexPath categorySelectedIndexPath = IndexPath(-1, -1, -1);
+  _onExpansion(bool expanding, IndexPath indexPath, int level) {
     if (expanding) {
       setState(() {
         const Duration(seconds: 2000);
         debugPrint('expanding $indexPath');
-        categorySelectedIndex = indexPath;
+        categorySelectedIndexPath = indexPath;
     });
     } else {
       setState(() {
-        categorySelectedIndex = IndexPath(-1, -1);
+        categorySelectedIndexPath = (level == 0) ? IndexPath(-1, -1, -1) : IndexPath(categorySelectedIndexPath.section, categorySelectedIndexPath.row, -1);
       });
     }
   }
 
-  Widget _buildCategoryItem(SidebarItem item, IndexPath indexPath) {
-    final expanded = categorySelectedIndex == indexPath || indexPath == IndexPath(categorySelectedIndex.section, -1);
-    debugPrint('$categorySelectedIndex $indexPath $expanded');
+  Widget _buildCategoryItem(SidebarItem item, IndexPath indexPath, int level) {
+    final expanded = categorySelectedIndexPath == indexPath || indexPath == IndexPath(categorySelectedIndexPath.section, -1, -1) || indexPath == IndexPath(categorySelectedIndexPath.section, categorySelectedIndexPath.row, -1);
+    debugPrint('$categorySelectedIndexPath $indexPath $expanded');
     if (item.children.isEmpty) return ListTile(title: Text(item.title));
     // final expanded = categorySelectedIndex == indexPath || indexPath == IndexPath(categorySelectedIndex.section, -1);
     return ExpansionTile(
@@ -88,13 +88,13 @@ class _MyPlusDrawerState extends ViewState<MyPlusDrawer, MyPlusDrawerController>
         item.title,
       ),
       childrenPadding: const EdgeInsets.only(left: 10),
-      onExpansionChanged: (bool expanding)=> _onExpansion(expanding, indexPath),
-      children: item.children.asMap().entries.map((e) => _buildCategoryItem(e.value, IndexPath(indexPath.section, e.key))).toList(),
+      onExpansionChanged: (bool expanding)=> _onExpansion(expanding, indexPath, level+1),
+      children: item.children.asMap().entries.map((e) => _buildCategoryItem(e.value, (level == 0) ? IndexPath(indexPath.section, e.key, 0) : IndexPath(indexPath.section, indexPath.row, e.key), level+1)).toList(),
     );
   }
   Widget _buildCategory(BuildContext context, Sidebar sidebar) {
     return ListView.builder(
-      key: Key('builder ${categorySelectedIndex.toString()}'),
+      key: Key('builder ${categorySelectedIndexPath.toString()}'),
       shrinkWrap: true,
       physics: const ClampingScrollPhysics(),
       itemCount: sidebar.items.length+1,
@@ -103,7 +103,7 @@ class _MyPlusDrawerState extends ViewState<MyPlusDrawer, MyPlusDrawerController>
           return _buildHeader(context, '商品分類'); 
         }
         index -= 1;
-        return _buildCategoryItem(sidebar.items[index], IndexPath(index, -1));
+        return _buildCategoryItem(sidebar.items[index], IndexPath(index, -1, -1), 0);
       }
     );
   }
