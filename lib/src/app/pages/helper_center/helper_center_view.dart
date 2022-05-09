@@ -1,3 +1,5 @@
+import 'package:brandstores/src/app/pages/helper_center/bulletin/bulletin_view.dart';
+import 'package:brandstores/src/app/pages/helper_center/faq/faq_view.dart';
 import 'package:brandstores/src/domain/entities/helper_center.dart';
 import 'package:flutter/material.dart';
 
@@ -29,29 +31,20 @@ class HelperCenterPage extends StatelessWidget {
   }
 
   _openPage(BuildContext context, int position, String title) {
-    switch (position) {
-      case 0:
-        debugPrint('開啟『常見問題』');
-        break;
-      case 1:
-        debugPrint('開啟『服務公告』');
-        break;
-      case 2:
-        _openArticlePage(context, ArticleType.privacy, title);
-        break;
-      case 3:
-        _openArticlePage(context, ArticleType.terms, title);
-        break;
-      case 4:
-        _openArticlePage(context, ArticleType.about, title);
-        break;
-    }
-  }
-
-  _openArticlePage(
-      BuildContext context, ArticleType articleType, String title) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return ArticlePage(articleType, title: title);
+      switch (position) {
+        case 0:
+          return FaqPage(title: title);
+        case 1:
+          return BulletinPage(title: title);
+        case 2:
+          return ArticlePage(ArticleType.privacy, title: title);
+        case 3:
+          return ArticlePage(ArticleType.terms, title: title);
+        case 4:
+        default:
+          return ArticlePage(ArticleType.about, title: title);
+      }
     }));
   }
 

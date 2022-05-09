@@ -4,7 +4,6 @@ import 'package:brandstores/src/domain/repositories/helper_center_repository.dar
 import '../../data/utils/dio/api.dart';
 import '../../data/utils/dio/dio_utils.dart';
 
-
 class DataHelperCenterRepository extends HelperCenterRepository {
   @override
   Future<Faq> getFaq() async {
@@ -20,7 +19,9 @@ class DataHelperCenterRepository extends HelperCenterRepository {
   Future<List<Category>> getBulletin() async {
     final response = await HttpUtils.instance.get(Api.bulletin);
     if (response.isSuccess) {
-      return (response.data as List).map((item) => item as Category).toList();
+      return (response.data as List)
+          .map((item) => Category.fromJson(item))
+          .toList();
     } else {
       throw Exception('Failed to load bulletin');
     }

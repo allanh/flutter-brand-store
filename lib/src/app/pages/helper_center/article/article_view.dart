@@ -15,12 +15,11 @@ class ArticlePage extends View {
 
   @override
   // ignore: no_logic_in_create_state
-  _ArticlePageState createState() => _ArticlePageState(articleType);
+  _PageState createState() => _PageState(articleType);
 }
 
-@mustCallSuper
-class _ArticlePageState extends ViewState<ArticlePage, ArticleController> {
-  _ArticlePageState(articleType)
+class _PageState extends ViewState<ArticlePage, ArticleController> {
+  _PageState(articleType)
       : super(ArticleController(DataHelperCenterRepository(), articleType));
 
   @override

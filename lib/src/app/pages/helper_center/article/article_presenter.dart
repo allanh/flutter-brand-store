@@ -7,25 +7,25 @@ class ArticlePresenter extends Presenter {
   late Function onComplete;
   late Function onError;
 
-  final GetArticleUseCase getArticleUseCase;
+  final GetArticleUseCase useCase;
 
-  ArticlePresenter(repo) : getArticleUseCase = GetArticleUseCase(repo);
+  ArticlePresenter(repo) : useCase = GetArticleUseCase(repo);
 
   void getArticle(ArticleType articleType) {
-    getArticleUseCase.execute(
-        _GetAboutUseCaseObserver(this), GetArticleUseCaseParams(articleType));
+    useCase.execute(
+        _UseCaseObserver(this), GetArticleUseCaseParams(articleType));
   }
 
   @override
   void dispose() {
-    getArticleUseCase.dispose();
+    useCase.dispose();
   }
 }
 
-class _GetAboutUseCaseObserver extends Observer<GetArticleUseCaseResponse> {
+class _UseCaseObserver extends Observer<GetArticleUseCaseResponse> {
   final ArticlePresenter presenter;
 
-  _GetAboutUseCaseObserver(this.presenter);
+  _UseCaseObserver(this.presenter);
 
   @override
   void onComplete() {
