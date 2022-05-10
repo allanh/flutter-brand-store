@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:brandstores/src/domain/entities/member_center/member_center.dart';
-import 'package:brandstores/src/domain/entities/site_setting.dart';
 
 class MemberLevelCard extends StatelessWidget {
   const MemberLevelCard({Key? key, required this.member}) : super(key: key);
@@ -71,7 +70,7 @@ class MemberLevelCard extends StatelessWidget {
                                   Container(
                                       color: member.level >=
                                               member.levelSettings[index].level
-                                          ? ThemeColor.theme
+                                          ? Colors.orange
                                           : Colors.black26,
                                       width: (MediaQuery.of(context)
                                                   .size

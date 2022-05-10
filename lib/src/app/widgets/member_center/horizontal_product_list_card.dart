@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:brandstores/src/domain/entities/member_center/member_center.dart';
-import 'package:brandstores/src/domain/entities/site_setting.dart';
 
 class HorizontalProductListCard extends StatefulWidget {
   const HorizontalProductListCard({Key? key, required this.productList})
@@ -108,12 +107,12 @@ class TabButton extends StatelessWidget {
             color: active ? Colors.white : Colors.black12,
             border: Border(
                 top: BorderSide(
-                    color: active ? ThemeColor.theme : Colors.black12,
+                    color: active ? Colors.orange : Colors.black12,
                     width: active ? indicatorHeight : 0))),
         child: TextButton(
             style: ButtonStyle(
                 foregroundColor: MaterialStateProperty.all<Color>(
-                    active ? ThemeColor.theme : Colors.black45)),
+                    active ? Colors.orange : Colors.black45)),
             child: Text(title),
             onPressed: _handleTap));
   }
