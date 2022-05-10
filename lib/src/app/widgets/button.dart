@@ -12,7 +12,7 @@ class HomePageButton extends StatelessWidget {
     final controller =
         FlutterCleanArchitecture.getController<HomeController>(context);
     return GestureDetector(
-      onTap: controller.buttonPressed,
+      // onTap: controller.buttonPressed,
       child: Container(
         height: 50.0,
         alignment: FractionalOffset.center,

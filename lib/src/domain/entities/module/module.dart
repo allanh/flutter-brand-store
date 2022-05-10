@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../../data/helper/json_value_converter.dart';
@@ -8,8 +7,16 @@ import 'image_list_item.dart';
 part 'module.g.dart';
 
 enum ModuleType {
-  @JsonValue('prod') product,
-  @JsonValue('ad') ad,
+  @JsonValue('prod')
+  product,
+  @JsonValue('ad')
+  ad,
+}
+enum DisplayMode {
+  @JsonValue('SCROLL')
+  scroll,
+  @JsonValue('NOSCROLL')
+  expand,
 }
 
 @JsonSerializable()
@@ -26,14 +33,15 @@ class ModuleItem {
   String? recommend;
   Link link;
 
-  factory ModuleItem.fromJson(Map<String, dynamic> json) => _$ModuleItemFromJson(json);
+  factory ModuleItem.fromJson(Map<String, dynamic> json) =>
+      _$ModuleItemFromJson(json);
   Map<String, dynamic> toJson() => _$ModuleItemToJson(this);
-
 }
 
 @JsonSerializable()
 class Module {
-  Module(this.type, this.layoutID, this.templateID, this.mainID, this.showTitle, this.title);
+  Module(this.type, this.layoutID, this.templateID, this.mainID, this.showTitle,
+      this.title);
 
   @JsonKey(name: 'module_type')
   ModuleType type;
@@ -43,31 +51,39 @@ class Module {
   int templateID;
   @JsonKey(name: 'main_id')
   int mainID;
-  @JsonKey(name: 'show_module_title', fromJson: JsonValueConverter.boolFromString, toJson: JsonValueConverter.boolToString)
+  @JsonKey(
+      name: 'show_module_title',
+      fromJson: JsonValueConverter.boolFromString,
+      toJson: JsonValueConverter.boolToString)
   bool showTitle;
   @JsonKey(name: 'module_title')
   String title;
   // products
   @JsonKey(name: 'prod_limit')
   int? limit;
-  @JsonKey(name: 'show_prodname', fromJson: JsonValueConverter.boolFromString, toJson: JsonValueConverter.boolToString)
+  @JsonKey(
+      name: 'show_prodname',
+      fromJson: JsonValueConverter.boolFromString,
+      toJson: JsonValueConverter.boolToString)
   bool? showProductName;
-  @JsonKey(name: 'show_prodprice', fromJson: JsonValueConverter.boolFromString, toJson: JsonValueConverter.boolToString)
+  @JsonKey(
+      name: 'show_prodprice',
+      fromJson: JsonValueConverter.boolFromString,
+      toJson: JsonValueConverter.boolToString)
   bool? showProductPrice;
-  @JsonKey(name:'prod_list')
+  @JsonKey(name: 'prod_list')
   List<ModuleItem>? products;
   // ads
   @JsonKey(name: 'ref_module_id')
   int? referModulrID;
   @JsonKey(name: 'img_size')
   ImageListItemSize? size;
-  @JsonKey(name:'img_list')
+  @JsonKey(name: 'img_list')
   List<ImageListItem>? images;
-  bool get contentNotEmpty => (images != null && images!.where((element) => element.contentNotEmpty).toList().isNotEmpty);
-  final PageController _controller = PageController();
-  PageController get controller => _controller;
-  @JsonKey(ignore: true)
-  int selectedIndex = 0;
+  @JsonKey(name: 'show_mode')
+  DisplayMode? mode;
+  bool get contentNotEmpty => (images != null &&
+      images!.where((element) => element.contentNotEmpty).toList().isNotEmpty);
   bool get hasChild {
     if (type == ModuleType.product) {
       return (products != null && ((products?.length ?? 0) > 0));
@@ -75,7 +91,8 @@ class Module {
       return (images != null && ((images?.length ?? 0) > 0));
     }
     return false;
-  } 
+  }
+
   factory Module.fromJson(Map<String, dynamic> json) => _$ModuleFromJson(json);
   Map<String, dynamic> toJson() => _$ModuleToJson(this);
 }
@@ -92,6 +109,8 @@ class ModuleList {
   List<Module> get goodModules {
     return modules.where((element) => element.hasChild).toList();
   }
-  factory ModuleList.fromJson(Map<String, dynamic> json) => _$ModuleListFromJson(json);
+
+  factory ModuleList.fromJson(Map<String, dynamic> json) =>
+      _$ModuleListFromJson(json);
   Map<String, dynamic> toJson() => _$ModuleListToJson(this);
 }
