@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:brandstores/src/app/widgets/member_center/service_button.dart';
 import 'package:brandstores/src/domain/entities/member_center/member_center.dart';
 
 class ServicesCard extends StatelessWidget {
@@ -10,37 +9,39 @@ class ServicesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 225.0,
+        height: 243 + 24 + 14,
         child: Card(
           child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
             SizedBox(
-                height: 40.0,
-                child: Row(
-                  children: const [
-                    Padding(
-                        padding: EdgeInsets.only(left: 14.0),
-                        child: Text(
-                          '我的服務',
-                          style: TextStyle(
-                              fontFamily: 'PingFangTC-Semibold',
-                              fontSize: 14.0,
-                              color: Color.fromRGBO(76, 76, 76, 1.0)),
-                        )),
-                  ],
-                )),
+              height: 40.0,
+              child: Row(
+                children: const [
+                  Padding(
+                    padding:
+                        EdgeInsets.only(left: 14.0, top: 10.0, bottom: 10.0),
+                    child: Text(
+                      '我的服務',
+                      style: TextStyle(
+                          fontFamily: 'PingFangTC-Semibold',
+                          fontSize: 14.0,
+                          color: Color.fromRGBO(76, 76, 76, 1.0)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const Divider(
               height: 1.0,
             ),
-            Expanded(
-                child: GridView.count(
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisCount: 4,
-                    childAspectRatio: 1.2,
-                    children: List.generate(
-                        services.length,
-                        (index) => Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: ServiceButton(service: services[index])))))
+            SizedBox(
+              height: 249.0 - 41.0,
+              child: GridView.count(
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: 4,
+                  childAspectRatio: 2 / 2,
+                  children: List.generate(services.length,
+                      (index) => ServiceButton(service: services[index]))),
+            )
           ]),
           color: Colors.white,
           elevation: 5,
@@ -48,5 +49,30 @@ class ServicesCard extends StatelessWidget {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         ));
+  }
+}
+
+class ServiceButton extends StatelessWidget {
+  const ServiceButton({Key? key, required this.service}) : super(key: key);
+
+  final Service service;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {},
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Image.asset(
+          'assets/${service.icon}',
+          fit: BoxFit.scaleDown,
+        ),
+        const SizedBox(height: 3),
+        Text(service.title,
+            style: const TextStyle(
+                fontFamily: 'PingFangTC-Regular',
+                fontSize: 14.0,
+                color: Color.fromRGBO(76, 76, 76, 1)))
+      ]),
+    );
   }
 }

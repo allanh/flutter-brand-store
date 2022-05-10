@@ -54,26 +54,29 @@ class _MemberCenterPageState
     return ControlledWidgetBuilder<MemberCenterController>(
         builder: (context, controller) {
       if (controller.memberCenter != null) {
-        return Scaffold(
-            key: globalKey,
-            body: ListView(
-              children: [
-                MemberCard(member: controller.memberCenter!.member),
-                MemberLevelCard(member: controller.memberCenter!.member!),
-                ServicesCard(
-                  services: controller.memberCenter!.services,
-                ),
-                HorizontalProductListCard(productList: [
-                  controller.memberCenter!.browseInfo!,
-                  controller.memberCenter!.bestSellersInfo
-                ]),
-                BannerCard(
-                    imageUrls: List.generate(
-                        controller.memberCenter!.banners.length,
-                        (index) =>
-                            controller.memberCenter!.banners[index].image))
-              ],
-            ));
+        List<Widget> children = [];
+
+        if (controller.memberCenter!.member == null ||
+            controller.memberCenter!.member?.online == "NO") {
+          children.add(MemberCard(member: controller.memberCenter!.member));
+        } else {
+          children
+              .add(MemberLevelCard(member: controller.memberCenter!.member!));
+        }
+        children.addAll([
+          ServicesCard(
+            services: controller.memberCenter!.services,
+          ),
+          HorizontalProductListCard(productList: [
+            controller.memberCenter!.newGoodsInfo,
+            controller.memberCenter!.bestSellersInfo
+          ]),
+          BannerCard(
+              imageUrls: List.generate(controller.memberCenter!.banners.length,
+                  (index) => controller.memberCenter!.banners[index].image))
+        ]);
+
+        return Scaffold(key: globalKey, body: ListView(children: children));
       }
       return Container();
     });

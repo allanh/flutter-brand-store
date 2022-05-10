@@ -110,9 +110,10 @@ class TabButton extends StatelessWidget {
                     color: active ? Colors.orange : Colors.black12,
                     width: active ? indicatorHeight : 0))),
         child: TextButton(
-            style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(
-                    active ? Colors.orange : Colors.black45)),
+            style: TextButton.styleFrom(
+                primary: active ? Colors.orange : Colors.black45,
+                fixedSize: Size(tabWidth, double.infinity),
+                splashFactory: NoSplash.splashFactory),
             child: Text(title),
             onPressed: _handleTap));
   }
