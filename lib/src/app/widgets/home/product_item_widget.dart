@@ -1,5 +1,6 @@
-import 'package:brandstores/src/domain/entities/module/module.dart';
 import 'package:flutter/material.dart';
+
+import '../../../domain/entities/module/product_list_item.dart';
 
 class ProductItemWidget extends StatelessWidget {
   const ProductItemWidget({
@@ -7,7 +8,7 @@ class ProductItemWidget extends StatelessWidget {
     required this.item,
   }) : super(key: key);
 
-  final ModuleItem item;
+  final ProductListItem item;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -19,9 +20,9 @@ class ProductItemWidget extends StatelessWidget {
           child:
               (item.image != null) ? Image.network(item.image!) : Container(),
         ),
-        Padding(
-          padding: const EdgeInsetsDirectional.only(start: 15.0, top: 8.0),
-          child: Flexible(
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsetsDirectional.only(start: 15.0, top: 8.0),
             child: Text(item.name),
           ),
         ),

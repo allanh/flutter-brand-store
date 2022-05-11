@@ -1,12 +1,12 @@
 import 'package:async/async.dart';
-import 'package:brandstores/src/app/widgets/home/image_item_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../../../domain/entities/module/image_list_item.dart';
+import '../../../domain/entities/module/ad_item.dart';
 import '../../../domain/entities/module/module.dart';
 import '../../widgets/home/module_title_widget.dart';
 import '../../widgets/page_indicator.dart';
 import '../../widgets/home/image_item_widget.dart';
+import '../../widgets/home/marquee_item_widget.dart';
 
 class AdWidget extends StatefulWidget {
   const AdWidget({
@@ -58,10 +58,14 @@ class _AdWidgetState extends State<AdWidget> {
     final width = MediaQuery.of(context).size.width;
     final ratio = widget.module.size!.ratio;
     final contentNotEmpty = widget.module.contentNotEmpty;
-    final itemHeight = width * ratio + (contentNotEmpty ? 110.0 : 0.0);
-    final height = (widget.module.mode == DisplayMode.scroll
-        ? itemHeight + 15
-        : itemHeight * images!.length);
+    final itemHeight = (!widget.module.isMarquee)
+        ? 50.0
+        : width * ratio + (contentNotEmpty ? 110.0 : 0.0);
+    final height = (!widget.module.isMarquee
+        ? itemHeight
+        : widget.module.mode == DisplayMode.scroll
+            ? itemHeight + (contentNotEmpty ? 15 : 0)
+            : itemHeight * images!.length);
     return Padding(
       padding: const EdgeInsetsDirectional.only(top: 10),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -75,52 +79,70 @@ class _AdWidgetState extends State<AdWidget> {
         SizedBox(
           width: width,
           height: height,
-          child: (widget.module.mode == DisplayMode.scroll)
-              ? Stack(alignment: Alignment.bottomCenter, children: [
-                  GestureDetector(
-                    onTapDown: (details) => {timer.cancel()},
-                    onTapUp: (detail) => {timer.reset()},
-                    onTap: () => {},
-                    child: PageView.builder(
-                      controller: controller,
-                      onPageChanged: (int page) {
-                        setState(() {
-                          selectedIndex = page % images!.length;
-                        });
-                      },
-                      itemBuilder: (context, index) => ImageItemWidget(
-                          item: images![index % images.length],
-                          showContent: widget.module.contentNotEmpty,
-                          ratio: widget.module.size!.ratio),
+          child: (!widget.module.isMarquee)
+              ? GestureDetector(
+                  onTapDown: (details) => {timer.cancel()},
+                  onTapUp: (detail) => {timer.reset()},
+                  onTap: () => {},
+                  child: PageView.builder(
+                    controller: controller,
+                    onPageChanged: (int page) {
+                      setState(() {
+                        selectedIndex = page % images!.length;
+                      });
+                    },
+                    itemBuilder: (context, index) => MarqueeItemWidget(
+                      item: images![index % images.length],
                     ),
                   ),
-                  SizedBox(
-                    width: width,
-                    height: 15,
-                    child: Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: PageIndicator(
-                          selectedIndex: selectedIndex,
-                          itemsCount: images!.length,
-                        )),
-                  ),
-                ])
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: images!
-                      .map(
-                        (e) => SizedBox(
-                            width: width,
-                            height: itemHeight,
-                            child: GestureDetector(
-                              onTap: () => {},
-                              child: ImageItemWidget(
-                                  item: e,
-                                  showContent: widget.module.contentNotEmpty,
-                                  ratio: widget.module.size!.ratio),
+                )
+              : (widget.module.mode == DisplayMode.scroll)
+                  ? Stack(alignment: Alignment.bottomCenter, children: [
+                      GestureDetector(
+                        onTapDown: (details) => {timer.cancel()},
+                        onTapUp: (detail) => {timer.reset()},
+                        onTap: () => {},
+                        child: PageView.builder(
+                          controller: controller,
+                          onPageChanged: (int page) {
+                            setState(() {
+                              selectedIndex = page % images!.length;
+                            });
+                          },
+                          itemBuilder: (context, index) => ImageItemWidget(
+                              item: images![index % images.length],
+                              showContent: widget.module.contentNotEmpty,
+                              ratio: widget.module.size!.ratio),
+                        ),
+                      ),
+                      SizedBox(
+                        width: width,
+                        height: 15,
+                        child: Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: PageIndicator(
+                              selectedIndex: selectedIndex,
+                              itemsCount: images!.length,
                             )),
-                      )
-                      .toList()),
+                      ),
+                    ])
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: images!
+                          .map(
+                            (e) => SizedBox(
+                                width: width,
+                                height: itemHeight,
+                                child: GestureDetector(
+                                  onTap: () => {},
+                                  child: ImageItemWidget(
+                                      item: e,
+                                      showContent:
+                                          widget.module.contentNotEmpty,
+                                      ratio: widget.module.size!.ratio),
+                                )),
+                          )
+                          .toList()),
         )
       ]),
     );

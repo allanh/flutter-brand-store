@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../../data/helper/json_value_converter.dart';
-import '../link.dart';
-import 'image_list_item.dart';
+import 'ad_item.dart';
+import 'product_list_item.dart';
 
 part 'module.g.dart';
 
@@ -17,25 +17,6 @@ enum DisplayMode {
   scroll,
   @JsonValue('NOSCROLL')
   expand,
-}
-
-@JsonSerializable()
-class ModuleItem {
-  ModuleItem(this.image, this.name, this.price, this.recommend, this.link);
-
-  @JsonKey(name: 'prod_image')
-  String? image;
-  @JsonKey(name: 'prod_name')
-  String name;
-  @JsonKey(name: 'prod_price')
-  int price;
-  @JsonKey(name: 'prod_recom')
-  String? recommend;
-  Link link;
-
-  factory ModuleItem.fromJson(Map<String, dynamic> json) =>
-      _$ModuleItemFromJson(json);
-  Map<String, dynamic> toJson() => _$ModuleItemToJson(this);
 }
 
 @JsonSerializable()
@@ -72,7 +53,7 @@ class Module {
       toJson: JsonValueConverter.boolToString)
   bool? showProductPrice;
   @JsonKey(name: 'prod_list')
-  List<ModuleItem>? products;
+  List<ProductListItem>? products;
   // ads
   @JsonKey(name: 'ref_module_id')
   int? referModulrID;
@@ -82,8 +63,11 @@ class Module {
   List<ImageListItem>? images;
   @JsonKey(name: 'show_mode')
   DisplayMode? mode;
+  @JsonKey(name: 'list')
+  List<AdItem>? marquees;
   bool get contentNotEmpty => (images != null &&
       images!.where((element) => element.contentNotEmpty).toList().isNotEmpty);
+  bool get isMarquee => type == ModuleType.ad && templateID == 3;
   bool get hasChild {
     if (type == ModuleType.product) {
       return (products != null && ((products?.length ?? 0) > 0));

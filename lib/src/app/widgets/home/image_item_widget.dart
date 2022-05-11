@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../domain/entities/module/image_list_item.dart';
+import '../../../domain/entities/module/ad_item.dart';
 
 class ImageItemWidget extends StatelessWidget {
   const ImageItemWidget({
