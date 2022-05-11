@@ -86,8 +86,8 @@ class _MemberCenterPageState
         services: controller.memberCenter!.services,
       ),
       HorizontalProductListCard(productList: [
-        controller.memberCenter!.newGoodsInfo,
-        controller.memberCenter!.bestSellersInfo
+        controller.memberCenter!.boughtInfo!,
+        controller.memberCenter!.browseInfo!
       ]),
       BannerCard(imageUrls: _buildBannerList(controller))
     ]);

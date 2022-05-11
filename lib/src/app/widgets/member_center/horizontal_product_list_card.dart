@@ -13,6 +13,35 @@ class HorizontalProductListCard extends StatefulWidget {
 }
 
 class _HorizontalProductListCardState extends State<HorizontalProductListCard> {
+  /// 儲存按鈕名稱，用來產生按鈕
+  final List<String> _tabs = ["最新商品", '熱銷商品'];
+
+  /// 按鈕點擊狀態
+  List<bool> _actives = [];
+
+  /// 當前顯示的商品清單
+  List<Product> _currentProducts = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    /// 指定商品清單預設顯示內容
+    _currentProducts = widget.productList[0].list ?? [];
+
+    /// 指定第一個頁籤為點擊狀態
+    _actives = List.generate(_tabs.length, (index) => index == 0);
+  }
+
+  void _handleTap(TabButton tabButton) {
+    final index = _tabs.indexOf(tabButton.title);
+    setState(() {
+      _currentProducts = widget.productList[index].list ?? [];
+      _actives = List.generate(
+          _tabs.length, (index) => _tabs[index] == tabButton.title);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     const space = 8.0;
@@ -24,10 +53,18 @@ class _HorizontalProductListCardState extends State<HorizontalProductListCard> {
           child: Column(
             children: [
               /// 頁籤
-              const TabButtonBar(),
+              TabButtonBar(
+                onChanged: _handleTap,
+                tabs: _tabs,
+                actives: _actives,
+              ),
 
               /// 商品清單
-              HorizontalProductListView(widget: widget, space: space),
+              HorizontalProductListView(
+                // widget: widget,
+                space: space,
+                products: _currentProducts,
+              ),
             ],
           ),
           color: Colors.white,
@@ -40,27 +77,20 @@ class _HorizontalProductListCardState extends State<HorizontalProductListCard> {
   }
 }
 
-class TabButtonBar extends StatefulWidget {
-  const TabButtonBar({
-    Key? key,
-  }) : super(key: key);
+class TabButtonBar extends StatelessWidget {
+  const TabButtonBar(
+      {Key? key,
+      required this.tabs,
+      required this.actives,
+      required this.onChanged})
+      : super(key: key);
 
-  @override
-  State<TabButtonBar> createState() => _TabButtonBarState();
-}
+  final List<String> tabs;
+  final List<bool> actives;
+  final ValueChanged<TabButton> onChanged;
 
-class _TabButtonBarState extends State<TabButtonBar> {
-  /// 儲存按鈕名稱，用來產生按鈕
-  final List<String> _buttons = ["最新商品", '熱銷商品'];
-
-  /// 按鈕點擊狀態
-  List<bool> _actives = [true, false];
-
-  void _handleChange(TabButton button) {
-    setState(() {
-      /// 改變按鈕點擊狀態
-      _actives = [button.title == _buttons[0], button.title == _buttons[1]];
-    });
+  void _handleChange(TabButton tabButton) {
+    onChanged(tabButton);
   }
 
   @override
@@ -69,10 +99,10 @@ class _TabButtonBarState extends State<TabButtonBar> {
         buttonHeight: 40.0,
         buttonPadding: EdgeInsets.zero,
         children: List.generate(
-            _buttons.length,
+            tabs.length,
             (index) => TabButton(
-                  title: _buttons[index],
-                  active: _actives[index],
+                  title: tabs[index],
+                  active: actives[index],
                   onChanged: _handleChange,
                 )));
   }
@@ -128,12 +158,12 @@ class TabButton extends StatelessWidget {
 class HorizontalProductListView extends StatelessWidget {
   const HorizontalProductListView({
     Key? key,
-    required this.widget,
     required this.space,
+    required this.products,
   }) : super(key: key);
 
-  final HorizontalProductListCard widget;
   final double space;
+  final List<Product> products;
 
   @override
   Widget build(BuildContext context) {
@@ -142,7 +172,7 @@ class HorizontalProductListView extends StatelessWidget {
       child:
 
           /// 如果沒有任何商品，就顯示無商品畫面
-          widget.productList[0].list!.isEmpty
+          products.isEmpty
 
               /// 無商品畫面
               ? const EmptyProductView()
@@ -153,11 +183,15 @@ class HorizontalProductListView extends StatelessWidget {
                   children:
 
                       /// 產生 15 個商品
-                      List.generate(
-                    15,
-                    (index) =>
-                        ProductView(space: space, widget: widget, index: index),
-                  )),
+                      _buildProductList()),
+    );
+  }
+
+  List<Widget> _buildProductList() {
+    return List.generate(
+      products.length,
+      (index) =>
+          ProductView(space: space, product: products[index], index: index),
     );
   }
 }
@@ -166,14 +200,13 @@ class ProductView extends StatelessWidget {
   const ProductView(
       {Key? key,
       required this.space,
-      required this.widget,
+      required this.product,
       required this.index})
       : super(key: key);
 
   final double space;
-  final HorizontalProductListCard widget;
   final int index;
-
+  final Product product;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -185,12 +218,12 @@ class ProductView extends StatelessWidget {
           width: 130,
           child: Column(children: [
             /// 商品圖片
-            ProductImage(imageUrl: widget.productList[0].list?[index].imageUrl),
+            ProductImage(imageUrl: product.imageUrl),
             const SizedBox(height: 8),
 
             /// 商品名稱
             ProductName(
-              name: widget.productList[0].list?[index].name ?? '',
+              name: product.name,
             ),
             const SizedBox(height: 8),
 
@@ -202,10 +235,7 @@ class ProductView extends StatelessWidget {
                     /// 價格
                     Expanded(
                       flex: 2,
-                      child: PriceView(
-                          price: widget.productList[0].list?[index].maxPrice
-                                  .toString() ??
-                              ''),
+                      child: PriceView(price: product.maxPrice.toString()),
                     ),
 
                     /// 收藏按鈕
