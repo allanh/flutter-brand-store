@@ -11,6 +11,7 @@ import 'package:brandstores/src/app/widgets/member_center/member_level_card.dart
 import 'package:brandstores/src/app/widgets/member_center/services_card.dart';
 import 'package:brandstores/src/app/widgets/member_center/horizontal_product_list_card.dart';
 import 'package:brandstores/src/app/widgets/member_center/banner_card.dart';
+import 'package:brandstores/src/app/widgets/member_center/level_upgrade_message_card.dart';
 
 /// In the case of Flutter
 /// - The 'View' is comprised of 2 classes
@@ -53,32 +54,87 @@ class _MemberCenterPageState
   Widget get view {
     return ControlledWidgetBuilder<MemberCenterController>(
         builder: (context, controller) {
+      final ThemeData theme = Theme.of(context);
+
       if (controller.memberCenter != null) {
-        List<Widget> children = [];
-
-        if (controller.memberCenter!.member == null ||
-            controller.memberCenter!.member?.online == "NO") {
-          children.add(MemberCard(member: controller.memberCenter!.member));
-        } else {
-          children
-              .add(MemberLevelCard(member: controller.memberCenter!.member!));
-        }
-        children.addAll([
-          ServicesCard(
-            services: controller.memberCenter!.services,
-          ),
-          HorizontalProductListCard(productList: [
-            controller.memberCenter!.newGoodsInfo,
-            controller.memberCenter!.bestSellersInfo
-          ]),
-          BannerCard(
-              imageUrls: List.generate(controller.memberCenter!.banners.length,
-                  (index) => controller.memberCenter!.banners[index].image))
-        ]);
-
-        return Scaffold(key: globalKey, body: ListView(children: children));
+        return Scaffold(
+            key: globalKey,
+            body: Stack(children: [
+              Background(theme: theme),
+              ListView(children: _buildCardList(controller))
+            ]));
       }
       return Container();
     });
   }
+
+  List<Widget> _buildCardList(MemberCenterController controller) {
+    List<Widget> children = [];
+
+    if (controller.memberCenter!.member == null ||
+        controller.memberCenter!.member?.online == "NO") {
+      children.add(MemberCard(member: controller.memberCenter!.member));
+    } else {
+      children.addAll([
+        MemberLevelCard(member: controller.memberCenter!.member!),
+        LevelUpgradeMessageCard(
+            message: controller.memberCenter!.member!.nextLevelDescription)
+      ]);
+    }
+    children.addAll([
+      ServicesCard(
+        services: controller.memberCenter!.services,
+      ),
+      HorizontalProductListCard(productList: [
+        controller.memberCenter!.newGoodsInfo,
+        controller.memberCenter!.bestSellersInfo
+      ]),
+      BannerCard(imageUrls: _buildBannerList(controller))
+    ]);
+
+    return children;
+  }
+
+  List<String> _buildBannerList(MemberCenterController controller) {
+    return List.generate(controller.memberCenter!.banners.length,
+        (index) => controller.memberCenter!.banners[index].image);
+  }
+}
+
+class Background extends StatelessWidget {
+  const Background({
+    Key? key,
+    required this.theme,
+  }) : super(key: key);
+
+  final ThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipPath(
+      clipper: NativeClipper(),
+      child: Container(
+        height: 300,
+        color: theme.appBarTheme.backgroundColor,
+      ),
+    );
+  }
+}
+
+class NativeClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+
+    path.lineTo(0, 0);
+    path.lineTo(0, size.height - 50);
+    path.quadraticBezierTo(
+        size.width / 2, size.height, size.width, size.height - 50);
+    path.lineTo(size.width, 0);
+    path.lineTo(0, 0);
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => true;
 }

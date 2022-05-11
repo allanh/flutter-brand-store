@@ -8,27 +8,18 @@ class MemberLevelCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var name = member.name ?? member.mobile ?? '';
-
     return SizedBox(
         height: 159.0,
         child: Card(
           child: Stack(
             children: [
-              Column(
-                children: [
-                  Row(children: [
-                    /// 大頭照
-                    const Avatar(),
+              /// 背景圖片
+              BackgroundImage(member: member),
 
-                    /// 姓名/等級/有效期限
-                    Information(name: name, member: member),
-                  ]),
+              /// 會員資訊
+              MemberInformation(member: member),
 
-                  /// 等級條區塊
-                  LevelBar(member: member)
-                ],
-              ),
+              /// 等級說明按鈕
               const LevelDescriptionButton(),
             ],
           ),
@@ -38,6 +29,54 @@ class MemberLevelCard extends StatelessWidget {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         ));
+  }
+}
+
+class MemberInformation extends StatelessWidget {
+  const MemberInformation({
+    Key? key,
+    required this.member,
+  }) : super(key: key);
+
+  final Member member;
+
+  @override
+  Widget build(BuildContext context) {
+    var name = member.name ?? member.mobile ?? '';
+    return Column(
+      children: [
+        Row(children: [
+          /// 大頭照
+          const Avatar(),
+
+          /// 姓名/等級/有效期限
+          Information(name: name, member: member),
+        ]),
+
+        /// 等級條區塊
+        LevelBar(member: member)
+      ],
+    );
+  }
+}
+
+class BackgroundImage extends StatelessWidget {
+  const BackgroundImage({
+    Key? key,
+    required this.member,
+  }) : super(key: key);
+
+  final Member member;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: double.infinity,
+      width: double.infinity,
+      child: member.backgroundSmallImgUrl != null
+          ? Image(image: NetworkImage(member.backgroundSmallImgUrl!))
+          : const Image(image: AssetImage('assets/mask.png')),
+    );
   }
 }
 
@@ -92,8 +131,7 @@ class LevelBar extends StatelessWidget {
           children: [
             /// 等級條
             Row(
-              children: List.generate(member.levelSettings.length,
-                  (index) => Bar(member: member, index: index)),
+              children: _buildBarList(),
             ),
             const SizedBox(height: 4.0),
 
@@ -111,6 +149,11 @@ class LevelBar extends StatelessWidget {
           ],
         ));
   }
+
+  List<Widget> _buildBarList() {
+    return List.generate(member.levelSettings.length,
+        (index) => Bar(member: member, index: index));
+  }
 }
 
 class Bar extends StatelessWidget {
@@ -125,6 +168,7 @@ class Bar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
     return SizedBox(
         height: 6.0,
         child: Row(children: [
@@ -133,7 +177,7 @@ class Bar extends StatelessWidget {
           /// 則顯示主題色，反之，顯示灰色
           Container(
               color: member.level >= member.levelSettings[index].level
-                  ? Colors.orange
+                  ? theme.appBarTheme.backgroundColor
                   : Colors.black26,
               width: (MediaQuery.of(context).size.width -
                       92.0 -
@@ -202,13 +246,18 @@ class Avatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(left: 24.0),
-      child: SizedBox(
-          width: 54,
-          height: 54,
-          child: CircleAvatar(
-              backgroundImage: AssetImage('assets/icon_user.png'))),
+    final ThemeData theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(left: 24.0),
+      child: Container(
+        width: 54,
+        height: 54,
+        foregroundDecoration: BoxDecoration(
+            image: DecorationImage(
+                image: const AssetImage('assets/icon_user.png'),
+                colorFilter: ColorFilter.mode(
+                    theme.appBarTheme.backgroundColor!, BlendMode.srcIn))),
+      ),
     );
   }
 }

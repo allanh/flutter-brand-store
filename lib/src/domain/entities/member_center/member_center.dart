@@ -155,6 +155,25 @@ class Member {
   @JsonKey(name: 'next_level_name')
   final String nextLevelName; // 升級等級名稱
 
+  String levelCategoryDescription(int limit) {
+    switch (levelUpCategoryId) {
+      case 1:
+        return '單次消費滿 $limit 元';
+      case 2:
+        return '再消費滿 $limit 元';
+      case 3:
+        return '再消費滿 $limit 次';
+    }
+    return '';
+  }
+
+  String get nextLevelDescription {
+    final description = levelCategoryDescription(limitLevelUp);
+    return description.isEmpty
+        ? '恭喜您，已升級至最高級會員！'
+        : '$description, 就能升為$nextLevelName';
+  }
+
   const Member(
       this.incomplete,
       this.name,

@@ -96,6 +96,8 @@ class TabButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
     const marginWitdh = 12.0;
     const indicatorHeight = 3.0;
     final tabWidth =
@@ -107,11 +109,15 @@ class TabButton extends StatelessWidget {
             color: active ? Colors.white : Colors.black12,
             border: Border(
                 top: BorderSide(
-                    color: active ? Colors.orange : Colors.black12,
+                    color: active
+                        ? theme.appBarTheme.backgroundColor!
+                        : Colors.black12,
                     width: active ? indicatorHeight : 0))),
         child: TextButton(
             style: TextButton.styleFrom(
-                primary: active ? Colors.orange : Colors.black45,
+                primary: active
+                    ? theme.appBarTheme.backgroundColor!
+                    : Colors.black45,
                 fixedSize: Size(tabWidth, double.infinity),
                 splashFactory: NoSplash.splashFactory),
             child: Text(title),

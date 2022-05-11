@@ -35,12 +35,7 @@ class ServicesCard extends StatelessWidget {
             ),
             SizedBox(
               height: 249.0 - 41.0,
-              child: GridView.count(
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: 4,
-                  childAspectRatio: 2 / 2,
-                  children: List.generate(services.length,
-                      (index) => ServiceButton(service: services[index]))),
+              child: _buildGrid(),
             )
           ]),
           color: Colors.white,
@@ -49,6 +44,19 @@ class ServicesCard extends StatelessWidget {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         ));
+  }
+
+  GridView _buildGrid() {
+    return GridView.count(
+        physics: const NeverScrollableScrollPhysics(),
+        crossAxisCount: 4,
+        childAspectRatio: 2 / 2,
+        children: _buildGridList());
+  }
+
+  List<Widget> _buildGridList() {
+    return List.generate(
+        services.length, (index) => ServiceButton(service: services[index]));
   }
 }
 
