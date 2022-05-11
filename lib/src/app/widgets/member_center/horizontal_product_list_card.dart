@@ -22,6 +22,9 @@ class _HorizontalProductListCardState extends State<HorizontalProductListCard> {
   /// 當前顯示的商品清單
   List<Product> _currentProducts = [];
 
+  /// 當前點擊的頁籤
+  String _currentTab = "最新商品";
+
   @override
   void initState() {
     super.initState();
@@ -39,6 +42,7 @@ class _HorizontalProductListCardState extends State<HorizontalProductListCard> {
       _currentProducts = widget.productList[index].list ?? [];
       _actives = List.generate(
           _tabs.length, (index) => _tabs[index] == tabButton.title);
+      _currentTab = tabButton.title;
     });
   }
 
@@ -63,6 +67,7 @@ class _HorizontalProductListCardState extends State<HorizontalProductListCard> {
               HorizontalProductListView(
                 space: _space,
                 products: _currentProducts,
+                tab: _currentTab,
               ),
             ],
           ),
@@ -159,10 +164,12 @@ class HorizontalProductListView extends StatelessWidget {
     Key? key,
     required this.space,
     required this.products,
+    required this.tab,
   }) : super(key: key);
 
   final double space;
   final List<Product> products;
+  final String tab;
 
   @override
   Widget build(BuildContext context) {
@@ -174,7 +181,7 @@ class HorizontalProductListView extends StatelessWidget {
           products.isEmpty
 
               /// 無商品畫面
-              ? const EmptyProductView()
+              ? EmptyProductView(tab: tab)
 
               /// 商品清單
               : ListView(
@@ -259,19 +266,22 @@ class HorizontalProductListView extends StatelessWidget {
 class EmptyProductView extends StatelessWidget {
   const EmptyProductView({
     Key? key,
+    required this.tab,
   }) : super(key: key);
+
+  final String tab;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: const [
-        Image(
+      children: [
+        const Image(
           image: AssetImage('assets/empty_cart.png'),
         ),
-        SizedBox(height: 24.0),
-        Text('目前尚未有最新商品。',
-            style: TextStyle(
+        const SizedBox(height: 24.0),
+        Text('目前尚未有$tab。',
+            style: const TextStyle(
                 fontFamily: 'PingFangTC-Regular',
                 fontSize: 14.0,
                 color: Color.fromRGBO(127, 127, 127, 1)))
