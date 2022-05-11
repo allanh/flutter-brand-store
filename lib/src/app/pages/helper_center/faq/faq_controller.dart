@@ -5,6 +5,10 @@ import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'faq_presenter.dart';
 
 class FaqController extends Controller {
+  int _expandIndex = -1;
+
+  int get expandIndex => _expandIndex;
+
   Faq? _faq;
 
   Faq? get faq => _faq; // data used by the View
@@ -14,6 +18,19 @@ class FaqController extends Controller {
   FaqController(repo)
       : presenter = FaqPresenter(repo),
         super();
+
+  List<Category> getItems() {
+    return _faq?.groups ?? [];
+  }
+
+  void setExpandIndex(int index, bool isExpand) {
+    if (isExpand) {
+      _expandIndex = -1;
+    } else {
+      _expandIndex = index;
+    }
+    refreshUI();
+  }
 
   @override
   void onInitState() {
