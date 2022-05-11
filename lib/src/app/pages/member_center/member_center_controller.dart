@@ -91,10 +91,4 @@ class MemberCenterController extends Controller {
   }
 
   void getMemberCenter() => memberCenterPresenter.getMemberCenter();
-
-  void getUserWithError() => memberCenterPresenter.getMemberCenter();
-
-  void buttonPressed() {
-    refreshUI();
-  }
 }

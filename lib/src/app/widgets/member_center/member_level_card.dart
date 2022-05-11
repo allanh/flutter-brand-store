@@ -2,9 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:brandstores/src/domain/entities/member_center/member_center.dart';
 
 class MemberLevelCard extends StatelessWidget {
-  const MemberLevelCard({Key? key, required this.member}) : super(key: key);
+  const MemberLevelCard(
+      {Key? key,
+      required this.member,
+      required this.levelDescriptionButtonTapped})
+      : super(key: key);
 
   final Member member;
+
+  final Function levelDescriptionButtonTapped;
+
+  void _handleTap() {
+    levelDescriptionButtonTapped();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +30,7 @@ class MemberLevelCard extends StatelessWidget {
               MemberInformation(member: member),
 
               /// 等級說明按鈕
-              const LevelDescriptionButton(),
+              LevelDescriptionButton(buttonTapped: _handleTap),
             ],
           ),
           color: Colors.white,
@@ -81,9 +91,14 @@ class BackgroundImage extends StatelessWidget {
 }
 
 class LevelDescriptionButton extends StatelessWidget {
-  const LevelDescriptionButton({
-    Key? key,
-  }) : super(key: key);
+  const LevelDescriptionButton({Key? key, required this.buttonTapped})
+      : super(key: key);
+
+  final Function buttonTapped;
+
+  void _handleTap() {
+    buttonTapped();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +112,7 @@ class LevelDescriptionButton extends StatelessWidget {
                 elevation: 8,
                 primary: Colors.white,
                 shape: const StadiumBorder()),
-            onPressed: () {},
+            onPressed: _handleTap,
             child: const Text('等級說明',
                 softWrap: false,
                 style: TextStyle(

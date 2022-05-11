@@ -12,6 +12,7 @@ import 'package:brandstores/src/app/widgets/member_center/services_card.dart';
 import 'package:brandstores/src/app/widgets/member_center/horizontal_product_list_card.dart';
 import 'package:brandstores/src/app/widgets/member_center/banner_card.dart';
 import 'package:brandstores/src/app/widgets/member_center/level_upgrade_message_card.dart';
+import 'package:brandstores/src/app/pages/member_center/level_description/level_description_view.dart';
 
 /// In the case of Flutter
 /// - The 'View' is comprised of 2 classes
@@ -48,6 +49,11 @@ class _MemberCenterPageState
   _MemberCenterPageState()
       : super(MemberCenterController(DataMemberCenterRepository()));
 
+  void openLevelDescriptionPage() {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const LevelDescriptionPage()));
+  }
+
   /// - The 'ViewState' contains the 'view' getter, which is technically
   ///   the UI implementaion
   @override
@@ -76,7 +82,9 @@ class _MemberCenterPageState
       children.add(MemberCard(member: controller.memberCenter!.member));
     } else {
       children.addAll([
-        MemberLevelCard(member: controller.memberCenter!.member!),
+        MemberLevelCard(
+            member: controller.memberCenter!.member!,
+            levelDescriptionButtonTapped: openLevelDescriptionPage),
         LevelUpgradeMessageCard(
             message: controller.memberCenter!.member!.nextLevelDescription)
       ]);
