@@ -1,7 +1,7 @@
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
 import './src/domain/entities/site_setting/site_setting.dart';
-import './src/app/main/main_view.dart';
+import 'src/app/main/main_view.dart';
 import 'package:flutter/material.dart';
 
 // import 'src/data/utils/dio/api.dart';
@@ -41,10 +41,10 @@ void main() {
 //     debugPrint('異常:$e');
 //   }
 // }
-  // final Color memberBackground;
-  // mem_back_color
-  // icon
-  // final Color borderTitleBackground;
+// final Color memberBackground;
+// mem_back_color
+// icon
+// final Color borderTitleBackground;
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -64,36 +64,37 @@ class MyApp extends StatelessWidget {
       primaryColor: setting.layout.setting.theme,
       focusColor: setting.layout.setting.focus,
       textTheme: _buildMyPlusTextTheme(base.textTheme, setting),
-      textSelectionTheme: const TextSelectionThemeData(
-        selectionColor: Colors.lightGreen
-      ),
+      textSelectionTheme:
+          const TextSelectionThemeData(selectionColor: Colors.lightGreen),
     );
   }
 
   static TextTheme _buildMyPlusTextTheme(TextTheme base, SiteSetting setting) {
-    return base.copyWith(
-      headline5: base.headline5!.copyWith(
-        fontWeight: FontWeight.w500,
-      ),
-      headline6: base.headline6!.copyWith(
-        fontWeight: FontWeight.bold,
-        fontSize: 18.0,
-        color: setting.layout.setting.title,
-      ),
-      caption: base.caption!.copyWith(
-        fontWeight: FontWeight.w400,
-        fontSize: 14.0,
-        color: setting.layout.setting.title,
-      ),
-      bodyText1: base.bodyText1!.copyWith(
-        fontWeight: FontWeight.w500,
-        fontSize: 16.0,
-      ),
-    ).apply(
-      fontFamily: 'PingFang TC',
-      // bodyColor: setting.layout.setting.title,
-      // displayColor: setting.layout.setting.title,
-    );
+    return base
+        .copyWith(
+          headline5: base.headline5!.copyWith(
+            fontWeight: FontWeight.w500,
+          ),
+          headline6: base.headline6!.copyWith(
+            fontWeight: FontWeight.bold,
+            fontSize: 18.0,
+            color: setting.layout.setting.title,
+          ),
+          caption: base.caption!.copyWith(
+            fontWeight: FontWeight.w400,
+            fontSize: 14.0,
+            color: setting.layout.setting.title,
+          ),
+          bodyText1: base.bodyText1!.copyWith(
+            fontWeight: FontWeight.w500,
+            fontSize: 16.0,
+          ),
+        )
+        .apply(
+          fontFamily: 'PingFang TC',
+          // bodyColor: setting.layout.setting.title,
+          // displayColor: setting.layout.setting.title,
+        );
   }
 
   // This widget is the root of your application.
