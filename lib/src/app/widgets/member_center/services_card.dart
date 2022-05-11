@@ -9,34 +9,14 @@ class ServicesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 243 + 24 + 14,
+        height: 242.0,
         child: Card(
           child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-            SizedBox(
-              height: 40.0,
-              child: Row(
-                children: const [
-                  Padding(
-                    padding:
-                        EdgeInsets.only(left: 14.0, top: 10.0, bottom: 10.0),
-                    child: Text(
-                      '我的服務',
-                      style: TextStyle(
-                          fontFamily: 'PingFangTC-Semibold',
-                          fontSize: 14.0,
-                          color: Color.fromRGBO(76, 76, 76, 1.0)),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            const HeaderView(),
             const Divider(
               height: 1.0,
             ),
-            SizedBox(
-              height: 249.0 - 41.0,
-              child: _buildGrid(),
-            )
+            ServiceView(services: services)
           ]),
           color: Colors.white,
           elevation: 5,
@@ -45,18 +25,62 @@ class ServicesCard extends StatelessWidget {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         ));
   }
+}
+
+class ServiceView extends StatelessWidget {
+  const ServiceView({
+    Key? key,
+    required this.services,
+  }) : super(key: key);
+
+  final List<Service> services;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 242.0 - 41.0 - 32.0,
+      child: _buildGrid(),
+    );
+  }
 
   GridView _buildGrid() {
     return GridView.count(
         physics: const NeverScrollableScrollPhysics(),
         crossAxisCount: 4,
-        childAspectRatio: 2 / 2,
+        childAspectRatio: 7 / 6,
         children: _buildGridList());
   }
 
   List<Widget> _buildGridList() {
     return List.generate(
         services.length, (index) => ServiceButton(service: services[index]));
+  }
+}
+
+class HeaderView extends StatelessWidget {
+  const HeaderView({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 40.0,
+      child: Row(
+        children: const [
+          Padding(
+            padding: EdgeInsets.only(left: 14.0, top: 10.0, bottom: 10.0),
+            child: Text(
+              '我的服務',
+              style: TextStyle(
+                  fontFamily: 'PingFangTC-Semibold',
+                  fontSize: 14.0,
+                  color: Color.fromRGBO(76, 76, 76, 1.0)),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

@@ -75,6 +75,7 @@ class _MainPageState extends ViewState<MainPage, MainController> {
               key: globalKey,
               appBar: AppBar(
                 title: _currentTitle(SidebarDirection.left),
+                elevation: 0,
                 leading: Builder(builder: (context) {
                   return IconButton(
                       onPressed: () => {Scaffold.of(context).openDrawer()},
