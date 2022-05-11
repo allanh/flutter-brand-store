@@ -2,17 +2,25 @@
 /// styles it, and depends on the 'Controller' to handle its events. The
 /// 'View' has-a 'Controller'.
 
-import 'package:brandstores/src/data/repositories/data_member_center_repository.dart';
-import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
+
+import 'package:brandstores/src/data/repositories/data_member_center_repository.dart';
+
+import 'package:brandstores/src/domain/entities/link.dart';
+import 'package:brandstores/src/domain/entities/member_center/member_center.dart';
+
 import 'member_center_controller.dart';
+
 import 'package:brandstores/src/app/widgets/member_center/member_card.dart';
 import 'package:brandstores/src/app/widgets/member_center/member_level_card.dart';
 import 'package:brandstores/src/app/widgets/member_center/services_card.dart';
 import 'package:brandstores/src/app/widgets/member_center/horizontal_product_list_card.dart';
 import 'package:brandstores/src/app/widgets/member_center/banner_card.dart';
 import 'package:brandstores/src/app/widgets/member_center/level_upgrade_message_card.dart';
+
 import 'package:brandstores/src/app/pages/member_center/level_description/level_description_view.dart';
+import 'package:brandstores/src/app/pages/helper_center/helper_center_view.dart';
 
 /// In the case of Flutter
 /// - The 'View' is comprised of 2 classes
@@ -54,6 +62,13 @@ class _MemberCenterPageState
         MaterialPageRoute(builder: (context) => const LevelDescriptionPage()));
   }
 
+  void openServicePage(Service service) {
+    if (service.linkType == LinkType.service) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const HelperCenterPage()));
+    }
+  }
+
   /// - The 'ViewState' contains the 'view' getter, which is technically
   ///   the UI implementaion
   @override
@@ -92,6 +107,7 @@ class _MemberCenterPageState
     children.addAll([
       ServicesCard(
         services: controller.memberCenter!.services,
+        tapped: openServicePage,
       ),
       HorizontalProductListCard(productList: [
         controller.memberCenter!.newGoodsInfo,

@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:brandstores/src/domain/entities/member_center/member_center.dart';
 
 class ServicesCard extends StatelessWidget {
-  const ServicesCard({Key? key, required this.services}) : super(key: key);
+  const ServicesCard({Key? key, required this.services, required this.tapped})
+      : super(key: key);
 
   final List<Service> services;
+
+  final ValueChanged<Service> tapped;
+
+  void buttonTapped(Service service) {
+    tapped(service);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +23,10 @@ class ServicesCard extends StatelessWidget {
             const Divider(
               height: 1.0,
             ),
-            ServiceView(services: services)
+            ServiceView(
+              services: services,
+              tapped: buttonTapped,
+            )
           ]),
           color: Colors.white,
           elevation: 5,
@@ -28,12 +38,16 @@ class ServicesCard extends StatelessWidget {
 }
 
 class ServiceView extends StatelessWidget {
-  const ServiceView({
-    Key? key,
-    required this.services,
-  }) : super(key: key);
+  const ServiceView({Key? key, required this.services, required this.tapped})
+      : super(key: key);
 
   final List<Service> services;
+
+  final ValueChanged<Service> tapped;
+
+  void buttonTapped(Service service) {
+    tapped(service);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +67,11 @@ class ServiceView extends StatelessWidget {
 
   List<Widget> _buildGridList() {
     return List.generate(
-        services.length, (index) => ServiceButton(service: services[index]));
+        services.length,
+        (index) => ServiceButton(
+              service: services[index],
+              tapped: buttonTapped,
+            ));
   }
 }
 
@@ -85,14 +103,21 @@ class HeaderView extends StatelessWidget {
 }
 
 class ServiceButton extends StatelessWidget {
-  const ServiceButton({Key? key, required this.service}) : super(key: key);
+  const ServiceButton({Key? key, required this.service, required this.tapped})
+      : super(key: key);
 
   final Service service;
+
+  final ValueChanged<Service> tapped;
+
+  void buttonTapped() {
+    tapped(service);
+  }
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () {},
+      onPressed: buttonTapped,
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Image.asset(
           'assets/${service.icon}',
