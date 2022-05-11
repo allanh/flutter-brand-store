@@ -44,8 +44,8 @@ class _HorizontalProductListCardState extends State<HorizontalProductListCard> {
 
   @override
   Widget build(BuildContext context) {
-    const space = 8.0;
-    const marginWitdh = 12.0;
+    const _space = 8.0;
+    const _marginWitdh = 12.0;
 
     return SizedBox(
         height: 312.0,
@@ -61,8 +61,7 @@ class _HorizontalProductListCardState extends State<HorizontalProductListCard> {
 
               /// 商品清單
               HorizontalProductListView(
-                // widget: widget,
-                space: space,
+                space: _space,
                 products: _currentProducts,
               ),
             ],
@@ -70,7 +69,7 @@ class _HorizontalProductListCardState extends State<HorizontalProductListCard> {
           color: Colors.white,
           elevation: 5,
           margin:
-              const EdgeInsets.fromLTRB(marginWitdh, 0.0, marginWitdh, 16.0),
+              const EdgeInsets.fromLTRB(_marginWitdh, 0.0, _marginWitdh, 16.0),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         ));
@@ -189,60 +188,70 @@ class HorizontalProductListView extends StatelessWidget {
 
   List<Widget> _buildProductList() {
     return List.generate(
-      products.length,
-      (index) =>
-          ProductView(space: space, product: products[index], index: index),
+        products.length,
+        (index) => Padding(
+            padding: EdgeInsets.only(left: space, right: space),
+            child:
+
+                /// 商品 UI
+                SizedBox(
+              width: 130,
+              child: Column(children: [
+                /// 商品圖片
+                _buildProductImage(products[index]),
+
+                const SizedBox(height: 8),
+
+                /// 商品名稱
+                _buildProductName(products[index]),
+                const SizedBox(height: 8),
+
+                /// 商品價格區塊
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
+                    child: Row(
+                      children: [
+                        /// 價格
+                        Expanded(
+                          flex: 2,
+                          child: _buildPrice(products[index]),
+                        ),
+
+                        /// 收藏按鈕
+                        const Expanded(flex: 1, child: FavoriteButton())
+                      ],
+                    ))
+              ]),
+            )));
+  }
+
+  Text _buildPrice(Product product) {
+    return Text("\$ ${product.maxPrice.toString()}",
+        style: const TextStyle(
+            fontFamily: 'PingFangTC-Semibold',
+            fontSize: 16.0,
+            color: Color.fromRGBO(242, 63, 68, 1)));
+  }
+
+  SizedBox _buildProductName(Product product) {
+    return SizedBox(
+      height: 48.0,
+      child: Text(product.name,
+          style: const TextStyle(
+              fontFamily: 'PingFangTC-Regular',
+              fontSize: 14.0,
+              color: Color.fromRGBO(76, 76, 76, 1))),
     );
   }
-}
 
-class ProductView extends StatelessWidget {
-  const ProductView(
-      {Key? key,
-      required this.space,
-      required this.product,
-      required this.index})
-      : super(key: key);
-
-  final double space;
-  final int index;
-  final Product product;
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.only(left: space, right: space),
-        child:
-
-            /// 商品 UI
-            SizedBox(
-          width: 130,
-          child: Column(children: [
-            /// 商品圖片
-            ProductImage(imageUrl: product.imageUrl),
-            const SizedBox(height: 8),
-
-            /// 商品名稱
-            ProductName(
-              name: product.name,
-            ),
-            const SizedBox(height: 8),
-
-            /// 商品價格區塊
-            Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
-                child: Row(
-                  children: [
-                    /// 價格
-                    Expanded(
-                      flex: 2,
-                      child: PriceView(price: product.maxPrice.toString()),
-                    ),
-
-                    /// 收藏按鈕
-                    const Expanded(flex: 1, child: FavoriteButton())
-                  ],
-                ))
-          ]),
+  SizedBox _buildProductImage(Product product) {
+    return SizedBox(
+        width: 130,
+        height: 130,
+        child: Image(
+          fit: BoxFit.contain,
+          image: NetworkImage(
+              product.imageUrl ?? 'https://via.placeholder.com/150'),
         ));
   }
 }
@@ -267,46 +276,6 @@ class EmptyProductView extends StatelessWidget {
                 fontSize: 14.0,
                 color: Color.fromRGBO(127, 127, 127, 1)))
       ],
-    );
-  }
-}
-
-class ProductImage extends StatelessWidget {
-  const ProductImage({
-    Key? key,
-    this.imageUrl,
-  }) : super(key: key);
-
-  final String? imageUrl;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-        width: 130,
-        height: 130,
-        child: Image(
-          fit: BoxFit.contain,
-          image: NetworkImage(imageUrl ?? 'https://via.placeholder.com/150'),
-        ));
-  }
-}
-
-class ProductName extends StatelessWidget {
-  const ProductName({
-    Key? key,
-    required this.name,
-  }) : super(key: key);
-
-  final String name;
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 48.0,
-      child: Text(name,
-          style: const TextStyle(
-              fontFamily: 'PingFangTC-Regular',
-              fontSize: 14.0,
-              color: Color.fromRGBO(76, 76, 76, 1))),
     );
   }
 }
@@ -340,23 +309,5 @@ class _FavoriteButtonState extends State<FavoriteButton> {
               ? const AssetImage('assets/icon_fill_heart.png')
               : const AssetImage('assets/icon_heart.png'),
         ));
-  }
-}
-
-class PriceView extends StatelessWidget {
-  const PriceView({
-    Key? key,
-    required this.price,
-  }) : super(key: key);
-
-  final String price;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text("\$ $price",
-        style: const TextStyle(
-            fontFamily: 'PingFangTC-Semibold',
-            fontSize: 16.0,
-            color: Color.fromRGBO(242, 63, 68, 1)));
   }
 }
