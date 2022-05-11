@@ -16,7 +16,6 @@ class ImageItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    // final ratio = widget.module.size!.ratio;
     final height = width * ratio + (showContent ? 125.0 : 0.0);
     return (showContent)
         ? SizedBox(

@@ -52,74 +52,16 @@ class _AdWidgetState extends State<AdWidget> {
     _timer.cancel();
   }
 
-  // Widget _buildImageItem(
-  //     BuildContext context, ImageListItem imageListItem, double height) {
-  //   final width = MediaQuery.of(context).size.width;
-  //   return (widget.module.contentNotEmpty)
-  //       ? SizedBox(
-  //           width: width,
-  //           height: height,
-  //           child: Column(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: [
-  //               Image.network(
-  //                 imageListItem.image,
-  //               ),
-  //               Padding(
-  //                 padding: const EdgeInsets.fromLTRB(12.0, 0, 12.0, 0),
-  //                 child: Column(
-  //                   children: [
-  //                     SizedBox(
-  //                       width: width,
-  //                       height: 30,
-  //                       child: Padding(
-  //                         padding: const EdgeInsetsDirectional.only(top: 8),
-  //                         child: Text(imageListItem.title ?? ''),
-  //                       ),
-  //                     ),
-  //                     SizedBox(
-  //                       width: width,
-  //                       height: 48,
-  //                       child: Padding(
-  //                         padding: const EdgeInsetsDirectional.only(top: 8),
-  //                         child: Text(imageListItem.content ?? ''),
-  //                       ),
-  //                     ),
-  //                     SizedBox(
-  //                       width: width,
-  //                       height: 32,
-  //                       child: Padding(
-  //                         padding: const EdgeInsetsDirectional.only(top: 8),
-  //                         child: Text(imageListItem.start.toString() +
-  //                             '-' +
-  //                             imageListItem.end.toString()),
-  //                       ),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               )
-  //             ],
-  //           ),
-  //         )
-  //       : Stack(
-  //           alignment: AlignmentDirectional.bottomCenter,
-  //           children: [
-  //             SizedBox(
-  //               width: width,
-  //               height: height,
-  //               child: Image.network(imageListItem.image),
-  //             ),
-  //           ],
-  //         );
-  // }
-
   @override
   Widget build(BuildContext context) {
     final images = widget.module.images;
     final width = MediaQuery.of(context).size.width;
     final ratio = widget.module.size!.ratio;
     final contentNotEmpty = widget.module.contentNotEmpty;
-    final height = width * ratio + (contentNotEmpty ? 125.0 : 0.0);
+    final itemHeight = width * ratio + (contentNotEmpty ? 110.0 : 0.0);
+    final height = (widget.module.mode == DisplayMode.scroll
+        ? itemHeight + 15
+        : itemHeight * images!.length);
     return Padding(
       padding: const EdgeInsetsDirectional.only(top: 10),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -131,36 +73,55 @@ class _AdWidgetState extends State<AdWidget> {
                 decoration: const BoxDecoration(color: Colors.red),
               ),
         SizedBox(
-            width: width,
-            height: height,
-            child: Stack(alignment: Alignment.bottomCenter, children: [
-              GestureDetector(
-                onTapDown: (details) => {timer.cancel()},
-                onTapUp: (detail) => {timer.reset()},
-                child: PageView.builder(
-                  controller: controller,
-                  onPageChanged: (int page) {
-                    setState(() {
-                      selectedIndex = page % images!.length;
-                    });
-                  },
-                  itemBuilder: (context, index) => ImageItemWidget(
-                      item: images![index % images.length],
-                      showContent: widget.module.contentNotEmpty,
-                      ratio: widget.module.size!.ratio),
-                ),
-              ),
-              SizedBox(
-                width: width,
-                height: 15,
-                child: Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: PageIndicator(
-                      selectedIndex: selectedIndex,
-                      itemsCount: images!.length,
-                    )),
-              ),
-            ]))
+          width: width,
+          height: height,
+          child: (widget.module.mode == DisplayMode.scroll)
+              ? Stack(alignment: Alignment.bottomCenter, children: [
+                  GestureDetector(
+                    onTapDown: (details) => {timer.cancel()},
+                    onTapUp: (detail) => {timer.reset()},
+                    onTap: () => {},
+                    child: PageView.builder(
+                      controller: controller,
+                      onPageChanged: (int page) {
+                        setState(() {
+                          selectedIndex = page % images!.length;
+                        });
+                      },
+                      itemBuilder: (context, index) => ImageItemWidget(
+                          item: images![index % images.length],
+                          showContent: widget.module.contentNotEmpty,
+                          ratio: widget.module.size!.ratio),
+                    ),
+                  ),
+                  SizedBox(
+                    width: width,
+                    height: 15,
+                    child: Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: PageIndicator(
+                          selectedIndex: selectedIndex,
+                          itemsCount: images!.length,
+                        )),
+                  ),
+                ])
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: images!
+                      .map(
+                        (e) => SizedBox(
+                            width: width,
+                            height: itemHeight,
+                            child: GestureDetector(
+                              onTap: () => {},
+                              child: ImageItemWidget(
+                                  item: e,
+                                  showContent: widget.module.contentNotEmpty,
+                                  ratio: widget.module.size!.ratio),
+                            )),
+                      )
+                      .toList()),
+        )
       ]),
     );
   }

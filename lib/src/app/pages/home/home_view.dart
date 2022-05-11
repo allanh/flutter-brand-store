@@ -4,7 +4,7 @@ import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import '../../../data/repositories/data_modules_repository.dart';
 import '../../../domain/entities/module/module.dart';
 import '../../widgets/home/ad_wiget.dart';
-import '../../widgets/home/module_title_widget.dart';
+import '../../widgets/home/product_widget.dart';
 
 class HomePage extends View {
   HomePage({Key? key, this.title}) : super(key: key);
@@ -20,52 +20,10 @@ class HomePage extends View {
 class _HomePageState extends ViewState<HomePage, HomeController> {
   _HomePageState() : super(HomeController(DataModulesRepository()));
 
-  Widget _buildProductItem(BuildContext context, ModuleItem moduleItem) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: 200,
-          width: MediaQuery.of(context).size.width,
-          child: (moduleItem.image != null)
-              ? Image.network(moduleItem.image!)
-              : Container(),
-        ),
-        Padding(
-          padding: const EdgeInsetsDirectional.only(start: 15.0, top: 8.0),
-          child: Text(moduleItem.name),
-        ),
-      ],
-    );
-  }
-
   Widget _buildWidget(BuildContext context, Module module) {
     if (module.type == ModuleType.product) {
       if (module.products != null && (module.products?.length ?? 0) > 0) {
-        final int length = module.products!.length;
-        final items = module.products!;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            (module.showTitle)
-                ? ModuleTitleWidget(module: module)
-                : Container(
-                    decoration: const BoxDecoration(color: Colors.red),
-                  ),
-            GridView.builder(
-                itemCount: length,
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 3.0 / 4.0,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  // return const Text('grid view item builder');
-                  return _buildProductItem(context, items[index]);
-                }),
-          ],
-        );
+        return ProductWidget(module: module);
       }
       return Container();
     } else if (module.type == ModuleType.ad) {
