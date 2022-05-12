@@ -15,6 +15,7 @@ class MyPlusDrawerController extends Controller {
   void onInitState() {
     getDrawerInfo();
   }
+
   @override
   void initListeners() {
     myPlusDrawerPresenter.getDrawerOnNext = (SiteSetting siteSetting) {
@@ -35,7 +36,11 @@ class MyPlusDrawerController extends Controller {
       refreshUI(); // Refreshes the UI manually
     };
   }
+
   void getDrawerInfo() => myPlusDrawerPresenter.getDrawerInfo();
+  void loginIfNeeded() {
+    debugPrint('loginIfNeeded');
+  }
 
   @override
   void onResumed() => debugPrint('On resumed');

@@ -5,6 +5,7 @@ import '../../../data/repositories/data_modules_repository.dart';
 import '../../../domain/entities/module/module.dart';
 import '../../widgets/home/ad_wiget.dart';
 import '../../widgets/home/product_widget.dart';
+import '../../widgets/home/video_widget.dart';
 
 class HomePage extends View {
   HomePage({Key? key, this.title}) : super(key: key);
@@ -21,18 +22,20 @@ class _HomePageState extends ViewState<HomePage, HomeController> {
   _HomePageState() : super(HomeController(DataModulesRepository()));
 
   Widget _buildWidget(BuildContext context, Module module) {
-    if (module.type == ModuleType.product) {
-      if (module.products != null && (module.products?.length ?? 0) > 0) {
-        return ProductWidget(module: module);
-      }
-      return Container();
-    } else if (module.type == ModuleType.ad) {
-      if (module.images != null && (module.images?.length ?? 0) > 0) {
-        return AdWidget(module: module);
-      }
-      return Container();
+    switch (module.type) {
+      case ModuleType.product:
+        return (module.products != null && (module.products?.length ?? 0) > 0)
+            ? ProductWidget(module: module)
+            : Container();
+      case ModuleType.ad:
+        return (module.images != null && (module.images?.length ?? 0) > 0)
+            ? AdWidget(module: module)
+            : Container();
+      case ModuleType.video:
+        return VideoWidget(
+          module: module,
+        );
     }
-    return Container();
   }
 
   @override

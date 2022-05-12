@@ -1,6 +1,8 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
+import '../../pages/home/home_controller.dart';
 import '../../../domain/entities/module/ad_item.dart';
 import '../../../domain/entities/module/module.dart';
 import '../../widgets/home/module_title_widget.dart';
@@ -55,17 +57,20 @@ class _AdWidgetState extends State<AdWidget> {
   @override
   Widget build(BuildContext context) {
     final images = widget.module.images;
+    final marquees = widget.module.marquees;
     final width = MediaQuery.of(context).size.width;
     final ratio = widget.module.size!.ratio;
     final contentNotEmpty = widget.module.contentNotEmpty;
-    final itemHeight = (!widget.module.isMarquee)
+    final itemHeight = (widget.module.isMarquee)
         ? 50.0
         : width * ratio + (contentNotEmpty ? 110.0 : 0.0);
-    final height = (!widget.module.isMarquee
+    final height = (widget.module.isMarquee
         ? itemHeight
         : widget.module.mode == DisplayMode.scroll
             ? itemHeight + (contentNotEmpty ? 15 : 0)
             : itemHeight * images!.length);
+    final homeController =
+        FlutterCleanArchitecture.getController<HomeController>(context);
     return Padding(
       padding: const EdgeInsetsDirectional.only(top: 10),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -79,20 +84,21 @@ class _AdWidgetState extends State<AdWidget> {
         SizedBox(
           width: width,
           height: height,
-          child: (!widget.module.isMarquee)
+          child: (widget.module.isMarquee)
               ? GestureDetector(
                   onTapDown: (details) => {timer.cancel()},
                   onTapUp: (detail) => {timer.reset()},
-                  onTap: () => {},
+                  onTap: () =>
+                      {homeController.onTap(marquees![selectedIndex].link)},
                   child: PageView.builder(
                     controller: controller,
                     onPageChanged: (int page) {
                       setState(() {
-                        selectedIndex = page % images!.length;
+                        selectedIndex = page % marquees!.length;
                       });
                     },
                     itemBuilder: (context, index) => MarqueeItemWidget(
-                      item: images![index % images.length],
+                      item: marquees![index % marquees.length],
                     ),
                   ),
                 )
@@ -101,7 +107,9 @@ class _AdWidgetState extends State<AdWidget> {
                       GestureDetector(
                         onTapDown: (details) => {timer.cancel()},
                         onTapUp: (detail) => {timer.reset()},
-                        onTap: () => {},
+                        onTap: () =>
+                            {homeController.onTap(images![selectedIndex].link)},
+                        onTapCancel: () => {timer.reset()},
                         child: PageView.builder(
                           controller: controller,
                           onPageChanged: (int page) {

@@ -16,6 +16,7 @@ class ProductWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final int length = module.products!.length;
     final items = module.products!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -24,18 +25,21 @@ class ProductWidget extends StatelessWidget {
             : Container(
                 decoration: const BoxDecoration(color: Colors.red),
               ),
-        GridView.builder(
-            itemCount: length,
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 3.0 / 4.0,
-            ),
-            itemBuilder: (BuildContext context, int index) {
-              // return const Text('grid view item builder');
-              return ProductItemWidget(item: items[index]);
-            }),
+        GestureDetector(
+          onTap: () => {},
+          child: GridView.builder(
+              itemCount: length,
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 3.0 / 4.0,
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                // return const Text('grid view item builder');
+                return ProductItemWidget(item: items[index]);
+              }),
+        ),
       ],
     );
   }

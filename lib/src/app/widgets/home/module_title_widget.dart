@@ -13,11 +13,16 @@ class ModuleTitleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      height: 43,
+      height: 40,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(12.0, 14.0, 12.0, 7.0),
-        child: Text(module.title),
-      ),
+          padding: const EdgeInsets.fromLTRB(12.0, 10.0, 12.0, 4.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(module.title),
+              const Text('MORE >'),
+            ],
+          )),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 import '../../../data/helper/json_value_converter.dart';
 import 'ad_item.dart';
 import 'product_list_item.dart';
+import '../link.dart';
 
 part 'module.g.dart';
 
@@ -11,6 +12,8 @@ enum ModuleType {
   product,
   @JsonValue('ad')
   ad,
+  @JsonValue('video')
+  video,
 }
 enum DisplayMode {
   @JsonValue('SCROLL')
@@ -65,6 +68,21 @@ class Module {
   DisplayMode? mode;
   @JsonKey(name: 'list')
   List<AdItem>? marquees;
+  @JsonKey(name: 'sub_youtube_url')
+  String? youtubeUrl;
+
+  @JsonKey(name: 'sub_title')
+  String? youtubeTitle;
+  @JsonKey(
+      name: 'show_sub_title',
+      fromJson: JsonValueConverter.boolFromString,
+      toJson: JsonValueConverter.boolToString)
+  bool? showYuotubeTitle;
+  @JsonKey(name: 'sub_link')
+  LinkType? linkType;
+  @JsonKey(name: 'sub_link_data')
+  String? linkValue;
+  Link get youtube => Link(linkType ?? LinkType.none, linkValue ?? '');
   bool get contentNotEmpty => (images != null &&
       images!.where((element) => element.contentNotEmpty).toList().isNotEmpty);
   bool get isMarquee => type == ModuleType.ad && templateID == 3;

@@ -1,9 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
+import '../../../domain/entities/link.dart';
 import './home_presenter.dart';
 import '../../../domain/entities/module/module.dart';
+
 class HomeController extends Controller {
   ModuleList? _moduleList;
   ModuleList? get moduleList => _moduleList; // data used by the View
@@ -41,6 +42,8 @@ class HomeController extends Controller {
   }
 
   void getModules() => homePresenter.getModules();
+
+  void onTap(Link link) => {debugPrint(link.value)};
 
   @override
   void onResumed() => debugPrint('On resumed');

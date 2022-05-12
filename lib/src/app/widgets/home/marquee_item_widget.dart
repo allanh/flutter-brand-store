@@ -39,14 +39,12 @@ class MarqueeItemWidget extends StatelessWidget {
                     border: Border.all(),
                     borderRadius: BorderRadius.circular(2.0),
                   ),
-                  // alignment: Alignment.center,
-                  child: Align(
-                      alignment: Alignment.center,
-                      child: Text(item.tag ?? '最新',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1
-                              ?.copyWith(color: Colors.white))),
+                  alignment: Alignment.center,
+                  child: Text(item.tag ?? '最新',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          ?.copyWith(color: Colors.white)),
                 ),
                 const SizedBox(
                   width: 9.0,
