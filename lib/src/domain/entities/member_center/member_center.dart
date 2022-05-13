@@ -139,7 +139,7 @@ class Member {
   String get period {
     return levelStartDate == null && levelEndDate == null
         ? "有效期限：永久有效"
-        : levelEndDate != null
+        : levelStartDate != null && levelEndDate == null
             ? "有效期限：$levelStartDate ~ 永久有效"
             : "";
   }
