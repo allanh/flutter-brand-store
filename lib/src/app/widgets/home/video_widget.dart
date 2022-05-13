@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../domain/entities/module/module.dart';
 
@@ -17,7 +17,7 @@ class VideoWidget extends StatefulWidget {
 class _ControlsOverlay extends StatelessWidget {
   const _ControlsOverlay({Key? key, required this.controller})
       : super(key: key);
-  final VideoPlayerController controller;
+  final YoutubePlayerController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -52,62 +52,72 @@ class _ControlsOverlay extends StatelessWidget {
 }
 
 class _VideoState extends State<VideoWidget> {
-  late VideoPlayerController _controller;
-  late Future<void> _initializeVideoPlayerFuture;
+  late YoutubePlayerController _controller;
+  bool _isPlayerReady = false;
   @override
   void initState() {
     super.initState();
+    _controller = YoutubePlayerController(
+      initialVideoId: widget.module.youtubeUrl ?? 'cYFcAF4Saw8',
+      flags: const YoutubePlayerFlags(
+        mute: false,
+        autoPlay: false,
+        disableDragSeek: false,
+        loop: false,
+        isLive: false,
+        forceHD: false,
+        enableCaption: true,
+      ),
+    );
+  }
 
-    // Create and store the VideoPlayerController. The VideoPlayerController
-    // offers several different constructors to play videos from assets, files,
-    // or the internet.
-    _controller = VideoPlayerController.network(widget.module.linkValue ?? ''
-        // 'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
-        );
-    _controller.addListener(() {
-      setState(() {});
-    });
-    _initializeVideoPlayerFuture = _controller.initialize();
+  // _initializeVideoPlayerFuture = _controller.initialize();
+  // }
+  @override
+  void deactivate() {
+    // Pauses video while navigating to next page.
+    // _controller.pause();
+    super.deactivate();
   }
 
   @override
   void dispose() {
     // Ensure disposing of the VideoPlayerController to free up resources.
     _controller.dispose();
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     // Complete the code in the next step.
-    return FutureBuilder(
-      future: _initializeVideoPlayerFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          // If the VideoPlayerController has finished initialization, use
-          // the data it provides to limit the aspect ratio of the video.
-          return AspectRatio(
-            aspectRatio: _controller.value.aspectRatio,
-            // Use the VideoPlayer widget to display the video.
-            child: Stack(
-              alignment: Alignment.bottomCenter,
-              children: [
-                VideoPlayer(_controller),
-                _ControlsOverlay(
-                  controller: _controller,
-                ),
-                VideoProgressIndicator(_controller, allowScrubbing: true),
-              ],
+    return YoutubePlayerBuilder(
+      player: YoutubePlayer(
+        controller: _controller,
+        showVideoProgressIndicator: true,
+        progressIndicatorColor: Colors.blueAccent,
+        onReady: () {
+          _isPlayerReady = true;
+        },
+      ),
+      builder: (context, player) {
+        return Stack(
+          children: [
+            player,
+            IconButton(
+              icon: Icon(
+                _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+              ),
+              onPressed: _isPlayerReady
+                  ? () {
+                      _controller.value.isPlaying
+                          ? _controller.pause()
+                          : _controller.play();
+                      setState(() {});
+                    }
+                  : null,
             ),
-          );
-        } else {
-          // If the VideoPlayerController is still initializing, show a
-          // loading spinner.
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
+          ],
+        );
       },
     );
   }
