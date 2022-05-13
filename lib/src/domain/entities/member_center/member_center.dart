@@ -109,7 +109,7 @@ class Member {
   final int level; // 等級
 
   @JsonKey(name: 'level_point')
-  final int levelPoint; // 積分
+  final int? levelPoint; // 積分
 
   @JsonKey(name: 'level_setting')
   final List<LevelSetting> levelSettings; // 會員等級設定 + 等級說明
@@ -119,7 +119,7 @@ class Member {
 
   @JsonKey(name: 'background_small_img_url')
   final String? backgroundSmallImgUrl; // 會員等級背景圖片 小網用
-  final int coupon; // 折價券張數
+  final int? coupon; // 折價券張數
 
   @JsonKey(name: 'max_level')
   final bool isMaxLevel; // 是否為最高等級
@@ -128,7 +128,7 @@ class Member {
   final String levelName; // 目前會員等級名稱
 
   @JsonKey(name: 'effect_eternal')
-  final int effectEternal; // 此等級是否永久生效
+  final int? effectEternal; // 此等級是否永久生效
 
   @JsonKey(name: 'level_sdate')
   final String? levelStartDate; // 會員等級效期 - 開始 (null 為永久)
@@ -145,13 +145,13 @@ class Member {
   }
 
   @JsonKey(name: 'level_up_category_id')
-  final int levelUpCategoryId; // 升級條件
+  final int? levelUpCategoryId; // 升級條件
 
   @JsonKey(name: 'limit_level_up')
   final int limitLevelUp; // 距離升等還缺多少
 
   @JsonKey(name: 'next_level')
-  final int nextLevel; // 升級等級
+  final int? nextLevel; // 升級等級
 
   @JsonKey(name: 'next_level_name')
   final String nextLevelName; // 升級等級名稱
@@ -218,14 +218,14 @@ class Incomplete {
 class LevelSetting {
   final int level; // 會員等級
   final String name; // 會員等級名稱
-  final int point; // 等級積分
+  final int? point; // 等級積分
   final String? image; // 會員徽章圖片位址
 
   @JsonKey(name: 'image_card')
   final String? imageCard; // 會員卡片圖片位址
 
   @JsonKey(name: 'effect_eternal')
-  final int effectEternal; // 是否永久有效
+  final int? effectEternal; // 是否永久有效
 
   @JsonKey(name: 'effect_interval')
   final int? effectInterval; // 會員效期
@@ -234,16 +234,16 @@ class LevelSetting {
   final String? effectIntervalUnit; // 會員效期單位
 
   @JsonKey(name: 'level_up_category_id')
-  final int levelUpCategoryId; // 升等條件
+  final int? levelUpCategoryId; // 升等條件
 
   @JsonKey(name: 'limit_level_up')
-  final int limitLevelUp; // 升等條件 - 數值
+  final int? limitLevelUp; // 升等條件 - 數值
 
   @JsonKey(name: 'level_keep_category_id')
-  final int levelKeepCategoryId; // 續等條件
+  final int? levelKeepCategoryId; // 續等條件
 
   @JsonKey(name: 'limit_level_keep')
-  final int limitLevelKeep; // 續等條件 - 數值
+  final int? limitLevelKeep; // 續等條件 - 數值
 
   String get effectIntervalUnitString {
     switch (effectIntervalUnit) {
@@ -338,7 +338,7 @@ class LevelSetting {
 
 @JsonSerializable()
 class Order {
-  final int total; // 我的訂單數量
+  final int? total; // 我的訂單數量
 
   const Order(this.total);
 
@@ -348,8 +348,8 @@ class Order {
 
 @JsonSerializable()
 class OrderQA {
-  final int total; // 總問題數量
-  final int unread; // 未讀數量
+  final int? total; // 總問題數量
+  final int? unread; // 未讀數量
 
   const OrderQA(this.total, this.unread);
 
@@ -364,7 +364,7 @@ class NoticeInfo {
   final int? total; // 最新通知list的筆數 (PS: 未登入時為 null)
 
   @JsonKey(name: 'list')
-  final List<Notice> notices; // 最新通知
+  final List<Notice?> notices; // 最新通知
 
   const NoticeInfo(this.unreads, this.total, this.notices);
 
@@ -375,8 +375,8 @@ class NoticeInfo {
 
 @JsonSerializable()
 class Unread {
-  final int unread; // 未讀
-  final int total; // 總筆數
+  final int? unread; // 未讀
+  final int? total; // 總筆數
   final String title; // 標題
 
   const Unread(this.unread, this.total, this.title);
@@ -388,7 +388,7 @@ class Unread {
 @JsonSerializable()
 class Notice {
   @JsonKey(name: 'notice_id')
-  final int noticeId; // 通知編號
+  final int? noticeId; // 通知編號
 
   final String title; // 通知標題
   final String description; // 通知訊息
@@ -498,8 +498,8 @@ class Banner {
 
 @JsonSerializable()
 class FavoriteInfo {
-  final int total; // 收藏總數
-  final List<Product>? list;
+  final int? total; // 收藏總數
+  final List<Product?>? list;
 
   const FavoriteInfo(this.total, this.list);
 
@@ -529,10 +529,10 @@ class Product {
   final String name; // 商品名稱
 
   @JsonKey(name: 'max_price')
-  final int maxPrice; // 最高價格
+  final int? maxPrice; // 最高價格
 
   @JsonKey(name: 'min_price')
-  final int minPrice; // 最低價格
+  final int? minPrice; // 最低價格
 
   @JsonKey(name: 'is_favorite')
   final bool? isFavorite; // 是否有收藏

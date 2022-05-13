@@ -318,8 +318,8 @@ Product _$ProductFromJson(Map<String, dynamic> json) => Product(
       json['goods_no'] as String,
       json['image_url'] as String?,
       json['name'] as String,
-      json['max_price'] as int,
-      json['min_price'] as int,
+      json['max_price'] as int?,
+      json['min_price'] as int?,
       json['is_favorite'] as bool?,
     );
 
