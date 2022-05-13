@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
+import '../pages/test_entry_page.dart';
 import './main_controller.dart';
 import '../../data/repositories/data_site_setting_repository.dart';
 import '../drawer/my_plus_drawer_view.dart';
@@ -52,7 +53,7 @@ class _MainPageState extends ViewState<MainPage, MainController> {
       case 0:
         return HomePage(title: '首頁');
       case 1:
-        return HomePage(title: '我的收藏');
+        return const TestPage();
       case 2:
         return MemberCenterPage(title: '會員中心');
       case 3:

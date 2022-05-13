@@ -1,15 +1,19 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
+import '../storage/my_key.dart';
+import '../storage/secure_storage.dart';
+
 class AuthInterceptor extends Interceptor {
+  final _storage = SecureStorage();
+
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    // 此处根据业务逻辑，自行判断处理
-    if ('access_token' != '') {
-      options.headers['authorization'] =
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJicmFuZF9pZCI6NSwibWVtX2lkIjoyMDIzNzAsIm5hbWUiOm51bGwsIm1vYmlsZSI6IjA5ODkwNzkxNDkiLCJlbWFpbCI6bnVsbCwibWVtYmVyX2xldmVsX3N1Yl9pZCI6MCwibGV2ZWwiOjAsImxvZ2luX3RpbWVzIjowLCJ6aXAiOm51bGwsImNpdHlubyI6bnVsbCwiYXJlYW5vIjpudWxsLCJhZGRyZXNzIjpudWxsLCJibG9ja19ydWxlIjpudWxsLCJpYXQiOjE2NDQ0NjIzOTZ9.RJL71dILnmmCShT6YY29AthHwPq8KxrYgXddcdCy3Us';
-    }
-    super.onRequest(options, handler);
+    _storage.read(MyKey.auth).then((token) {
+      if (token != null && token.isNotEmpty) {
+        options.headers['authorization'] = token;
+      }
+    }).whenComplete(() => super.onRequest(options, handler));
   }
 }
 
