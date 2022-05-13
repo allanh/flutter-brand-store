@@ -1,3 +1,4 @@
+import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
@@ -22,15 +23,19 @@ class ProductItemWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 200,
-            width: MediaQuery.of(context).size.width,
+            height: 185.0,
+            width: 185.0,
             child:
                 (item.image != null) ? Image.network(item.image!) : Container(),
           ),
           Expanded(
             child: Padding(
               padding: const EdgeInsetsDirectional.only(start: 15.0, top: 8.0),
-              child: Text(item.name),
+              child: Text(
+                item.name,
+                style: Theme.of(context).textTheme.caption?.copyWith(
+                    color: UdiColors.greyishBrown, fontWeight: FontWeight.w600),
+              ),
             ),
           ),
         ],

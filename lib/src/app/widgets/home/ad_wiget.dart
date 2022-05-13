@@ -77,6 +77,7 @@ class _AdWidgetState extends State<AdWidget> {
         (widget.module.showTitle)
             ? ModuleTitleWidget(
                 module: widget.module,
+                showMore: false,
               )
             : Container(
                 decoration: const BoxDecoration(color: Colors.red),

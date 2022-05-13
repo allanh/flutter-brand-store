@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
+
+import '../../pages/home/home_controller.dart';
 
 import '../../../domain/entities/module/module.dart';
 
@@ -14,43 +17,6 @@ class VideoWidget extends StatefulWidget {
   State<StatefulWidget> createState() => _VideoState();
 }
 
-class _ControlsOverlay extends StatelessWidget {
-  const _ControlsOverlay({Key? key, required this.controller})
-      : super(key: key);
-  final YoutubePlayerController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    debugPrint('{$controller.value.isPlaying}');
-    return Stack(
-      children: <Widget>[
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 50),
-          reverseDuration: const Duration(milliseconds: 200),
-          child: controller.value.isPlaying
-              ? const SizedBox.shrink()
-              : Container(
-                  color: Colors.black26,
-                  child: const Center(
-                    child: Icon(
-                      Icons.play_arrow,
-                      color: Colors.white,
-                      size: 100.0,
-                      semanticLabel: 'Play',
-                    ),
-                  ),
-                ),
-        ),
-        GestureDetector(
-          onTap: () {
-            controller.value.isPlaying ? controller.pause() : controller.play();
-          },
-        ),
-      ],
-    );
-  }
-}
-
 class _VideoState extends State<VideoWidget> {
   late YoutubePlayerController _controller;
   bool _isPlayerReady = false;
@@ -58,7 +24,7 @@ class _VideoState extends State<VideoWidget> {
   void initState() {
     super.initState();
     _controller = YoutubePlayerController(
-      initialVideoId: widget.module.youtubeUrl ?? 'cYFcAF4Saw8',
+      initialVideoId: widget.module.youtubeUrl ?? ' ',
       flags: const YoutubePlayerFlags(
         mute: false,
         autoPlay: false,
@@ -71,14 +37,12 @@ class _VideoState extends State<VideoWidget> {
     );
   }
 
-  // _initializeVideoPlayerFuture = _controller.initialize();
+  // @override
+  // void deactivate() {
+  //   // Pauses video while navigating to next page.
+  //   // _controller.pause();
+  //   super.deactivate();
   // }
-  @override
-  void deactivate() {
-    // Pauses video while navigating to next page.
-    // _controller.pause();
-    super.deactivate();
-  }
 
   @override
   void dispose() {
@@ -90,6 +54,9 @@ class _VideoState extends State<VideoWidget> {
   @override
   Widget build(BuildContext context) {
     // Complete the code in the next step.
+    final theme = Theme.of(context);
+    final controller =
+        FlutterCleanArchitecture.getController<HomeController>(context);
     return YoutubePlayerBuilder(
       player: YoutubePlayer(
         controller: _controller,
@@ -100,22 +67,57 @@ class _VideoState extends State<VideoWidget> {
         },
       ),
       builder: (context, player) {
-        return Stack(
+        return Column(
           children: [
-            player,
-            IconButton(
-              icon: Icon(
-                _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-              ),
-              onPressed: _isPlayerReady
-                  ? () {
-                      _controller.value.isPlaying
-                          ? _controller.pause()
-                          : _controller.play();
-                      setState(() {});
-                    }
-                  : null,
+            Stack(
+              children: [
+                player,
+                IconButton(
+                  icon: Icon(
+                    _controller.value.isPlaying
+                        ? Icons.pause
+                        : Icons.play_arrow,
+                  ),
+                  onPressed: _isPlayerReady
+                      ? () {
+                          _controller.value.isPlaying
+                              ? _controller.pause()
+                              : _controller.play();
+                          setState(() {});
+                        }
+                      : null,
+                ),
+              ],
             ),
+            (widget.module.showYoutubeTitle ?? false)
+                ? GestureDetector(
+                    onTap: () => controller.onTap(widget.module.link),
+                    behavior: HitTestBehavior.translucent,
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 32.0,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12.0, vertical: 6.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              widget.module.youtubeTitle ?? 'title',
+                              style: theme.textTheme.caption?.copyWith(
+                                color: theme.primaryColor,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                            const Text(
+                              '>',
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                : Container(),
           ],
         );
       },

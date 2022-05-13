@@ -21,6 +21,12 @@ enum DisplayMode {
   @JsonValue('NOSCROLL')
   expand,
 }
+enum Source {
+  @JsonValue('CATEGORY')
+  category,
+  @JsonValue('PRODUCT')
+  product,
+}
 
 @JsonSerializable()
 class Module {
@@ -55,6 +61,13 @@ class Module {
       fromJson: JsonValueConverter.boolFromString,
       toJson: JsonValueConverter.boolToString)
   bool? showProductPrice;
+  @JsonKey(name: 'sel_prod_source')
+  Source? source;
+  @JsonKey(name: 'sel_prod_cat')
+  String? categoryID;
+  Link get titleLink => Link(
+      source == Source.category ? LinkType.category : LinkType.none,
+      categoryID ?? '');
   @JsonKey(name: 'prod_list')
   List<ProductListItem>? products;
   // ads
@@ -77,12 +90,13 @@ class Module {
       name: 'show_sub_title',
       fromJson: JsonValueConverter.boolFromString,
       toJson: JsonValueConverter.boolToString)
-  bool? showYuotubeTitle;
+  bool? showYoutubeTitle;
   @JsonKey(name: 'sub_link')
   LinkType? linkType;
   @JsonKey(name: 'sub_link_data')
   String? linkValue;
-  Link get youtube => Link(linkType ?? LinkType.none, linkValue ?? '');
+  Link get link => Link(linkType ?? LinkType.none, linkValue ?? '');
+
   bool get contentNotEmpty => (images != null &&
       images!.where((element) => element.contentNotEmpty).toList().isNotEmpty);
   bool get isMarquee => type == ModuleType.ad && templateID == 3;
