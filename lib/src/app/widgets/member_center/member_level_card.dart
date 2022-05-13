@@ -5,12 +5,19 @@ class MemberLevelCard extends StatelessWidget {
   const MemberLevelCard(
       {Key? key,
       required this.member,
-      required this.levelDescriptionButtonTapped})
+      required this.levelDescriptionButtonTapped,
+      required this.avatarTapped})
       : super(key: key);
 
   final Member member;
 
   final Function(List<LevelSetting>) levelDescriptionButtonTapped;
+
+  final Function avatarTapped;
+
+  void handleAvatarTapped() {
+    avatarTapped();
+  }
 
   void _handleTap() {
     levelDescriptionButtonTapped(member.levelSettings);
@@ -27,7 +34,8 @@ class MemberLevelCard extends StatelessWidget {
               BackgroundImage(member: member),
 
               /// 會員資訊
-              MemberInformation(member: member),
+              MemberInformation(
+                  member: member, avatarTapped: handleAvatarTapped),
 
               /// 等級說明按鈕
               LevelDescriptionButton(buttonTapped: _handleTap),
@@ -43,12 +51,16 @@ class MemberLevelCard extends StatelessWidget {
 }
 
 class MemberInformation extends StatelessWidget {
-  const MemberInformation({
-    Key? key,
-    required this.member,
-  }) : super(key: key);
+  const MemberInformation(
+      {Key? key, required this.member, required this.avatarTapped})
+      : super(key: key);
 
   final Member member;
+  final Function avatarTapped;
+
+  void handleAvatarTapped() {
+    avatarTapped();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +69,7 @@ class MemberInformation extends StatelessWidget {
       children: [
         Row(children: [
           /// 大頭照
-          const Avatar(),
+          Avatar(avatarTapped: handleAvatarTapped),
 
           /// 姓名/等級/有效期限
           Information(name: name, member: member),
@@ -255,24 +267,30 @@ class Information extends StatelessWidget {
 }
 
 class Avatar extends StatelessWidget {
-  const Avatar({
-    Key? key,
-  }) : super(key: key);
+  const Avatar({Key? key, required this.avatarTapped}) : super(key: key);
+
+  final Function avatarTapped;
+
+  void handleAvatarTapped() {
+    avatarTapped();
+  }
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(left: 24.0),
-      child: Container(
-        width: 54,
-        height: 54,
-        foregroundDecoration: BoxDecoration(
-            image: DecorationImage(
-                image: const AssetImage('assets/icon_user.png'),
-                colorFilter: ColorFilter.mode(
-                    theme.appBarTheme.backgroundColor!, BlendMode.srcIn))),
-      ),
-    );
+        padding: const EdgeInsets.only(left: 24.0),
+        child: GestureDetector(
+          onTap: handleAvatarTapped,
+          child: Container(
+            width: 54,
+            height: 54,
+            foregroundDecoration: BoxDecoration(
+                image: DecorationImage(
+                    image: const AssetImage('assets/icon_user.png'),
+                    colorFilter: ColorFilter.mode(
+                        theme.appBarTheme.backgroundColor!, BlendMode.srcIn))),
+          ),
+        ));
   }
 }

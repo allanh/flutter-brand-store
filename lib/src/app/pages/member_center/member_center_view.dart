@@ -72,6 +72,16 @@ class _MemberCenterPageState
     }
   }
 
+  void openLoginPage() {
+    /// TODO: implement open login page
+    debugPrint('Login button tapped.');
+  }
+
+  void openMemberUpdatePage() {
+    /// TODO: implement open member update page.
+    debugPrint('Avatar tapped.');
+  }
+
   /// - The 'ViewState' contains the 'view' getter, which is technically
   ///   the UI implementaion
   @override
@@ -97,12 +107,18 @@ class _MemberCenterPageState
 
     if (controller.memberCenter!.member == null ||
         controller.memberCenter!.member?.online == "NO") {
-      children.add(MemberCard(member: controller.memberCenter!.member));
+      children.add(MemberCard(
+        member: controller.memberCenter!.member,
+        loginButtonTapped: openLoginPage,
+        avatarTapped: openMemberUpdatePage,
+      ));
     } else {
       children.addAll([
         MemberLevelCard(
-            member: controller.memberCenter!.member!,
-            levelDescriptionButtonTapped: openLevelDescriptionPage),
+          member: controller.memberCenter!.member!,
+          levelDescriptionButtonTapped: openLevelDescriptionPage,
+          avatarTapped: openMemberUpdatePage,
+        ),
         LevelUpgradeMessageCard(
             message: controller.memberCenter!.member!.nextLevelDescription)
       ]);

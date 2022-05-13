@@ -89,21 +89,21 @@ Member _$MemberFromJson(Map<String, dynamic> json) => Member(
       json['login_times'] as int,
       json['online'] as String,
       json['level'] as int,
-      json['level_point'] as int,
+      json['level_point'] as int?,
       (json['level_setting'] as List<dynamic>)
           .map((e) => LevelSetting.fromJson(e as Map<String, dynamic>))
           .toList(),
       json['background_big_img_url'] as String?,
       json['background_small_img_url'] as String?,
-      json['coupon'] as int,
+      json['coupon'] as int?,
       json['max_level'] as bool,
       json['level_name'] as String,
-      json['effect_eternal'] as int,
+      json['effect_eternal'] as int?,
       json['level_sdate'] as String?,
       json['level_edate'] as String?,
-      json['level_up_category_id'] as int,
+      json['level_up_category_id'] as int?,
       json['limit_level_up'] as int,
-      json['next_level'] as int,
+      json['next_level'] as int?,
       json['next_level_name'] as String,
     );
 
@@ -145,16 +145,16 @@ Map<String, dynamic> _$IncompleteToJson(Incomplete instance) =>
 LevelSetting _$LevelSettingFromJson(Map<String, dynamic> json) => LevelSetting(
       json['level'] as int,
       json['name'] as String,
-      json['point'] as int,
+      json['point'] as int?,
       json['image'] as String?,
       json['image_card'] as String?,
-      json['effect_eternal'] as int,
+      json['effect_eternal'] as int?,
       json['effect_interval'] as int?,
       json['effect_interval_unit'] as String?,
-      json['level_up_category_id'] as int,
-      json['limit_level_up'] as int,
-      json['level_keep_category_id'] as int,
-      json['limit_level_keep'] as int,
+      json['level_up_category_id'] as int?,
+      json['limit_level_up'] as int?,
+      json['level_keep_category_id'] as int?,
+      json['limit_level_keep'] as int?,
     );
 
 Map<String, dynamic> _$LevelSettingToJson(LevelSetting instance) =>
@@ -174,7 +174,7 @@ Map<String, dynamic> _$LevelSettingToJson(LevelSetting instance) =>
     };
 
 Order _$OrderFromJson(Map<String, dynamic> json) => Order(
-      json['total'] as int,
+      json['total'] as int?,
     );
 
 Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
@@ -182,8 +182,8 @@ Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
     };
 
 OrderQA _$OrderQAFromJson(Map<String, dynamic> json) => OrderQA(
-      json['total'] as int,
-      json['unread'] as int,
+      json['total'] as int?,
+      json['unread'] as int?,
     );
 
 Map<String, dynamic> _$OrderQAToJson(OrderQA instance) => <String, dynamic>{
@@ -197,7 +197,8 @@ NoticeInfo _$NoticeInfoFromJson(Map<String, dynamic> json) => NoticeInfo(
           .toList(),
       json['total'] as int?,
       (json['list'] as List<dynamic>)
-          .map((e) => Notice.fromJson(e as Map<String, dynamic>))
+          .map((e) =>
+              e == null ? null : Notice.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
@@ -209,8 +210,8 @@ Map<String, dynamic> _$NoticeInfoToJson(NoticeInfo instance) =>
     };
 
 Unread _$UnreadFromJson(Map<String, dynamic> json) => Unread(
-      json['unread'] as int,
-      json['total'] as int,
+      json['unread'] as int?,
+      json['total'] as int?,
       json['title'] as String,
     );
 
@@ -221,7 +222,7 @@ Map<String, dynamic> _$UnreadToJson(Unread instance) => <String, dynamic>{
     };
 
 Notice _$NoticeFromJson(Map<String, dynamic> json) => Notice(
-      json['notice_id'] as int,
+      json['notice_id'] as int?,
       json['title'] as String,
       json['description'] as String,
       json['days_ago'] as String,
@@ -260,6 +261,8 @@ const _$LinkTypeEnumMap = {
   LinkType.service: 'service',
   LinkType.membersetting: 'membersetting',
   LinkType.orderdetail: 'orderdetail',
+  LinkType.allEvent: 'newevent',
+  LinkType.event: 'neweventview',
 };
 
 Service _$ServiceFromJson(Map<String, dynamic> json) => Service(
@@ -291,9 +294,10 @@ Map<String, dynamic> _$BannerToJson(Banner instance) => <String, dynamic>{
     };
 
 FavoriteInfo _$FavoriteInfoFromJson(Map<String, dynamic> json) => FavoriteInfo(
-      json['total'] as int,
+      json['total'] as int?,
       (json['list'] as List<dynamic>?)
-          ?.map((e) => Product.fromJson(e as Map<String, dynamic>))
+          ?.map((e) =>
+              e == null ? null : Product.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
