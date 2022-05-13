@@ -10,10 +10,10 @@ class MemberLevelCard extends StatelessWidget {
 
   final Member member;
 
-  final Function levelDescriptionButtonTapped;
+  final Function(List<LevelSetting>) levelDescriptionButtonTapped;
 
   void _handleTap() {
-    levelDescriptionButtonTapped();
+    levelDescriptionButtonTapped(member.levelSettings);
   }
 
   @override

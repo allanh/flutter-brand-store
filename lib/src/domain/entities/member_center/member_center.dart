@@ -15,6 +15,7 @@
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:brandstores/src/domain/entities/link.dart';
+import 'package:intl/intl.dart';
 
 part 'member_center.g.dart';
 
@@ -243,6 +244,78 @@ class LevelSetting {
 
   @JsonKey(name: 'limit_level_keep')
   final int limitLevelKeep; // 續等條件 - 數值
+
+  String get effectIntervalUnitString {
+    switch (effectIntervalUnit) {
+      case 'DAY':
+        return '天';
+      case 'MONTH':
+        return '個月';
+      case 'YEAR':
+        return '年';
+    }
+    return '';
+  }
+
+  List<String> get levelConditionSpans {
+    var formatter = NumberFormat("#,###");
+    if (level == 0) {
+      return ['完成會員註冊即可成為一般會員'];
+    }
+    switch (levelUpCategoryId) {
+      case 1:
+        return [
+          '在$name期限內，單次消費購物金額滿',
+          ' ${formatter.format(limitLevelUp)} ',
+          '元'
+        ];
+      case 2:
+        return [
+          '在$name期限內，累計消費購物金額滿',
+          ' ${formatter.format(limitLevelUp)} ',
+          '元'
+        ];
+      case 3:
+        return [
+          '在$name期限內，單次消費購物次數滿',
+          ' ${formatter.format(limitLevelUp)} ',
+          '次'
+        ];
+    }
+    return [];
+  }
+
+  List<String> get levelKeepConditionSpans {
+    if (level == 0) {
+      return ['-'];
+    }
+    var formatter = NumberFormat("#,###");
+    switch (levelKeepCategoryId) {
+      case 1:
+        return [
+          '在等級期限內，單次購物消費金額滿',
+          ' ${formatter.format(limitLevelKeep)} ',
+          '元'
+        ];
+      case 2:
+        return [
+          '在等級期限內，累積購物消費金額滿',
+          ' ${formatter.format(limitLevelKeep)} ',
+          '元'
+        ];
+      case 3:
+        return ['在等級期限內，累積購物消費次數滿', ' $limitLevelKeep ', '次'];
+    }
+    return [];
+  }
+
+  String get levelPeriodDescription {
+    switch (level) {
+      case 0:
+        return '永久';
+    }
+    return '$effectInterval $effectIntervalUnitString';
+  }
 
   const LevelSetting(
       this.level,

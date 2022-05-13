@@ -57,9 +57,12 @@ class _MemberCenterPageState
   _MemberCenterPageState()
       : super(MemberCenterController(DataMemberCenterRepository()));
 
-  void openLevelDescriptionPage() {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const LevelDescriptionPage()));
+  void openLevelDescriptionPage(List<LevelSetting> levelSettings) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                LevelDescriptionPage(levelSettings: levelSettings)));
   }
 
   void openServicePage(Service service) {
