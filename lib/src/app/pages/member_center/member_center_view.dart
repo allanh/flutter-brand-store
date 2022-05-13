@@ -115,8 +115,10 @@ class _MemberCenterPageState
     } else {
       children.addAll([
         MemberLevelCard(
-            member: controller.memberCenter!.member!,
-            levelDescriptionButtonTapped: openLevelDescriptionPage),
+          member: controller.memberCenter!.member!,
+          levelDescriptionButtonTapped: openLevelDescriptionPage,
+          avatarTapped: openMemberUpdatePage,
+        ),
         LevelUpgradeMessageCard(
             message: controller.memberCenter!.member!.nextLevelDescription)
       ]);
