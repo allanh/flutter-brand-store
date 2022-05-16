@@ -26,19 +26,19 @@ class Product {
   List<ImageInfo>? imageInfo;
   @JsonKey(name: 'spec_type')
   String? specType;
-  @JsonKey(name: 'specLv1_display')
+  @JsonKey(name: 'spec_lv_1_display')
   String? specLv1Display;
-  @JsonKey(name: 'specLv1_title')
+  @JsonKey(name: 'spec_lv_1_title')
   String? specLv1Title;
-  @JsonKey(name: 'specLv2_display')
+  @JsonKey(name: 'spec_lv_2_display')
   String? specLv2Display;
-  @JsonKey(name: 'specLv2_title')
+  @JsonKey(name: 'spec_lv_2_title')
   String? specLv2Title;
   @JsonKey(name: 'spec_sku')
   List<SpecSku>? specSku;
-  @JsonKey(name: 'spec_info1')
+  @JsonKey(name: 'spec_info_1')
   List<SpecSku>? specInfo1;
-  @JsonKey(name: 'spec_info2')
+  @JsonKey(name: 'spec_info_2')
   List<SpecSku>? specInfo2;
   @JsonKey(name: 'promotion_app')
   Promotion? promotionApp;

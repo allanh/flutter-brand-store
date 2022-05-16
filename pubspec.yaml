@@ -40,6 +40,8 @@ dependencies:
   go_router: ^3.1.0
   # show images from the internet and keep them in the cache directory.
   cached_network_image: ^3.2.0
+  # A carousel slider widget.
+  carousel_slider: ^4.1.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
