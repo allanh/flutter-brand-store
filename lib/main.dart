@@ -1,18 +1,24 @@
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
-
-import './src/domain/entities/site_setting/site_setting.dart';
-import 'src/app/main/main_view.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'src/domain/entities/site_setting/site_setting.dart';
+import 'src/app/main/main_view.dart';
+import 'login_state.dart';
+import 'cart_state.dart';
+import 'src/app/routes.dart';
 
 // import 'src/data/utils/dio/api.dart';
 // import 'src/data/utils/dio/dio_utils.dart';
 
-void main() {
+Future<void> main() async {
   // 測試用
   // about();
   // login();
-
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  final state = await LoginState.create();
+  state.checkLoggedIn();
+  runApp(MyApp(loginState: state));
 }
 
 // void about() async {
@@ -47,7 +53,9 @@ void main() {
 // final Color borderTitleBackground;
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final LoginState loginState;
+
+  const MyApp({Key? key, required this.loginState}) : super(key: key);
 
   static ThemeData _buildMyPlusTheme(SiteSetting setting) {
     final ThemeData base = ThemeData.light();
@@ -101,15 +109,40 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FlutterCleanArchitecture.debugModeOn();
-    return ValueListenableBuilder<SiteSetting>(
-      valueListenable: SiteSetting.notifier,
-      builder: (_, setting, __) {
-        return MaterialApp(
-          theme: _buildMyPlusTheme(setting),
-          darkTheme: ThemeData.dark(),
-          home: MainPage(title: '買+'),
-        );
-      },
-    );
+    return MultiProvider(
+
+        /// 設定狀態與路由 providers
+        providers: [
+          ChangeNotifierProvider<CartState>(
+            lazy: false,
+            create: (_) => CartState(),
+          ),
+          ChangeNotifierProvider<LoginState>(
+            lazy: false,
+            create: (_) => loginState,
+          ),
+          Provider<MyPlusRouter>(
+              lazy: false, create: (_) => MyPlusRouter(loginState))
+        ],
+        child: Builder(builder: (BuildContext context) {
+          final router =
+              Provider.of<MyPlusRouter>(context, listen: false).router;
+
+          return ValueListenableBuilder<SiteSetting>(
+            valueListenable: SiteSetting.notifier,
+            builder: (_, setting, __) {
+              /// 設定路由
+              return MaterialApp.router(
+                routeInformationParser: router.routeInformationParser,
+                routerDelegate: router.routerDelegate,
+                debugShowCheckedModeBanner: false,
+                title: '買+',
+                theme: _buildMyPlusTheme(setting),
+                darkTheme: ThemeData.dark(),
+                //home: MainPage(title: '買+'),
+              );
+            },
+          );
+        }));
   }
 }

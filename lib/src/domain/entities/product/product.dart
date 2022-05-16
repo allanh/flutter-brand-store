@@ -75,7 +75,7 @@ class Product {
   @JsonKey(name: 'shipped_preorder_date')
   List<String>? shippedPreorderDate;
   @JsonKey(name: 'shipped_custom_day')
-  String? shippedCustomDay;
+  int? shippedCustomDay;
   @JsonKey(name: 'special_description')
   String? specialDescription;
   String? description;

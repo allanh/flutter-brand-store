@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
+import 'package:go_router/go_router.dart';
 import './product_presenter.dart';
 import '../../../domain/entities/product/product.dart';
 
 class ProductController extends Controller {
+  final String? _goodsNo;
+  final int? _productId;
   Product? _product;
   Product? get product => _product; // data used by the View
   final ProductPresenter productPresenter;
   // Presenter should always be initialized this way
-  ProductController(productsRepo)
+  ProductController(productsRepo, this._goodsNo, this._productId)
       : productPresenter = ProductPresenter(productsRepo),
         super();
 
   @override
   void onInitState() {
-    getProduct(goodsNo: 'M04009000020119', productId: 57544);
+    if (_goodsNo != null) {
+      // TODO: 商品解析JSON問題待解
+      //getProduct(goodsNo: _goodsNo!, productId: _productId);
+    }
   }
 
   @override

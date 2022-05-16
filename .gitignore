@@ -104,6 +104,11 @@ unlinked_spec.ds
 **/macos/Flutter/GeneratedPluginRegistrant.swift
 **/macos/Flutter/ephemeral
 
+# Windows 
+**/windows/flutter/generated_plugin_registrant.cc
+**/windows/flutter/generated_plugin_registrant.h
+**/windows/flutter/generated_plugins.cmake
+
 # Coverage
 coverage/
 
