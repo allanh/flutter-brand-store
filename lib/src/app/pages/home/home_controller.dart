@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../domain/entities/link.dart';
 import './home_presenter.dart';
 import '../../../domain/entities/module/module.dart';
+import '../../utils/constants.dart';
 
 class HomeController extends Controller {
   ModuleList? _moduleList;
@@ -43,7 +45,24 @@ class HomeController extends Controller {
 
   void getModules() => homePresenter.getModules();
 
-  void onTap(Link link) => {debugPrint(link.value)};
+  void onTap(Link? link) {
+
+    if (link != null) {
+      switch (link.type) {
+        case LinkType.product:
+          getContext().goNamed(productRouteName,
+                params: {QueryKey.goodsNo: link.value});
+          break;
+        default:
+          debugPrint('default link');
+      }
+    } else {
+      debugPrint('no link');
+    }
+  }
+  void buttonPressed() {
+    refreshUI();
+  }
 
   @override
   void onResumed() => debugPrint('On resumed');

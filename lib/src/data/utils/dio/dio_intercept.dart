@@ -1,14 +1,19 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
+import '../storage/my_key.dart';
+import '../storage/secure_storage.dart';
+
 class AuthInterceptor extends Interceptor {
+  final _storage = SecureStorage();
+
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    // 此处根据业务逻辑，自行判断处理
-    if ('access_token' != '') {
-      options.headers['access_token'] = 'access_token';
-    }
-    super.onRequest(options, handler);
+    _storage.read(MyKey.auth).then((token) {
+      if (token != null && token.isNotEmpty) {
+        options.headers['authorization'] = token;
+      }
+    }).whenComplete(() => super.onRequest(options, handler));
   }
 }
 

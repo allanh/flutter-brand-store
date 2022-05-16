@@ -20,6 +20,22 @@ enum LinkType {
   order,
   @JsonValue('favorite')
   favorite,
+  @JsonValue('bought')
+  bought,
+  @JsonValue('cookie')
+  cookie,
+  @JsonValue('updatemember')
+  updatemember,
+  @JsonValue('fastcheckout')
+  fastcheckout,
+  @JsonValue('orderqa')
+  orderqa,
+  @JsonValue('service')
+  service,
+  @JsonValue('membersetting')
+  membersetting,
+  @JsonValue('orderdetail')
+  orderdetail,
   @JsonValue('newevent')
   allEvent,
   @JsonValue('neweventview')
