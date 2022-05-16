@@ -1,3 +1,4 @@
+import 'package:brandstores/src/data/repositories/data_member_center_repository.dart';
 import 'package:brandstores/src/domain/entities/site_setting/event/event_list.dart';
 import 'package:brandstores/src/domain/entities/site_setting/store_setting/basic.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,7 @@ import '../widgets/drawer/my_plus_drawer_header_widget.dart';
 class _MyPlusDrawerState
     extends ViewState<MyPlusDrawer, MyPlusDrawerController> {
   _MyPlusDrawerState()
-      : super(MyPlusDrawerController(DataDrawerInfoRepository()));
+      : super(MyPlusDrawerController(DataDrawerInfoRepository(), DataMemberCenterRepository()));
 
   // event
   Widget _buildEventItems(EventListItem item, int index) {
@@ -348,30 +349,33 @@ class _MyPlusDrawerState
         final basic = controller.siteSetting!.store.basic;
         final sections = _buildSections(hotKeys, switchs);
         return Drawer(
-            child: ListView.builder(
-                itemCount: sections.length,
-                itemBuilder: (context, index) {
-                  final element = sections[index];
-                  switch (element) {
-                    case 'header':
-                      return const MyPlusDrawerHeader();
-                    case 'hot_key':
-                      return _buildHotKeys(context, hotKeys);
-                    case 'footer':
-                      return _buildFooter(context, footer);
-                    case 'news':
-                      return _buildEvent(context, eventList);
-                    case 'menu':
-                      return _buildMenu(context, header);
-                    case 'category':
-                      return _buildCategory(context, sidebar);
-                    case 'info':
-                      return _buildInfo(
-                          theme, sections.contains('footer'), basic);
-                    default:
-                      return Container();
-                  }
-                }));
+          child: ListView.builder(
+              key: globalKey,
+              itemCount: sections.length,
+              itemBuilder: (context, index) {
+                final element = sections[index];
+                switch (element) {
+                  case 'header':
+                    return MyPlusDrawerHeader(title: controller.memberCenter?.member?.name);
+                  case 'hot_key':
+                    return _buildHotKeys(context, hotKeys);
+                  case 'footer':
+                    return _buildFooter(context, footer);
+                  case 'news':
+                    return _buildEvent(context, eventList);
+                  case 'menu':
+                    return _buildMenu(context, header);
+                  case 'category':
+                    return _buildCategory(context, sidebar);
+                  case 'info':
+                    return _buildInfo(
+                        theme, sections.contains('footer'), basic);
+                  default:
+                    return Container();
+                }
+              },
+            ),
+          );
       }
       return Container();
     });

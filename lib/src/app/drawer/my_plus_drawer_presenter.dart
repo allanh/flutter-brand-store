@@ -8,10 +8,10 @@ class MyPlusDrawerPresenter extends Presenter {
   late Function getDrawerOnError;
 
   final GetDrawerInfoUseCase getDrawerInfoUseCase;
-  MyPlusDrawerPresenter(drawerInfoRepo) : getDrawerInfoUseCase = GetDrawerInfoUseCase(drawerInfoRepo);
+  MyPlusDrawerPresenter(drawerInfoRepo, memberCenterRepo) : getDrawerInfoUseCase = GetDrawerInfoUseCase(drawerInfoRepo, memberCenterRepo);
 
   void getDrawerInfo() {
-    // execute getUseruserCase
+    // execute getDrawerUseCase
     getDrawerInfoUseCase.execute(
         _GetDrawerInfoUseCaseObserver(this), GetDrawerInfoUseCaseParams());
   }
@@ -39,6 +39,6 @@ class _GetDrawerInfoUseCaseObserver extends Observer<GetDrawerInfoUseCaseRespons
   @override
   void onNext(response) {
     // assert(presenter.getUserOnNext != null);
-    presenter.getDrawerOnNext(response?.siteSetting);
+    presenter.getDrawerOnNext(response?.siteSetting, response?.memberCenter);
   }
 }
