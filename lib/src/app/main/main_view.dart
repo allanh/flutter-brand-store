@@ -95,6 +95,7 @@ class _MainPageState extends ViewState<MainPage, MainController> {
             );
           } else {
             return Scaffold(
+              key: globalKey,
               appBar: AppBar(
                 title: _currentTitle(SidebarDirection.right),
                 actions: [
