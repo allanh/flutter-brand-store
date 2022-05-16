@@ -11,8 +11,6 @@ part 'product.g.dart';
 
 @JsonSerializable()
 class Product {
-  @JsonKey(name: 'goods_id')
-  String? goodsId;
   @JsonKey(name: 'goods_no')
   String? goodsNo;
   @JsonKey(name: 'goods_status')
@@ -134,8 +132,7 @@ class Product {
   int? addonFixedPrice;
 
   Product(
-      {this.goodsId,
-      this.goodsNo,
+      {this.goodsNo,
       this.goodsStatus,
       this.name,
       this.goodsType,

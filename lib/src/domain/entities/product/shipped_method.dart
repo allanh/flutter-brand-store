@@ -18,7 +18,7 @@ class ShippedMethod {
   @JsonKey(name: 'fixed_cost')
   int? fixedCost;
   @JsonKey(name: 'range_info')
-  RangeInfo? rangeInfo;
+  List<RangeInfo>? rangeInfo;
   @JsonKey(name: 'outlying_is_enabled')
   bool? outlyingIsEnabled;
   @JsonKey(name: 'outlying_cost_type')

@@ -19,7 +19,7 @@ class ProductController extends Controller {
   void onInitState() {
     if (_goodsNo != null) {
       // TODO: 商品解析JSON問題待解
-      //getProduct(goodsNo: _goodsNo!, productId: _productId);
+      getProduct(goodsNo: _goodsNo!, productId: _productId);
     }
   }
 

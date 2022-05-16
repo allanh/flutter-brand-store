@@ -34,7 +34,7 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
           body: CustomScrollView(
             slivers: <Widget>[
               SliverAppBar(
-                expandedHeight: 250.0,
+                expandedHeight: 375.0,
                 flexibleSpace: FlexibleSpaceBar(
                   title: const Text('商品', textScaleFactor: 1),
                   background: controller.product?.imageInfo?.first.url != null
@@ -43,6 +43,14 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                           fit: BoxFit.fill,
                         )
                       : Image.asset('assets/images/empty_cart.png'),
+                  /*
+                  background: controller.product?.imageInfo?.first.url != null
+                      ? Image.network(
+                          controller.product!.imageInfo!.first.url!,
+                          fit: BoxFit.fill,
+                        )
+                      : Image.asset('assets/images/empty_cart.png'),
+                      */
                 ),
                 floating: false,
                 pinned: true,
