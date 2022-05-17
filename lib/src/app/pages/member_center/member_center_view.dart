@@ -105,7 +105,6 @@ class _MemberCenterPageState
 
   List<Widget> _buildCardList(MemberCenterController controller) {
     List<Widget> children = [];
-
     if (controller.memberCenter!.member == null ||
         controller.memberCenter!.member?.online == "NO") {
       children.add(MemberCard(

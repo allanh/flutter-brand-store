@@ -38,42 +38,58 @@ class MemberCenterResponse {
 
 @JsonSerializable()
 class MemberCenter {
-  final String greeting; // 歡迎訊息
-  final Member? member; // 會員相關資料 (PS: 未登入時為 null)
-  final Order? order; // 最近訂單 (PS: 未登入時為 null)
+  /// 歡迎訊息
+  final String greeting;
 
+  /// 會員相關資料 (PS: 未登入時為 null)
+  final Member? member;
+
+  /// 最近訂單 (PS: 未登入時為 null)
+  final Order? order;
+
+  /// 問題記錄
   @JsonKey(name: 'order_qa')
-  final OrderQA? orderQA; // 問題記錄
+  final OrderQA? orderQA;
 
+  /// 我的通知 (PS: 未登入時為 null)
   @JsonKey(name: 'notice')
-  final NoticeInfo? noticeInfo; // 我的通知 (PS: 未登入時為 null)
+  final NoticeInfo? noticeInfo;
 
+  /// 我的服務
   @JsonKey(name: 'service')
-  final List<Service> services; // 我的服務
+  final List<Service> services;
 
+  /// 廣告清單
   @JsonKey(name: 'banner')
-  final List<Banner> banners; // 廣告清單
+  final List<Banner> banners;
 
+  /// 我的收藏 - WEB/小網/APP (PS: 未登入時為 null)
   @JsonKey(name: 'favorite')
-  final FavoriteInfo? favoriteInfo; // 我的收藏 - WEB/小網/APP (PS: 未登入時為 null)
+  final FavoriteInfo? favoriteInfo;
 
+  /// 瀏覽記錄 - WEB/小網/APP (PS: 未登入時為 null)
   @JsonKey(name: 'browse')
-  final ProductInfo? browseInfo; // 瀏覽記錄 - WEB/小網/APP (PS: 未登入時為 null)
+  final ProductInfo? browseInfo;
 
+  /// 買過商品 - WEB/小網/APP (PS: 未登入時為 null)
   @JsonKey(name: 'bought')
-  final ProductInfo? boughtInfo; // 買過商品 - WEB/小網/APP (PS: 未登入時為 null)
+  final ProductInfo? boughtInfo;
 
+  /// 為你推薦 - WEB/小網/APP (PS: 未登入時為 null)
   @JsonKey(name: 'recommend')
-  final ProductInfo? recommendInfo; // 為你推薦 - WEB/小網/APP (PS: 未登入時為 null)
+  final ProductInfo? recommendInfo;
 
+  /// 第三方 Social
   @JsonKey(name: 'social_media')
-  final List<Service>? socialMedias; // 第三方 Social
+  final List<Service>? socialMedias;
 
+  /// 近七日新上架商品
   @JsonKey(name: 'new_goods')
-  final ProductInfo newGoodsInfo; // 近七日新上架商品
+  final ProductInfo newGoodsInfo;
 
+  /// 近七日暢銷商品
   @JsonKey(name: 'bestsellers')
-  final ProductInfo bestSellersInfo; // 近七日暢銷商品
+  final ProductInfo bestSellersInfo;
 
   const MemberCenter(
       this.greeting,
@@ -98,44 +114,62 @@ class MemberCenter {
 
 @JsonSerializable()
 class Member {
-  final Incomplete incomplete; // 會員資料的完整性
+  /// 會員資料的完整性
+  final Incomplete incomplete;
   final String? name;
   final String? mobile;
   final String? email;
 
+  /// 登入次數
   @JsonKey(name: 'login_times')
-  final int loginTimes; // 登入次數
-  final String online; // 會員等級啟用/停用狀態(YES=啟用,NO=停用)
-  final int level; // 等級
+  final int loginTimes;
 
+  /// 會員等級啟用/停用狀態(YES=啟用,NO=停用)
+  final String online;
+
+  /// 等級
+  final int level;
+
+  /// 積分
   @JsonKey(name: 'level_point')
-  final int? levelPoint; // 積分
+  final int? levelPoint;
 
+  /// 會員等級設定 + 等級說明
   @JsonKey(name: 'level_setting')
-  final List<LevelSetting> levelSettings; // 會員等級設定 + 等級說明
+  final List<LevelSetting> levelSettings;
 
+  /// 會員等級背景圖片 大網用
   @JsonKey(name: 'background_big_img_url')
-  final String? backgroundBigImgUrl; // 會員等級背景圖片 大網用
+  final String? backgroundBigImgUrl;
 
+  /// 會員等級背景圖片 小網用
   @JsonKey(name: 'background_small_img_url')
-  final String? backgroundSmallImgUrl; // 會員等級背景圖片 小網用
-  final int? coupon; // 折價券張數
+  final String? backgroundSmallImgUrl;
 
+  /// 折價券張數
+  final int? coupon;
+
+  /// 是否為最高等級
   @JsonKey(name: 'max_level')
-  final bool isMaxLevel; // 是否為最高等級
+  final bool isMaxLevel;
 
+  /// 目前會員等級名稱
   @JsonKey(name: 'level_name')
-  final String levelName; // 目前會員等級名稱
+  final String levelName;
 
+  /// 此等級是否永久生效
   @JsonKey(name: 'effect_eternal')
-  final int? effectEternal; // 此等級是否永久生效
+  final int? effectEternal;
 
+  /// 會員等級效期 - 開始 (null 為永久)
   @JsonKey(name: 'level_sdate')
-  final String? levelStartDate; // 會員等級效期 - 開始 (null 為永久)
+  final String? levelStartDate;
 
+  /// 會員等級效期 - 結束 (null 為永久)
   @JsonKey(name: 'level_edate')
-  final String? levelEndDate; // 會員等級效期 - 結束 (null 為永久)
+  final String? levelEndDate;
 
+  /// 有效期限組合訊息
   String get period {
     return levelStartDate == null && levelEndDate == null
         ? "有效期限：永久有效"
@@ -144,18 +178,23 @@ class Member {
             : "";
   }
 
+  /// 升級條件
   @JsonKey(name: 'level_up_category_id')
-  final int? levelUpCategoryId; // 升級條件
+  final int? levelUpCategoryId;
 
+  /// 距離升等還缺多少
   @JsonKey(name: 'limit_level_up')
-  final int limitLevelUp; // 距離升等還缺多少
+  final int limitLevelUp;
 
+  /// 升級等級
   @JsonKey(name: 'next_level')
-  final int? nextLevel; // 升級等級
+  final int? nextLevel;
 
+  /// 升級等級名稱
   @JsonKey(name: 'next_level_name')
-  final String nextLevelName; // 升級等級名稱
+  final String nextLevelName;
 
+  /// 等級描述
   String levelCategoryDescription(int limit) {
     switch (levelUpCategoryId) {
       case 1:
@@ -168,6 +207,7 @@ class Member {
     return '';
   }
 
+  /// 次一級等級說明
   String get nextLevelDescription {
     final description = levelCategoryDescription(limitLevelUp);
     return description.isEmpty
@@ -257,6 +297,7 @@ class LevelSetting {
     return '';
   }
 
+  /// 等級條件文字片段，為了滿足UI需要不同顏色，需自行組裝文字
   List<String> get levelConditionSpans {
     var formatter = NumberFormat("#,###");
     if (level == 0) {
@@ -285,6 +326,7 @@ class LevelSetting {
     return [];
   }
 
+  /// 等級維持文字片段，為了滿足UI需要不同顏色，需自行組裝文字
   List<String> get levelKeepConditionSpans {
     if (level == 0) {
       return ['-'];
@@ -309,6 +351,7 @@ class LevelSetting {
     return [];
   }
 
+  /// 等級期限文字片段
   String get levelPeriodDescription {
     switch (level) {
       case 0:
@@ -338,7 +381,8 @@ class LevelSetting {
 
 @JsonSerializable()
 class Order {
-  final int? total; // 我的訂單數量
+  /// 我的訂單數量
+  final int? total;
 
   const Order(this.total);
 
@@ -348,8 +392,11 @@ class Order {
 
 @JsonSerializable()
 class OrderQA {
-  final int? total; // 總問題數量
-  final int? unread; // 未讀數量
+  /// 總問題數量
+  final int? total;
+
+  /// 未讀數量
+  final int? unread;
 
   const OrderQA(this.total, this.unread);
 
@@ -375,8 +422,11 @@ class NoticeInfo {
 
 @JsonSerializable()
 class Unread {
-  final int? unread; // 未讀
-  final int? total; // 總筆數
+  /// 未讀數
+  final int? unread;
+
+  /// 總筆數
+  final int? total;
   final String title; // 標題
 
   const Unread(this.unread, this.total, this.title);
@@ -392,9 +442,9 @@ class Notice {
 
   final String title; // 通知標題
   final String description; // 通知訊息
-
+  /// 多久前的訊息
   @JsonKey(name: 'days_ago')
-  final String daysAgo; // 多久前的訊息
+  final String daysAgo;
 
   @JsonKey(name: 'image_url')
   final String imageUrl; // 圖示
@@ -408,8 +458,9 @@ class Notice {
     return Link(linkType, linkValue);
   }
 
+  /// 通知時間
   @JsonKey(name: 'created_dt')
-  final String createdAt; // 通知時間
+  final String createdAt;
 
   const Notice(this.noticeId, this.title, this.description, this.daysAgo,
       this.imageUrl, this.linkType, this.linkValue, this.createdAt);
@@ -422,8 +473,9 @@ class Notice {
 class Service {
   final String title; // 標題
 
+  /// 是否啟用服務，true=開啟
   @JsonKey(name: 'enabled')
-  final bool isEnabled; // true=開啟
+  final bool isEnabled;
 
   @JsonKey(name: 'link')
   final LinkType linkType;
@@ -498,7 +550,8 @@ class Banner {
 
 @JsonSerializable()
 class FavoriteInfo {
-  final int? total; // 收藏總數
+  /// 收藏總數
+  final int? total;
   final List<Product?>? list;
 
   const FavoriteInfo(this.total, this.list);
