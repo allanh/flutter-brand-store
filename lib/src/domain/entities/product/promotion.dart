@@ -1,12 +1,28 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'promotion.g.dart';
 
+/// 特惠適⽤裝置
+enum PromotionDevice {
+  @JsonValue('WEB')
+  web, // 網⾴
+  @JsonValue('APP')
+  app, // ⼿機
+}
+
+/// 特惠折扣⽅式
+enum PromotionType {
+  @JsonValue('RATE')
+  text, // 折數
+  @JsonValue('MONEY')
+  picture, // 元
+}
+
 @JsonSerializable()
 class Promotion {
   @JsonKey(name: 'promotion_device')
-  String? device;
+  PromotionDevice? device;
   @JsonKey(name: 'promotion_type')
-  String? type;
+  PromotionType? type;
   @JsonKey(name: 'promotion_rate')
   int? rate;
   @JsonKey(name: 'promotion_price')

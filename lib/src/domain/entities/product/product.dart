@@ -7,17 +7,74 @@ import 'shipped_method.dart';
 import 'payment.dart';
 import 'tag.dart';
 import 'event.dart';
+import '../status.dart';
 part 'product.g.dart';
+
+/// 商品狀態
+enum ProductStatus {
+  @JsonValue('COMING_SOON')
+  comingSoon, // 即將開賣
+  @JsonValue('SOLD_OUT')
+  soldOut, // 已售完/已停售
+  @JsonValue('SOLD_END')
+  soldEnd, // 銷售結束
+  @JsonValue('APP_ONLY')
+  appOnly, // APP獨賣品
+  @JsonValue('BUYABLE')
+  buyable, // 立即購買
+}
+
+/// 商品類型
+enum ProductType {
+  @JsonValue('MAIN')
+  main, // 普通
+  @JsonValue('ADDON')
+  addon, // 加購品
+  @JsonValue('FREEBIE')
+  freebie, // 贈品
+}
+
+/// 上架狀態
+enum ShelfStatus {
+  @JsonValue('ON_SHELF')
+  onShelf, // 上架
+  @JsonValue('OFF_SHELF')
+  offShelf, // 下架
+  @JsonValue('DRAFT')
+  draft, // 暫存未上架
+}
+
+/// 庫存狀態
+enum StockStatus {
+  @JsonValue('HIGH_STOCK')
+  highStock, // 可銷量⾼
+  @JsonValue('LOW_STOCK')
+  lowStock, // 可銷量低
+  @JsonValue('PARTIAL_ZERO_STOCK')
+  partialZeroStock, // 部份已售完
+  @JsonValue('ZERO_STOCK')
+  zeroStock, // 已售完
+}
+
+/// 上架狀態
+enum Store {
+  @JsonValue('BRAND')
+  brand, // 品牌
+  @JsonValue('MOMO')
+  momo, // MOMO
+  @JsonValue('SHOPEE')
+  shopee, // 蝦⽪
+}
 
 @JsonSerializable()
 class Product {
   @JsonKey(name: 'goods_no')
-  String? goodsNo;
+  String? no;
   @JsonKey(name: 'goods_status')
-  String? goodsStatus;
+  ProductStatus? status;
   String? name;
   @JsonKey(name: 'goods_type')
-  String? goodsType;
+  ProductType? type;
   @JsonKey(name: 'category_main')
   CategoryMain? categoryMain;
   @JsonKey(name: 'category_sub')
@@ -25,13 +82,13 @@ class Product {
   @JsonKey(name: 'image_info')
   List<ImageInfo>? imageInfo;
   @JsonKey(name: 'spec_type')
-  String? specType;
+  SpecType? specType;
   @JsonKey(name: 'spec_lv_1_display')
-  String? specLv1Display;
+  SpecDisplay? specLv1Display;
   @JsonKey(name: 'spec_lv_1_title')
   String? specLv1Title;
   @JsonKey(name: 'spec_lv_2_display')
-  String? specLv2Display;
+  SpecDisplay? specLv2Display;
   @JsonKey(name: 'spec_lv_2_title')
   String? specLv2Title;
   @JsonKey(name: 'spec_sku')
@@ -59,7 +116,7 @@ class Product {
   @JsonKey(name: 'is_large')
   bool? isLarge;
   @JsonKey(name: 'shelf_status')
-  String? shelfStatus;
+  ShelfStatus? shelfStatus;
   @JsonKey(name: 'started_at')
   String? startedAt;
   @JsonKey(name: 'ended_at')
@@ -67,9 +124,9 @@ class Product {
   @JsonKey(name: 'is_favorite')
   bool? isFavorite;
   @JsonKey(name: 'stock_status')
-  String? stockStatus;
+  StockStatus? stockStatus;
   @JsonKey(name: 'shipped_type')
-  String? shippedType;
+  ShippedType? shippedType;
   @JsonKey(name: 'shipped_preorder_date')
   List<String>? shippedPreorderDate;
   @JsonKey(name: 'shipped_custom_day')
@@ -78,11 +135,11 @@ class Product {
   String? specialDescription;
   String? description;
   String? tags;
-  String? expiry;
+  Expiry? expiry;
   @JsonKey(name: 'expire_date')
   String? expireDate;
   @JsonKey(name: 'expire_date_type')
-  String? expireDateType;
+  ExpireDateType? expireDateType;
   double? length;
   double? width;
   double? height;
@@ -96,7 +153,7 @@ class Product {
   @JsonKey(name: 'box_weight')
   double? boxWeight;
   @JsonKey(name: 'temperature_layer')
-  String? temperatureLayer;
+  TemperatureLayer? temperatureLayer;
   @JsonKey(name: 'shipped_method')
   List<ShippedMethod>? shippedMethod;
   @JsonKey(name: 'payment_info')
@@ -132,10 +189,10 @@ class Product {
   int? addonFixedPrice;
 
   Product(
-      {this.goodsNo,
-      this.goodsStatus,
+      {this.no,
+      this.status,
       this.name,
-      this.goodsType,
+      this.type,
       this.categoryMain,
       this.categorySub,
       this.imageInfo,
@@ -199,6 +256,13 @@ class Product {
   factory Product.fromJson(Map<String, dynamic> json) =>
       _$ProductFromJson(json);
   Map<String, dynamic> toJson() => _$ProductToJson(this);
+
+  /// 圖片列表
+  List<String>? get imageList => imageInfo
+      ?.where(
+          (element) => element.url != null && element.type == ImageType.image)
+      .map((element) => element.url!)
+      .toList();
 }
 
 @JsonSerializable()
@@ -207,7 +271,7 @@ class ProductInfo {
   @JsonKey(name: 'store_no')
   String? storeNo;
   @JsonKey(name: 'product_status')
-  String? productStatus;
+  EnabledStatus? productStatus;
   @JsonKey(name: 'product_id')
   int? productId;
   @JsonKey(name: 'product_no')
@@ -224,7 +288,7 @@ class ProductInfo {
   int? specLv2Id;
   @JsonKey(name: 'spec_lv_2_name')
   String? specLv2Name;
-  String? store;
+  Store? store;
   int? quantity;
   @JsonKey(name: 'safe_stock')
   int? safeStock;

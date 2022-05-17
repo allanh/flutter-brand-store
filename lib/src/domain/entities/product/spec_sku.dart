@@ -1,6 +1,26 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'spec_sku.g.dart';
 
+/// 商品規格種類
+enum SpecType {
+  @JsonValue('NONE')
+  none, // 無規
+  @JsonValue('SINGLE')
+  single, // 單規
+  @JsonValue('DOUBLE')
+  double, // 雙規
+}
+
+/// 前台顯⽰
+enum SpecDisplay {
+  @JsonValue('TEXT')
+  text, // 無規
+  @JsonValue('PICTURE')
+  picture, // 單規
+  @JsonValue('TEXT_PICTURE')
+  textPicture, // 雙規
+}
+
 @JsonSerializable()
 class SpecSku {
   int? level;

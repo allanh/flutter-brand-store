@@ -23,32 +23,7 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
       : super(ProductController(DataProductRepository(), goodsNo, productId));
   int _current = 0;
   double _top = 0.0;
-  final CarouselController _controller = CarouselController();
-
-  List<Widget>? _getimageList(ProductController controller) {
-    if (controller.product?.imageInfo != null) {
-      return controller.product?.imageInfo?.map((i) {
-        return Builder(
-          builder: (BuildContext context) {
-            return Container(
-                width: MediaQuery.of(context).size.width,
-                /*
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 5.0),
-                                    decoration:
-                                        BoxDecoration(color: Colors.amber),
-                                        */
-                child: Image.network(
-                  controller.product!.imageInfo!.first.url!,
-                  fit: BoxFit.fill,
-                ));
-          },
-        );
-      }).toList();
-    } else {
-      return [Image.asset('assets/images/empty_cart.png')];
-    }
-  }
+  final CarouselController carouselController = CarouselController();
 
   @override
   Widget get view {
@@ -73,22 +48,25 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                     //floating: true,
                     stretch: true,
                     expandedHeight: 300.0,
+                    backgroundColor: Colors.black,
                     flexibleSpace: LayoutBuilder(
                       builder:
                           (BuildContext context, BoxConstraints constraints) {
-                        // print('constraints=' + constraints.toString());
                         _top = constraints.biggest.height;
                         return FlexibleSpaceBar(
                             centerTitle: true,
                             title: AnimatedOpacity(
                                 duration: const Duration(milliseconds: 300),
                                 opacity: _top > 150 ? 0.0 : 1.0,
-                                //opacity: innerBoxIsScrolled ? 1.0 : 0.0,
-                                child: Text(
-                                  _top.toString(),
-                                  style: const TextStyle(fontSize: 18.0),
+                                child: const Text(
+                                  '商品',
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                    fontFamily:
+                                        'PingFangTC-Semibold,PingFang TC',
+                                  ),
                                 )),
-                            background: _getSlider(controller));
+                            background: _getBackground(controller));
                       },
                     ),
                   )),
@@ -149,50 +127,69 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
     });
   }
 
-  Widget _getSlider(ProductController controller) {
+  Widget _getBackground(ProductController controller) {
     return controller.product?.imageInfo != null
-        ? CarouselSlider(
-            options: CarouselOptions(
-              height: 400.0,
-              viewportFraction: 1.0,
-              enableInfiniteScroll: false,
-              enlargeCenterPage: false,
-              // autoPlay: false,
+        ? Stack(alignment: AlignmentDirectional.bottomCenter, children: [
+            CarouselSlider(
+              options: CarouselOptions(
+                  height: 400.0,
+                  viewportFraction: 1.0,
+                  enableInfiniteScroll: false,
+                  enlargeCenterPage: false,
+                  onPageChanged: (index, reason) {
+                    setState(() {
+                      _current = index;
+                    });
+                  }),
+              carouselController: carouselController,
+              items: controller.product?.imageList?.map((item) {
+                return Builder(
+                  builder: (BuildContext context) {
+                    return SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: CachedNetworkImage(
+                          imageUrl: item,
+                          fit: BoxFit.fill,
+                          alignment: Alignment.topCenter,
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        )
+                        //: Image.asset('assets/images/empty_cart.png')
+                        );
+                  },
+                );
+              }).toList(),
             ),
-            items: controller.product?.imageInfo
-                ?.where(
-                    (element) => element.url != null && element.type == 'IMAGE')
-                .map((item) {
-              debugPrint('2 image: ${item.url}');
-              return Builder(
-                builder: (BuildContext context) {
-                  return SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: item.url != null
-                          ? Image.network(
-                              item.url!,
-                              fit: BoxFit.fill,
-                            )
-                          : Image.asset('assets/images/empty_cart.png'));
-                },
-              );
-            }).toList(),
-          )
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: controller.product?.imageList != null
+                    ? controller.product!.imageList!
+                        .asMap()
+                        .entries
+                        .map((entry) {
+                        return GestureDetector(
+                          onTap: () =>
+                              carouselController.animateToPage(entry.key),
+                          child: Container(
+                            width: 12.0,
+                            height: 12.0,
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 4.0),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: (Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black)
+                                    .withOpacity(
+                                        _current == entry.key ? 0.9 : 0.4)),
+                          ),
+                        );
+                      }).toList()
+                    : [])
+          ])
         : Image.asset('assets/images/empty_cart.png');
-
-    /*
-                   CachedNetworkImage(
-                    imageUrl:
-                        'https://storage.googleapis.com/udi_upload/0e09d77564308edd2da7b84ae39ef8cf',
-                    fit: BoxFit.fitWidth,
-                    alignment: Alignment.topCenter,
-                    placeholder: (context, url) =>
-                        const CircularProgressIndicator(
-                      color: Colors.black,
-                    ),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                  ),
-                  */
   }
 }

@@ -1,17 +1,61 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'event.g.dart';
 
+/// 活動適⽤類型
+enum EventType {
+  @JsonValue('EVENT_DISCOUNT')
+  eventDiscount, // 促銷折扣
+}
+
+/// 活動適⽤類型
+enum AvailableType {
+  @JsonValue('ALL')
+  all, // 全站活動
+  @JsonValue('PRODUCT')
+  product, // 指定商品
+}
+
+/// 折扣條件
+enum RuleType {
+  @JsonValue('NO_RULES')
+  noRules, // 無條件
+  @JsonValue('FILL_UP')
+  fillUp, // 滿件折扣
+  @JsonValue('EACH_FILL_UP')
+  eachFillUp, // 每滿件
+  @JsonValue('OVER_AMOUNT')
+  overAmount, // 滿額
+  @JsonValue('EACH_OVER_AMOUNT')
+  eachOverAmount, // 每滿額
+  @JsonValue('FILL_UP_MULTI')
+  fillUpMulti, // 滿件級距
+  @JsonValue('OVER_AMOUNT_MULTI')
+  overAmountMulti, // 滿額級距
+}
+
+/// 折扣條件
+enum RuleContent {
+  @JsonValue('ORDER_DISCOUNT')
+  orderDiscount, // 訂單⾦額折N元
+  @JsonValue('PRODUCT_PERCENT_OFF')
+  productPercentOff, // 所有適⽤商品打N折
+  @JsonValue('PRODUCT_FIXED_PRICE')
+  productFixedPrice, // 所有適⽤商品每件固定N元
+  @JsonValue('PRODUCT_DISCOUNT')
+  productDiscount, // 所有適⽤商品每件折N元
+}
+
 @JsonSerializable()
 class Event {
   @JsonKey(name: 'available_type')
-  String? availableType;
+  AvailableType? availableType;
   @JsonKey(name: 'event_id')
   int? eventId;
   @JsonKey(name: 'event_no')
   String? eventNo;
   @JsonKey(name: 'event_online')
   bool? eventOnline;
-  String? type;
+  EventType? type;
   String? name;
   String? description;
   @JsonKey(name: 'started_at')
@@ -21,9 +65,9 @@ class Event {
   @JsonKey(name: 'is_used_limit')
   bool? isUsedLimit;
   @JsonKey(name: 'rule_type')
-  String? ruleType;
+  RuleType? ruleType;
   @JsonKey(name: 'rule_content')
-  String? ruleContent;
+  RuleContent? ruleContent;
   @JsonKey(name: 'rule_infos')
   List<RuleInfos>? ruleInfos;
 
