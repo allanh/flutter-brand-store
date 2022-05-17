@@ -94,7 +94,7 @@ class MemberProfile {
 
   /// 密碼(true=已設定密碼, false=無設定密碼)
   @JsonKey(name: 'pwd')
-  final bool isSettingPassword;
+  final bool? isSettingPassword;
 
   /// 信箱是否已驗證
   @JsonKey(
@@ -112,7 +112,7 @@ class MemberProfile {
 
   /// 第三方綁定資料
   @JsonKey(name: 'bundle_info')
-  final BindingInfo bindingInfo;
+  final BindingInfo? bindingInfo;
 
   factory MemberProfile.fromJson(Map<String, dynamic> json) =>
       _$MemberProfileFromJson(json);
@@ -125,13 +125,13 @@ class BindingInfo {
       this.appleBinding);
 
   @JsonKey(name: 'FACEBOOK')
-  final Binding facebookBinding;
+  final Binding? facebookBinding;
   @JsonKey(name: 'LINE')
-  final Binding lineBinding;
+  final Binding? lineBinding;
   @JsonKey(name: 'GOOGLE')
-  final Binding googleBinding;
+  final Binding? googleBinding;
   @JsonKey(name: 'APPLE')
-  final Binding appleBinding;
+  final Binding? appleBinding;
 
   factory BindingInfo.fromJson(Map<String, dynamic> json) =>
       _$BindingInfoFromJson(json);

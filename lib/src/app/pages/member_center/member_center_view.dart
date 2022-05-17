@@ -79,8 +79,8 @@ class _MemberCenterPageState
   }
 
   void openMemberUpdatePage() {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const MemberProfilePage()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => MemberProfilePage()));
   }
 
   /// - The 'ViewState' contains the 'view' getter, which is technically

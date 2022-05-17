@@ -45,7 +45,6 @@ dependencies:
   cupertino_icons: ^1.0.2
   dio: ^4.0.6
   json_annotation: ^4.5.0
-  geocoder: ^0.2.1
 
 dev_dependencies:
   flutter_test:
@@ -118,7 +117,7 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 fonts:
-   - family: NotoSns
-     fonts:
-       # https://fonts.google.com/specimen/Noto+Sans+TC
-       - asset: assets/fonts/NotoSansTC-Black.otf
+  - family: NotoSns
+    fonts:
+      # https://fonts.google.com/specimen/Noto+Sans+TC
+      - asset: assets/fonts/NotoSansTC-Black.otf
