@@ -15,7 +15,7 @@
 import 'dart:async';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
-import 'package:brandstores/src/domain/entities/member_center/member_center.dart';
+import 'package:brandstores/src/domain/entities/member_profile/member_profile.dart';
 import 'package:brandstores/src/domain/repositories/member_profile_repository.dart';
 
 class GetMemberProfileUseCase extends UseCase<GetMemberProfileUseCaseResponse,
@@ -30,10 +30,10 @@ class GetMemberProfileUseCase extends UseCase<GetMemberProfileUseCaseResponse,
 
     try {
       // get member center
-      final member = await memberProfileRepository.getMemberProfile();
+      final memberProfile = await memberProfileRepository.getMemberProfile();
       // Adding it triggers the .onNext() in the 'Observer'
       // It is usually better to wrap the response inside a response object.
-      controller.add(GetMemberProfileUseCaseResponse(member));
+      controller.add(GetMemberProfileUseCaseResponse(memberProfile));
       logger.finest('GetMemberProfileUseCase successful.');
       controller.close();
     } catch (e) {
@@ -47,8 +47,8 @@ class GetMemberProfileUseCase extends UseCase<GetMemberProfileUseCaseResponse,
 
 /// Wrapping response inside an object makes it easier to change later
 class GetMemberProfileUseCaseResponse {
-  final Member member;
-  GetMemberProfileUseCaseResponse(this.member);
+  final MemberProfile memberProfile;
+  GetMemberProfileUseCaseResponse(this.memberProfile);
 }
 
 /// Wrapping params inside an object makes it easier to change later

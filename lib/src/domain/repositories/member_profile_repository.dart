@@ -7,7 +7,7 @@
 /// with the business logic of the application, not with the implementation
 /// details. This also allows for easy migration between platform, should
 /// any issues arise.
-import 'package:brandstores/src/domain/entities/member_center/member_center.dart';
+import 'package:brandstores/src/domain/entities/member_profile/member_profile.dart';
 
 /// Repositories
 /// - Abstract classes that define the expected functionality of outer layers
@@ -16,5 +16,5 @@ import 'package:brandstores/src/domain/entities/member_center/member_center.dart
 ///     functionality
 /// - Passed to 'Usecases' from outer layers
 abstract class MemberProfileRepository {
-  Future<Member> getMemberProfile();
+  Future<MemberProfile> getMemberProfile();
 }

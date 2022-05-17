@@ -18,7 +18,9 @@ class Api {
 
   static const modules = '/udi/v1/app_layout/published/source';
 
+// Member
   static const memberCenter = '/udi/v1/member_center';
+  static const memberProfile = '/udi/v1/member_center/update/data';
 
   // Product
   static const getProduct = '/udi/v2/goods/info';

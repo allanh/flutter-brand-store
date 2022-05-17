@@ -2,7 +2,7 @@ import 'package:brandstores/src/domain/usecases/get_member_profile_usecase.dart'
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
 class MemberProfilePresenter extends Presenter {
-late Function getMemberProfileOnNext;
+  late Function getMemberProfileOnNext;
   late Function getMemberProfileOnComplete;
   late Function getMemberProfileOnError;
 
@@ -11,8 +11,8 @@ late Function getMemberProfileOnNext;
       : getMemberProfileUseCase = GetMemberProfileUseCase(memberProfileRepo);
 
   void getMemberProfile() {
-    getMemberProfileUseCase.execute(
-        _GetMemberProfileUseCaseObserver(this), GetMemberProfileUseCaseParams());
+    getMemberProfileUseCase.execute(_GetMemberProfileUseCaseObserver(this),
+        GetMemberProfileUseCaseParams());
   }
 
   @override
@@ -39,6 +39,6 @@ class _GetMemberProfileUseCaseObserver
 
   @override
   void onNext(response) {
-    presenter.getMemberProfileOnNext(response?.member);
+    presenter.getMemberProfileOnNext(response?.memberProfile);
   }
 }
