@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
-import 'package:brandstores/src/domain/entities/member_center/member_center.dart';
+import 'package:brandstores/src/domain/entities/member_profile/member_profile.dart';
 import 'member_profile_presenter.dart';
 
 class MemberProfileController extends Controller {
-  Member? _member;
-  Member? get member => _member;
+  MemberProfile? _memberProfile;
+  MemberProfile? get memberProfile => _memberProfile;
 
   final MemberProfilePresenter memberProfilePresenter;
 
@@ -24,9 +24,10 @@ class MemberProfileController extends Controller {
     /// The 'Controller' will specify what listeners the 'Presenter'
     /// should call for all success and error events as mentioned
     /// previously.
-    memberProfilePresenter.getMemberProfileOnNext = (Member member) {
-      debugPrint(member.toString());
-      _member = member;
+    memberProfilePresenter.getMemberProfileOnNext =
+        (MemberProfile memberProfile) {
+      debugPrint(memberProfile.toString());
+      _memberProfile = memberProfile;
 
       /// The 'Controller' has access to the 'ViewState' and can refresh
       /// the 'ControllerWidgets' via 'refreshUI()'.
@@ -43,7 +44,7 @@ class MemberProfileController extends Controller {
       ScaffoldMessenger.of(getContext())
           .showSnackBar(SnackBar(content: Text(e.message)));
 
-      _member = null;
+      _memberProfile = null;
 
       refreshUI();
     };
