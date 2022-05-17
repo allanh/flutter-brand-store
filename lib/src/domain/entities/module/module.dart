@@ -1,39 +1,37 @@
-import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../../data/helper/json_value_converter.dart';
+import 'ad_item.dart';
+import 'product_list_item.dart';
 import '../link.dart';
-import 'image_list_item.dart';
 
 part 'module.g.dart';
 
 enum ModuleType {
-  @JsonValue('prod') product,
-  @JsonValue('ad') ad,
+  @JsonValue('prod')
+  product,
+  @JsonValue('ad')
+  ad,
+  @JsonValue('video')
+  video,
 }
-
-@JsonSerializable()
-class ModuleItem {
-  ModuleItem(this.image, this.name, this.price, this.recommend, this.link);
-
-  @JsonKey(name: 'prod_image')
-  String? image;
-  @JsonKey(name: 'prod_name')
-  String name;
-  @JsonKey(name: 'prod_price')
-  int price;
-  @JsonKey(name: 'prod_recom')
-  String? recommend;
-  Link link;
-
-  factory ModuleItem.fromJson(Map<String, dynamic> json) => _$ModuleItemFromJson(json);
-  Map<String, dynamic> toJson() => _$ModuleItemToJson(this);
-
+enum DisplayMode {
+  @JsonValue('SCROLL')
+  scroll,
+  @JsonValue('NOSCROLL')
+  expand,
+}
+enum Source {
+  @JsonValue('CATEGORY')
+  category,
+  @JsonValue('PRODUCT')
+  product,
 }
 
 @JsonSerializable()
 class Module {
-  Module(this.type, this.layoutID, this.templateID, this.mainID, this.showTitle, this.title);
+  Module(this.type, this.layoutID, this.templateID, this.mainID, this.showTitle,
+      this.title);
 
   @JsonKey(name: 'module_type')
   ModuleType type;
@@ -43,31 +41,65 @@ class Module {
   int templateID;
   @JsonKey(name: 'main_id')
   int mainID;
-  @JsonKey(name: 'show_module_title', fromJson: JsonValueConverter.boolFromString, toJson: JsonValueConverter.boolToString)
+  @JsonKey(
+      name: 'show_module_title',
+      fromJson: JsonValueConverter.boolFromString,
+      toJson: JsonValueConverter.boolToString)
   bool showTitle;
   @JsonKey(name: 'module_title')
   String title;
   // products
   @JsonKey(name: 'prod_limit')
   int? limit;
-  @JsonKey(name: 'show_prodname', fromJson: JsonValueConverter.boolFromString, toJson: JsonValueConverter.boolToString)
+  @JsonKey(
+      name: 'show_prodname',
+      fromJson: JsonValueConverter.boolFromString,
+      toJson: JsonValueConverter.boolToString)
   bool? showProductName;
-  @JsonKey(name: 'show_prodprice', fromJson: JsonValueConverter.boolFromString, toJson: JsonValueConverter.boolToString)
+  @JsonKey(
+      name: 'show_prodprice',
+      fromJson: JsonValueConverter.boolFromString,
+      toJson: JsonValueConverter.boolToString)
   bool? showProductPrice;
-  @JsonKey(name:'prod_list')
-  List<ModuleItem>? products;
+  @JsonKey(name: 'sel_prod_source')
+  Source? source;
+  @JsonKey(name: 'sel_prod_cat')
+  String? categoryID;
+  Link get titleLink => Link(
+      source == Source.category ? LinkType.category : LinkType.none,
+      categoryID ?? '');
+  @JsonKey(name: 'prod_list')
+  List<ProductListItem>? products;
   // ads
   @JsonKey(name: 'ref_module_id')
   int? referModulrID;
   @JsonKey(name: 'img_size')
   ImageListItemSize? size;
-  @JsonKey(name:'img_list')
+  @JsonKey(name: 'img_list')
   List<ImageListItem>? images;
-  bool get contentNotEmpty => (images != null && images!.where((element) => element.contentNotEmpty).toList().isNotEmpty);
-  final PageController _controller = PageController();
-  PageController get controller => _controller;
-  @JsonKey(ignore: true)
-  int selectedIndex = 0;
+  @JsonKey(name: 'show_mode')
+  DisplayMode? mode;
+  @JsonKey(name: 'list')
+  List<AdItem>? marquees;
+  @JsonKey(name: 'sub_youtube_url')
+  String? youtubeUrl;
+
+  @JsonKey(name: 'sub_title')
+  String? youtubeTitle;
+  @JsonKey(
+      name: 'show_sub_title',
+      fromJson: JsonValueConverter.boolFromString,
+      toJson: JsonValueConverter.boolToString)
+  bool? showYoutubeTitle;
+  @JsonKey(name: 'sub_link')
+  LinkType? linkType;
+  @JsonKey(name: 'sub_link_data')
+  String? linkValue;
+  Link get link => Link(linkType ?? LinkType.none, linkValue ?? '');
+
+  bool get contentNotEmpty => (images != null &&
+      images!.where((element) => element.contentNotEmpty).toList().isNotEmpty);
+  bool get isMarquee => type == ModuleType.ad && templateID == 3;
   bool get hasChild {
     if (type == ModuleType.product) {
       return (products != null && ((products?.length ?? 0) > 0));
@@ -75,7 +107,8 @@ class Module {
       return (images != null && ((images?.length ?? 0) > 0));
     }
     return false;
-  } 
+  }
+
   factory Module.fromJson(Map<String, dynamic> json) => _$ModuleFromJson(json);
   Map<String, dynamic> toJson() => _$ModuleToJson(this);
 }
@@ -92,6 +125,8 @@ class ModuleList {
   List<Module> get goodModules {
     return modules.where((element) => element.hasChild).toList();
   }
-  factory ModuleList.fromJson(Map<String, dynamic> json) => _$ModuleListFromJson(json);
+
+  factory ModuleList.fromJson(Map<String, dynamic> json) =>
+      _$ModuleListFromJson(json);
   Map<String, dynamic> toJson() => _$ModuleListToJson(this);
 }

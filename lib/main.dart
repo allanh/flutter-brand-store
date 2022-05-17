@@ -80,24 +80,27 @@ class MyApp extends StatelessWidget {
   static TextTheme _buildMyPlusTextTheme(TextTheme base, SiteSetting setting) {
     return base
         .copyWith(
-          headline5: base.headline5!.copyWith(
-            fontWeight: FontWeight.w500,
-          ),
-          headline6: base.headline6!.copyWith(
-            fontWeight: FontWeight.bold,
-            fontSize: 18.0,
-            color: setting.layout.setting.title,
-          ),
-          caption: base.caption!.copyWith(
-            fontWeight: FontWeight.w400,
-            fontSize: 14.0,
-            color: setting.layout.setting.title,
-          ),
-          bodyText1: base.bodyText1!.copyWith(
-            fontWeight: FontWeight.w500,
-            fontSize: 16.0,
-          ),
-        )
+            headline5: base.headline5!.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+            headline6: base.headline6!.copyWith(
+              fontWeight: FontWeight.bold,
+              fontSize: 18.0,
+              color: setting.layout.setting.title,
+            ),
+            caption: base.caption!.copyWith(
+              fontWeight: FontWeight.w400,
+              fontSize: 14.0,
+              color: setting.layout.setting.title,
+            ),
+            bodyText1: base.bodyText1!.copyWith(
+              fontWeight: FontWeight.w500,
+              fontSize: 16.0,
+            ),
+            bodyText2: base.bodyText2!.copyWith(
+              fontWeight: FontWeight.w600,
+              fontSize: 16.0,
+            ))
         .apply(
           fontFamily: 'PingFang TC',
           // bodyColor: setting.layout.setting.title,

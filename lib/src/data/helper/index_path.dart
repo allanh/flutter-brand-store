@@ -12,7 +12,7 @@ class IndexPath {
   }
 
   @override
-  bool operator ==(o) => o is IndexPath && section == o.section && row == o.row && sub == o.sub;
+  bool operator ==(other) => other is IndexPath && section == other.section && row == other.row && sub == other.sub;
   @override
   int get hashCode => hashValues(section, row, sub);
 }

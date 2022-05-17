@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
-import 'package:go_router/go_router.dart';
+// import 'package:go_router/go_router.dart';
 
 import '../../../data/repositories/data_modules_repository.dart';
 import '../../../domain/entities/module/module.dart';
-import '../../../domain/entities/module/image_list_item.dart';
-import '../../../domain/entities/link.dart';
+import '../../widgets/home/ad_wiget.dart';
+import '../../widgets/home/product_widget.dart';
+import '../../widgets/home/video_widget.dart';
+// import '../../../domain/entities/module/image_list_item.dart';
+// import '../../../domain/entities/link.dart';
 import '../helper_center/helper_center_view.dart';
 import './home_controller.dart';
-import '../../utils/constants.dart';
+// import '../../utils/constants.dart';
 
 class HomePage extends View {
   HomePage({Key? key, this.title}) : super(key: key);
@@ -24,21 +27,37 @@ class HomePage extends View {
 class _HomePageState extends ViewState<HomePage, HomeController> {
   _HomePageState() : super(HomeController(DataModulesRepository()));
 
-  void _onItemTapped(Link? link) {
-    if (link != null) {
-      switch (link.type) {
-        case LinkType.product:
-          context.goNamed(productRouteName,
-              params: {QueryKey.goodsNo: link.value});
-          break;
-        default:
-          debugPrint('default link');
-      }
-    } else {
-      debugPrint('no link');
+  Widget _buildWidget(BuildContext context, Module module) {
+    switch (module.type) {
+      case ModuleType.product:
+        return (module.products != null && (module.products?.length ?? 0) > 0)
+            ? ProductWidget(module: module)
+            : Container();
+      case ModuleType.ad:
+        return (module.images != null && (module.images?.length ?? 0) > 0)
+            ? AdWidget(module: module)
+            : Container();
+      case ModuleType.video:
+        return VideoWidget(
+          module: module,
+        );
     }
   }
-
+  // void _onItemTapped(Link? link) {
+  //   if (link != null) {
+  //     switch (link.type) {
+  //       case LinkType.product:
+  //         context.goNamed(productRouteName,
+  //             params: {QueryKey.goodsNo: link.value});
+  //         break;
+  //       default:
+  //         debugPrint('default link');
+  //     }
+  //   } else {
+  //     debugPrint('no link');
+  //   }
+  // }
+/*
   Widget _indicator(bool isActive) {
     return Container(
       height: 10,
@@ -160,7 +179,8 @@ class _HomePageState extends ViewState<HomePage, HomeController> {
           child: Text(module.title),
         ));
   }
-
+  */
+/*
   Widget _buildWidget(BuildContext context, Module module) {
     if (module.type == ModuleType.product) {
       if (module.products != null && (module.products?.length ?? 0) > 0) {
@@ -285,28 +305,30 @@ class _HomePageState extends ViewState<HomePage, HomeController> {
       }
       return Container();
     }
-    return Container();
   }
-
+*/
   @override
   Widget get view {
     return ControlledWidgetBuilder<HomeController>(
       builder: (context, controller) {
         if (controller.moduleList != null) {
           final moduleList = controller.moduleList!;
-          return Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: moduleList.goodModules.length,
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemBuilder: (BuildContext context, int index) {
-                    return _buildWidget(context, moduleList.goodModules[index]);
-                  },
+          return Scaffold(
+            key: globalKey,
+            body: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: moduleList.goodModules.length,
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemBuilder: (BuildContext context, int index) {
+                      return _buildWidget(context, moduleList.goodModules[index]);
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            )
           );
         }
         return const CircularProgressIndicator();
