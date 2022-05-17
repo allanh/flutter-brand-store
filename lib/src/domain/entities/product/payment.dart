@@ -43,6 +43,7 @@ class Credit {
 
 @JsonSerializable()
 class StagingInfo {
+  // int?
   double? fee;
   int? stage;
   @JsonKey(name: 'is_interest')

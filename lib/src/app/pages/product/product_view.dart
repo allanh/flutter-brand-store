@@ -2,20 +2,28 @@ import './product_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import '../../../data/repositories/data_product_repository.dart';
+import 'package:go_router/go_router.dart';
 
 class ProductPage extends View {
-  ProductPage({Key? key, this.title}) : super(key: key);
+  final String? goodsNo;
+  final int? productId;
 
-  final String? title;
+  ProductPage({Key? key, this.goodsNo, this.productId}) : super(key: key);
 
   @override
   _ProductPageState createState() =>
       // inject dependencies inwards
-      _ProductPageState();
+      _ProductPageState(goodsNo, productId);
 }
 
 class _ProductPageState extends ViewState<ProductPage, ProductController> {
-  _ProductPageState() : super(ProductController(DataProductRepository()));
+  _ProductPageState(goodsNo, productId)
+      : super(ProductController(DataProductRepository(), goodsNo, productId));
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget get view {
@@ -28,18 +36,20 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
               SliverAppBar(
                 expandedHeight: 250.0,
                 flexibleSpace: FlexibleSpaceBar(
-                  title: Text('Test', textScaleFactor: 1),
-                  background: Image.network(
-                    controller.product?.imageInfo?.first.url ?? 'assert',
-                    fit: BoxFit.fill,
-                  ),
+                  title: const Text('商品', textScaleFactor: 1),
+                  background: controller.product?.imageInfo?.first.url != null
+                      ? Image.network(
+                          controller.product!.imageInfo!.first.url!,
+                          fit: BoxFit.fill,
+                        )
+                      : Image.asset('assets/images/empty_cart.png'),
                 ),
                 floating: false,
                 pinned: true,
                 snap: false,
                 leading: IconButton(
                   icon: const Icon(Icons.arrow_back),
-                  onPressed: () {},
+                  onPressed: () => context.pop(),
                 ),
               ),
               SliverList(

@@ -1,3 +1,6 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
+
 import '../../domain/entities/product/product.dart';
 import '../../domain/repositories/product_repository.dart';
 import '../../data/utils/dio/api.dart';
@@ -18,7 +21,7 @@ class DataProductRepository extends ProductRepository {
   @override
   Future<Product> getProduct({required String goodsNo, int? productId}) async {
     // Here, do some heavy work lke http requests, async tasks, etc to get data
-
+    debugPrint('goods_no: $goodsNo, product_id: $productId');
     final response = await HttpUtils.instance.post(Api.getProduct,
         params: {'goods_no': goodsNo, 'product_id': productId});
     if (response.isSuccess) {

@@ -1,10 +1,14 @@
-import '../helper_center/helper_center_view.dart';
-import './home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
+import 'package:go_router/go_router.dart';
+
 import '../../../data/repositories/data_modules_repository.dart';
 import '../../../domain/entities/module/module.dart';
 import '../../../domain/entities/module/image_list_item.dart';
+import '../../../domain/entities/link.dart';
+import '../helper_center/helper_center_view.dart';
+import './home_controller.dart';
+import '../../utils/constants.dart';
 
 class HomePage extends View {
   HomePage({Key? key, this.title}) : super(key: key);
@@ -19,6 +23,21 @@ class HomePage extends View {
 
 class _HomePageState extends ViewState<HomePage, HomeController> {
   _HomePageState() : super(HomeController(DataModulesRepository()));
+
+  void _onItemTapped(Link? link) {
+    if (link != null) {
+      switch (link.type) {
+        case LinkType.product:
+          context.goNamed(productRouteName,
+              params: {QueryKey.goodsNo: link.value});
+          break;
+        default:
+          debugPrint('default link');
+      }
+    } else {
+      debugPrint('no link');
+    }
+  }
 
   Widget _indicator(bool isActive) {
     return Container(
@@ -61,22 +80,24 @@ class _HomePageState extends ViewState<HomePage, HomeController> {
   }
 
   Widget _buildProductItem(BuildContext context, ModuleItem moduleItem) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: 200,
-          width: MediaQuery.of(context).size.width,
-          child: (moduleItem.image != null)
-              ? Image.network(moduleItem.image!)
-              : Container(),
-        ),
-        Padding(
-          padding: const EdgeInsetsDirectional.only(start: 15.0, top: 8.0),
-          child: Text(moduleItem.name),
-        ),
-      ],
-    );
+    return GestureDetector(
+        onTap: () => _onItemTapped(moduleItem.link),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 200,
+              width: MediaQuery.of(context).size.width,
+              child: (moduleItem.image != null)
+                  ? Image.network(moduleItem.image!)
+                  : Container(),
+            ),
+            Padding(
+              padding: const EdgeInsetsDirectional.only(start: 15.0, top: 8.0),
+              child: Text(moduleItem.name),
+            ),
+          ],
+        ));
   }
 
   Widget _buildImageItem(BuildContext context, ImageListItem imageListItem,
