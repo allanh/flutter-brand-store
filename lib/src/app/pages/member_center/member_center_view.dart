@@ -21,6 +21,7 @@ import 'package:brandstores/src/app/widgets/member_center/level_upgrade_message_
 
 import 'package:brandstores/src/app/pages/member_center/level_description/level_description_view.dart';
 import 'package:brandstores/src/app/pages/helper_center/helper_center_view.dart';
+import 'package:brandstores/src/app/pages/member_center/profile/member_profile_view.dart';
 
 /// In the case of Flutter
 /// - The 'View' is comprised of 2 classes
@@ -78,8 +79,8 @@ class _MemberCenterPageState
   }
 
   void openMemberUpdatePage() {
-    /// TODO: implement open member update page.
-    debugPrint('Avatar tapped.');
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const MemberProfilePage()));
   }
 
   /// - The 'ViewState' contains the 'view' getter, which is technically
