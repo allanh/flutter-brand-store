@@ -12,9 +12,9 @@ enum PromotionDevice {
 /// 特惠折扣⽅式
 enum PromotionType {
   @JsonValue('RATE')
-  text, // 折數
+  rate, // 折數
   @JsonValue('MONEY')
-  picture, // 元
+  money, // 元
 }
 
 @JsonSerializable()
@@ -24,7 +24,7 @@ class Promotion {
   @JsonKey(name: 'promotion_type')
   PromotionType? type;
   @JsonKey(name: 'promotion_rate')
-  int? rate;
+  double? rate;
   @JsonKey(name: 'promotion_price')
   int? price;
   @JsonKey(name: 'promotion_slogan')

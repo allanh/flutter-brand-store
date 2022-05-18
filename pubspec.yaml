@@ -93,6 +93,7 @@ flutter:
     - assets/icon_heart.png
     - assets/icon_fill_heart.png
     - assets/mask.png
+    - assets/icon_video_indictor.png
     - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see

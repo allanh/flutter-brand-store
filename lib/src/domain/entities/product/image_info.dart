@@ -10,7 +10,7 @@ enum ImageType {
 }
 
 @JsonSerializable()
-class ImageInfo {
+class MyPlusImageInfo {
   @JsonKey(name: 'image_url')
   String? imageUrl;
   @JsonKey(name: 'coupon_id')
@@ -18,9 +18,9 @@ class ImageInfo {
   ImageType? type;
   String? url;
 
-  ImageInfo({this.imageUrl, this.couponId, this.type, this.url});
+  MyPlusImageInfo({this.imageUrl, this.couponId, this.type, this.url});
 
-  factory ImageInfo.fromJson(Map<String, dynamic> json) =>
-      _$ImageInfoFromJson(json);
-  Map<String, dynamic> toJson() => _$ImageInfoToJson(this);
+  factory MyPlusImageInfo.fromJson(Map<String, dynamic> json) =>
+      _$MyPlusImageInfoFromJson(json);
+  Map<String, dynamic> toJson() => _$MyPlusImageInfoToJson(this);
 }

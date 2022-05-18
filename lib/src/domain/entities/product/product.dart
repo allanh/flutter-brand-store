@@ -80,7 +80,7 @@ class Product {
   @JsonKey(name: 'category_sub')
   List<CategoryMain>? categorySub;
   @JsonKey(name: 'image_info')
-  List<ImageInfo>? imageInfo;
+  List<MyPlusImageInfo>? imageInfo;
   @JsonKey(name: 'spec_type')
   SpecType? specType;
   @JsonKey(name: 'spec_lv_1_display')
@@ -137,7 +137,7 @@ class Product {
   String? tags;
   Expiry? expiry;
   @JsonKey(name: 'expire_date')
-  String? expireDate;
+  int? expireDate;
   @JsonKey(name: 'expire_date_type')
   ExpireDateType? expireDateType;
   double? length;
@@ -172,7 +172,7 @@ class Product {
   @JsonKey(name: 'event_list')
   List<Event>? eventList;
   @JsonKey(name: 'sliding_image')
-  List<ImageInfo>? slidingImage;
+  List<MyPlusImageInfo>? slidingImage;
 
   // freebie
   @JsonKey(name: 'freebie_buy_num')
@@ -306,7 +306,7 @@ class ProductInfo {
   @JsonKey(name: 'image_url')
   String? imageUrl;
   @JsonKey(name: 'image_info')
-  List<ImageInfo>? imageInfo;
+  List<MyPlusImageInfo>? imageInfo;
   Tag? tagProd;
   Tag? tag;
   StagingInfo? stagePriceBestApp;
