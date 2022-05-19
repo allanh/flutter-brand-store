@@ -23,6 +23,9 @@ const String profilePaymentRouteName = 'profile-payment';
 const String profilePersonalRouteName = 'profile-personal';
 const String profileSigninInfoRouteName = 'profile-signin';
 
+const String inputFormat = 'yyyy-MM-dd HH:mm:ss';
+const String outputFormat = 'yyyy/MM/dd HH:mm:ss';
+
 class QueryKey {
   static const String goodsNo = 'goods_no';
   static const String productId = 'product_id';

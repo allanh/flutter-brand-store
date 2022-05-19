@@ -1,3 +1,5 @@
+import 'package:brandstores/src/app/utils/constants.dart';
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'category_main.dart';
 import 'image_info.dart';
@@ -168,7 +170,7 @@ class Product {
   List<Product>? freebieInfo;
   @JsonKey(name: 'addon_info')
   List<Product>? addonInfo;
-  ProductInfo? product;
+  ProductInfo? product; // 已選規格品
   @JsonKey(name: 'event_list')
   List<Event>? eventList;
   @JsonKey(name: 'sliding_image')
@@ -187,6 +189,7 @@ class Product {
   // addon
   @JsonKey(name: 'addon_fixed_price')
   int? addonFixedPrice;
+  DateFormat _inputDateFormat = DateFormat(inputFormat);
 
   Product(
       {this.no,
@@ -263,6 +266,25 @@ class Product {
           (element) => element.url != null && element.type == ImageType.image)
       .map((element) => element.url!)
       .toList();
+
+  Duration? get countdownDuration {
+    if (productInfo?.isEmpty == true) return null;
+
+    // var start = _inputDateFormat.parse("2022-05-21 00:00:00");
+    // var start = _inputDateFormat.parse(startedAt!);
+    var tomorrow = DateTime.now().add(const Duration(days: 3));
+    return tomorrow.difference(DateTime.now());
+/*
+    if (productInfo!.first.tagProd?.comingSoon == true && startedAt != null) {
+      var start = _inputDateFormat.parse(startedAt!);
+      Duration dur =  DateTime.now().difference(start);
+    } else if (productInfo!.first.tagProd?.flashSale == true &&
+        promotionApp?.priceEndedAt != null) {
+      var end = _inputDateFormat.parse(promotionApp!.priceEndedAt!);
+      Duration dur =  DateTime.now().difference(end);
+    }
+*/
+  }
 }
 
 @JsonSerializable()
