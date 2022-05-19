@@ -1,5 +1,4 @@
 import 'package:brandstores/src/app/widgets/product/promotion_tag.dart';
-import 'package:brandstores/src/domain/entities/product/promotion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -73,77 +72,4 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
         if (controller.product?.productInfo?.isNotEmpty == true)
           PromotionTagsView(product: controller.product!),
       ]));
-
-/*
-  @override
-  Widget get view {
-    return ControlledWidgetBuilder<ProductController>(
-        builder: (context, controller) {
-      return Scaffold(
-        body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              SliverOverlapAbsorber(
-                  handle:
-                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                  sliver: SliverAppBar(
-                    leading: InkWell(
-                      onTap: () => context.pop(),
-                      child: const Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.white,
-                      ),
-                    ),
-                    pinned: true,
-                    //floating: true,
-                    stretch: true,
-                    expandedHeight: 375.0,
-                    backgroundColor: Colors.black,
-                    flexibleSpace: LayoutBuilder(
-                      builder:
-                          (BuildContext context, BoxConstraints constraints) {
-                        _top = constraints.biggest.height;
-                        return FlexibleSpaceBar(
-                            centerTitle: true,
-                            title: AnimatedOpacity(
-                                duration: const Duration(milliseconds: 300),
-                                opacity: _top > 150 ? 0.0 : 1.0,
-                                child: const Text(
-                                  '商品',
-                                  style: TextStyle(
-                                    fontSize: 18.0,
-                                    fontFamily:
-                                        'PingFangTC-Semibold,PingFang TC',
-                                  ),
-                                )),
-                            background: ImageSlider(
-                                imageList:
-                                    controller.product?.imageInfo ?? []));
-                      },
-                    ),
-                  )),
-            ];
-          },
-          body: Builder(builder: (BuildContext context) {
-            return CustomScrollView(
-              slivers: [
-                SliverOverlapInjector(
-                  // This is the flip side of the SliverOverlapAbsorber above.
-                  handle:
-                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                ),
-                SliverToBoxAdapter(
-                  child: Container(
-                    height: 200,
-                    color: Colors.red,
-                  ),
-                ),
-              ],
-            );
-          }),
-        ),
-      );
-    });
-  }
-  */
 }
