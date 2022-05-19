@@ -5,6 +5,7 @@ import 'package:brandstores/src/data/utils/storage/secure_storage.dart';
 import 'package:flutter/material.dart';
 
 import 'helper_center/helper_center_view.dart';
+import 'login/login_view.dart';
 
 class TestPage extends StatefulWidget {
   const TestPage({Key? key}) : super(key: key);
@@ -25,6 +26,8 @@ class _TestPageState extends State<TestPage> {
             children: [
               const SizedBox(width: 12),
               openPageBtn(context, '幫助中心', const HelperCenterPage()),
+              const SizedBox(width: 12),
+              openPageBtn(context, '登入', LoginPage()),
             ],
           ),
           const SizedBox(height: 50),

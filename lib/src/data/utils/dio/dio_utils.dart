@@ -86,6 +86,7 @@ class HttpUtils {
       }
       response = DioWrapper.responseWrapper(res);
     } catch (e) {
+      debugPrint('$e');
       response = DioWrapper.errorWrapper(e);
     } finally {
       // 隱藏 loading

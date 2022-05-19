@@ -5,7 +5,7 @@ class BaseResponse {
   late String status;
   late String message;
   late dynamic data;
-  late dynamic error;
+  late Error? error;
   late bool isSuccess;
   Response? originalResponse;
 
@@ -24,7 +24,31 @@ class BaseResponse {
     status = json?['status'] ?? '';
     message = json?['message'] ?? '';
     data = json?['data'];
-    error = json?['error'];
+    error = json?['error'] == null ? null : Error.fromJson(json?['error']);
     isSuccess = status == 'SUCCESS' ? true : false;
   }
+}
+
+class Error {
+  Error({
+    this.code,
+    this.message,
+    this.reason,
+  });
+
+  String? code;
+  String? message;
+  String? reason;
+
+  factory Error.fromJson(Map<String, dynamic> json) => Error(
+        code: json["code"],
+        message: json["message"],
+        reason: json["reason"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "code": code,
+        "message": message,
+        "reason": reason,
+      };
 }
