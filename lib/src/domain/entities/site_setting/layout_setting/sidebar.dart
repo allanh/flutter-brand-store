@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../../../data/helper/json_value_converter.dart';
+import '../../drawer_list_item.dart';
 import '../../link.dart';
 
 part 'sidebar.g.dart';
@@ -12,20 +13,11 @@ enum SidebarDirection {
   @JsonValue('RIGHT') right
 }
 @JsonSerializable()
-class SidebarItem {
-  SidebarItem(this.title, this.linkType, this.linkValue, this.children);
-
-  final String title;
-  @JsonKey(name: 'link')
-  final LinkType linkType;
-  @JsonKey(name:'link_data')
-  final String linkValue;
-  Link get link {
-    return Link(linkType, linkValue);
-  }
-  final List<SidebarItem> children;
+class SidebarItem extends DrawerListItem {
+  SidebarItem({required String title, required LinkType linkType, dynamic value, required List<DrawerListItem> children}) : super(title, linkType, value, children);
 
   factory SidebarItem.fromJson(Map<String, dynamic> json) => _$SidebarItemFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$SidebarItemToJson(this);
 }
 @JsonSerializable()

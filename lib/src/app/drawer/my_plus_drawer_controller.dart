@@ -1,3 +1,4 @@
+import 'package:brandstores/src/domain/entities/link.dart';
 import 'package:brandstores/src/domain/entities/member_center/member_center.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
@@ -20,7 +21,11 @@ class MyPlusDrawerController extends Controller {
   void onInitState() {
     getDrawerInfo();
   }
-
+  void onTap(Link link) {
+    Navigator.pop(getContext());
+    getContext().goNamed(link.type.name);
+    // getContext().pushNamed(link.type.name);
+  }
   @override
   void initListeners() {
     myPlusDrawerPresenter.getDrawerOnNext = (SiteSetting siteSetting, MemberCenter memberCenter) {

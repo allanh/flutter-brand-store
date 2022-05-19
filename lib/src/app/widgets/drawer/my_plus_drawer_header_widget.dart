@@ -43,7 +43,7 @@ class MyPlusDrawerHeader extends StatelessWidget {
                 const SizedBox(
                   width: 10,
                 ),
-                (isLogin) ? Text(title ?? '', style: theme.textTheme.headline6) : Text('登入/註冊', style: theme.textTheme.headline6),
+                Text((isLogin) ? title ?? '' : '登入/註冊', style: theme.textTheme.headline6),
               ],
             ),
           ),

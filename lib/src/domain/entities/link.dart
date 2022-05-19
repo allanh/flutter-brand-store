@@ -47,7 +47,7 @@ class Link {
   Link(this.type, this.value);
 
   final LinkType type;
-  final String value;
+  final dynamic value;
 
   factory Link.fromJson(Map<String, dynamic> json) => _$LinkFromJson(json);
   Map<String, dynamic> toJson() => _$LinkToJson(this);
