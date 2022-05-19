@@ -14,7 +14,7 @@ class DataMemberProfileRepository extends MemberProfileRepository {
   @override
   Future<MemberProfile> getMemberProfile() async {
     try {
-      final response = await HttpUtils.instance.get(Api.memberCenter);
+      final response = await HttpUtils.instance.get(Api.memberProfile);
       if (response.isSuccess) {
         return MemberProfile.fromJson(response.data);
       }

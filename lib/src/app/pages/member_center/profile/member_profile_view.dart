@@ -3,8 +3,8 @@ import 'package:brandstores/src/data/repositories/data_member_profile_repository
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
-
-enum Gender { male, female, other }
+import 'package:brandstores/src/domain/entities/member_profile/member_profile.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class MemberProfilePage extends View {
   MemberProfilePage({Key? key}) : super(key: key);
@@ -17,14 +17,22 @@ class _MemberProfilePageState
     extends ViewState<MemberProfilePage, MemberProfileController> {
   _MemberProfilePageState()
       : super(MemberProfileController(DataMemberProfileRepository()));
-  Gender? _character;
+
+  Gender? _gender;
+
+  void _handleGender(Gender? gender) {
+    setState(() {
+      _gender = gender;
+    });
+  }
+
   @override
   Widget get view {
     return Scaffold(
         appBar: AppBar(title: const Text('會員資料')),
         body: ControlledWidgetBuilder<MemberProfileController>(
             builder: (context, controller) {
-          return Column(children: [
+          return ListView(children: [
             /// 生日修改次數說明
             _buildBirthdayChangeHint(context),
 
@@ -44,16 +52,69 @@ class _MemberProfilePageState
                 controller.memberProfile?.phone, controller.memberProfile?.ext),
 
             /// 性別區塊
-            _buildGenderRadioButtons(context),
+            _buildGenderRadioButtons(context, _gender, _handleGender),
+
+            /// 生日區塊
+            _buildBirthdayPicker(context, controller.memberProfile?.birthday)
           ]);
         }));
   }
 
-  Padding _buildGenderRadioButtons(BuildContext context) {
-    Color getColor(Set<MaterialState> states) {
-      return const Color.fromRGBO(204, 204, 204, 1);
-    }
+  /// 建立生日選擇
+  Padding _buildBirthdayPicker(BuildContext context, String? birthday) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 12.0,
+        right: 12.0,
+      ),
+      child: SizedBox(
+          width: double.infinity,
+          height: 80.0,
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            _buildPingFangTCSemiboldText('生日'),
+            const SizedBox(height: 8.0),
+            SizedBox(
+              height: 40.0,
+              child: GestureDetector(
+                  onTap: () {
+                    DatePicker.showDatePicker(context,
+                        showTitleActions: true,
+                        maxTime: DateTime.now(), onChanged: (date) {
+                      debugPrint('change $date');
+                    }, onConfirm: (date) {
+                      debugPrint('confirm $date');
+                    }, currentTime: DateTime.now(), locale: LocaleType.tw);
+                  },
+                  child: const TextField(
+                    readOnly: true,
+                    cursorColor: UdiColors.brownGrey2,
+                    decoration: InputDecoration(
+                        enabled: false,
+                        suffixIcon: Image(
+                          image: AssetImage('assets/icon_date_picker.png'),
+                        ),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                width: 1.0, color: UdiColors.veryLightGrey2)),
+                        disabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                width: 1.0, color: UdiColors.veryLightGrey2)),
+                        labelText: '請選擇生日',
+                        contentPadding: EdgeInsets.only(
+                          left: 10.0,
+                          top: 40.0 / 4,
+                          bottom: 40.0 / 4,
+                        )),
+                  )),
+            ),
+          ])),
+    );
+  }
 
+  /// 建立性別選擇按鈕
+  Padding _buildGenderRadioButtons(BuildContext context, Gender? gender,
+      void Function(Gender?) handleGender) {
     return Padding(
       padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
       child: SizedBox(
@@ -61,55 +122,56 @@ class _MemberProfilePageState
           height: 80.0,
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('性別',
-                style: Theme.of(context)
-                    .textTheme
-                    .caption
-                    ?.copyWith(color: UdiColors.greyishBrown)),
+            _buildPingFangTCSemiboldText('性別'),
             Row(
               children: [
-                Radio<Gender>(
-                  value: Gender.male,
-                  groupValue: _character,
-                  activeColor: Theme.of(context).appBarTheme.backgroundColor,
-                  fillColor: MaterialStateProperty.resolveWith(getColor),
-                  onChanged: (Gender? value) {
-                    setState(() {
-                      _character = value;
-                    });
-                  },
-                ),
-                Text('男性'),
-                Radio<Gender>(
-                  value: Gender.female,
-                  groupValue: _character,
-                  activeColor: Theme.of(context).appBarTheme.backgroundColor,
-                  fillColor: MaterialStateProperty.resolveWith(getColor),
-                  onChanged: (Gender? value) {
-                    setState(() {
-                      _character = value;
-                    });
-                  },
-                ),
-                Text('女性'),
-                Radio<Gender>(
-                  value: Gender.other,
-                  groupValue: _character,
-                  activeColor: Theme.of(context).appBarTheme.backgroundColor,
-                  fillColor: MaterialStateProperty.resolveWith(getColor),
-                  onChanged: (Gender? value) {
-                    setState(() {
-                      _character = value;
-                    });
-                  },
-                ),
-                Text('不公開')
+                _buildGenderRadioOptionRow(
+                    context, '男性', Gender.male, gender, handleGender),
+                const SizedBox(width: 12.0),
+                _buildGenderRadioOptionRow(
+                    context, '女性', Gender.female, gender, handleGender),
+                const SizedBox(width: 12.0),
+                _buildGenderRadioOptionRow(
+                    context, '不公開', Gender.other, gender, handleGender),
               ],
             )
           ])),
     );
   }
 
+  /// 建立性別選項
+  Row _buildGenderRadioOptionRow(BuildContext context, String title,
+      Gender value, Gender? groupValue, void Function(Gender?) handleChange) {
+    return Row(
+      children: [
+        _buildRadio(context, value, groupValue, handleChange),
+        Text(title,
+            style: Theme.of(context)
+                .textTheme
+                .caption
+                ?.copyWith(color: UdiColors.greyishBrown))
+      ],
+    );
+  }
+
+  /// 建立 Radio 物件
+  Radio<Gender> _buildRadio(BuildContext context, Gender value,
+      Gender? groupValue, void Function(Gender?) handleChange) {
+    return Radio<Gender>(
+      value: value,
+      groupValue: groupValue,
+      visualDensity: const VisualDensity(vertical: -2.0, horizontal: -4.0),
+      fillColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
+        if (states.contains(MaterialState.selected)) {
+          return Theme.of(context).appBarTheme.backgroundColor!;
+        }
+        return UdiColors.brownGrey2;
+      }),
+      onChanged: handleChange,
+    );
+  }
+
+  /// 建立市話輸入框
   Padding _buildPhoneTextField(
       BuildContext context, String? area, String? phone, String? ext) {
     return Padding(
@@ -118,11 +180,7 @@ class _MemberProfilePageState
         width: double.infinity,
         height: 104.0,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('市話',
-              style: Theme.of(context)
-                  .textTheme
-                  .caption
-                  ?.copyWith(color: UdiColors.greyishBrown)),
+          _buildPingFangTCSemiboldText('市話'),
           const SizedBox(height: 8.0),
           Row(
             children: [
@@ -143,6 +201,7 @@ class _MemberProfilePageState
     );
   }
 
+  /// 建立行動電話輸入框
   Padding _buildMobileTextField(BuildContext context, String? mobile) {
     return Padding(
       padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
@@ -168,6 +227,7 @@ class _MemberProfilePageState
     );
   }
 
+  /// 建立生日修改提示說明
   Padding _buildBirthdayChangeHint(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 12.0),
@@ -181,6 +241,7 @@ class _MemberProfilePageState
                     ?.copyWith(color: UdiColors.brownGrey))));
   }
 
+  /// 建立文字輸入框
   Padding _buildTextField(BuildContext context, String title, String? text,
       String hintText, String errorText) {
     return Padding(
@@ -199,6 +260,7 @@ class _MemberProfilePageState
         ));
   }
 
+  /// 建立左邊有icon的錯誤訊息
   Row _buildErrorMessage(BuildContext context, String message) {
     return Row(children: [
       const Image(
@@ -215,10 +277,12 @@ class _MemberProfilePageState
     ]);
   }
 
+  /// 建立有狀態的文字輸入框
   TextField _buildStateTextField(String? labelText, String hintText) {
     return TextField(
         cursorColor: UdiColors.brownGrey2,
         decoration: InputDecoration(
+            isCollapsed: true,
             border: _buildStateBorder(labelText != null),
             enabledBorder: _buildStateBorder(labelText != null),
             focusedBorder: _buildStateBorder(labelText != null),
@@ -227,10 +291,12 @@ class _MemberProfilePageState
             labelText: labelText,
             contentPadding: const EdgeInsets.only(
               left: 10.0,
-              bottom: 36.0 / 2,
+              top: 40.0 / 4,
+              bottom: 40.0 / 4,
             )));
   }
 
+  /// 建立有狀態的邊匡
   OutlineInputBorder _buildStateBorder(bool valid) {
     return OutlineInputBorder(
         borderSide: BorderSide(
@@ -238,22 +304,32 @@ class _MemberProfilePageState
             color: valid ? UdiColors.veryLightGrey2 : UdiColors.strawberry));
   }
 
+  /// 建立有星號(*)的文字
   RichText _buildRequiresText(BuildContext context, String text) {
     return RichText(
       text: TextSpan(
           text: text,
-          style: Theme.of(context)
-              .textTheme
-              .caption
-              ?.copyWith(color: UdiColors.greyishBrown),
+          style: _buildPingFangTCSemiboldStyle(UdiColors.greyishBrown),
           children: <TextSpan>[
             TextSpan(
                 text: "*",
-                style: Theme.of(context)
-                    .textTheme
-                    .caption
-                    ?.copyWith(color: UdiColors.strawberry))
+                style: _buildPingFangTCSemiboldStyle(UdiColors.strawberry))
           ]),
     );
+  }
+
+  /// 建立粗體字體
+  Text _buildPingFangTCSemiboldText(String text) {
+    return Text(text,
+        style: _buildPingFangTCSemiboldStyle(UdiColors.greyishBrown));
+  }
+
+  /// 建立粗體字樣式
+  TextStyle _buildPingFangTCSemiboldStyle(Color color) {
+    return TextStyle(
+        color: color,
+        fontFamily: 'PingFangTC Semibold',
+        fontWeight: FontWeight.w600,
+        fontSize: 14.0);
   }
 }
