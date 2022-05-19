@@ -1,3 +1,5 @@
+import 'package:brandstores/src/app/widgets/product/promotion_tag.dart';
+import 'package:brandstores/src/domain/entities/product/promotion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -28,13 +30,10 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
   Widget get view {
     return ControlledWidgetBuilder<ProductController>(
         builder: (context, controller) {
-      final ThemeData theme = Theme.of(context);
       return Scaffold(
           key: globalKey,
           appBar: getAppBar(controller),
-          body: Stack(children: [
-            ImageSlider(imageList: controller.product?.imageInfo ?? [])
-          ]));
+          body: getBody(controller));
     });
   }
 
@@ -63,6 +62,17 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
           )
         ],
       );
+
+  Widget getBody(ProductController controller) => SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: 375.0,
+      child: Stack(children: [
+        // 圖片或影片
+        ImageSlider(imageList: controller.product?.imageInfo ?? []),
+        // 圖標
+        if (controller.product?.productInfo?.isNotEmpty == true)
+          PromotionTagsView(product: controller.product!),
+      ]));
 
 /*
   @override

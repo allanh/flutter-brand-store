@@ -78,7 +78,7 @@ class _ImageSliderState extends State<ImageSlider> {
                         : BoxDecoration(
                             image: DecorationImage(
                                 image: const AssetImage(
-                                    "assets/icon_video_indictor.png"),
+                                    "assets/images/icon_video_indictor.png"),
                                 fit: BoxFit.cover,
                                 colorFilter: ColorFilter.mode(
                                     _color(entry.key), BlendMode.modulate)),

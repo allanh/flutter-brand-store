@@ -307,9 +307,12 @@ class ProductInfo {
   String? imageUrl;
   @JsonKey(name: 'image_info')
   List<MyPlusImageInfo>? imageInfo;
+  @JsonKey(name: 'tag_prod')
   Tag? tagProd;
   Tag? tag;
+  @JsonKey(name: 'stage_price_best_app')
   StagingInfo? stagePriceBestApp;
+  @JsonKey(name: 'stage_price_info_app')
   List<StagingInfo>? stagePriceInfoApp;
 
   ProductInfo(
