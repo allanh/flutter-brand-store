@@ -267,23 +267,24 @@ class Product {
       .map((element) => element.url!)
       .toList();
 
+  /// 倒數時間
   Duration? get countdownDuration {
     if (productInfo?.isEmpty == true) return null;
 
-    // var start = _inputDateFormat.parse("2022-05-21 00:00:00");
-    // var start = _inputDateFormat.parse(startedAt!);
-    var tomorrow = DateTime.now().add(const Duration(days: 3));
-    return tomorrow.difference(DateTime.now());
-/*
+    final now = DateTime.now();
+    // 測試用
+    //return now.add(const Duration(days: 2)).difference(now);
+    // 即將開賣時間
     if (productInfo!.first.tagProd?.comingSoon == true && startedAt != null) {
-      var start = _inputDateFormat.parse(startedAt!);
-      Duration dur =  DateTime.now().difference(start);
+      return _inputDateFormat.parse(startedAt!).difference(now);
+      // 限時搶購時間
     } else if (productInfo!.first.tagProd?.flashSale == true &&
         promotionApp?.priceEndedAt != null) {
-      var end = _inputDateFormat.parse(promotionApp!.priceEndedAt!);
-      Duration dur =  DateTime.now().difference(end);
+      return _inputDateFormat
+          .parse(promotionApp!.priceEndedAt!)
+          .difference(now);
     }
-*/
+    return null;
   }
 }
 

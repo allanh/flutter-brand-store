@@ -43,6 +43,8 @@ enum RuleContent {
   productFixedPrice, // 所有適⽤商品每件固定N元
   @JsonValue('PRODUCT_DISCOUNT')
   productDiscount, // 所有適⽤商品每件折N元
+  @JsonValue('GIVE_FREEBIE')
+  giveFreebie, // 贈送贈品
 }
 
 @JsonSerializable()

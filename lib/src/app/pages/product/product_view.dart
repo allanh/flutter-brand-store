@@ -80,10 +80,13 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
           // 倒數計時
           if (controller.product?.countdownDuration != null)
             EventCountDownTimer(
-                duration: controller.product!.countdownDuration!,
-                type: (controller.product?.status == ProductStatus.comingSoon)
-                    ? CountDownType.comingSoon
-                    : CountDownType.flashSale)
+              duration: controller.product!.countdownDuration!,
+              type: (controller.product?.status == ProductStatus.comingSoon)
+                  ? CountDownType.comingSoon
+                  : CountDownType.flashSale,
+              slogan: controller.product?.promotionApp?.slogan,
+              onTimerEned: () => controller.onCountDownEnd(),
+            )
         ],
       ));
 }
