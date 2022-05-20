@@ -1,3 +1,4 @@
+import 'package:brandstores/src/app/utils/colors.dart';
 import 'package:brandstores/src/app/widgets/product/event_countdown_timer.dart';
 import 'package:brandstores/src/app/widgets/product/promotion_tag.dart';
 import 'package:brandstores/src/domain/entities/product/product.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import '../../widgets/product/image_slider.dart';
+import '../../widgets/product/product_name.dart';
 import './product_controller.dart';
 import '../../../data/repositories/data_product_repository.dart';
 import 'package:go_router/go_router.dart';
@@ -65,8 +67,9 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
         ],
       );
 
-  Widget getBody(ProductController controller) => SizedBox(
+  Widget getBody(ProductController controller) => Container(
       width: MediaQuery.of(context).size.width,
+      color: MyPlusColor.whiteTwo,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -86,7 +89,9 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                   : CountDownType.flashSale,
               slogan: controller.product?.promotionApp?.slogan,
               onTimerEned: () => controller.onCountDownEnd(),
-            )
+            ),
+          // 商品名稱和價格
+          ProductName(product: controller.product),
         ],
       ));
 }

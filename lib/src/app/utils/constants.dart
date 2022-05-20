@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 const String rootRouteName = 'root';
 const String homeRouteName = 'home'; // 首頁
 const String staticRouteName = 'static'; // 靜態頁
@@ -25,6 +27,9 @@ const String profileSigninInfoRouteName = 'profile-signin';
 
 const String inputFormat = 'yyyy-MM-dd HH:mm:ss';
 const String outputFormat = 'yyyy/MM/dd HH:mm:ss';
+
+// 價格格式
+NumberFormat numberFormat = NumberFormat("###,###.###", "zh_TW");
 
 class QueryKey {
   static const String goodsNo = 'goods_no';

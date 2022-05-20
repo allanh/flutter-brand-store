@@ -10,6 +10,7 @@ import 'payment.dart';
 import 'tag.dart';
 import 'event.dart';
 import '../status.dart';
+import '../../../extension/iterable_extension.dart';
 part 'product.g.dart';
 
 /// 商品狀態
@@ -286,6 +287,16 @@ class Product {
     }
     return null;
   }
+
+  // 最小網路價
+  int? get minProposedPrice =>
+      productInfo?.map((element) => element.proposedPrice).min;
+
+  // 是否為多價格
+  bool get isRangePrice =>
+      productInfo
+          ?.any((element) => element.proposedPrice != minProposedPrice) ??
+      false;
 }
 
 @JsonSerializable()

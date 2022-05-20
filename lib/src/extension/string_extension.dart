@@ -1,4 +1,4 @@
-extension StringConvert on String {
+extension StringExtension on String {
   /// convert a String to bool
   bool toBool() {
     return toLowerCase() == 'true';
