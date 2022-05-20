@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:brandstores/src/data/helper/json_value_converter.dart';
+import 'package:intl/intl.dart';
+
 part 'member_profile.g.dart';
 
 /// M=男/F=女/O=不公開，允许值: M, F, O
@@ -58,6 +60,10 @@ class MemberProfile {
   final String? countryCode;
 
   final String? mobile;
+
+  String get sensitiveMobile {
+    return '+$countryCode ${mobile?.replaceRange(2, 8, '******')}';
+  }
 
   @JsonKey(name: 'area_code')
   final String? areaCode;

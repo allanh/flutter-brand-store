@@ -22,6 +22,7 @@ class _MemberProfilePageState
 
   void _handleGender(Gender? gender) {
     setState(() {
+      debugPrint(gender.toString());
       _gender = gender;
     });
   }
@@ -41,9 +42,21 @@ class _MemberProfilePageState
                 '請輸入姓名', '請輸入有效姓名'),
 
             /// 行動電話區塊
+            _buildMobileView(
+                context,
+                controller.memberProfile?.sensitiveMobile ?? '',
+                // controller.memberProfile?.isVerifyMobile ??
+                false, (message) {
+              debugPrint(message);
+            }),
+            _buildValidationCodeTextField(context, ''),
             _buildMobileTextField(context, controller.memberProfile?.mobile),
 
             /// Eamil 區塊
+            _buildEmailView(context, controller.memberProfile?.email ?? '',
+                controller.memberProfile?.isVerifyEmail ?? false, (message) {
+              debugPrint(message);
+            }),
             _buildTextField(context, 'Email', controller.memberProfile?.name,
                 '請輸入Email', '請輸入有效Email'),
 
@@ -55,7 +68,15 @@ class _MemberProfilePageState
             _buildGenderRadioButtons(context, _gender, _handleGender),
 
             /// 生日區塊
-            _buildBirthdayPicker(context, controller.memberProfile?.birthday)
+            _buildBirthdayPicker(context, controller.memberProfile?.birthday),
+
+            /// 地址
+            _buildAddressTextFields(
+                context,
+                controller.memberProfile?.zipCode,
+                controller.memberProfile?.city,
+                controller.memberProfile?.area,
+                controller.memberProfile?.address)
           ]);
         }));
   }
@@ -186,10 +207,7 @@ class _MemberProfilePageState
             children: [
               SizedBox(width: 90.0, child: _buildStateTextField(area, '區碼')),
               const SizedBox(width: 10.0),
-              SizedBox(
-                  width:
-                      MediaQuery.of(context).size.width - 90.0 - 119.0 - 44.0,
-                  child: _buildStateTextField(phone, '市內電話')),
+              Expanded(child: _buildStateTextField(phone, '市內電話')),
               const SizedBox(width: 10.0),
               SizedBox(width: 119.0, child: _buildStateTextField(phone, '分機'))
             ],
@@ -198,6 +216,171 @@ class _MemberProfilePageState
           _buildErrorMessage(context, '請輸入有效市話')
         ]),
       ),
+    );
+  }
+
+  /// 建立地址輸入框
+  Padding _buildAddressTextFields(BuildContext context, String? zipCode,
+      String? county, String? district, String? address) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
+      child: SizedBox(
+        width: double.infinity,
+        height: 149.0,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          _buildPingFangTCSemiboldText('地址'),
+          const SizedBox(height: 8.0),
+          Row(
+            children: [
+              Expanded(child: _buildStateTextField(zipCode, '郵遞區號')),
+              const SizedBox(width: 10.0),
+              Expanded(child: _buildDropdownTextField(county, '縣市')),
+              const SizedBox(width: 10.0),
+              Expanded(child: _buildDropdownTextField(district, '鄉鎮市區'))
+            ],
+          ),
+          const SizedBox(height: 8.0),
+          _buildStateTextField(address, '請輸入街號、樓層'),
+          const SizedBox(height: 3.0),
+          _buildErrorMessage(context, '請輸入有效地址')
+        ]),
+      ),
+    );
+  }
+
+  /// 建立驗證碼輸入匡
+  Padding _buildValidationCodeTextField(BuildContext context, String? code) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
+      child: SizedBox(
+        width: double.infinity,
+        height: 104.0,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(
+            children: [
+              Expanded(
+                  child: TextField(
+                      cursorColor: UdiColors.brownGrey2,
+                      decoration: InputDecoration(
+                          isCollapsed: true,
+                          border: _buildStateBorder(true),
+                          enabledBorder: _buildStateBorder(true),
+                          focusedBorder: _buildStateBorder(true),
+                          hintText: '請輸入驗證碼',
+                          hintStyle:
+                              const TextStyle(color: UdiColors.brownGrey2),
+                          contentPadding: const EdgeInsets.only(
+                            left: 10.0,
+                            top: 40.0 / 4,
+                            bottom: 40.0 / 4,
+                          )))),
+              const SizedBox(width: 12.0),
+              SizedBox(
+                  width: 80.0,
+                  height: 40.0,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        primary: Theme.of(context).appBarTheme.backgroundColor),
+                    onPressed: () {},
+                    child: const Text('提交'),
+                  ))
+            ],
+          ),
+          const SizedBox(height: 4.0),
+          const Text('請耐心等候驗證簡訊，約300秒後可重新發送。',
+              style: TextStyle(
+                  fontFamily: 'PingFangTC Regular',
+                  fontWeight: FontWeight.w400,
+                  fontSize: 12.0,
+                  color: UdiColors.brownGrey2))
+        ]),
+      ),
+    );
+  }
+
+  /// 建立行動電話顯示
+  Padding _buildMobileView(BuildContext context, String sensitiveMobile,
+      bool isValidation, void Function(String) handleTap) {
+    return Padding(
+        padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
+        child: SizedBox(
+            width: double.infinity,
+            height: 80.0,
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              _buildRequiresText(context, '手機'),
+              const SizedBox(height: 8.0),
+              Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(children: [
+                      _buildPingFangTCRegularText(sensitiveMobile),
+                      const SizedBox(width: 10.0),
+                      isValidation
+                          ? const Image(
+                              image: AssetImage('assets/icon_completed.png'))
+                          : const Image(
+                              image: AssetImage(
+                                  'assets/icon_warning_red_circle.png')),
+                      _buildValidResultText(isValidation)
+                    ]),
+                    Row(
+                        children: isValidation
+                            ? [_buildHyperLinkButton('手機變更', handleTap)]
+                            : [
+                                _buildHyperLinkButton('發送驗證碼', handleTap),
+                                const SizedBox(width: 4),
+                                _buildHyperLinkButton('手機變更', handleTap)
+                              ])
+                  ])
+            ])));
+  }
+
+  /// 建立Email顯示
+  Padding _buildEmailView(BuildContext context, String email, bool isValidation,
+      void Function(String) handleTap) {
+    return Padding(
+        padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
+        child: SizedBox(
+            width: double.infinity,
+            height: 80.0,
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              _buildRequiresText(context, 'Email'),
+              const SizedBox(height: 8.0),
+              Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(children: [
+                      _buildPingFangTCRegularText(email),
+                      const SizedBox(width: 10.0),
+                      isValidation
+                          ? const Image(
+                              image: AssetImage('assets/icon_completed.png'))
+                          : const Image(
+                              image: AssetImage(
+                                  'assets/icon_warning_red_circle.png')),
+                      _buildValidResultText(isValidation)
+                    ]),
+                    Row(
+                        children: isValidation
+                            ? [_buildHyperLinkButton('Email變更', handleTap)]
+                            : [
+                                _buildHyperLinkButton('發送驗證信', handleTap),
+                                const SizedBox(width: 4),
+                                _buildHyperLinkButton('Email變更', handleTap)
+                              ])
+                  ])
+            ])));
+  }
+
+  GestureDetector _buildHyperLinkButton(
+      String text, void Function(String) handleTap) {
+    return GestureDetector(
+      child: _buildHyperLinkText(text),
+      onTap: () => handleTap(text),
     );
   }
 
@@ -215,9 +398,7 @@ class _MemberProfilePageState
             children: [
               SizedBox(width: 84.0, child: _buildStateTextField('+886', '')),
               const SizedBox(width: 10.0),
-              SizedBox(
-                  width: MediaQuery.of(context).size.width - 84.0 - 34.0,
-                  child: _buildStateTextField(mobile, '請輸入手機號碼'))
+              Expanded(child: _buildStateTextField(mobile, '請輸入手機號碼'))
             ],
           ),
           const SizedBox(height: 3.0),
@@ -277,6 +458,38 @@ class _MemberProfilePageState
     ]);
   }
 
+  /// 建立有下拉箭頭的文字輸入匡
+  GestureDetector _buildDropdownTextField(String? labelText, String hintText) {
+    return GestureDetector(
+        onTap: () {
+          debugPrint('$hintText button pressed');
+        },
+        child: Stack(alignment: Alignment.centerRight, children: [
+          TextField(
+              enabled: false,
+              cursorColor: UdiColors.brownGrey2,
+              decoration: InputDecoration(
+                  isCollapsed: true,
+                  border: _buildStateBorder(true),
+                  enabledBorder: _buildStateBorder(true),
+                  focusedBorder: _buildStateBorder(true),
+                  disabledBorder: _buildStateBorder(true),
+                  hintText: hintText,
+                  hintStyle: const TextStyle(color: UdiColors.brownGrey2),
+                  labelText: labelText,
+                  contentPadding: const EdgeInsets.only(
+                    left: 10.0,
+                    top: 40.0 / 4,
+                    bottom: 40.0 / 4,
+                  ))),
+          const Padding(
+              padding: EdgeInsets.only(right: 9.8),
+              child: Image(
+                image: AssetImage('assets/icon_arrow_down.png'),
+              ))
+        ]));
+  }
+
   /// 建立有狀態的文字輸入框
   TextField _buildStateTextField(String? labelText, String hintText) {
     return TextField(
@@ -331,5 +544,46 @@ class _MemberProfilePageState
         fontFamily: 'PingFangTC Semibold',
         fontWeight: FontWeight.w600,
         fontSize: 14.0);
+  }
+
+  /// 建立一般字體
+  Text _buildPingFangTCRegularText(String text) {
+    return Text(text,
+        style: _buildPingFangTCRegularStyle(UdiColors.greyishBrown));
+  }
+
+  /// 建立一般字樣式
+  TextStyle _buildPingFangTCRegularStyle(Color color) {
+    return TextStyle(
+        color: color,
+        fontFamily: 'PingFangTC Regular',
+        fontWeight: FontWeight.w400,
+        fontSize: 14.0);
+  }
+
+  /// 建立驗證結果文字
+  Text _buildValidResultText(bool isValid) {
+    return Text(isValid ? '已驗證' : '未驗證',
+        style: _buildValidResultStyle(
+            isValid ? UdiColors.green : UdiColors.strawberry));
+  }
+
+  TextStyle _buildValidResultStyle(Color color) {
+    return TextStyle(
+        color: color,
+        fontFamily: 'PingFangTC Regular',
+        fontWeight: FontWeight.w400,
+        fontSize: 12.0);
+  }
+
+  /// 建立超連結文字
+  Text _buildHyperLinkText(String text) {
+    return Text(text,
+        style: const TextStyle(
+            color: Color.fromRGBO(102, 106, 209, 1),
+            fontFamily: 'PingFangTC Regular',
+            fontWeight: FontWeight.w400,
+            fontSize: 12.0,
+            decoration: TextDecoration.underline));
   }
 }

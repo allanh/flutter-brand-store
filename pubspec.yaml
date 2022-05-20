@@ -93,6 +93,9 @@ flutter:
     - assets/images/
     - assets/icon_warning_red.png
     - assets/icon_date_picker.png
+    - assets/icon_warning_red_circle.png
+    - assets/icon_completed.png
+    - assets/icon_arrow_down.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
