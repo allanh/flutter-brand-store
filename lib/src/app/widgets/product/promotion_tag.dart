@@ -1,3 +1,4 @@
+import 'package:brandstores/src/app/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 import '../../../domain/entities/product/product.dart';
@@ -12,27 +13,28 @@ class PromotionTag extends StatelessWidget {
   final String image;
 
   @override
-  Widget build(BuildContext context) => Padding(
-      padding: const EdgeInsets.only(top: 3, bottom: 3),
-      child: SizedBox(
-          width: 40,
-          height: 40,
-          child: Container(
-            alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-              image: DecorationImage(image: AssetImage(image)),
-            ),
-            padding: const EdgeInsets.only(left: 3, right: 3),
-            child: Text(
-              tagText,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                  fontFamily: 'PingFangTC-Semibold',
-                  height: 1.142857,
-                  fontSize: 14.0,
-                  color: Colors.white),
-            ),
-          )));
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Padding(
+        padding: const EdgeInsets.only(top: 3, bottom: 3),
+        child: SizedBox(
+            width: 40,
+            height: 40,
+            child: Container(
+              alignment: Alignment.centerLeft,
+              decoration: BoxDecoration(
+                image: DecorationImage(image: AssetImage(image)),
+              ),
+              padding: const EdgeInsets.only(left: 3, right: 3),
+              child: Text(
+                tagText,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.headline6!
+                    .copyWith(height: 1.142857, fontSize: 14),
+              ),
+            )));
+  }
 }
 
 /// 全部圖標

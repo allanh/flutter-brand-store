@@ -29,7 +29,7 @@ const String inputFormat = 'yyyy-MM-dd HH:mm:ss';
 const String outputFormat = 'yyyy/MM/dd HH:mm:ss';
 
 // 價格格式
-NumberFormat numberFormat = NumberFormat("###,###.###", "zh_TW");
+NumberFormat numberFormat = NumberFormat("#,###");
 
 class QueryKey {
   static const String goodsNo = 'goods_no';

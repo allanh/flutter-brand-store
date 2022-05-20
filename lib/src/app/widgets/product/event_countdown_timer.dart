@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:brandstores/src/app/utils/colors.dart';
+import 'package:brandstores/src/app/utils/constants.dart';
+import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:flutter/material.dart';
 
 enum CountDownType {
@@ -50,48 +51,46 @@ class _EventCountDownTimerState extends State<EventCountDownTimer> {
   }
 
   @override
-  Widget build(BuildContext context) => Container(
-        width: MediaQuery.of(context).size.width,
-        child: Column(children: [
-          // 倒數計時區塊
-          Padding(
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      child: Column(children: [
+        // 倒數計時區塊
+        Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12),
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            leadingView(theme),
+            timerView(theme),
+          ]),
+        ),
+        // 促銷標語
+        if (widget.slogan != null)
+          Container(
+            alignment: Alignment.centerLeft,
             padding: const EdgeInsets.only(left: 12, right: 12),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  leadingView,
-                  timerView,
-                ]),
-          ),
-          // 促銷標語
-          if (widget.slogan != null)
-            Container(
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.only(left: 12, right: 12),
-              width: MediaQuery.of(context).size.width,
-              height: 36,
-              child: Text(
-                widget.slogan!,
+            width: MediaQuery.of(context).size.width,
+            height: 36,
+            child: Text(widget.slogan!,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontFamily: 'PingFangTC-Regular',
-                    height: 1.142857,
-                    fontSize: 14.0,
+                style: theme.textTheme.caption!.copyWith(
                     color: widget.type == CountDownType.comingSoon
-                        ? MyPlusColor.comingSoon
-                        : MyPlusColor.strawberry),
-              ),
-              decoration: const BoxDecoration(color: Colors.white),
-            )
-        ]),
-        decoration: BoxDecoration(
-            gradient: widget.type == CountDownType.comingSoon
-                ? MyPlusColor.comingSoonGradient
-                : MyPlusColor.flashSaleGradient),
-      );
+                        ? UdiColors.comingSoon
+                        : UdiColors.strawberry)),
+            decoration: const BoxDecoration(color: Colors.white),
+          )
+      ]),
+      decoration: BoxDecoration(
+          gradient: widget.type == CountDownType.comingSoon
+              ? UdiColors.comingSoonGradient
+              : UdiColors.flashSaleGradient),
+    );
+  }
 
   /// 倒數類型文字 widget
-  Widget get leadingView => Row(children: [
+  Widget leadingView(ThemeData theme) => Row(children: [
         Image(
             image: widget.type == CountDownType.comingSoon
                 ? const AssetImage("assets/images/icon_clock.png")
@@ -100,49 +99,42 @@ class _EventCountDownTimerState extends State<EventCountDownTimer> {
         Text(
           widget.type == CountDownType.comingSoon ? '即將開賣' : '限時搶購',
           textAlign: TextAlign.center,
-          style: const TextStyle(
-              fontFamily: 'PingFangTC-Semibold',
-              height: 1.142857,
-              fontSize: 14.0,
-              color: Colors.white),
+          style: theme.textTheme.headline6!.copyWith(fontSize: 14.0),
         ),
       ]);
 
   /// 計時器 widget
-  Widget get timerView => Row(
+  Widget timerView(ThemeData theme) => Row(
         children: [
           Text(
             widget.type == CountDownType.comingSoon
                 ? '開賣倒數 $_day 天'
                 : '距結束只剩 $_day 天',
             textAlign: TextAlign.center,
-            style: const TextStyle(
-                fontFamily: 'PingFangTC-Regular',
-                height: 1.142857,
-                fontSize: 14.0,
-                color: Colors.white),
+            style: theme.textTheme.caption!.copyWith(color: Colors.white),
           ),
           const SizedBox(width: 8),
-          buildTime(),
+          buildTime(theme),
         ],
       );
 
-  Widget buildTime() {
+  Widget buildTime(ThemeData theme) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     final hours = twoDigits(_duration.inHours % 24);
     final minutes = twoDigits(_duration.inMinutes.remainder(60));
     final seconds = twoDigits(_duration.inSeconds.remainder(60));
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      buildTimeCard(time: hours),
-      timeColon,
-      buildTimeCard(time: minutes),
-      timeColon,
-      buildTimeCard(time: seconds),
+      buildTimeCard(theme: theme, time: hours),
+      timeColon(theme),
+      buildTimeCard(theme: theme, time: minutes),
+      timeColon(theme),
+      buildTimeCard(theme: theme, time: seconds),
     ]);
   }
 
   /// 建立時分秒的方格
-  Widget buildTimeCard({required String time}) => Container(
+  Widget buildTimeCard({required ThemeData theme, required String time}) =>
+      Container(
         width: 24,
         height: 22,
         margin: const EdgeInsets.only(top: 7, bottom: 7),
@@ -152,26 +144,21 @@ class _EventCountDownTimerState extends State<EventCountDownTimer> {
         child: Text(
           time,
           textAlign: TextAlign.center,
-          style: TextStyle(
-              fontFamily: 'PingFangTC-Regular',
-              fontSize: 14.0,
+          style: theme.textTheme.caption!.copyWith(
               color: widget.type == CountDownType.comingSoon
-                  ? MyPlusColor.comingSoon
-                  : MyPlusColor.strawberry),
+                  ? UdiColors.comingSoon
+                  : UdiColors.strawberry),
         ),
       );
 
-  Widget get timeColon => const SizedBox(
+  Widget timeColon(ThemeData theme) => SizedBox(
         width: 12,
         height: 22,
         child: Center(
             child: Text(
           ':',
           textAlign: TextAlign.center,
-          style: TextStyle(
-              fontFamily: 'PingFangTC-Regular',
-              fontSize: 12.0,
-              color: Colors.white),
+          style: theme.textTheme.caption!.copyWith(color: Colors.white),
         )),
       );
 

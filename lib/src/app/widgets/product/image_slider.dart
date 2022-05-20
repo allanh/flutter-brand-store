@@ -52,8 +52,6 @@ class _ImageSliderState extends State<ImageSlider> {
                   imageUrl: item.url!,
                   fit: BoxFit.fill,
                   alignment: Alignment.topCenter,
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                 ));
           },

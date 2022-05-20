@@ -274,7 +274,7 @@ class Product {
 
     final now = DateTime.now();
     // 測試用
-    //return now.add(const Duration(days: 2)).difference(now);
+    // return now.add(const Duration(days: 2)).difference(now);
     // 即將開賣時間
     if (productInfo!.first.tagProd?.comingSoon == true && startedAt != null) {
       return _inputDateFormat.parse(startedAt!).difference(now);
