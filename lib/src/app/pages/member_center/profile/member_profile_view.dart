@@ -29,13 +29,15 @@ class _MemberProfilePageState
         appBar: AppBar(title: const Text('會員資料')),
         body: ControlledWidgetBuilder<MemberProfileController>(
             builder: (context, controller) {
+          final MemberProfile profile = controller.memberProfile!;
+
           return ListView(children: [
             /// 生日修改次數說明
             _buildBirthdayChangeHint(context),
 
             /// 姓名區塊
-            _buildTextField(context, '姓名', controller.memberProfile?.name,
-                '請輸入姓名', '請輸入有效姓名', (char) {
+            _buildTextField(context, '姓名', profile.name, '請輸入姓名', '請輸入有效姓名',
+                (char) {
               debugPrint('Input $char');
             }, () {
               debugPrint('Editing complete');
@@ -46,14 +48,13 @@ class _MemberProfilePageState
             /// 行動電話區塊
             _buildMobileView(
                 context,
-                controller.memberProfile?.sensitiveMobile ?? '',
+                profile.sensitiveMobile,
                 // controller.memberProfile?.isVerifyMobile ??
                 false, (message) {
               debugPrint(message);
             }),
             _buildValidationCodeTextField(context, ''),
-            _buildMobileTextField(context, controller.memberProfile?.mobile,
-                (char) {
+            _buildMobileTextField(context, profile.mobile, (char) {
               debugPrint('Input $char');
             }, () {
               debugPrint('Editing complete');
@@ -62,12 +63,14 @@ class _MemberProfilePageState
             }),
 
             /// Eamil 區塊
-            _buildEmailView(context, controller.memberProfile?.email ?? '',
-                controller.memberProfile?.isVerifyEmail ?? false, (message) {
+            _buildEmailView(
+                context, profile.email ?? '', profile.isVerifyEmail ?? false,
+                (message) {
               debugPrint(message);
             }),
-            _buildTextField(context, 'Email', controller.memberProfile?.email,
-                '請輸入Email', '請輸入有效Email', (char) {
+            _buildTextField(
+                context, 'Email', profile.email, '請輸入Email', '請輸入有效Email',
+                (char) {
               debugPrint('Input $char');
             }, () {
               debugPrint('Editing complete');
@@ -77,13 +80,8 @@ class _MemberProfilePageState
 
             /// 市話區塊
             _buildPhoneTextField(
-                context,
-                controller.memberProfile?.area,
-                controller.memberProfile?.phone,
-                controller.memberProfile?.ext, (char) {
+                context, profile.area, profile.phone, profile.ext, (char) {
               debugPrint('Input $char');
-            }, () {
-              debugPrint('Editing complete');
             }, (result) {
               debugPrint('Submit $result');
             }),
@@ -110,12 +108,8 @@ class _MemberProfilePageState
             ),
 
             /// 地址
-            _buildAddressTextFields(
-                context,
-                controller.memberProfile?.zipCode,
-                controller.memberProfile?.city,
-                controller.memberProfile?.area,
-                controller.memberProfile?.address, (char) {
+            _buildAddressTextFields(context, profile.zipCode, profile.city,
+                profile.area, profile.address, (char) {
               debugPrint('Input $char');
             }, (result) {
               debugPrint('Submit $result');
@@ -123,16 +117,153 @@ class _MemberProfilePageState
 
             /// 密碼設定
             _buildPasswordSettingView(
-                context, controller.memberProfile?.isSettingPassword ?? false,
-                (message) {
+                context, profile.isSettingPassword ?? false, (message) {
               debugPrint(message);
             }),
 
+            /// 儲存按鈕
             _buildSaveButton(context, () {
               debugPrint('save button pressed');
-            })
+            }),
+
+            /// 分隔線
+            const Divider(
+                thickness: 1.0,
+                indent: 12.0,
+                endIndent: 12.0,
+                color: UdiColors.veryLightGrey2),
+
+            /// 綁定帳號提示
+            _buildBindingHint(context),
+
+            /// Facebook帳號綁定
+            _buildBindingView(
+                context,
+                profile.bindingInfo?.facebookBinding,
+                profile.bindingInfo!.facebookBindingImage,
+                profile.bindingInfo?.facebookBinding?.bindingId != null,
+                (binding) {
+              debugPrint('Facebook binding button pressed');
+            }),
+
+            /// Google帳號綁定
+            _buildBindingView(
+                context,
+                profile.bindingInfo?.googleBinding,
+                profile.bindingInfo!.googleBindingImage,
+                profile.bindingInfo?.googleBinding?.bindingId != null,
+                (binding) {
+              debugPrint('Google binding button pressed');
+            }),
+
+            /// Line帳號綁定
+            _buildBindingView(
+                context,
+                profile.bindingInfo?.lineBinding,
+                profile.bindingInfo!.lineBindingImage,
+                profile.bindingInfo?.lineBinding?.bindingId != null, (binding) {
+              debugPrint('Line binding button pressed');
+            }),
+
+            /// Apple帳號綁定
+            _buildBindingView(
+                context,
+                profile.bindingInfo?.appleBinding,
+                profile.bindingInfo!.appleBindingImage,
+                profile.bindingInfo?.appleBinding?.bindingId != null,
+                (binding) {
+              debugPrint('Apple binding button pressed');
+            }),
           ]);
         }));
+  }
+
+  /// 建立綁定畫面
+  Padding _buildBindingView(BuildContext context, Binding? binding,
+      String image, bool isBinding, void Function(Binding?) handleBinding) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+      child: SizedBox(
+        width: double.infinity,
+        height: 66.0,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                SizedBox(
+                    height: 46.0,
+                    width: 46.0,
+                    child: Image(
+                      height: 46.0,
+                      width: 46.0,
+                      image: AssetImage(image),
+                    )),
+                const SizedBox(width: 16.0),
+                Text(isBinding ? '已綁定' : '尚未綁定',
+                    style: _buildPingFangTCRegularStyle(UdiColors.brownGrey))
+              ],
+            ),
+            Row(
+                children: isBinding
+                    ? [
+                        OutlinedButton(
+                          onPressed: () => handleBinding(binding),
+                          child: Text('解除綁定',
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .appBarTheme
+                                      .backgroundColor)),
+                        )
+                      ]
+                    : [
+                        ElevatedButton(
+                            onPressed: () => handleBinding(binding),
+                            child: const Text('立即綁定'),
+                            style: ElevatedButton.styleFrom(
+                                primary: Theme.of(context)
+                                    .appBarTheme
+                                    .backgroundColor))
+                      ])
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 建立帳號綁定提示
+  Padding _buildBindingHint(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+        child: SizedBox(
+            width: double.infinity,
+            height: 75.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                    height: 30.0,
+                    child: Row(
+                      children: [
+                        /// 「綁定帳號」文字右邊的線條
+                        Container(
+                          height: 20.0,
+                          width: 2.0,
+                          color: Theme.of(context).appBarTheme.backgroundColor,
+                        ),
+                        const SizedBox(width: 9.0),
+                        _buildPingFangTCSemiboldText('綁定帳號')
+                      ],
+                    )),
+                const SizedBox(width: 9.0),
+                SizedBox(
+                    height: 24.0,
+                    child: _buildPingFangTCRegularText(
+                        '綁定帳號後，下次可使用這些帳號快速登入。', UdiColors.brownGrey))
+              ],
+            )));
   }
 
   /// 建立儲存按鈕
@@ -172,12 +303,19 @@ class _MemberProfilePageState
                   children: [
                     Row(children: [
                       _buildPingFangTCRegularText(
-                          isSettingPassword ? '************' : '-'),
+                          isSettingPassword ? '************' : '-',
+                          UdiColors.greyishBrown),
                     ]),
                     Row(
                         children: isSettingPassword
-                            ? [_buildHyperLinkButton('修改密碼', handleTap)]
-                            : [_buildHyperLinkButton('設定密碼', handleTap)])
+                            ? [
+                                _buildHyperLinkButton(
+                                    context, '修改密碼', handleTap)
+                              ]
+                            : [
+                                _buildHyperLinkButton(
+                                    context, '設定密碼', handleTap)
+                              ])
                   ])
             ])));
   }
@@ -310,7 +448,6 @@ class _MemberProfilePageState
     String? phone,
     String? ext,
     void Function(String?) handleChange,
-    void Function()? handleEditingComplete,
     void Function(String)? handleSubmitted,
   ) {
     return Padding(
@@ -451,7 +588,8 @@ class _MemberProfilePageState
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(children: [
-                      _buildPingFangTCRegularText(sensitiveMobile),
+                      _buildPingFangTCRegularText(
+                          sensitiveMobile, UdiColors.greyishBrown),
                       const SizedBox(width: 10.0),
                       isValidation
                           ? const Image(
@@ -463,11 +601,16 @@ class _MemberProfilePageState
                     ]),
                     Row(
                         children: isValidation
-                            ? [_buildHyperLinkButton('手機變更', handleTap)]
+                            ? [
+                                _buildHyperLinkButton(
+                                    context, '手機變更', handleTap)
+                              ]
                             : [
-                                _buildHyperLinkButton('發送驗證碼', handleTap),
+                                _buildHyperLinkButton(
+                                    context, '發送驗證碼', handleTap),
                                 const SizedBox(width: 4),
-                                _buildHyperLinkButton('手機變更', handleTap)
+                                _buildHyperLinkButton(
+                                    context, '手機變更', handleTap)
                               ])
                   ])
             ])));
@@ -490,7 +633,8 @@ class _MemberProfilePageState
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(children: [
-                      _buildPingFangTCRegularText(email),
+                      _buildPingFangTCRegularText(
+                          email, UdiColors.greyishBrown),
                       const SizedBox(width: 10.0),
                       isValidation
                           ? const Image(
@@ -502,20 +646,26 @@ class _MemberProfilePageState
                     ]),
                     Row(
                         children: isValidation
-                            ? [_buildHyperLinkButton('Email變更', handleTap)]
+                            ? [
+                                _buildHyperLinkButton(
+                                    context, 'Email變更', handleTap)
+                              ]
                             : [
-                                _buildHyperLinkButton('發送驗證信', handleTap),
+                                _buildHyperLinkButton(
+                                    context, '發送驗證信', handleTap),
                                 const SizedBox(width: 4),
-                                _buildHyperLinkButton('Email變更', handleTap)
+                                _buildHyperLinkButton(
+                                    context, 'Email變更', handleTap)
                               ])
                   ])
             ])));
   }
 
+  /// 超連結樣式按鈕
   GestureDetector _buildHyperLinkButton(
-      String text, void Function(String) handleTap) {
+      BuildContext context, String text, void Function(String) handleTap) {
     return GestureDetector(
-      child: _buildHyperLinkText(text),
+      child: _buildHyperLinkText(context, text),
       onTap: () => handleTap(text),
     );
   }
@@ -709,9 +859,8 @@ class _MemberProfilePageState
   }
 
   /// 建立一般字體
-  Text _buildPingFangTCRegularText(String text) {
-    return Text(text,
-        style: _buildPingFangTCRegularStyle(UdiColors.greyishBrown));
+  Text _buildPingFangTCRegularText(String text, Color color) {
+    return Text(text, style: _buildPingFangTCRegularStyle(color));
   }
 
   /// 建立一般字樣式
@@ -739,10 +888,10 @@ class _MemberProfilePageState
   }
 
   /// 建立超連結文字
-  Text _buildHyperLinkText(String text) {
+  Text _buildHyperLinkText(BuildContext context, String text) {
     return Text(text,
-        style: const TextStyle(
-            color: Color.fromRGBO(102, 106, 209, 1),
+        style: TextStyle(
+            color: Theme.of(context).appBarTheme.backgroundColor,
             fontFamily: 'PingFangTC Regular',
             fontWeight: FontWeight.w400,
             fontSize: 12.0,
