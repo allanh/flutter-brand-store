@@ -23,6 +23,10 @@ class _MemberProfilePageState
 
   String? _birthday;
 
+  String? _validationCode;
+
+  bool _showValidationView = false;
+
   @override
   Widget get view {
     return Scaffold(
@@ -39,25 +43,56 @@ class _MemberProfilePageState
             _buildTextField(context, '姓名', profile?.name, '請輸入姓名', '請輸入有效姓名',
                 (char) {
               debugPrint('Input $char');
-            }, () {
-              debugPrint('Editing complete');
             }, (result) {
               debugPrint('Submit $result');
             }),
 
             /// 行動電話區塊
-            _buildMobileView(context, profile?.sensitiveMobile ?? '',
-                controller.memberProfile?.isVerifyMobile ?? false, (message) {
-              debugPrint(message);
-            }),
-            _buildValidationCodeTextField(context, ''),
-            _buildMobileTextField(context, profile?.mobile, (char) {
-              debugPrint('Input $char');
-            }, () {
-              debugPrint('Editing complete');
-            }, (result) {
-              debugPrint('Submit $result');
-            }),
+            profile?.mobile != null
+                ? _showValidationView == false
+                    ? _buildMobileView(
+                        context,
+                        profile?.sensitiveMobile ?? '',
+                        // profile?.isVerifyMobile ??
+                        false, (code) {
+                        setState(() {
+                          _showValidationView = true;
+                        });
+                      }, (message) {
+                        debugPrint(message);
+                      })
+                    : Column(
+                        children: [
+                          _buildMobileView(
+                              context,
+                              profile?.sensitiveMobile ?? '',
+                              // profile?.isVerifyMobile ??
+                              false, (code) {
+                            setState(() {
+                              _showValidationView = true;
+                            });
+                          }, (message) {
+                            debugPrint(message);
+                          }),
+                          _buildValidationCodeTextField(context, '', (code) {
+                            _validationCode = code;
+                          }, (code) {
+                            debugPrint(code);
+                            setState(() {
+                              if (code != null && code.isEmpty == false) {
+                                _showValidationView = false;
+                              }
+                            });
+                          }),
+                        ],
+                      )
+
+                /// 行動電話輸入區塊
+                : _buildMobileTextField(context, profile?.mobile, (char) {
+                    debugPrint('Input $char');
+                  }, (result) {
+                    debugPrint('Submit $result');
+                  }),
 
             /// Eamil 區塊
             _buildEmailView(
@@ -69,8 +104,6 @@ class _MemberProfilePageState
                 context, 'Email', profile?.email, '請輸入Email', '請輸入有效Email',
                 (char) {
               debugPrint('Input $char');
-            }, () {
-              debugPrint('Editing complete');
             }, (result) {
               debugPrint('Submit $result');
             }),
@@ -285,7 +318,7 @@ class _MemberProfilePageState
 
   /// 建立密碼設定區塊
   Padding _buildPasswordSettingView(BuildContext context,
-      bool isSettingPassword, void Function(String) handleTap) {
+      bool isSettingPassword, void Function(String?) handleTap) {
     return Padding(
         padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
         child: SizedBox(
@@ -308,11 +341,11 @@ class _MemberProfilePageState
                         children: isSettingPassword
                             ? [
                                 _buildHyperLinkButton(
-                                    context, '修改密碼', handleTap)
+                                    context, '修改密碼', true, handleTap)
                               ]
                             : [
                                 _buildHyperLinkButton(
-                                    context, '設定密碼', handleTap)
+                                    context, '設定密碼', true, handleTap)
                               ])
                   ])
             ])));
@@ -520,7 +553,11 @@ class _MemberProfilePageState
   }
 
   /// 建立驗證碼輸入匡
-  Padding _buildValidationCodeTextField(BuildContext context, String? code) {
+  Padding _buildValidationCodeTextField(
+      BuildContext context,
+      String? code,
+      void Function(String)? handleChange,
+      void Function(String?) handlePressed) {
     return Padding(
       padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
       child: SizedBox(
@@ -531,6 +568,7 @@ class _MemberProfilePageState
             children: [
               Expanded(
                   child: TextField(
+                      onChanged: handleChange,
                       cursorColor: UdiColors.brownGrey2,
                       decoration: InputDecoration(
                           isCollapsed: true,
@@ -552,7 +590,7 @@ class _MemberProfilePageState
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         primary: Theme.of(context).appBarTheme.backgroundColor),
-                    onPressed: () {},
+                    onPressed: () => handlePressed(_validationCode),
                     child: const Text('提交'),
                   ))
             ],
@@ -570,8 +608,13 @@ class _MemberProfilePageState
   }
 
   /// 建立行動電話顯示
-  Padding _buildMobileView(BuildContext context, String sensitiveMobile,
-      bool isValidation, void Function(String) handleTap) {
+  Padding _buildMobileView(
+    BuildContext context,
+    String sensitiveMobile,
+    bool isValidation,
+    void Function(String?) handleValidCodeSend,
+    void Function(String?) handleMobileChange,
+  ) {
     return Padding(
         padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
         child: SizedBox(
@@ -601,14 +644,17 @@ class _MemberProfilePageState
                         children: isValidation
                             ? [
                                 _buildHyperLinkButton(
-                                    context, '手機變更', handleTap)
+                                    context, '手機變更', true, handleMobileChange)
                               ]
                             : [
                                 _buildHyperLinkButton(
-                                    context, '發送驗證碼', handleTap),
+                                    context,
+                                    '發送驗證碼',
+                                    _showValidationView == false,
+                                    handleValidCodeSend),
                                 const SizedBox(width: 4),
                                 _buildHyperLinkButton(
-                                    context, '手機變更', handleTap)
+                                    context, '手機變更', true, handleMobileChange)
                               ])
                   ])
             ])));
@@ -616,7 +662,7 @@ class _MemberProfilePageState
 
   /// 建立Email顯示
   Padding _buildEmailView(BuildContext context, String email, bool isValidation,
-      void Function(String) handleTap) {
+      void Function(String?) handleTap) {
     return Padding(
         padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
         child: SizedBox(
@@ -646,25 +692,25 @@ class _MemberProfilePageState
                         children: isValidation
                             ? [
                                 _buildHyperLinkButton(
-                                    context, 'Email變更', handleTap)
+                                    context, 'Email變更', true, handleTap)
                               ]
                             : [
                                 _buildHyperLinkButton(
-                                    context, '發送驗證信', handleTap),
+                                    context, '發送驗證信', true, handleTap),
                                 const SizedBox(width: 4),
                                 _buildHyperLinkButton(
-                                    context, 'Email變更', handleTap)
+                                    context, 'Email變更', true, handleTap)
                               ])
                   ])
             ])));
   }
 
   /// 超連結樣式按鈕
-  GestureDetector _buildHyperLinkButton(
-      BuildContext context, String text, void Function(String) handleTap) {
+  GestureDetector _buildHyperLinkButton(BuildContext context, String text,
+      bool enable, void Function(String?) handleTap) {
     return GestureDetector(
-      child: _buildHyperLinkText(context, text),
-      onTap: () => handleTap(text),
+      child: _buildHyperLinkText(context, text, enable),
+      onTap: () => enable ? handleTap(text) : null,
     );
   }
 
@@ -673,7 +719,6 @@ class _MemberProfilePageState
     BuildContext context,
     String? mobile,
     void Function(String?) handleChange,
-    void Function()? handleEditingComplete,
     void Function(String)? handleSubmitted,
   ) {
     return Padding(
@@ -725,7 +770,6 @@ class _MemberProfilePageState
     String hintText,
     String errorText,
     void Function(String?) handleChange,
-    void Function()? handleEditingComplete,
     void Function(String)? handleSubmitted,
   ) {
     return Padding(
@@ -886,10 +930,12 @@ class _MemberProfilePageState
   }
 
   /// 建立超連結文字
-  Text _buildHyperLinkText(BuildContext context, String text) {
+  Text _buildHyperLinkText(BuildContext context, String text, bool enable) {
     return Text(text,
         style: TextStyle(
-            color: Theme.of(context).appBarTheme.backgroundColor,
+            color: enable
+                ? Theme.of(context).appBarTheme.backgroundColor
+                : UdiColors.brownGrey2,
             fontFamily: 'PingFangTC Regular',
             fontWeight: FontWeight.w400,
             fontSize: 12.0,

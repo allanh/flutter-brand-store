@@ -67,4 +67,8 @@ class MemberProfileController extends Controller {
   }
 
   void getMemberProfile() => memberProfilePresenter.getMemberProfile();
+
+  bool validateName(String? name) {
+    return name != null;
+  }
 }
