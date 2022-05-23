@@ -6,6 +6,7 @@ import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import '../../../device/utils/my_plus_colors.dart';
 import '../../widgets/product/base_product_row.dart';
+import '../../widgets/product/event.dart';
 import '../../widgets/product/image_slider.dart';
 import '../../widgets/product/product_name.dart';
 import './product_controller.dart';
@@ -34,7 +35,6 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
   Widget get view {
     return ControlledWidgetBuilder<ProductController>(
         builder: (context, controller) {
-      debugPrint('${controller.product?.countdownDuration}');
       return Scaffold(
           key: globalKey,
           appBar: getAppBar(controller),
@@ -69,13 +69,18 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Stack(children: [
-                // 圖片或影片
-                ImageSlider(imageList: controller.product?.imageInfo ?? []),
-                // 圖標
-                if (controller.product?.productInfo?.isNotEmpty == true)
-                  PromotionTagsView(product: controller.product!),
-              ]),
+              // 圖片或影片
+              Flexible(
+                  child: SizedBox(
+                      height: 375,
+                      child: Stack(children: [
+                        ImageSlider(
+                            imageList: controller.product?.imageInfo ?? []),
+                        // 圖標
+                        if (controller.product?.productInfo?.isNotEmpty == true)
+                          PromotionTagsView(product: controller.product!),
+                      ]))),
+
               // 倒數計時
               if (controller.product?.countdownDuration != null)
                 EventCountDownTimer(
@@ -86,10 +91,19 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                   slogan: controller.product?.promotionApp?.slogan,
                   onTimerEned: () => controller.onCountDownEnd(),
                 ),
-              // 商品名稱和價格
+
+              // 商品名稱
               ProductName(product: controller.product),
-              //if (controller.product?.eventList?.isNotEmpty == true)
-              BaseProductRow(title: '活   動', child: Row()),
+
+              // 促銷活動
+              if (controller.product?.eventList?.isNotEmpty == true)
+                BaseProductRow(
+                    title: '活   動',
+                    view: ProductEventsView(
+                      //eventList: controller.product!.mockEvents,
+                      eventList: controller.product!.eventList!,
+                    ),
+                    onMoreTap: () => debugPrint('tap event')),
             ],
           ))
       : SizedBox(

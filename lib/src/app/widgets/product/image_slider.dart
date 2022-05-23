@@ -23,23 +23,25 @@ class _ImageSliderState extends State<ImageSlider> {
 
   @override
   Widget build(BuildContext context) => widget.imageList.isNotEmpty
-      ? Stack(alignment: AlignmentDirectional.bottomCenter, children: [
-          CarouselSlider(
-            options: CarouselOptions(
-                height: 375.0,
-                viewportFraction: 1.0,
-                enableInfiniteScroll: false,
-                enlargeCenterPage: false,
-                onPageChanged: (index, reason) {
-                  setState(() {
-                    _current = index;
-                  });
-                }),
-            carouselController: _controller,
-            items: _items,
-          ),
-          if (imageList.length > 1) _indictor
-        ])
+      ? SizedBox(
+          height: 375,
+          child: Stack(alignment: AlignmentDirectional.bottomCenter, children: [
+            CarouselSlider(
+              options: CarouselOptions(
+                  height: 375.0,
+                  viewportFraction: 1.0,
+                  enableInfiniteScroll: false,
+                  //enlargeCenterPage: false,
+                  onPageChanged: (index, reason) {
+                    setState(() {
+                      _current = index;
+                    });
+                  }),
+              carouselController: _controller,
+              items: _items,
+            ),
+            if (imageList.length > 1) _indictor
+          ]))
       : const Center(child: CircularProgressIndicator());
 
   /// 圖片或影片列表

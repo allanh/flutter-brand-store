@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:sprintf/sprintf.dart';
 part 'event.g.dart';
 
 /// 活動適⽤類型
@@ -31,6 +32,26 @@ enum RuleType {
   fillUpMulti, // 滿件級距
   @JsonValue('OVER_AMOUNT_MULTI')
   overAmountMulti, // 滿額級距
+}
+
+extension RuleTypeExtension on RuleType {
+  // 商品頁的標籤
+  String get productLabelName {
+    switch (this) {
+      case RuleType.noRules:
+        return '馬上折';
+      case RuleType.fillUp:
+        return '滿件折';
+      case RuleType.eachFillUp:
+      case RuleType.fillUpMulti:
+        return '每滿件折';
+      case RuleType.overAmount:
+        return '滿額折';
+      case RuleType.eachOverAmount:
+      case RuleType.overAmountMulti:
+        return '每滿額折';
+    }
+  }
 }
 
 /// 折扣條件
@@ -71,7 +92,7 @@ class Event {
   @JsonKey(name: 'rule_content')
   RuleContent? ruleContent;
   @JsonKey(name: 'rule_infos')
-  List<RuleInfos>? ruleInfos;
+  List<RuleInfo>? ruleInfos;
 
   Event(
       {this.availableType,
@@ -90,18 +111,146 @@ class Event {
 
   factory Event.fromJson(Map<String, dynamic> json) => _$EventFromJson(json);
   Map<String, dynamic> toJson() => _$EventToJson(this);
-}
 
-@JsonSerializable()
-class RuleInfos {
-  @JsonKey(name: 'rule_info')
-  List<RuleInfo>? ruleInfo;
+  /// 顯示在商品主頁的活動列表
+  String? get discountWording {
+    List<String> list = [];
+    if (ruleInfos != null) {
+      ruleInfos?.forEach((info) {
+        int perPrice = info.perPrice ?? 0;
+        int perUnit = info.perUnit ?? 0;
+        int discount = info.discount ?? 0;
+        int fixedPrice = info.fixedPrice ?? 0;
 
-  RuleInfos({this.ruleInfo});
+        switch (ruleType) {
+          case RuleType.noRules: // 無條件
+            switch (ruleContent) {
+              case RuleContent.orderDiscount:
+                list.add(sprintf("折%d", [discount]));
+                break;
+              case RuleContent.productPercentOff:
+                list.add(sprintf("享%d折", [discount]));
+                break;
+              case RuleContent.productFixedPrice:
+                list.add(sprintf("每件%d", [fixedPrice]));
+                break;
+              case RuleContent.productDiscount:
+                list.add(sprintf("每件折%d", [discount]));
+                break;
+              case RuleContent.giveFreebie:
+                list.add('贈送贈品');
+                break;
+              default:
+                break;
+            }
+            break;
+          case RuleType.fillUp: // 滿件折扣
+            switch (ruleContent) {
+              case RuleContent.orderDiscount:
+                list.add(sprintf("%d件折%d", [perUnit, discount]));
+                break;
+              case RuleContent.productPercentOff:
+                list.add(sprintf("%d件%d折", [perUnit, discount]));
+                break;
+              case RuleContent.productFixedPrice:
+                list.add(sprintf("滿%d件，每件%d", [perUnit, fixedPrice]));
+                break;
+              case RuleContent.productDiscount:
+                list.add(sprintf("滿%d件，每件折%d", [perUnit, discount]));
+                break;
+              case RuleContent.giveFreebie:
+                list.add(sprintf('滿%d件，贈送贈品', [perUnit]));
+                break;
+              default:
+                break;
+            }
+            break;
+          case RuleType.overAmount: // 滿額
+            switch (ruleContent) {
+              case RuleContent.orderDiscount:
+                list.add(sprintf("滿%d折%d", [perPrice, discount]));
+                break;
+              case RuleContent.productPercentOff:
+                list.add(sprintf("滿%d享%d折", [perPrice, discount]));
+                break;
+              case RuleContent.productFixedPrice:
+                list.add(sprintf("滿%d每件%d", [perPrice, fixedPrice]));
+                break;
+              case RuleContent.productDiscount:
+                list.add(sprintf("滿%d件每件折%d", [perPrice, discount]));
+                break;
+              default:
+                break;
+            }
+            break;
+          case RuleType.eachFillUp: // 每滿件
+            switch (ruleContent) {
+              case RuleContent.orderDiscount:
+                list.add(sprintf("每滿%d件折%d", [perUnit, discount]));
+                break;
+              case RuleContent.productPercentOff:
+                list.add(sprintf("每滿%d件享%d折", [perUnit, discount]));
+                break;
+              case RuleContent.productFixedPrice:
+                list.add(sprintf("每滿%d件每件%d", [perUnit, fixedPrice]));
+                break;
+              case RuleContent.productDiscount:
+                list.add(sprintf("每滿%d件每件折%d", [perUnit, discount]));
+                break;
+              default:
+                break;
+            }
+            break;
+          case RuleType.eachOverAmount: // 每滿額
+            switch (ruleContent) {
+              case RuleContent.orderDiscount:
+                list.add(sprintf("每滿%d折%d", [perPrice, discount]));
+                break;
+              case RuleContent.productDiscount:
+                list.add(sprintf("每滿%d每件折%d", [perPrice, discount]));
+                break;
+              default:
+                break;
+            }
+            break;
+          case RuleType.fillUpMulti: // 滿件級距
+            switch (ruleContent) {
+              case RuleContent.orderDiscount:
+                list.add(sprintf("%d件折%d", [perUnit, discount]));
+                break;
+              case RuleContent.productPercentOff:
+                list.add(sprintf("%d件%d折", [perUnit, discount]));
+                break;
+              case RuleContent.productFixedPrice:
+                list.add(sprintf("滿%d每件%d", [perUnit, fixedPrice]));
+                break;
+              case RuleContent.productDiscount:
+                list.add(sprintf("滿%d件每件折%d", [perUnit, discount]));
+                break;
+              default:
+                break;
+            }
+            break;
 
-  factory RuleInfos.fromJson(Map<String, dynamic> json) =>
-      _$RuleInfosFromJson(json);
-  Map<String, dynamic> toJson() => _$RuleInfosToJson(this);
+          case RuleType.overAmountMulti: // 滿額級距
+            switch (ruleContent) {
+              case RuleContent.orderDiscount:
+                list.add(sprintf("滿%d折%d", [perPrice, discount]));
+                break;
+              case RuleContent.productPercentOff:
+                list.add(sprintf("滿%d享%d折", [perPrice, discount]));
+                break;
+              default:
+                break;
+            }
+            break;
+          default:
+            break;
+        }
+      });
+    }
+    return list.isNotEmpty ? list.first : null;
+  }
 }
 
 @JsonSerializable()

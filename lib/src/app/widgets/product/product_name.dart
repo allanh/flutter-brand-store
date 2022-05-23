@@ -59,8 +59,10 @@ class ProductName extends StatelessWidget {
                       child: Text(
                         product?.product?.marketPrice?.toDollarString() ?? '',
                         textAlign: TextAlign.left,
-                        style: theme.textTheme.caption!
-                            .copyWith(color: UdiColors.brownGrey),
+                        style: theme.textTheme.caption!.copyWith(
+                          color: UdiColors.brownGrey,
+                          decoration: TextDecoration.lineThrough,
+                        ),
                       )),
                   // 折扣折數
                   if (product?.promotionApp?.type == PromotionType.rate)

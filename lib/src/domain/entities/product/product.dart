@@ -381,3 +381,21 @@ class ProductInfo {
       _$ProductInfoFromJson(json);
   Map<String, dynamic> toJson() => _$ProductInfoToJson(this);
 }
+
+// 測試用
+extension MockProduct on Product {
+  List<Event> get mockEvents => [
+        Event(
+            eventOnline: true,
+            type: EventType.eventDiscount,
+            ruleType: RuleType.noRules,
+            ruleContent: RuleContent.productDiscount,
+            ruleInfos: [RuleInfo(discount: 1000)]),
+        Event(
+            eventOnline: false,
+            type: EventType.eventDiscount,
+            ruleType: RuleType.fillUp,
+            ruleContent: RuleContent.productPercentOff,
+            ruleInfos: [RuleInfo(perUnit: 3, discount: 7)]),
+      ];
+}
