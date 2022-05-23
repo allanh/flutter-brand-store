@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:brandstores/src/domain/entities/member_profile/member_profile.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:intl/intl.dart';
 
 class MemberProfilePage extends View {
   MemberProfilePage({Key? key}) : super(key: key);
@@ -20,12 +21,7 @@ class _MemberProfilePageState
 
   Gender? _gender;
 
-  void _handleGender(Gender? gender) {
-    setState(() {
-      debugPrint(gender.toString());
-      _gender = gender;
-    });
-  }
+  String? _birthday;
 
   @override
   Widget get view {
@@ -39,7 +35,13 @@ class _MemberProfilePageState
 
             /// 姓名區塊
             _buildTextField(context, '姓名', controller.memberProfile?.name,
-                '請輸入姓名', '請輸入有效姓名'),
+                '請輸入姓名', '請輸入有效姓名', (char) {
+              debugPrint('Input $char');
+            }, () {
+              debugPrint('Editing complete');
+            }, (result) {
+              debugPrint('Submit $result');
+            }),
 
             /// 行動電話區塊
             _buildMobileView(
@@ -50,25 +52,62 @@ class _MemberProfilePageState
               debugPrint(message);
             }),
             _buildValidationCodeTextField(context, ''),
-            _buildMobileTextField(context, controller.memberProfile?.mobile),
+            _buildMobileTextField(context, controller.memberProfile?.mobile,
+                (char) {
+              debugPrint('Input $char');
+            }, () {
+              debugPrint('Editing complete');
+            }, (result) {
+              debugPrint('Submit $result');
+            }),
 
             /// Eamil 區塊
             _buildEmailView(context, controller.memberProfile?.email ?? '',
                 controller.memberProfile?.isVerifyEmail ?? false, (message) {
               debugPrint(message);
             }),
-            _buildTextField(context, 'Email', controller.memberProfile?.name,
-                '請輸入Email', '請輸入有效Email'),
+            _buildTextField(context, 'Email', controller.memberProfile?.email,
+                '請輸入Email', '請輸入有效Email', (char) {
+              debugPrint('Input $char');
+            }, () {
+              debugPrint('Editing complete');
+            }, (result) {
+              debugPrint('Submit $result');
+            }),
 
             /// 市話區塊
-            _buildPhoneTextField(context, controller.memberProfile?.area,
-                controller.memberProfile?.phone, controller.memberProfile?.ext),
+            _buildPhoneTextField(
+                context,
+                controller.memberProfile?.area,
+                controller.memberProfile?.phone,
+                controller.memberProfile?.ext, (char) {
+              debugPrint('Input $char');
+            }, () {
+              debugPrint('Editing complete');
+            }, (result) {
+              debugPrint('Submit $result');
+            }),
 
             /// 性別區塊
-            _buildGenderRadioButtons(context, _gender, _handleGender),
+            _buildGenderRadioButtons(context, _gender, (gender) {
+              setState(() {
+                debugPrint(gender.toString());
+                _gender = gender;
+              });
+            }),
 
             /// 生日區塊
-            _buildBirthdayPicker(context, controller.memberProfile?.birthday),
+            _buildBirthdayPicker(
+              context,
+              _birthday,
+              (date) {
+                debugPrint('confirm $date');
+                setState(() {
+                  final DateFormat formatter = DateFormat('yyyy/MM/dd');
+                  _birthday = formatter.format(date);
+                });
+              },
+            ),
 
             /// 地址
             _buildAddressTextFields(
@@ -76,13 +115,56 @@ class _MemberProfilePageState
                 controller.memberProfile?.zipCode,
                 controller.memberProfile?.city,
                 controller.memberProfile?.area,
-                controller.memberProfile?.address)
+                controller.memberProfile?.address, (char) {
+              debugPrint('Input $char');
+            }, (result) {
+              debugPrint('Submit $result');
+            }),
+
+            /// 密碼設定
+            _buildPasswordSettingView(
+                context, controller.memberProfile?.isSettingPassword ?? false,
+                (message) {
+              debugPrint(message);
+            })
           ]);
         }));
   }
 
+  /// 建立密碼設定區塊
+  Padding _buildPasswordSettingView(BuildContext context,
+      bool isSettingPassword, void Function(String) handleTap) {
+    return Padding(
+        padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
+        child: SizedBox(
+            width: double.infinity,
+            height: 80.0,
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              _buildPingFangTCSemiboldText('密碼'),
+              const SizedBox(height: 8.0),
+              Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(children: [
+                      _buildPingFangTCRegularText(
+                          isSettingPassword ? '************' : '-'),
+                    ]),
+                    Row(
+                        children: isSettingPassword
+                            ? [_buildHyperLinkButton('修改密碼', handleTap)]
+                            : [_buildHyperLinkButton('設定密碼', handleTap)])
+                  ])
+            ])));
+  }
+
   /// 建立生日選擇
-  Padding _buildBirthdayPicker(BuildContext context, String? birthday) {
+  Padding _buildBirthdayPicker(
+    BuildContext context,
+    String? birthday,
+    dynamic Function(DateTime)? handleConfirm,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(
         left: 12.0,
@@ -99,30 +181,34 @@ class _MemberProfilePageState
               height: 40.0,
               child: GestureDetector(
                   onTap: () {
-                    DatePicker.showDatePicker(context,
-                        showTitleActions: true,
-                        maxTime: DateTime.now(), onChanged: (date) {
-                      debugPrint('change $date');
-                    }, onConfirm: (date) {
-                      debugPrint('confirm $date');
-                    }, currentTime: DateTime.now(), locale: LocaleType.tw);
+                    DatePicker.showDatePicker(
+                      context,
+                      showTitleActions: true,
+                      maxTime: DateTime.now(),
+                      onConfirm: handleConfirm,
+                      locale: LocaleType.tw,
+                    );
                   },
-                  child: const TextField(
+                  child: TextField(
                     readOnly: true,
                     cursorColor: UdiColors.brownGrey2,
                     decoration: InputDecoration(
                         enabled: false,
-                        suffixIcon: Image(
+                        suffixIcon: const Image(
                           image: AssetImage('assets/icon_date_picker.png'),
                         ),
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                             borderSide: BorderSide(
                                 width: 1.0, color: UdiColors.veryLightGrey2)),
-                        disabledBorder: OutlineInputBorder(
+                        disabledBorder: const OutlineInputBorder(
                             borderSide: BorderSide(
                                 width: 1.0, color: UdiColors.veryLightGrey2)),
-                        labelText: '請選擇生日',
-                        contentPadding: EdgeInsets.only(
+                        labelText: birthday ?? '請選擇生日',
+                        labelStyle: TextStyle(
+                            color: birthday != null
+                                ? UdiColors.greyishBrown
+                                : UdiColors.brownGrey2),
+                        contentPadding: const EdgeInsets.only(
                           left: 10.0,
                           top: 40.0 / 4,
                           bottom: 40.0 / 4,
@@ -196,7 +282,14 @@ class _MemberProfilePageState
 
   /// 建立市話輸入框
   Padding _buildPhoneTextField(
-      BuildContext context, String? area, String? phone, String? ext) {
+    BuildContext context,
+    String? area,
+    String? phone,
+    String? ext,
+    void Function(String?) handleChange,
+    void Function()? handleEditingComplete,
+    void Function(String)? handleSubmitted,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
       child: SizedBox(
@@ -207,11 +300,19 @@ class _MemberProfilePageState
           const SizedBox(height: 8.0),
           Row(
             children: [
-              SizedBox(width: 90.0, child: _buildStateTextField(area, '區碼')),
+              SizedBox(
+                  width: 90.0,
+                  child: _buildStateTextField(
+                      area, '區碼', handleChange, handleSubmitted)),
               const SizedBox(width: 10.0),
-              Expanded(child: _buildStateTextField(phone, '市內電話')),
+              Expanded(
+                  child: _buildStateTextField(
+                      phone, '市內電話', handleChange, handleSubmitted)),
               const SizedBox(width: 10.0),
-              SizedBox(width: 119.0, child: _buildStateTextField(phone, '分機'))
+              SizedBox(
+                  width: 119.0,
+                  child: _buildStateTextField(
+                      phone, '分機', handleChange, handleSubmitted))
             ],
           ),
           const SizedBox(height: 3.0),
@@ -222,8 +323,15 @@ class _MemberProfilePageState
   }
 
   /// 建立地址輸入框
-  Padding _buildAddressTextFields(BuildContext context, String? zipCode,
-      String? county, String? district, String? address) {
+  Padding _buildAddressTextFields(
+    BuildContext context,
+    String? zipCode,
+    String? county,
+    String? district,
+    String? address,
+    void Function(String?) handleChange,
+    void Function(String)? handleSubmitted,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
       child: SizedBox(
@@ -234,7 +342,9 @@ class _MemberProfilePageState
           const SizedBox(height: 8.0),
           Row(
             children: [
-              Expanded(child: _buildStateTextField(zipCode, '郵遞區號')),
+              Expanded(
+                  child: _buildStateTextField(
+                      zipCode, '郵遞區號', handleChange, handleSubmitted)),
               const SizedBox(width: 10.0),
               Expanded(child: _buildDropdownTextField(county, '縣市')),
               const SizedBox(width: 10.0),
@@ -242,7 +352,8 @@ class _MemberProfilePageState
             ],
           ),
           const SizedBox(height: 8.0),
-          _buildStateTextField(address, '請輸入街號、樓層'),
+          _buildStateTextField(
+              address, '請輸入街號、樓層', handleChange, handleSubmitted),
           const SizedBox(height: 3.0),
           _buildErrorMessage(context, '請輸入有效地址')
         ]),
@@ -387,7 +498,13 @@ class _MemberProfilePageState
   }
 
   /// 建立行動電話輸入框
-  Padding _buildMobileTextField(BuildContext context, String? mobile) {
+  Padding _buildMobileTextField(
+    BuildContext context,
+    String? mobile,
+    void Function(String?) handleChange,
+    void Function()? handleEditingComplete,
+    void Function(String)? handleSubmitted,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
       child: SizedBox(
@@ -398,9 +515,14 @@ class _MemberProfilePageState
           const SizedBox(height: 8.0),
           Row(
             children: [
-              SizedBox(width: 84.0, child: _buildStateTextField('+886', '')),
+              SizedBox(
+                  width: 84.0,
+                  child: _buildStateTextField(
+                      '+886', '', handleChange, handleSubmitted)),
               const SizedBox(width: 10.0),
-              Expanded(child: _buildStateTextField(mobile, '請輸入手機號碼'))
+              Expanded(
+                  child: _buildStateTextField(
+                      mobile, '請輸入手機號碼', handleChange, handleSubmitted))
             ],
           ),
           const SizedBox(height: 3.0),
@@ -425,8 +547,16 @@ class _MemberProfilePageState
   }
 
   /// 建立文字輸入框
-  Padding _buildTextField(BuildContext context, String title, String? text,
-      String hintText, String errorText) {
+  Padding _buildTextField(
+    BuildContext context,
+    String title,
+    String? text,
+    String hintText,
+    String errorText,
+    void Function(String?) handleChange,
+    void Function()? handleEditingComplete,
+    void Function(String)? handleSubmitted,
+  ) {
     return Padding(
         padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
         child: SizedBox(
@@ -436,7 +566,7 @@ class _MemberProfilePageState
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             _buildRequiresText(context, title),
             const SizedBox(height: 8.0),
-            _buildStateTextField(text, hintText),
+            _buildStateTextField(text, hintText, handleChange, handleSubmitted),
             const SizedBox(height: 3.0),
             _buildErrorMessage(context, errorText)
           ]),
@@ -493,8 +623,15 @@ class _MemberProfilePageState
   }
 
   /// 建立有狀態的文字輸入框
-  TextField _buildStateTextField(String? labelText, String hintText) {
+  TextField _buildStateTextField(
+    String? labelText,
+    String hintText,
+    void Function(String?) handleChange,
+    void Function(String)? handleSubmitted,
+  ) {
     return TextField(
+        onSubmitted: handleSubmitted,
+        onChanged: handleChange,
         cursorColor: UdiColors.brownGrey2,
         decoration: InputDecoration(
             isCollapsed: true,
