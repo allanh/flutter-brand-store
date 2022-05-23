@@ -29,14 +29,14 @@ class _MemberProfilePageState
         appBar: AppBar(title: const Text('會員資料')),
         body: ControlledWidgetBuilder<MemberProfileController>(
             builder: (context, controller) {
-          final MemberProfile profile = controller.memberProfile!;
+          final MemberProfile? profile = controller.memberProfile;
 
           return ListView(children: [
             /// 生日修改次數說明
             _buildBirthdayChangeHint(context),
 
             /// 姓名區塊
-            _buildTextField(context, '姓名', profile.name, '請輸入姓名', '請輸入有效姓名',
+            _buildTextField(context, '姓名', profile?.name, '請輸入姓名', '請輸入有效姓名',
                 (char) {
               debugPrint('Input $char');
             }, () {
@@ -46,15 +46,12 @@ class _MemberProfilePageState
             }),
 
             /// 行動電話區塊
-            _buildMobileView(
-                context,
-                profile.sensitiveMobile,
-                // controller.memberProfile?.isVerifyMobile ??
-                false, (message) {
+            _buildMobileView(context, profile?.sensitiveMobile ?? '',
+                controller.memberProfile?.isVerifyMobile ?? false, (message) {
               debugPrint(message);
             }),
             _buildValidationCodeTextField(context, ''),
-            _buildMobileTextField(context, profile.mobile, (char) {
+            _buildMobileTextField(context, profile?.mobile, (char) {
               debugPrint('Input $char');
             }, () {
               debugPrint('Editing complete');
@@ -64,12 +61,12 @@ class _MemberProfilePageState
 
             /// Eamil 區塊
             _buildEmailView(
-                context, profile.email ?? '', profile.isVerifyEmail ?? false,
+                context, profile?.email ?? '', profile?.isVerifyEmail ?? false,
                 (message) {
               debugPrint(message);
             }),
             _buildTextField(
-                context, 'Email', profile.email, '請輸入Email', '請輸入有效Email',
+                context, 'Email', profile?.email, '請輸入Email', '請輸入有效Email',
                 (char) {
               debugPrint('Input $char');
             }, () {
@@ -80,7 +77,7 @@ class _MemberProfilePageState
 
             /// 市話區塊
             _buildPhoneTextField(
-                context, profile.area, profile.phone, profile.ext, (char) {
+                context, profile?.area, profile?.phone, profile?.ext, (char) {
               debugPrint('Input $char');
             }, (result) {
               debugPrint('Submit $result');
@@ -108,8 +105,8 @@ class _MemberProfilePageState
             ),
 
             /// 地址
-            _buildAddressTextFields(context, profile.zipCode, profile.city,
-                profile.area, profile.address, (char) {
+            _buildAddressTextFields(context, profile?.zipCode, profile?.city,
+                profile?.area, profile?.address, (char) {
               debugPrint('Input $char');
             }, (result) {
               debugPrint('Submit $result');
@@ -117,7 +114,7 @@ class _MemberProfilePageState
 
             /// 密碼設定
             _buildPasswordSettingView(
-                context, profile.isSettingPassword ?? false, (message) {
+                context, profile?.isSettingPassword ?? false, (message) {
               debugPrint(message);
             }),
 
@@ -139,9 +136,9 @@ class _MemberProfilePageState
             /// Facebook帳號綁定
             _buildBindingView(
                 context,
-                profile.bindingInfo?.facebookBinding,
-                profile.bindingInfo!.facebookBindingImage,
-                profile.bindingInfo?.facebookBinding?.bindingId != null,
+                profile?.bindingInfo?.facebookBinding,
+                profile?.bindingInfo?.facebookBindingImage ?? '',
+                profile?.bindingInfo?.facebookBinding?.bindingId != null,
                 (binding) {
               debugPrint('Facebook binding button pressed');
             }),
@@ -149,9 +146,9 @@ class _MemberProfilePageState
             /// Google帳號綁定
             _buildBindingView(
                 context,
-                profile.bindingInfo?.googleBinding,
-                profile.bindingInfo!.googleBindingImage,
-                profile.bindingInfo?.googleBinding?.bindingId != null,
+                profile?.bindingInfo?.googleBinding,
+                profile?.bindingInfo?.googleBindingImage ?? '',
+                profile?.bindingInfo?.googleBinding?.bindingId != null,
                 (binding) {
               debugPrint('Google binding button pressed');
             }),
@@ -159,18 +156,19 @@ class _MemberProfilePageState
             /// Line帳號綁定
             _buildBindingView(
                 context,
-                profile.bindingInfo?.lineBinding,
-                profile.bindingInfo!.lineBindingImage,
-                profile.bindingInfo?.lineBinding?.bindingId != null, (binding) {
+                profile?.bindingInfo?.lineBinding,
+                profile?.bindingInfo?.lineBindingImage ?? '',
+                profile?.bindingInfo?.lineBinding?.bindingId != null,
+                (binding) {
               debugPrint('Line binding button pressed');
             }),
 
             /// Apple帳號綁定
             _buildBindingView(
                 context,
-                profile.bindingInfo?.appleBinding,
-                profile.bindingInfo!.appleBindingImage,
-                profile.bindingInfo?.appleBinding?.bindingId != null,
+                profile?.bindingInfo?.appleBinding,
+                profile?.bindingInfo?.appleBindingImage ?? '',
+                profile?.bindingInfo?.appleBinding?.bindingId != null,
                 (binding) {
               debugPrint('Apple binding button pressed');
             }),
