@@ -166,11 +166,13 @@ class _MemberProfilePageState
     return Row(
       children: [
         _buildRadio(context, value, groupValue, handleChange),
-        Text(title,
-            style: Theme.of(context)
-                .textTheme
-                .caption
-                ?.copyWith(color: UdiColors.greyishBrown))
+        GestureDetector(
+            onTap: () => handleChange(value),
+            child: Text(title,
+                style: Theme.of(context)
+                    .textTheme
+                    .caption
+                    ?.copyWith(color: UdiColors.greyishBrown)))
       ],
     );
   }
