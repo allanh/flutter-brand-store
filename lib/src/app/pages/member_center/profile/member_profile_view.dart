@@ -40,7 +40,7 @@ class _MemberProfilePageState
             _buildBirthdayChangeHint(context),
 
             /// 姓名區塊
-            _buildTextField(context, '姓名', profile?.name, '請輸入姓名', '請輸入有效姓名',
+            _buildInputTile(context, '姓名', profile?.name, '請輸入姓名', '請輸入有效姓名',
                 (char) {
               debugPrint('Input $char');
             }, (result) {
@@ -48,59 +48,15 @@ class _MemberProfilePageState
             }),
 
             /// 行動電話區塊
-            profile?.mobile != null
-                ? _showValidationView == false
-                    ? _buildMobileView(
-                        context,
-                        profile?.sensitiveMobile ?? '',
-                        // profile?.isVerifyMobile ??
-                        false, (code) {
-                        setState(() {
-                          _showValidationView = true;
-                        });
-                      }, (message) {
-                        debugPrint(message);
-                      })
-                    : Column(
-                        children: [
-                          _buildMobileView(
-                              context,
-                              profile?.sensitiveMobile ?? '',
-                              // profile?.isVerifyMobile ??
-                              false, (code) {
-                            setState(() {
-                              _showValidationView = true;
-                            });
-                          }, (message) {
-                            debugPrint(message);
-                          }),
-                          _buildValidationCodeTextField(context, '', (code) {
-                            _validationCode = code;
-                          }, (code) {
-                            debugPrint(code);
-                            setState(() {
-                              if (code != null && code.isEmpty == false) {
-                                _showValidationView = false;
-                              }
-                            });
-                          }),
-                        ],
-                      )
-
-                /// 行動電話輸入區塊
-                : _buildMobileTextField(context, profile?.mobile, (char) {
-                    debugPrint('Input $char');
-                  }, (result) {
-                    debugPrint('Submit $result');
-                  }),
+            _buildMobileCard(profile, context),
 
             /// Eamil 區塊
-            _buildEmailView(
+            _buildEmailTile(
                 context, profile?.email ?? '', profile?.isVerifyEmail ?? false,
                 (message) {
               debugPrint(message);
             }),
-            _buildTextField(
+            _buildInputTile(
                 context, 'Email', profile?.email, '請輸入Email', '請輸入有效Email',
                 (char) {
               debugPrint('Input $char');
@@ -109,7 +65,7 @@ class _MemberProfilePageState
             }),
 
             /// 市話區塊
-            _buildPhoneTextField(
+            _buildPhoneTile(
                 context, profile?.area, profile?.phone, profile?.ext, (char) {
               debugPrint('Input $char');
             }, (result) {
@@ -117,7 +73,7 @@ class _MemberProfilePageState
             }),
 
             /// 性別區塊
-            _buildGenderRadioButtons(context, _gender, (gender) {
+            _buildGenderTile(context, _gender, (gender) {
               setState(() {
                 debugPrint(gender.toString());
                 _gender = gender;
@@ -125,7 +81,7 @@ class _MemberProfilePageState
             }),
 
             /// 生日區塊
-            _buildBirthdayPicker(
+            _buildBirthdayTile(
               context,
               _birthday,
               (date) {
@@ -138,7 +94,7 @@ class _MemberProfilePageState
             ),
 
             /// 地址
-            _buildAddressTextFields(context, profile?.zipCode, profile?.city,
+            _buildAddressTile(context, profile?.zipCode, profile?.city,
                 profile?.area, profile?.address, (char) {
               debugPrint('Input $char');
             }, (result) {
@@ -146,7 +102,7 @@ class _MemberProfilePageState
             }),
 
             /// 密碼設定
-            _buildPasswordSettingView(
+            _buildPasswordSettingTile(
                 context, profile?.isSettingPassword ?? false, (message) {
               debugPrint(message);
             }),
@@ -164,10 +120,10 @@ class _MemberProfilePageState
                 color: UdiColors.veryLightGrey2),
 
             /// 綁定帳號提示
-            _buildBindingHint(context),
+            _buildBindingHintTile(context),
 
             /// Facebook帳號綁定
-            _buildBindingView(
+            _buildBindingTile(
                 context,
                 profile?.bindingInfo?.facebookBinding,
                 profile?.bindingInfo?.facebookBindingImage ?? '',
@@ -177,7 +133,7 @@ class _MemberProfilePageState
             }),
 
             /// Google帳號綁定
-            _buildBindingView(
+            _buildBindingTile(
                 context,
                 profile?.bindingInfo?.googleBinding,
                 profile?.bindingInfo?.googleBindingImage ?? '',
@@ -187,7 +143,7 @@ class _MemberProfilePageState
             }),
 
             /// Line帳號綁定
-            _buildBindingView(
+            _buildBindingTile(
                 context,
                 profile?.bindingInfo?.lineBinding,
                 profile?.bindingInfo?.lineBindingImage ?? '',
@@ -197,7 +153,7 @@ class _MemberProfilePageState
             }),
 
             /// Apple帳號綁定
-            _buildBindingView(
+            _buildBindingTile(
                 context,
                 profile?.bindingInfo?.appleBinding,
                 profile?.bindingInfo?.appleBindingImage ?? '',
@@ -209,8 +165,58 @@ class _MemberProfilePageState
         }));
   }
 
+  Column _buildMobileCard(MemberProfile? profile, BuildContext context) {
+    var mobileTile = _buildMobileTile(
+        context,
+        profile?.sensitiveMobile ?? '',
+        // profile?.isVerifyMobile ??
+        false, (code) {
+      setState(() {
+        _showValidationView = true;
+      });
+    }, (message) {
+      debugPrint(message);
+    });
+    var validationCodeTile = _buildValidationCodeTile(context, '', (code) {
+      _validationCode = code;
+    }, (code) {
+      debugPrint(code);
+      setState(() {
+        if (code != null && code.isEmpty == false) {
+          _showValidationView = false;
+        }
+      });
+    });
+    var mobileInputTile =
+        _buildMobileInputTile(context, profile?.mobile, (char) {
+      debugPrint('Input $char');
+    }, (result) {
+      debugPrint('Submit $result');
+    });
+    return Column(
+        children:
+
+            /// 有行動電話資料
+            profile?.mobile != null
+
+                /// 使用者尚未點擊發送驗證碼按鈕
+                ? _showValidationView == false
+
+                    /// 顯示行動電話
+                    ? [mobileTile]
+
+                    /// 使用者點擊發送驗證碼按鈕，顯示驗證碼輸入框
+                    : [
+                        mobileTile,
+                        validationCodeTile,
+                      ]
+
+                /// 沒有行動電話資料，顯示輸入框
+                : [mobileInputTile]);
+  }
+
   /// 建立綁定畫面
-  Padding _buildBindingView(BuildContext context, Binding? binding,
+  Padding _buildBindingTile(BuildContext context, Binding? binding,
       String image, bool isBinding, void Function(Binding?) handleBinding) {
     return Padding(
       padding: const EdgeInsets.only(left: 12.0, right: 12.0),
@@ -264,7 +270,7 @@ class _MemberProfilePageState
   }
 
   /// 建立帳號綁定提示
-  Padding _buildBindingHint(BuildContext context) {
+  Padding _buildBindingHintTile(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.only(left: 12.0, right: 12.0),
         child: SizedBox(
@@ -291,8 +297,8 @@ class _MemberProfilePageState
                 const SizedBox(width: 9.0),
                 SizedBox(
                     height: 24.0,
-                    child: _buildPingFangTCRegularText(
-                        '綁定帳號後，下次可使用這些帳號快速登入。', UdiColors.brownGrey))
+                    child: _buildPingFangTCRegularText('綁定帳號後，下次可使用這些帳號快速登入。',
+                        color: UdiColors.brownGrey))
               ],
             )));
   }
@@ -317,7 +323,7 @@ class _MemberProfilePageState
   }
 
   /// 建立密碼設定區塊
-  Padding _buildPasswordSettingView(BuildContext context,
+  Padding _buildPasswordSettingTile(BuildContext context,
       bool isSettingPassword, void Function(String?) handleTap) {
     return Padding(
         padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
@@ -334,8 +340,7 @@ class _MemberProfilePageState
                   children: [
                     Row(children: [
                       _buildPingFangTCRegularText(
-                          isSettingPassword ? '************' : '-',
-                          UdiColors.greyishBrown),
+                          isSettingPassword ? '************' : '-'),
                     ]),
                     Row(
                         children: isSettingPassword
@@ -352,7 +357,7 @@ class _MemberProfilePageState
   }
 
   /// 建立生日選擇
-  Padding _buildBirthdayPicker(
+  Padding _buildBirthdayTile(
     BuildContext context,
     String? birthday,
     dynamic Function(DateTime)? handleConfirm,
@@ -389,12 +394,8 @@ class _MemberProfilePageState
                         suffixIcon: const Image(
                           image: AssetImage('assets/icon_date_picker.png'),
                         ),
-                        border: const OutlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 1.0, color: UdiColors.veryLightGrey2)),
-                        disabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 1.0, color: UdiColors.veryLightGrey2)),
+                        border: _buildHighlightBorder(),
+                        disabledBorder: _buildHighlightBorder(),
                         labelText: birthday ?? '請選擇生日',
                         labelStyle: TextStyle(
                             color: birthday != null
@@ -412,7 +413,7 @@ class _MemberProfilePageState
   }
 
   /// 建立性別選擇按鈕
-  Padding _buildGenderRadioButtons(BuildContext context, Gender? gender,
+  Padding _buildGenderTile(BuildContext context, Gender? gender,
       void Function(Gender?) handleGender) {
     return Padding(
       padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
@@ -424,13 +425,13 @@ class _MemberProfilePageState
             _buildPingFangTCSemiboldText('性別'),
             Row(
               children: [
-                _buildGenderRadioOptionRow(
+                _buildGenderOption(
                     context, '男性', Gender.male, gender, handleGender),
                 const SizedBox(width: 12.0),
-                _buildGenderRadioOptionRow(
+                _buildGenderOption(
                     context, '女性', Gender.female, gender, handleGender),
                 const SizedBox(width: 12.0),
-                _buildGenderRadioOptionRow(
+                _buildGenderOption(
                     context, '不公開', Gender.other, gender, handleGender),
               ],
             )
@@ -439,11 +440,11 @@ class _MemberProfilePageState
   }
 
   /// 建立性別選項
-  Row _buildGenderRadioOptionRow(BuildContext context, String title,
-      Gender value, Gender? groupValue, void Function(Gender?) handleChange) {
+  Row _buildGenderOption(BuildContext context, String title, Gender value,
+      Gender? groupValue, void Function(Gender?) handleChange) {
     return Row(
       children: [
-        _buildRadio(context, value, groupValue, handleChange),
+        _buildOption(context, value, groupValue, handleChange),
         GestureDetector(
             onTap: () => handleChange(value),
             child: Text(title,
@@ -456,7 +457,7 @@ class _MemberProfilePageState
   }
 
   /// 建立 Radio 物件
-  Radio<Gender> _buildRadio(BuildContext context, Gender value,
+  Radio<Gender> _buildOption(BuildContext context, Gender value,
       Gender? groupValue, void Function(Gender?) handleChange) {
     return Radio<Gender>(
       value: value,
@@ -473,7 +474,7 @@ class _MemberProfilePageState
   }
 
   /// 建立市話輸入框
-  Padding _buildPhoneTextField(
+  Padding _buildPhoneTile(
     BuildContext context,
     String? area,
     String? phone,
@@ -493,16 +494,16 @@ class _MemberProfilePageState
             children: [
               SizedBox(
                   width: 90.0,
-                  child: _buildStateTextField(
+                  child: _buildHighlightTextField(
                       area, '區碼', handleChange, handleSubmitted)),
               const SizedBox(width: 10.0),
               Expanded(
-                  child: _buildStateTextField(
+                  child: _buildHighlightTextField(
                       phone, '市內電話', handleChange, handleSubmitted)),
               const SizedBox(width: 10.0),
               SizedBox(
                   width: 119.0,
-                  child: _buildStateTextField(
+                  child: _buildHighlightTextField(
                       phone, '分機', handleChange, handleSubmitted))
             ],
           ),
@@ -514,7 +515,7 @@ class _MemberProfilePageState
   }
 
   /// 建立地址輸入框
-  Padding _buildAddressTextFields(
+  Padding _buildAddressTile(
     BuildContext context,
     String? zipCode,
     String? county,
@@ -534,7 +535,7 @@ class _MemberProfilePageState
           Row(
             children: [
               Expanded(
-                  child: _buildStateTextField(
+                  child: _buildHighlightTextField(
                       zipCode, '郵遞區號', handleChange, handleSubmitted)),
               const SizedBox(width: 10.0),
               Expanded(child: _buildDropdownTextField(county, '縣市')),
@@ -543,7 +544,7 @@ class _MemberProfilePageState
             ],
           ),
           const SizedBox(height: 8.0),
-          _buildStateTextField(
+          _buildHighlightTextField(
               address, '請輸入街號、樓層', handleChange, handleSubmitted),
           const SizedBox(height: 3.0),
           _buildErrorMessage(context, '請輸入有效地址')
@@ -553,7 +554,7 @@ class _MemberProfilePageState
   }
 
   /// 建立驗證碼輸入匡
-  Padding _buildValidationCodeTextField(
+  Padding _buildValidationCodeTile(
       BuildContext context,
       String? code,
       void Function(String)? handleChange,
@@ -572,9 +573,9 @@ class _MemberProfilePageState
                       cursorColor: UdiColors.brownGrey2,
                       decoration: InputDecoration(
                           isCollapsed: true,
-                          border: _buildStateBorder(true),
-                          enabledBorder: _buildStateBorder(true),
-                          focusedBorder: _buildStateBorder(true),
+                          border: _buildHighlightBorder(),
+                          enabledBorder: _buildHighlightBorder(),
+                          focusedBorder: _buildHighlightBorder(),
                           hintText: '請輸入驗證碼',
                           hintStyle:
                               const TextStyle(color: UdiColors.brownGrey2),
@@ -596,19 +597,16 @@ class _MemberProfilePageState
             ],
           ),
           const SizedBox(height: 4.0),
-          const Text('請耐心等候驗證簡訊，約300秒後可重新發送。',
-              style: TextStyle(
-                  fontFamily: 'PingFangTC Regular',
-                  fontWeight: FontWeight.w400,
-                  fontSize: 12.0,
-                  color: UdiColors.brownGrey2))
+          Text('請耐心等候驗證簡訊，約300秒後可重新發送。',
+              style: _buildPingFangTCRegularStyle(UdiColors.brownGrey2,
+                  fontSize: 12.0))
         ]),
       ),
     );
   }
 
   /// 建立行動電話顯示
-  Padding _buildMobileView(
+  Padding _buildMobileTile(
     BuildContext context,
     String sensitiveMobile,
     bool isValidation,
@@ -629,8 +627,7 @@ class _MemberProfilePageState
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(children: [
-                      _buildPingFangTCRegularText(
-                          sensitiveMobile, UdiColors.greyishBrown),
+                      _buildPingFangTCRegularText(sensitiveMobile),
                       const SizedBox(width: 10.0),
                       isValidation
                           ? const Image(
@@ -661,7 +658,7 @@ class _MemberProfilePageState
   }
 
   /// 建立Email顯示
-  Padding _buildEmailView(BuildContext context, String email, bool isValidation,
+  Padding _buildEmailTile(BuildContext context, String email, bool isValidation,
       void Function(String?) handleTap) {
     return Padding(
         padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
@@ -677,8 +674,7 @@ class _MemberProfilePageState
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(children: [
-                      _buildPingFangTCRegularText(
-                          email, UdiColors.greyishBrown),
+                      _buildPingFangTCRegularText(email),
                       const SizedBox(width: 10.0),
                       isValidation
                           ? const Image(
@@ -709,13 +705,13 @@ class _MemberProfilePageState
   GestureDetector _buildHyperLinkButton(BuildContext context, String text,
       bool enable, void Function(String?) handleTap) {
     return GestureDetector(
-      child: _buildHyperLinkText(context, text, enable),
+      child: _buildHyperLinkText(context, text, active: enable),
       onTap: () => enable ? handleTap(text) : null,
     );
   }
 
   /// 建立行動電話輸入框
-  Padding _buildMobileTextField(
+  Padding _buildMobileInputTile(
     BuildContext context,
     String? mobile,
     void Function(String?) handleChange,
@@ -733,11 +729,11 @@ class _MemberProfilePageState
             children: [
               SizedBox(
                   width: 84.0,
-                  child: _buildStateTextField(
+                  child: _buildHighlightTextField(
                       '+886', '', handleChange, handleSubmitted)),
               const SizedBox(width: 10.0),
               Expanded(
-                  child: _buildStateTextField(
+                  child: _buildHighlightTextField(
                       mobile, '請輸入手機號碼', handleChange, handleSubmitted))
             ],
           ),
@@ -763,7 +759,7 @@ class _MemberProfilePageState
   }
 
   /// 建立文字輸入框
-  Padding _buildTextField(
+  Padding _buildInputTile(
     BuildContext context,
     String title,
     String? text,
@@ -781,7 +777,8 @@ class _MemberProfilePageState
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             _buildRequiresText(context, title),
             const SizedBox(height: 8.0),
-            _buildStateTextField(text, hintText, handleChange, handleSubmitted),
+            _buildHighlightTextField(
+                text, hintText, handleChange, handleSubmitted),
             const SizedBox(height: 3.0),
             _buildErrorMessage(context, errorText)
           ]),
@@ -817,10 +814,10 @@ class _MemberProfilePageState
               cursorColor: UdiColors.brownGrey2,
               decoration: InputDecoration(
                   isCollapsed: true,
-                  border: _buildStateBorder(true),
-                  enabledBorder: _buildStateBorder(true),
-                  focusedBorder: _buildStateBorder(true),
-                  disabledBorder: _buildStateBorder(true),
+                  border: _buildHighlightBorder(),
+                  enabledBorder: _buildHighlightBorder(),
+                  focusedBorder: _buildHighlightBorder(),
+                  disabledBorder: _buildHighlightBorder(),
                   hintText: hintText,
                   hintStyle: const TextStyle(color: UdiColors.brownGrey2),
                   labelText: labelText,
@@ -838,7 +835,7 @@ class _MemberProfilePageState
   }
 
   /// 建立有狀態的文字輸入框
-  TextField _buildStateTextField(
+  TextField _buildHighlightTextField(
     String? labelText,
     String hintText,
     void Function(String?) handleChange,
@@ -850,9 +847,11 @@ class _MemberProfilePageState
         cursorColor: UdiColors.brownGrey2,
         decoration: InputDecoration(
             isCollapsed: true,
-            border: _buildStateBorder(labelText != null),
-            enabledBorder: _buildStateBorder(labelText != null),
-            focusedBorder: _buildStateBorder(labelText != null),
+            border: _buildHighlightBorder(isHighlight: labelText == null),
+            enabledBorder:
+                _buildHighlightBorder(isHighlight: labelText == null),
+            focusedBorder:
+                _buildHighlightBorder(isHighlight: labelText == null),
             hintText: hintText,
             hintStyle: const TextStyle(color: UdiColors.brownGrey2),
             labelText: labelText,
@@ -864,11 +863,12 @@ class _MemberProfilePageState
   }
 
   /// 建立有狀態的邊匡
-  OutlineInputBorder _buildStateBorder(bool valid) {
+  OutlineInputBorder _buildHighlightBorder({bool isHighlight = false}) {
     return OutlineInputBorder(
         borderSide: BorderSide(
             width: 1.0,
-            color: valid ? UdiColors.veryLightGrey2 : UdiColors.strawberry));
+            color:
+                isHighlight ? UdiColors.strawberry : UdiColors.veryLightGrey2));
   }
 
   /// 建立有星號(*)的文字
@@ -876,23 +876,24 @@ class _MemberProfilePageState
     return RichText(
       text: TextSpan(
           text: text,
-          style: _buildPingFangTCSemiboldStyle(UdiColors.greyishBrown),
+          style: _buildPingFangTCSemiboldStyle(),
           children: <TextSpan>[
             TextSpan(
                 text: "*",
-                style: _buildPingFangTCSemiboldStyle(UdiColors.strawberry))
+                style:
+                    _buildPingFangTCSemiboldStyle(color: UdiColors.strawberry))
           ]),
     );
   }
 
   /// 建立粗體字體
   Text _buildPingFangTCSemiboldText(String text) {
-    return Text(text,
-        style: _buildPingFangTCSemiboldStyle(UdiColors.greyishBrown));
+    return Text(text, style: _buildPingFangTCSemiboldStyle());
   }
 
   /// 建立粗體字樣式
-  TextStyle _buildPingFangTCSemiboldStyle(Color color) {
+  TextStyle _buildPingFangTCSemiboldStyle(
+      {Color color = UdiColors.greyishBrown}) {
     return TextStyle(
         color: color,
         fontFamily: 'PingFangTC Semibold',
@@ -901,17 +902,19 @@ class _MemberProfilePageState
   }
 
   /// 建立一般字體
-  Text _buildPingFangTCRegularText(String text, Color color) {
+  Text _buildPingFangTCRegularText(String text,
+      {Color color = UdiColors.greyishBrown}) {
     return Text(text, style: _buildPingFangTCRegularStyle(color));
   }
 
   /// 建立一般字樣式
-  TextStyle _buildPingFangTCRegularStyle(Color color) {
+  TextStyle _buildPingFangTCRegularStyle(Color color,
+      {double fontSize = 14.0}) {
     return TextStyle(
         color: color,
         fontFamily: 'PingFangTC Regular',
         fontWeight: FontWeight.w400,
-        fontSize: 14.0);
+        fontSize: fontSize);
   }
 
   /// 建立驗證結果文字
@@ -922,18 +925,15 @@ class _MemberProfilePageState
   }
 
   TextStyle _buildValidResultStyle(Color color) {
-    return TextStyle(
-        color: color,
-        fontFamily: 'PingFangTC Regular',
-        fontWeight: FontWeight.w400,
-        fontSize: 12.0);
+    return _buildPingFangTCRegularStyle(color, fontSize: 12.0);
   }
 
   /// 建立超連結文字
-  Text _buildHyperLinkText(BuildContext context, String text, bool enable) {
+  Text _buildHyperLinkText(BuildContext context, String text,
+      {bool active = true}) {
     return Text(text,
         style: TextStyle(
-            color: enable
+            color: active
                 ? Theme.of(context).appBarTheme.backgroundColor
                 : UdiColors.brownGrey2,
             fontFamily: 'PingFangTC Regular',
