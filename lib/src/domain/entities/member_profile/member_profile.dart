@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:brandstores/src/data/helper/json_value_converter.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 
 part 'member_profile.g.dart';
 
@@ -33,7 +33,7 @@ class MemberProfileResponse {
 
 @JsonSerializable()
 class MemberProfile {
-  const MemberProfile(
+  MemberProfile(
       this.name,
       this.countryCode,
       this.mobile,
@@ -53,50 +53,50 @@ class MemberProfile {
       this.isVerifyMobile,
       this.bindingInfo);
 
-  final String? name;
+  String? name;
 
   /// 手機國碼
   @JsonKey(name: 'mobile_code')
-  final String? countryCode;
+  String? countryCode;
 
-  final String? mobile;
+  String? mobile;
 
   String get sensitiveMobile {
     return '+$countryCode ${mobile?.replaceRange(2, 8, '******')}';
   }
 
   @JsonKey(name: 'area_code')
-  final String? areaCode;
+  String? areaCode;
 
   @JsonKey(name: 'tel')
-  final String? phone;
+  String? phone;
 
   ///分機號碼
   @JsonKey(name: 'tel_ext')
-  final String? ext;
+  String? ext;
 
-  final String? email;
+  String? email;
 
   ///性別
-  final Gender? gender;
+  Gender? gender;
 
   @JsonKey(name: 'birth')
-  final String? birthday;
+  String? birthday;
 
   /// 生日修改次數
   @JsonKey(name: 'birth_count')
-  final int? birthdayModifyCount;
+  int? birthdayModifyCount;
 
   @JsonKey(name: 'zip')
-  final String? zipCode;
+  String? zipCode;
 
   @JsonKey(name: 'cityno')
-  final String? city;
+  String? city;
 
   @JsonKey(name: 'areano')
-  final String? area;
+  String? area;
 
-  final String? address;
+  String? address;
 
   /// 密碼(true=已設定密碼, false=無設定密碼)
   @JsonKey(name: 'pwd')

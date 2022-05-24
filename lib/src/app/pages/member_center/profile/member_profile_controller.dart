@@ -68,7 +68,55 @@ class MemberProfileController extends Controller {
 
   void getMemberProfile() => memberProfilePresenter.getMemberProfile();
 
+  void updateName(String? name) {
+    if (name != null && name.isNotEmpty && _memberProfile?.name != name) {
+      _memberProfile?.name = name;
+      refreshUI();
+    }
+  }
+
+  void updateEmail(String? email) {
+    if (email != null && email.isNotEmpty && _memberProfile?.email != email) {
+      _memberProfile?.email = email;
+      refreshUI();
+    }
+  }
+
+  void updateCountryCode(String? code) {
+    if (code != null &&
+        code.isNotEmpty &&
+        _memberProfile?.countryCode != code) {
+      _memberProfile?.countryCode = code;
+      refreshUI();
+    }
+  }
+
+  void updateMobile(String? mobile) {
+    if (mobile != null &&
+        mobile.isNotEmpty &&
+        _memberProfile?.mobile != mobile) {
+      _memberProfile?.mobile = mobile;
+      refreshUI();
+    }
+  }
+
   bool validateName(String? name) {
-    return name != null;
+    return name == null || !(name.contains('!'));
+  }
+
+  bool validateEmail(String? email) {
+    var regex = RegExp(
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+    return email == null || email.startsWith(regex);
+  }
+
+  bool validateCountryCode(String? code) {
+    var regex = RegExp('^[0-9]{3}\$');
+    return code == null || code.startsWith(regex);
+  }
+
+  bool validateMobile(String? mobile) {
+    var regex = RegExp('^09[0-9]{8}\$');
+    return mobile == null || mobile.startsWith(regex);
   }
 }
