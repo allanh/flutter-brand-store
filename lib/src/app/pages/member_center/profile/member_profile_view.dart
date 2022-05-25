@@ -30,7 +30,8 @@ class MemberProfilePage extends View {
 class _MemberProfilePageState
     extends ViewState<MemberProfilePage, MemberProfileController> {
   _MemberProfilePageState()
-      : super(MemberProfileController(DataMemberProfileRepository()));
+      : super(MemberProfileController(
+            DataMemberProfileRepository(), DataMemberVerificationRepository()));
 
   Gender? _gender;
 
@@ -52,17 +53,21 @@ class _MemberProfilePageState
             controller.updateCountryCode(code);
           }
 
-          void handleMobileEditing(mobile) {
+          void handleMobileChange(mobile) {
             controller.updateMobile(mobile);
           }
 
-          void handleSendValidCodePressed(code) {
+          void handleSendValidationCode(code) {
+            controller.mobileVerification(
+              profile?.countryCode ?? '886',
+              profile?.mobile ?? '',
+            );
             setState(() {
               _showValidationView = true;
             });
           }
 
-          void handleMobileChangePressed(message) {
+          void handleChangeMobile(message) {
             debugPrint(message);
           }
 
@@ -70,8 +75,7 @@ class _MemberProfilePageState
             _validationCode = code;
           }
 
-          void handleCodeSubmitPressed(code) {
-            debugPrint(code);
+          void handleValidationCodeSubmit(code) {
             setState(() {
               if (code != null && code.isEmpty == false) {
                 _showValidationView = false;
@@ -79,6 +83,18 @@ class _MemberProfilePageState
               }
             });
           }
+
+          void handleNameChange(name) {
+            controller.updateName(name);
+          }
+
+          void handleEmailChange(email) {
+            controller.updateEmail(email);
+          }
+
+          void handleChangeEmail(toggle) {}
+
+          void handleSendValidationMail(toggle) {}
 
           List<Widget> list = [
             /// 生日修改次數說明
@@ -92,10 +108,7 @@ class _MemberProfilePageState
                 hintText: '請輸入姓名',
                 errorText: '請輸入有效姓名',
                 isValid: controller.validateName(profile?.name),
-                handleChange: (char) {
-                  debugPrint('Input $char');
-                  controller.updateName(char);
-                }),
+                handleChange: handleNameChange),
 
             /// 行動電話區塊
             MobileTile(
@@ -105,26 +118,27 @@ class _MemberProfilePageState
                 countryCode: profile?.countryCode,
                 mobile:
                     profile?.mobile != null ? profile?.sensitiveMobile : null,
-                isVerify: false,
+                isVerify: profile?.isVerifyMobile,
                 isValidCountryCode:
                     controller.validateCountryCode(profile?.countryCode),
                 isValidMobile: controller.validateMobile(profile?.mobile),
                 handleCountryCodeChange: handleCountryCodeChange,
-                handleMobileEditing: handleMobileEditing,
-                handleSendValidCodePressed: handleSendValidCodePressed,
-                handleMobileChangePressed: handleMobileChangePressed,
+                handleMobileChange: handleMobileChange,
+                handleSendValidationCode: handleSendValidationCode,
+                handleChangeMobile: handleChangeMobile,
                 handleValidationCodeChange: handleValidationCodeChange,
-                handleCodeSubmitPressed: handleCodeSubmitPressed),
+                handleValidationCodeSubmit: handleValidationCodeSubmit),
 
             /// Eamil 區塊
             EmailTile(
-                context: context,
-                controller: controller,
-                profile: profile,
-                handleEmailChange: (email) {
-                  debugPrint('Input $email');
-                  controller.updateEmail(email);
-                }),
+              context: context,
+              email: profile?.email,
+              isVerify: profile?.isVerifyEmail ?? false,
+              isValid: controller.validateEmail(profile?.email),
+              handleEmailChange: handleEmailChange,
+              handleSendValidationMail: handleSendValidationMail,
+              handleChangeEmail: handleChangeEmail,
+            ),
 
             /// 市話區塊
             PhoneTile(

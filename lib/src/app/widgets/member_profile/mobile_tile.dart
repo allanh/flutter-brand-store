@@ -11,9 +11,9 @@ import 'package:brandstores/src/app/widgets/member_profile/mobile_operation_tile
 /// - [isValidCountryCode] 國碼是否正確有符合規則
 /// - [isValidMobile] 行動電話是否正確有符合規則
 /// - [handleCountryCodeChange] 國碼編輯 callback
-/// - [handleMobileEditing] 行動電話編輯 callback
-/// - [handleSendValidCodePressed] 點擊發送驗證碼按鈕 callback
-/// - [handleMobileChangePressed] 點擊手機變更按鈕 callback
+/// - [handleMobileChange] 行動電話編輯 callback
+/// - [handleSendValidationCode] 點擊發送驗證碼按鈕 callback
+/// - [handleChangeMobile] 點擊手機變更按鈕 callback
 class MobileTile extends StatelessWidget {
   const MobileTile({
     Key? key,
@@ -26,11 +26,11 @@ class MobileTile extends StatelessWidget {
     required this.isValidCountryCode,
     required this.isValidMobile,
     required this.handleCountryCodeChange,
-    required this.handleMobileEditing,
-    required this.handleSendValidCodePressed,
-    required this.handleMobileChangePressed,
+    required this.handleMobileChange,
+    required this.handleSendValidationCode,
+    required this.handleChangeMobile,
     required this.handleValidationCodeChange,
-    required this.handleCodeSubmitPressed,
+    required this.handleValidationCodeSubmit,
   })  : _showValidationView = showValidationView,
         _validationCode = validationCode,
         super(key: key);
@@ -44,11 +44,11 @@ class MobileTile extends StatelessWidget {
   final bool isValidCountryCode;
   final bool isValidMobile;
   final void Function(String? p1) handleCountryCodeChange;
-  final void Function(String? p1) handleMobileEditing;
-  final void Function(String? p1) handleSendValidCodePressed;
-  final void Function(String? p1) handleMobileChangePressed;
+  final void Function(String? p1) handleMobileChange;
+  final void Function(String? p1) handleSendValidationCode;
+  final void Function(String? p1) handleChangeMobile;
   final void Function(String p1)? handleValidationCodeChange;
-  final void Function(String? p1) handleCodeSubmitPressed;
+  final void Function(String? p1) handleValidationCodeSubmit;
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +58,8 @@ class MobileTile extends StatelessWidget {
         context: context,
         sensitiveMobile: mobile ?? '',
         isValidation: isVerify ?? false,
-        handleValidCodeSend: handleSendValidCodePressed,
-        handleMobileChange: handleMobileChangePressed);
+        handleValidCodeSend: handleSendValidationCode,
+        handleMobileChange: handleChangeMobile);
 
     /// 驗證碼輸入欄位
     ValidationCodeTile validationCodeTile = ValidationCodeTile(
@@ -67,7 +67,7 @@ class MobileTile extends StatelessWidget {
         context: context,
         code: '',
         handleValidationCodeChange: handleValidationCodeChange,
-        handleCodeSubmitPressed: handleCodeSubmitPressed);
+        handleCodeSubmitPressed: handleValidationCodeSubmit);
 
     /// 沒有行動電話資料，行動電話輸入欄位
     MobileInputTile mobileInputTile = MobileInputTile(
@@ -76,7 +76,7 @@ class MobileTile extends StatelessWidget {
         isValidCountryCode: isValidCountryCode,
         isValidMobile: isValidMobile,
         handleCountryCodeChange: handleCountryCodeChange,
-        handleChange: handleMobileEditing);
+        handleChange: handleMobileChange);
 
     return Column(
         children:

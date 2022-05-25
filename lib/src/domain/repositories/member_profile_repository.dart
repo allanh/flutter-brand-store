@@ -18,3 +18,8 @@ import 'package:brandstores/src/domain/entities/member_profile/member_profile.da
 abstract class MemberProfileRepository {
   Future<MemberProfile> getMemberProfile();
 }
+
+abstract class MemberVerificationRepository {
+  Future<MemberVerification> memberVerification(
+      String countryCode, String mobile);
+}

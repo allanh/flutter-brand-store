@@ -29,7 +29,7 @@ class GetMemberProfileUseCase extends UseCase<GetMemberProfileUseCaseResponse,
     final controller = StreamController<GetMemberProfileUseCaseResponse>();
 
     try {
-      // get member center
+      // get member profile
       final memberProfile = await memberProfileRepository.getMemberProfile();
       // Adding it triggers the .onNext() in the 'Observer'
       // It is usually better to wrap the response inside a response object.
@@ -54,4 +54,49 @@ class GetMemberProfileUseCaseResponse {
 /// Wrapping params inside an object makes it easier to change later
 class GetMemberProfileUseCaseParams {
   GetMemberProfileUseCaseParams();
+}
+
+class GetMemberVerificationUseCase extends UseCase<
+    GetMemberVerificationUseCaseResponse, GetMemberVerificationUseCaseParams> {
+  final MemberVerificationRepository memberVerificationRepository;
+  GetMemberVerificationUseCase(this.memberVerificationRepository);
+
+  @override
+  Future<Stream<GetMemberVerificationUseCaseResponse?>> buildUseCaseStream(
+      GetMemberVerificationUseCaseParams? params) async {
+    final controller = StreamController<GetMemberVerificationUseCaseResponse>();
+
+    try {
+      // get member profile
+      final memberVerification =
+          await memberVerificationRepository.memberVerification(
+        params!.countryCode,
+        params.mobile,
+      );
+      // Adding it triggers the .onNext() in the 'Observer'
+      // It is usually better to wrap the response inside a response object.
+      controller.add(GetMemberVerificationUseCaseResponse(memberVerification));
+      logger.finest('GetMemberVerificationUseCase successful.');
+      controller.close();
+    } catch (e) {
+      logger.severe('GetMemberVerificationUseCase failure.');
+      // Trigger .onError
+      controller.addError(e);
+    }
+    return controller.stream;
+  }
+}
+
+class GetMemberVerificationUseCaseResponse {
+  final MemberVerification memberVerification;
+  GetMemberVerificationUseCaseResponse(this.memberVerification);
+}
+
+class GetMemberVerificationUseCaseParams {
+  final String countryCode;
+  final String mobile;
+  GetMemberVerificationUseCaseParams(
+    this.countryCode,
+    this.mobile,
+  );
 }

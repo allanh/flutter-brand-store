@@ -175,3 +175,46 @@ class Binding {
       _$BindingFromJson(json);
   Map<String, dynamic> toJson() => _$BindingToJson(this);
 }
+
+@JsonSerializable()
+class MemberVerificationResponse {
+  const MemberVerificationResponse(
+    this.id,
+    this.status,
+    this.message,
+    this.verification,
+  );
+  final String id;
+  final String status;
+  final String? message;
+
+  /// 會員帳號驗證
+  @JsonKey(name: 'data')
+  final MemberVerification? verification;
+
+  factory MemberVerificationResponse.fromJson(Map<String, dynamic> json) =>
+      _$MemberVerificationResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$MemberVerificationResponseToJson(this);
+}
+
+enum MemberVerificationType {
+  @JsonValue('MOBILE')
+  mobile,
+  @JsonValue('EMAIL')
+  email,
+}
+
+@JsonSerializable()
+class MemberVerification {
+  const MemberVerification(this.type, this.code);
+
+  @JsonKey(name: 'verify_method')
+  final MemberVerificationType type;
+
+  @JsonKey(name: 'verify_code')
+  final String? code;
+
+  factory MemberVerification.fromJson(Map<String, dynamic> json) =>
+      _$MemberVerificationFromJson(json);
+  Map<String, dynamic> toJson() => _$MemberVerificationToJson(this);
+}

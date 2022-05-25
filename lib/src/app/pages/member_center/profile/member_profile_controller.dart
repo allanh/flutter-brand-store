@@ -9,8 +9,14 @@ class MemberProfileController extends Controller {
 
   final MemberProfilePresenter memberProfilePresenter;
 
-  MemberProfileController(memberProfileRepo)
-      : memberProfilePresenter = MemberProfilePresenter(memberProfileRepo),
+  final MemberVerificationPresenter memberVerificationPresenter;
+
+  MemberProfileController(
+    memberProfileRepo,
+    memberVerificationRepo,
+  )   : memberProfilePresenter = MemberProfilePresenter(memberProfileRepo),
+        memberVerificationPresenter =
+            MemberVerificationPresenter(memberVerificationRepo),
         super();
 
   @override
@@ -67,6 +73,15 @@ class MemberProfileController extends Controller {
   }
 
   void getMemberProfile() => memberProfilePresenter.getMemberProfile();
+
+  void mobileVerification(
+    String countryCode,
+    String mobile,
+  ) =>
+      memberVerificationPresenter.mobileVerification(
+        countryCode,
+        mobile,
+      );
 
   void updateName(String? name) {
     if (name != null && name.isNotEmpty && _memberProfile?.name != name) {

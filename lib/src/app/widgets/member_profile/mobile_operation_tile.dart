@@ -43,7 +43,7 @@ class MobileOperationTile extends StatelessWidget {
                   children: [
                     Row(children: [
                       Text(sensitiveMobile,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: UdiColors.greyishBrown,
                               fontFamily: 'PingFangTC Regular',
                               fontWeight: FontWeight.w400,

@@ -25,3 +25,33 @@ class DataMemberProfileRepository extends MemberProfileRepository {
     }
   }
 }
+
+class DataMemberVerificationRepository extends MemberVerificationRepository {
+  // sigleton
+  static final DataMemberVerificationRepository _instance =
+      DataMemberVerificationRepository._internal();
+  DataMemberVerificationRepository._internal();
+  factory DataMemberVerificationRepository() => _instance;
+
+  @override
+  Future<MemberVerification> memberVerification(
+      String countryCode, String mobile) async {
+    try {
+      debugPrint('Country code: $countryCode\nMobile: $mobile');
+      final response =
+          await HttpUtils.instance.post(Api.memberVerification, params: {
+        'mobile_code': countryCode,
+        'mobile': mobile,
+        "email": "",
+        'verify_type': 'VERIFY_ACCOUNT'
+      });
+      if (response.isSuccess) {
+        return MemberVerification.fromJson(response.data);
+      }
+      throw Exception('Failed to verify member.');
+    } catch (e) {
+      debugPrint(e.toString());
+      throw Exception('Failed to verify member.');
+    }
+  }
+}

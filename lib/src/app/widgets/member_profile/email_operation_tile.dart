@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:brandstores/src/app/widgets/member_profile/common.dart';
-import 'package:brandstores/src/app/pages/member_center/profile/member_profile_controller.dart';
 
 /// 建立Email驗證、變更區塊
 class EmailOperationTile extends StatelessWidget {
   const EmailOperationTile({
     Key? key,
     required this.context,
-    required this.controller,
     required this.email,
     required this.isValidation,
-    required this.handleTap,
+    required this.handleSendValidationMail,
+    required this.handleChangeEmail,
   }) : super(key: key);
 
   final BuildContext context;
-  final MemberProfileController controller;
   final String email;
   final bool isValidation;
-  final void Function(String? p1) handleTap;
+  final void Function(String? p1) handleSendValidationMail;
+  final void Function(String? p2) handleChangeEmail;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +36,7 @@ class EmailOperationTile extends StatelessWidget {
                   children: [
                     Row(children: [
                       Text(email,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: UdiColors.greyishBrown,
                               fontFamily: 'PingFangTC Regular',
                               fontWeight: FontWeight.w400,
@@ -58,20 +57,20 @@ class EmailOperationTile extends StatelessWidget {
                                     context: context,
                                     text: 'Email變更',
                                     enable: true,
-                                    handleTap: handleTap)
+                                    handleTap: handleChangeEmail)
                               ]
                             : [
                                 HyperLinkButton(
                                     context: context,
                                     text: '發送驗證信',
                                     enable: true,
-                                    handleTap: handleTap),
+                                    handleTap: handleSendValidationMail),
                                 const SizedBox(width: 4),
                                 HyperLinkButton(
                                     context: context,
                                     text: 'Email變更',
                                     enable: true,
-                                    handleTap: handleTap)
+                                    handleTap: handleChangeEmail)
                               ])
                   ])
             ])));

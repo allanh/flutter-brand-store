@@ -27,7 +27,7 @@ class LogInterceptor extends Interceptor {
     debugPrint('---Request Start---');
     debugPrint('uri: ${options.uri}');
     debugPrint('header: ${options.headers}');
-    debugPrint('param: ${options.queryParameters}');
+    debugPrint('param: ${options.data}');
     super.onRequest(options, handler);
   }
 
