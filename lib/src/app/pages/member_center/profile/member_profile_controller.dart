@@ -76,7 +76,7 @@ class MemberProfileController extends Controller {
   }
 
   void updateEmail(String? email) {
-    if (email != null && email.isNotEmpty && _memberProfile?.email != email) {
+    if (_memberProfile?.email != email) {
       _memberProfile?.email = email;
       refreshUI();
     }
@@ -107,7 +107,9 @@ class MemberProfileController extends Controller {
   bool validateEmail(String? email) {
     var regex = RegExp(
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
-    return email == null || email.startsWith(regex);
+    bool result = email == null || email.isEmpty || email.startsWith(regex);
+    debugPrint('Email is ${result ? 'valid' : 'invalid'} ');
+    return result;
   }
 
   bool validateCountryCode(String? code) {
