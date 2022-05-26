@@ -45,6 +45,7 @@ dependencies:
   intl: ^0.17.0
   # Dart implementation of sprintf.
   sprintf: "^6.0.0"
+  pinput: ^2.2.9
 
 
   # The following adds the Cupertino Icons font to your application.

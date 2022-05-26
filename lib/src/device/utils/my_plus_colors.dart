@@ -5,6 +5,22 @@ extension UdiColors on Colors {
   static const Color greyishBrown = Color(0xff4c4c4c);
   static const Color brownGrey = Color(0xff7c7c7c);
 
+  // 全站規範 - Neutral Color
+  static const Color normalText = Color(0xff4c4c4c);
+  static const Color secondaryText = Color(0xff7f7f7f);
+  static const Color normalIcon = Color(0xff7f7f7f);
+  static const Color hintText = Color(0xffb4b4b4);
+  static const Color disabledText = Color(0xffb4b4b4);
+  static const Color border = Color(0xffcccccc);
+  static const Color divider = Color(0xffe5e5e5);
+
+  // 全站規範 - Semantic Color
+  static const Color danger = Color(0xfff23f44);
+
+  // 全站規範 - Input state
+  static const Color defaultBorder = Color(0xffe5e5e5);
+  static const Color focusedBorder = Color(0xff4c4c4c);
+
   static Color get strawberry => const Color.fromRGBO(242, 63, 68, 1);
   static Color get comingSoon => const Color.fromRGBO(114, 0, 255, 1);
   static Color get reddishOrange => const Color.fromRGBO(255, 83, 20, 1);
