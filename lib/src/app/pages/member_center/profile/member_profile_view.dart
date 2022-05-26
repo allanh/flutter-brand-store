@@ -33,8 +33,6 @@ class _MemberProfilePageState
       : super(MemberProfileController(
             DataMemberProfileRepository(), DataMemberVerificationRepository()));
 
-  String? _birthday;
-
   String? _validationCode;
 
   bool _showValidationView = false;
@@ -110,6 +108,12 @@ class _MemberProfilePageState
             controller.updateGender(gender);
           }
 
+          void handleBirthdayChange(birthday) {
+            final DateFormat formatter = DateFormat('yyyy/MM/dd');
+            birthday = formatter.format(birthday);
+            controller.updateBirthday(birthday);
+          }
+
           List<Widget> list = [
             /// 生日修改次數說明
             BirthdayChangeHintTile(context: context),
@@ -177,14 +181,8 @@ class _MemberProfilePageState
             BrithdayTile(
                 context: context,
                 controller: controller,
-                birthday: _birthday,
-                handleConfirm: (date) {
-                  debugPrint('confirm $date');
-                  setState(() {
-                    final DateFormat formatter = DateFormat('yyyy/MM/dd');
-                    _birthday = formatter.format(date);
-                  });
-                }),
+                birthday: profile?.birthday,
+                handleConfirm: handleBirthdayChange),
 
             /// 地址
             AddressTile(

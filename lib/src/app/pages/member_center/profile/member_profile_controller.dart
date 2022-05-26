@@ -188,4 +188,11 @@ class MemberProfileController extends Controller {
       refreshUI();
     }
   }
+
+  void updateBirthday(String? birthday) {
+    if (_memberProfile?.birthday != birthday) {
+      _memberProfile?.birthday = birthday;
+      refreshUI();
+    }
+  }
 }
