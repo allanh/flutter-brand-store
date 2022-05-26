@@ -159,30 +159,26 @@ class MemberProfileController extends Controller {
   }
 
   bool validatePhone(String area, String phone, String ext) {
-    return
+    /// 區碼跟電話有資料
+    /// 區碼需 2 到 3 個字
+    /// 電話需 5 到 8 個字
+    bool validateLength(String area, String phone) {
+      return area.isNotEmpty &&
+          area.length > 1 &&
+          area.length < 4 &&
+          phone.isNotEmpty &&
+          phone.length > 4 &&
+          phone.length < 9;
+    }
 
-        /// 區碼跟電話有資料
-        /// 區碼需 2 到 3 個字
-        /// 電話需 5 到 8 個字
-        area.isNotEmpty &&
-                area.length > 1 &&
-                area.length < 4 &&
-                phone.isNotEmpty &&
-                phone.length > 4 &&
-                phone.length < 9
+    return validateLength(area, phone)
 
-            /// 區碼、電話跟分機都空白
-            ||
-            area.isEmpty && phone.isEmpty && ext.isEmpty
+        /// 區碼、電話跟分機都空白
+        ||
+        area.isEmpty && phone.isEmpty && ext.isEmpty
 
-            /// 區碼、電話跟分機都有資料
-            ||
-            area.isNotEmpty &&
-                area.length > 1 &&
-                area.length < 4 &&
-                phone.isNotEmpty &&
-                phone.length > 4 &&
-                phone.length < 9 &&
-                ext.isNotEmpty;
+        /// 區碼、電話跟分機都有資料
+        ||
+        validateLength(area, phone) && ext.isNotEmpty;
   }
 }
