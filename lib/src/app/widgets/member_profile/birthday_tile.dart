@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
-import 'package:brandstores/src/app/pages/member_center/profile/member_profile_controller.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 /// 建立生日選擇
@@ -8,13 +7,13 @@ class BrithdayTile extends StatelessWidget {
   const BrithdayTile({
     Key? key,
     required this.context,
-    required this.controller,
+    required this.enableChange,
     required this.birthday,
     required this.handleConfirm,
   }) : super(key: key);
 
   final BuildContext context;
-  final MemberProfileController controller;
+  final bool enableChange;
   final String? birthday;
   final Function(DateTime p1)? handleConfirm;
 
@@ -30,7 +29,7 @@ class BrithdayTile extends StatelessWidget {
           height: 80.0,
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('生日',
+            const Text('生日',
                 style: TextStyle(
                     color: UdiColors.greyishBrown,
                     fontFamily: 'PingFangTC Semibold',
@@ -41,15 +40,18 @@ class BrithdayTile extends StatelessWidget {
               height: 40.0,
               child: GestureDetector(
                   onTap: () {
-                    DatePicker.showDatePicker(
-                      context,
-                      showTitleActions: true,
-                      maxTime: DateTime.now(),
-                      onConfirm: handleConfirm,
-                      locale: LocaleType.tw,
-                    );
+                    enableChange
+                        ? DatePicker.showDatePicker(
+                            context,
+                            showTitleActions: true,
+                            maxTime: DateTime.now(),
+                            onConfirm: handleConfirm,
+                            locale: LocaleType.tw,
+                          )
+                        : null;
                   },
                   child: TextField(
+                    enabled: false,
                     readOnly: true,
                     cursorColor: UdiColors.brownGrey2,
                     decoration: InputDecoration(
@@ -58,18 +60,15 @@ class BrithdayTile extends StatelessWidget {
                         suffixIcon: const Image(
                           image: AssetImage('assets/icon_date_picker.png'),
                         ),
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                             borderSide: BorderSide(
-                                width: 1.0,
-                                color: (false)
-                                    ? UdiColors.strawberry
-                                    : UdiColors.veryLightGrey2)),
-                        disabledBorder: OutlineInputBorder(
+                                width: 1.0, color: UdiColors.veryLightGrey2)),
+                        enabledBorder: const OutlineInputBorder(
                             borderSide: BorderSide(
-                                width: 1.0,
-                                color: (false)
-                                    ? UdiColors.strawberry
-                                    : UdiColors.veryLightGrey2)),
+                                width: 1.0, color: UdiColors.veryLightGrey2)),
+                        disabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                                width: 1.0, color: UdiColors.veryLightGrey2)),
                         labelText: birthday,
                         labelStyle: TextStyle(
                             color: birthday != null

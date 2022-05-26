@@ -180,7 +180,7 @@ class _MemberProfilePageState
             /// 生日區塊
             BrithdayTile(
                 context: context,
-                controller: controller,
+                enableChange: profile?.enableBirthdayChange ?? false,
                 birthday: profile?.birthday,
                 handleConfirm: handleBirthdayChange),
 

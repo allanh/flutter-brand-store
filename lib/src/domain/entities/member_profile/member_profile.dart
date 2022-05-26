@@ -87,6 +87,11 @@ class MemberProfile {
   @JsonKey(name: 'birth_count')
   int? birthdayModifyCount;
 
+  bool get enableBirthdayChange {
+    return birthdayModifyCount == null ||
+        birthdayModifyCount != null && birthdayModifyCount! < 1;
+  }
+
   @JsonKey(name: 'zip')
   String? zipCode;
 
