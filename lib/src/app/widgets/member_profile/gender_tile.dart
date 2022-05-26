@@ -24,7 +24,7 @@ class GenderTile extends StatelessWidget {
           height: 80.0,
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('性別',
+            const Text('性別',
                 style: TextStyle(
                     color: UdiColors.greyishBrown,
                     fontFamily: 'PingFangTC Semibold',

@@ -181,4 +181,11 @@ class MemberProfileController extends Controller {
         ||
         validateLength(area, phone) && ext.isNotEmpty;
   }
+
+  void updateGender(Gender? gender) {
+    if (_memberProfile?.gender != gender) {
+      _memberProfile?.gender = gender;
+      refreshUI();
+    }
+  }
 }

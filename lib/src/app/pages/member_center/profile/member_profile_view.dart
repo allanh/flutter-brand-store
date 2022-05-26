@@ -33,8 +33,6 @@ class _MemberProfilePageState
       : super(MemberProfileController(
             DataMemberProfileRepository(), DataMemberVerificationRepository()));
 
-  Gender? _gender;
-
   String? _birthday;
 
   String? _validationCode;
@@ -108,6 +106,10 @@ class _MemberProfilePageState
             controller.updateExt(ext);
           }
 
+          void handleGenderChange(gender) {
+            controller.updateGender(gender);
+          }
+
           List<Widget> list = [
             /// 生日修改次數說明
             BirthdayChangeHintTile(context: context),
@@ -158,8 +160,8 @@ class _MemberProfilePageState
               area: profile?.area,
               phone: profile?.phone,
               ext: profile?.ext,
-              isValid: controller.validatePhone(
-                  profile?.areaCode ?? '', profile?.phone ?? '', profile?.ext ?? ''),
+              isValid: controller.validatePhone(profile?.areaCode ?? '',
+                  profile?.phone ?? '', profile?.ext ?? ''),
               handleAreaChange: handleAreaChange,
               handlePhoneChange: handlePhoneChange,
               handleExtChange: handleExtChange,
@@ -168,13 +170,8 @@ class _MemberProfilePageState
             /// 性別區塊
             GenderTile(
                 context: context,
-                gender: _gender,
-                handleGender: (gender) {
-                  setState(() {
-                    debugPrint(gender.toString());
-                    _gender = gender;
-                  });
-                }),
+                gender: profile?.gender,
+                handleGender: handleGenderChange),
 
             /// 生日區塊
             BrithdayTile(
