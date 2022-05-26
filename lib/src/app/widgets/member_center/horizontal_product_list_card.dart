@@ -277,7 +277,7 @@ class EmptyProductView extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Image(
-          image: AssetImage('assets/empty_cart.png'),
+          image: AssetImage('assets/images/empty_cart.png'),
         ),
         const SizedBox(height: 24.0),
         Text('目前尚未有$tab。',
@@ -316,8 +316,8 @@ class _FavoriteButtonState extends State<FavoriteButton> {
           color: _isFavorite ? Colors.red : Colors.black54,
           fit: BoxFit.scaleDown,
           image: _isFavorite
-              ? const AssetImage('assets/icon_fill_heart.png')
-              : const AssetImage('assets/icon_heart.png'),
+              ? const AssetImage('assets/images/icon_fill_heart.png')
+              : const AssetImage('assets/images/icon_heart.png'),
         ));
   }
 }

@@ -120,7 +120,7 @@ class ServiceButton extends StatelessWidget {
       onPressed: buttonTapped,
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Image.asset(
-          'assets/${service.icon}',
+          'assets/images/${service.icon}',
           fit: BoxFit.scaleDown,
         ),
         const SizedBox(height: 3),

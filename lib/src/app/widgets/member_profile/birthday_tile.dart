@@ -58,7 +58,7 @@ class BrithdayTile extends StatelessWidget {
                         hintText: '請選擇生日',
                         enabled: false,
                         suffixIcon: const Image(
-                          image: AssetImage('assets/icon_date_picker.png'),
+                          image: AssetImage('assets/images/icon_date_picker.png'),
                         ),
                         border: const OutlineInputBorder(
                             borderSide: BorderSide(

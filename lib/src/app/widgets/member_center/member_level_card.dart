@@ -97,7 +97,7 @@ class BackgroundImage extends StatelessWidget {
       width: double.infinity,
       child: member.backgroundSmallImgUrl != null
           ? Image(image: NetworkImage(member.backgroundSmallImgUrl!))
-          : const Image(image: AssetImage('assets/mask.png')),
+          : const Image(image: AssetImage('assets/images/mask.png')),
     );
   }
 }
@@ -287,7 +287,7 @@ class Avatar extends StatelessWidget {
             height: 54,
             foregroundDecoration: BoxDecoration(
                 image: DecorationImage(
-                    image: const AssetImage('assets/icon_user.png'),
+                    image: const AssetImage('assets/images/icon_user.png'),
                     colorFilter: ColorFilter.mode(
                         theme.appBarTheme.backgroundColor!, BlendMode.srcIn))),
           ),

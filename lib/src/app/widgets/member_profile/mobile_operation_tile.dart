@@ -51,10 +51,11 @@ class MobileOperationTile extends StatelessWidget {
                       const SizedBox(width: 10.0),
                       isValidation
                           ? const Image(
-                              image: AssetImage('assets/icon_completed.png'))
+                              image: AssetImage(
+                                  'assets/images/icon_completed.png'))
                           : const Image(
                               image: AssetImage(
-                                  'assets/icon_warning_red_circle.png')),
+                                  'assets/images/icon_warning_red_circle.png')),
                       ValidResultText(isValid: isValidation)
                     ]),
                     Row(

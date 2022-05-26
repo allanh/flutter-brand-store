@@ -138,25 +138,25 @@ class BindingInfo {
   @JsonKey(name: 'FACEBOOK')
   final Binding? facebookBinding;
   String get facebookBindingImage {
-    return 'assets/icon_circle_facebook.png';
+    return 'assets/images/icon_circle_facebook.png';
   }
 
   @JsonKey(name: 'LINE')
   final Binding? lineBinding;
   String get lineBindingImage {
-    return 'assets/icon_circle_line.png';
+    return 'assets/images/icon_circle_line.png';
   }
 
   @JsonKey(name: 'GOOGLE')
   final Binding? googleBinding;
   String get googleBindingImage {
-    return 'assets/icon_circle_google.png';
+    return 'assets/images/icon_circle_google.png';
   }
 
   @JsonKey(name: 'APPLE')
   final Binding? appleBinding;
   String get appleBindingImage {
-    return 'assets/icon_circle_apple.png';
+    return 'assets/images/icon_circle_apple.png';
   }
 
   factory BindingInfo.fromJson(Map<String, dynamic> json) =>

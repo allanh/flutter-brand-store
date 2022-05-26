@@ -209,7 +209,7 @@ class DropdownTextField extends StatelessWidget {
           const Padding(
               padding: EdgeInsets.only(right: 9.8),
               child: Image(
-                image: AssetImage('assets/icon_arrow_down.png'),
+                image: AssetImage('assets/images/icon_arrow_down.png'),
               ))
         ]));
   }
@@ -230,7 +230,7 @@ class ErrorMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(children: [
       const Image(
-        image: AssetImage('assets/icon_warning_red.png'),
+        image: AssetImage('assets/images/icon_warning_red.png'),
       ),
       const SizedBox(
         width: 2.0,
