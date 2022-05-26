@@ -177,6 +177,12 @@ class MemberProfileController extends Controller {
 
             /// 區碼、電話跟分機都有資料
             ||
-            area.isNotEmpty && phone.isNotEmpty && ext.isNotEmpty;
+            area.isNotEmpty &&
+                area.length > 1 &&
+                area.length < 4 &&
+                phone.isNotEmpty &&
+                phone.length > 4 &&
+                phone.length < 9 &&
+                ext.isNotEmpty;
   }
 }
