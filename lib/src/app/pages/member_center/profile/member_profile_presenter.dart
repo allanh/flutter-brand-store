@@ -56,7 +56,7 @@ class MemberVerificationPresenter extends Presenter {
       : getMemberVerificationUseCase =
             GetMemberVerificationUseCase(memberVerificationRepo);
 
-  void mobileVerification(
+  void verifyMobile(
     String countryCode,
     String mobile,
   ) {

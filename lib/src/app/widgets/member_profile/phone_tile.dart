@@ -10,54 +10,66 @@ class PhoneTile extends StatelessWidget {
     required this.area,
     required this.phone,
     required this.ext,
-    required this.handleChange,
+    required this.isValid,
+    required this.handleAreaChange,
+    required this.handlePhoneChange,
+    required this.handleExtChange,
   }) : super(key: key);
 
   final BuildContext context;
   final String? area;
   final String? phone;
   final String? ext;
-  final void Function(String? p1) handleChange;
+  final bool isValid;
+  final void Function(String? p1) handleAreaChange;
+  final void Function(String? p1) handlePhoneChange;
+  final void Function(String? p1) handleExtChange;
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> children = [
+      const Text('市話',
+          style: TextStyle(
+              color: UdiColors.greyishBrown,
+              fontFamily: 'PingFangTC Semibold',
+              fontWeight: FontWeight.w600,
+              fontSize: 14.0)),
+      const SizedBox(height: 8.0),
+      Row(children: [
+        SizedBox(
+            width: 90.0,
+            child: HighlightTextField(
+                hintText: '區碼',
+                handleChange: handleAreaChange,
+                isHighlight: false)),
+        const SizedBox(width: 10.0),
+        Expanded(
+            child: HighlightTextField(
+                hintText: '市內電話',
+                handleChange: handlePhoneChange,
+                isHighlight: false)),
+        const SizedBox(width: 10.0),
+        SizedBox(
+            width: 119.0,
+            child: HighlightTextField(
+                hintText: '分機',
+                handleChange: handleExtChange,
+                isHighlight: false))
+      ]),
+    ];
+    if (isValid == false) {
+      children.addAll([
+        const SizedBox(height: 3.0),
+        ErrorMessage(context: context, message: '請輸入有效市話')
+      ]);
+    }
     return Padding(
         padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
         child: SizedBox(
             width: double.infinity,
-            height: 104.0,
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('市話',
-                  style: TextStyle(
-                      color: UdiColors.greyishBrown,
-                      fontFamily: 'PingFangTC Semibold',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14.0)),
-              const SizedBox(height: 8.0),
-              Row(children: [
-                SizedBox(
-                    width: 90.0,
-                    child: HighlightTextField(
-                        hintText: '區碼',
-                        handleChange: handleChange,
-                        isHighlight: false)),
-                const SizedBox(width: 10.0),
-                Expanded(
-                    child: HighlightTextField(
-                        hintText: '市內電話',
-                        handleChange: handleChange,
-                        isHighlight: false)),
-                const SizedBox(width: 10.0),
-                SizedBox(
-                    width: 119.0,
-                    child: HighlightTextField(
-                        hintText: '分機',
-                        handleChange: handleChange,
-                        isHighlight: false))
-              ]),
-              const SizedBox(height: 3.0),
-              ErrorMessage(context: context, message: '請輸入有效市話')
-            ])));
+            height: isValid ? 80.0 : 104.0,
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: children)));
   }
 }

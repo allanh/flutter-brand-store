@@ -74,11 +74,11 @@ class MemberProfileController extends Controller {
 
   void getMemberProfile() => memberProfilePresenter.getMemberProfile();
 
-  void mobileVerification(
+  void verifyMobile(
     String countryCode,
     String mobile,
   ) =>
-      memberVerificationPresenter.mobileVerification(
+      memberVerificationPresenter.verifyMobile(
         countryCode,
         mobile,
       );
@@ -90,11 +90,23 @@ class MemberProfileController extends Controller {
     }
   }
 
+  bool validateName(String? name) {
+    return name == null || !(name.contains('!'));
+  }
+
   void updateEmail(String? email) {
     if (_memberProfile?.email != email) {
       _memberProfile?.email = email;
       refreshUI();
     }
+  }
+
+  bool validateEmail(String? email) {
+    var regex = RegExp(
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+    bool result = email == null || email.isEmpty || email.startsWith(regex);
+    debugPrint('Email is ${result ? 'valid' : 'invalid'} ');
+    return result;
   }
 
   void updateCountryCode(String? code) {
@@ -106,6 +118,11 @@ class MemberProfileController extends Controller {
     }
   }
 
+  bool validateCountryCode(String? code) {
+    var regex = RegExp('^[0-9]{3}\$');
+    return code == null || code.startsWith(regex);
+  }
+
   void updateMobile(String? mobile) {
     if (mobile != null &&
         mobile.isNotEmpty &&
@@ -115,25 +132,51 @@ class MemberProfileController extends Controller {
     }
   }
 
-  bool validateName(String? name) {
-    return name == null || !(name.contains('!'));
-  }
-
-  bool validateEmail(String? email) {
-    var regex = RegExp(
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
-    bool result = email == null || email.isEmpty || email.startsWith(regex);
-    debugPrint('Email is ${result ? 'valid' : 'invalid'} ');
-    return result;
-  }
-
-  bool validateCountryCode(String? code) {
-    var regex = RegExp('^[0-9]{3}\$');
-    return code == null || code.startsWith(regex);
-  }
-
   bool validateMobile(String? mobile) {
     var regex = RegExp('^09[0-9]{8}\$');
     return mobile == null || mobile.startsWith(regex);
+  }
+
+  void updatePhone(String? phone) {
+    if (_memberProfile?.mobile != phone) {
+      _memberProfile?.phone = phone;
+      refreshUI();
+    }
+  }
+
+  void updateArea(String? area) {
+    if (_memberProfile?.areaCode != area) {
+      _memberProfile?.areaCode = area;
+      refreshUI();
+    }
+  }
+
+  void updateExt(String? ext) {
+    if (_memberProfile?.ext != ext) {
+      _memberProfile?.ext = ext;
+      refreshUI();
+    }
+  }
+
+  bool validatePhone(String area, String phone, String ext) {
+    return
+
+        /// 區碼跟電話有資料
+        /// 區碼需 2 到 3 個字
+        /// 電話需 5 到 8 個字
+        area.isNotEmpty &&
+                area.length > 1 &&
+                area.length < 4 &&
+                phone.isNotEmpty &&
+                phone.length > 4 &&
+                phone.length < 9
+
+            /// 區碼、電話跟分機都空白
+            ||
+            area.isEmpty && phone.isEmpty && ext.isEmpty
+
+            /// 區碼、電話跟分機都有資料
+            ||
+            area.isNotEmpty && phone.isNotEmpty && ext.isNotEmpty;
   }
 }

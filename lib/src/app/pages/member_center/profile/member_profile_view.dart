@@ -58,7 +58,7 @@ class _MemberProfilePageState
           }
 
           void handleSendValidationCode(code) {
-            controller.mobileVerification(
+            controller.verifyMobile(
               profile?.countryCode ?? '886',
               profile?.mobile ?? '',
             );
@@ -95,6 +95,18 @@ class _MemberProfilePageState
           void handleChangeEmail(toggle) {}
 
           void handleSendValidationMail(toggle) {}
+
+          void handleAreaChange(area) {
+            controller.updateArea(area);
+          }
+
+          void handlePhoneChange(phone) {
+            controller.updatePhone(phone);
+          }
+
+          void handleExtChange(ext) {
+            controller.updateExt(ext);
+          }
 
           List<Widget> list = [
             /// 生日修改次數說明
@@ -142,13 +154,16 @@ class _MemberProfilePageState
 
             /// 市話區塊
             PhoneTile(
-                context: context,
-                area: profile?.area,
-                phone: profile?.phone,
-                ext: profile?.ext,
-                handleChange: (char) {
-                  debugPrint('Input $char');
-                }),
+              context: context,
+              area: profile?.area,
+              phone: profile?.phone,
+              ext: profile?.ext,
+              isValid: controller.validatePhone(
+                  profile?.areaCode ?? '', profile?.phone ?? '', profile?.ext ?? ''),
+              handleAreaChange: handleAreaChange,
+              handlePhoneChange: handlePhoneChange,
+              handleExtChange: handleExtChange,
+            ),
 
             /// 性別區塊
             GenderTile(
