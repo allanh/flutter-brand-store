@@ -182,8 +182,8 @@ class Binding {
 }
 
 @JsonSerializable()
-class MemberVerificationResponse {
-  const MemberVerificationResponse(
+class VerificationResultResponse {
+  const VerificationResultResponse(
     this.id,
     this.status,
     this.message,
@@ -195,14 +195,14 @@ class MemberVerificationResponse {
 
   /// 會員帳號驗證
   @JsonKey(name: 'data')
-  final MemberVerification? verification;
+  final VerificationResult? verification;
 
-  factory MemberVerificationResponse.fromJson(Map<String, dynamic> json) =>
-      _$MemberVerificationResponseFromJson(json);
-  Map<String, dynamic> toJson() => _$MemberVerificationResponseToJson(this);
+  factory VerificationResultResponse.fromJson(Map<String, dynamic> json) =>
+      _$VerificationResultResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$VerificationResultResponseToJson(this);
 }
 
-enum MemberVerificationType {
+enum VerificationType {
   @JsonValue('MOBILE')
   mobile,
   @JsonValue('EMAIL')
@@ -210,16 +210,32 @@ enum MemberVerificationType {
 }
 
 @JsonSerializable()
-class MemberVerification {
-  const MemberVerification(this.type, this.code);
+class VerificationResult {
+  const VerificationResult(this.type, this.code);
 
   @JsonKey(name: 'verify_method')
-  final MemberVerificationType type;
+  final VerificationType type;
 
   @JsonKey(name: 'verify_code')
   final String? code;
 
-  factory MemberVerification.fromJson(Map<String, dynamic> json) =>
-      _$MemberVerificationFromJson(json);
-  Map<String, dynamic> toJson() => _$MemberVerificationToJson(this);
+  factory VerificationResult.fromJson(Map<String, dynamic> json) =>
+      _$VerificationResultFromJson(json);
+  Map<String, dynamic> toJson() => _$VerificationResultToJson(this);
+}
+
+class Districts {
+  const Districts(this.list, this.name);
+
+  final List<District> list;
+
+  final String name;
+}
+
+class District {
+  const District(this.zip, this.name);
+
+  final String zip;
+
+  final String name;
 }

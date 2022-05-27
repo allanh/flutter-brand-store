@@ -3,25 +3,31 @@ import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:brandstores/src/domain/entities/member_profile/member_profile.dart';
 import 'member_profile_presenter.dart';
 
+// import 'package:flutter/services.dart' show rootBundle;
+// import 'dart:convert';
+
 class MemberProfileController extends Controller {
   MemberProfile? _memberProfile;
   MemberProfile? get memberProfile => _memberProfile;
 
-  final MemberProfilePresenter memberProfilePresenter;
+  VerificationResult? _verificationResult;
+  VerificationResult? get verificationResult => _verificationResult;
 
-  final MemberVerificationPresenter memberVerificationPresenter;
+  List<Districts>? _districts;
+  List<Districts>? get districts => _districts;
+
+  final MemberProfilePresenter presenter;
 
   MemberProfileController(
     memberProfileRepo,
-    memberVerificationRepo,
-  )   : memberProfilePresenter = MemberProfilePresenter(memberProfileRepo),
-        memberVerificationPresenter =
-            MemberVerificationPresenter(memberVerificationRepo),
+  )   : presenter = MemberProfilePresenter(memberProfileRepo),
         super();
 
   @override
   void onInitState() {
     getMemberProfile();
+
+    loadDistricts();
   }
 
   @override
@@ -30,8 +36,9 @@ class MemberProfileController extends Controller {
     /// The 'Controller' will specify what listeners the 'Presenter'
     /// should call for all success and error events as mentioned
     /// previously.
-    memberProfilePresenter.getMemberProfileOnNext =
-        (MemberProfile memberProfile) {
+
+    /// 取會員資料
+    presenter.getMemberProfileOnNext = (MemberProfile memberProfile) {
       debugPrint(memberProfile.toString());
       _memberProfile = memberProfile;
 
@@ -40,12 +47,12 @@ class MemberProfileController extends Controller {
       refreshUI();
     };
 
-    memberProfilePresenter.getMemberProfileOnComplete = () {
+    presenter.getMemberProfileOnComplete = () {
       debugPrint('Member profile retrieved');
     };
 
     // On error, show a snackbar, remove the user, and refresh the UI
-    memberProfilePresenter.getMemberProfileOnError = (e) {
+    presenter.getMemberProfileOnError = (e) {
       debugPrint('Could not retrieve member profile.');
       ScaffoldMessenger.of(getContext())
           .showSnackBar(SnackBar(content: Text(e.message)));
@@ -53,6 +60,41 @@ class MemberProfileController extends Controller {
       _memberProfile = null;
 
       refreshUI();
+    };
+
+    /// 手機驗證
+    presenter.verifyMobileOnNext = (VerificationResult verificationResult) {
+      _verificationResult = verificationResult;
+    };
+
+    presenter.verifyMobileOnComplete = () {
+      debugPrint('Verify mobile finish');
+    };
+
+    presenter.verifyMobileOnError = (e) {
+      debugPrint('Could not verify mobile.');
+
+      ScaffoldMessenger.of(getContext())
+          .showSnackBar(SnackBar(content: Text(e.message)));
+
+      _verificationResult = null;
+
+      refreshUI();
+    };
+
+    /// 下載郵遞區號
+    presenter.loadDistrictsOnNext = (List<Districts> districts) {
+      _districts = districts;
+    };
+
+    presenter.loadDistrictsOnComplete = () {
+      debugPrint('Loaded districts finish.');
+    };
+
+    presenter.loadDistrictsOnError = (e) {
+      debugPrint('Could not download districts: $e');
+
+      _districts = null;
     };
   }
 
@@ -68,20 +110,22 @@ class MemberProfileController extends Controller {
   @override
   void onDisposed() {
     // don't forget to dispose of the presenter
-    memberProfilePresenter.dispose();
+    presenter.dispose();
     super.onDisposed();
   }
 
-  void getMemberProfile() => memberProfilePresenter.getMemberProfile();
+  void getMemberProfile() => presenter.getMemberProfile();
 
   void verifyMobile(
     String countryCode,
     String mobile,
   ) =>
-      memberVerificationPresenter.verifyMobile(
+      presenter.verifyMobile(
         countryCode,
         mobile,
       );
+
+  void loadDistricts() => presenter.loadDistricts();
 
   void updateName(String? name) {
     if (name != null && name.isNotEmpty && _memberProfile?.name != name) {

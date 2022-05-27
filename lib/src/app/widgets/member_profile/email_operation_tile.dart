@@ -42,12 +42,10 @@ class EmailOperationTile extends StatelessWidget {
                               fontWeight: FontWeight.w400,
                               fontSize: 14.0)),
                       const SizedBox(width: 10.0),
-                      isValidation
-                          ? const Image(
-                              image: AssetImage('assets/images/icon_completed.png'))
-                          : const Image(
-                              image: AssetImage(
-                                  'assets/images/icon_warning_red_circle.png')),
+                      Image(
+                          image: AssetImage(isValidation
+                              ? 'assets/images/icon_completed.png'
+                              : 'assets/images/icon_warning_red_circle.png')),
                       ValidResultText(isValid: isValidation)
                     ]),
                     Row(

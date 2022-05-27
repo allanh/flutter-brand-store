@@ -315,9 +315,9 @@ class _FavoriteButtonState extends State<FavoriteButton> {
         child: Image(
           color: _isFavorite ? Colors.red : Colors.black54,
           fit: BoxFit.scaleDown,
-          image: _isFavorite
-              ? const AssetImage('assets/images/icon_fill_heart.png')
-              : const AssetImage('assets/images/icon_heart.png'),
+          image: AssetImage(_isFavorite
+              ? 'assets/images/icon_fill_heart.png'
+              : 'assets/images/icon_heart.png'),
         ));
   }
 }

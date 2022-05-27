@@ -34,7 +34,7 @@ class BindingTile extends StatelessWidget {
                     Image(height: 46.0, width: 46.0, image: AssetImage(image)),
                     const SizedBox(width: 16.0),
                     Text(isBinding ? '已綁定' : '尚未綁定',
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: UdiColors.brownGrey,
                             fontFamily: 'PingFangTC Regular',
                             fontWeight: FontWeight.w400,

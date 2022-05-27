@@ -30,8 +30,7 @@ class MemberProfilePage extends View {
 class _MemberProfilePageState
     extends ViewState<MemberProfilePage, MemberProfileController> {
   _MemberProfilePageState()
-      : super(MemberProfileController(
-            DataMemberProfileRepository(), DataMemberVerificationRepository()));
+      : super(MemberProfileController(DataMemberProfileRepository()));
 
   String? _validationCode;
 
@@ -43,6 +42,9 @@ class _MemberProfilePageState
         appBar: AppBar(title: const Text('會員資料')),
         body: ControlledWidgetBuilder<MemberProfileController>(
             builder: (context, controller) {
+          final List<Districts>? districts = controller.districts;
+          debugPrint(districts.toString());
+
           final MemberProfile? profile = controller.memberProfile;
 
           void handleCountryCodeChange(code) {
@@ -224,7 +226,8 @@ class _MemberProfilePageState
             BindingTile(
                 context: context,
                 binding: profile?.bindingInfo?.facebookBinding,
-                image: profile?.bindingInfo?.facebookBindingImage ?? '',
+                image: profile?.bindingInfo?.facebookBindingImage ??
+                    'assets/images/icon_circle_facebook.png',
                 isBinding:
                     profile?.bindingInfo?.facebookBinding?.bindingId != null,
                 handleBinding: (binding) {
@@ -235,7 +238,8 @@ class _MemberProfilePageState
             BindingTile(
                 context: context,
                 binding: profile?.bindingInfo?.googleBinding,
-                image: profile?.bindingInfo?.googleBindingImage ?? '',
+                image: profile?.bindingInfo?.googleBindingImage ??
+                    'assets/images/icon_circle_google.png',
                 isBinding:
                     profile?.bindingInfo?.googleBinding?.bindingId != null,
                 handleBinding: (binding) {
@@ -246,7 +250,8 @@ class _MemberProfilePageState
             BindingTile(
                 context: context,
                 binding: profile?.bindingInfo?.lineBinding,
-                image: profile?.bindingInfo?.lineBindingImage ?? '',
+                image: profile?.bindingInfo?.lineBindingImage ??
+                    'assets/images/icon_circle_line.png',
                 isBinding: profile?.bindingInfo?.lineBinding?.bindingId != null,
                 handleBinding: (binding) {
                   debugPrint('Line binding button pressed');
@@ -256,7 +261,8 @@ class _MemberProfilePageState
             BindingTile(
                 context: context,
                 binding: profile?.bindingInfo?.appleBinding,
-                image: profile?.bindingInfo?.appleBindingImage ?? '',
+                image: profile?.bindingInfo?.appleBindingImage ??
+                    'assets/images/icon_circle_apple.png',
                 isBinding:
                     profile?.bindingInfo?.appleBinding?.bindingId != null,
                 handleBinding: (binding) {

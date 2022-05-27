@@ -18,6 +18,7 @@ import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:brandstores/src/domain/entities/member_profile/member_profile.dart';
 import 'package:brandstores/src/domain/repositories/member_profile_repository.dart';
 
+/// 取會員資料
 class GetMemberProfileUseCase extends UseCase<GetMemberProfileUseCaseResponse,
     GetMemberProfileUseCaseParams> {
   final MemberProfileRepository memberProfileRepository;
@@ -56,26 +57,26 @@ class GetMemberProfileUseCaseParams {
   GetMemberProfileUseCaseParams();
 }
 
-class GetMemberVerificationUseCase extends UseCase<
-    GetMemberVerificationUseCaseResponse, GetMemberVerificationUseCaseParams> {
-  final MemberVerificationRepository memberVerificationRepository;
-  GetMemberVerificationUseCase(this.memberVerificationRepository);
+/// 門號驗證
+class VerifyMobileUseCase
+    extends UseCase<VerifyMobileUseCaseResponse, VerifyMobileUseCaseParams> {
+  final MemberProfileRepository memberProfileRepository;
+  VerifyMobileUseCase(this.memberProfileRepository);
 
   @override
-  Future<Stream<GetMemberVerificationUseCaseResponse?>> buildUseCaseStream(
-      GetMemberVerificationUseCaseParams? params) async {
-    final controller = StreamController<GetMemberVerificationUseCaseResponse>();
+  Future<Stream<VerifyMobileUseCaseResponse?>> buildUseCaseStream(
+      VerifyMobileUseCaseParams? params) async {
+    final controller = StreamController<VerifyMobileUseCaseResponse>();
 
     try {
-      // get member profile
-      final memberVerification =
-          await memberVerificationRepository.memberVerification(
+      // Verify mobile
+      final result = await memberProfileRepository.verifyMobile(
         params!.countryCode,
         params.mobile,
       );
       // Adding it triggers the .onNext() in the 'Observer'
       // It is usually better to wrap the response inside a response object.
-      controller.add(GetMemberVerificationUseCaseResponse(memberVerification));
+      controller.add(VerifyMobileUseCaseResponse(result));
       logger.finest('GetMemberVerificationUseCase successful.');
       controller.close();
     } catch (e) {
@@ -87,16 +88,53 @@ class GetMemberVerificationUseCase extends UseCase<
   }
 }
 
-class GetMemberVerificationUseCaseResponse {
-  final MemberVerification memberVerification;
-  GetMemberVerificationUseCaseResponse(this.memberVerification);
+class VerifyMobileUseCaseResponse {
+  final VerificationResult result;
+  VerifyMobileUseCaseResponse(this.result);
 }
 
-class GetMemberVerificationUseCaseParams {
+class VerifyMobileUseCaseParams {
   final String countryCode;
   final String mobile;
-  GetMemberVerificationUseCaseParams(
+  VerifyMobileUseCaseParams(
     this.countryCode,
     this.mobile,
   );
+}
+
+/// 下載郵遞區號
+class LoadDistrictsUseCase
+    extends UseCase<LoadDistrictsUseCaseResponse, LoadDistrictsUseCaseParams> {
+  final MemberProfileRepository memberProfileRepository;
+  LoadDistrictsUseCase(this.memberProfileRepository);
+
+  @override
+  Future<Stream<LoadDistrictsUseCaseResponse>> buildUseCaseStream(
+      LoadDistrictsUseCaseParams? params) async {
+    final controller = StreamController<LoadDistrictsUseCaseResponse>();
+
+    try {
+      // Verify mobile
+      final result = await memberProfileRepository.loadDistricts();
+      // Adding it triggers the .onNext() in the 'Observer'
+      // It is usually better to wrap the response inside a response object.
+      controller.add(LoadDistrictsUseCaseResponse(result));
+      logger.finest('LoadDistrictsUseCaseParams successful.');
+      controller.close();
+    } catch (e) {
+      logger.severe('LoadDistrictsUseCaseParams failure.');
+      // Trigger .onError
+      controller.addError(e);
+    }
+    return controller.stream;
+  }
+}
+
+class LoadDistrictsUseCaseResponse {
+  final List<Districts> districts;
+  LoadDistrictsUseCaseResponse(this.districts);
+}
+
+class LoadDistrictsUseCaseParams {
+  LoadDistrictsUseCaseParams();
 }

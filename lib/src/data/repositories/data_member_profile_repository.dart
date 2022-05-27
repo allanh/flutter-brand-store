@@ -4,6 +4,9 @@ import 'package:brandstores/src/domain/repositories/member_profile_repository.da
 import 'package:brandstores/src/data/utils/dio/api.dart';
 import 'package:flutter/material.dart';
 
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:convert';
+
 class DataMemberProfileRepository extends MemberProfileRepository {
   // sigleton
   static final DataMemberProfileRepository _instance =
@@ -11,6 +14,7 @@ class DataMemberProfileRepository extends MemberProfileRepository {
   DataMemberProfileRepository._internal();
   factory DataMemberProfileRepository() => _instance;
 
+  /// 取會員資料
   @override
   Future<MemberProfile> getMemberProfile() async {
     try {
@@ -24,17 +28,10 @@ class DataMemberProfileRepository extends MemberProfileRepository {
       throw Exception('Failed to get member center.');
     }
   }
-}
 
-class DataMemberVerificationRepository extends MemberVerificationRepository {
-  // sigleton
-  static final DataMemberVerificationRepository _instance =
-      DataMemberVerificationRepository._internal();
-  DataMemberVerificationRepository._internal();
-  factory DataMemberVerificationRepository() => _instance;
-
+  /// 門號驗證
   @override
-  Future<MemberVerification> memberVerification(
+  Future<VerificationResult> verifyMobile(
       String countryCode, String mobile) async {
     try {
       debugPrint('Country code: $countryCode\nMobile: $mobile');
@@ -46,12 +43,32 @@ class DataMemberVerificationRepository extends MemberVerificationRepository {
         'verify_type': 'VERIFY_ACCOUNT'
       });
       if (response.isSuccess) {
-        return MemberVerification.fromJson(response.data);
+        return VerificationResult.fromJson(response.data);
       }
       throw Exception('Failed to verify member.');
     } catch (e) {
       debugPrint(e.toString());
       throw Exception('Failed to verify member.');
     }
+  }
+
+  /// 下載郵遞區號
+  @override
+  Future<List<Districts>> loadDistricts() async {
+    var jsonText = await rootBundle.loadString('assets/taiwan_districts.json');
+    var decodedJson = json.decode(jsonText) as List;
+    var city = List.generate(decodedJson.length, (index) {
+      final list =
+          List.generate(decodedJson[index]['districts'].length, (innerIndex) {
+        final zip = decodedJson[index]['districts'][innerIndex]['zip'];
+        final name = decodedJson[index]['districts'][innerIndex]['name'];
+        final District district = District(zip, name);
+        return district;
+      });
+      final name = decodedJson[index]['name'];
+      final Districts districts = Districts(list, name);
+      return districts;
+    });
+    return city;
   }
 }

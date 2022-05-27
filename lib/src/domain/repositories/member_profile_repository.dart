@@ -16,10 +16,12 @@ import 'package:brandstores/src/domain/entities/member_profile/member_profile.da
 ///     functionality
 /// - Passed to 'Usecases' from outer layers
 abstract class MemberProfileRepository {
+  /// 取會員資料
   Future<MemberProfile> getMemberProfile();
-}
 
-abstract class MemberVerificationRepository {
-  Future<MemberVerification> memberVerification(
-      String countryCode, String mobile);
+  /// 手機驗證
+  Future<VerificationResult> verifyMobile(String countryCode, String mobile);
+
+  /// 取得郵遞區號
+  Future<List<Districts>> loadDistricts();
 }
