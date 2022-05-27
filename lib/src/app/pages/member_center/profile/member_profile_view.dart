@@ -121,8 +121,8 @@ class _MemberProfilePageState
             controller.updateCounty(context);
           }
 
-          void handleDistrictChange() {
-            controller.updateDistrict();
+          void handleDistrictChange(BuildContext context, String county) {
+            controller.updateDistrict(context, county);
           }
 
           void handleAddressChange(address) {}
@@ -211,7 +211,12 @@ class _MemberProfilePageState
                   profile?.address ?? ''),
               handleZipCodeChange: handleZipCodeChange,
               handleCountyChange: () => handleCountyChange(context),
-              handleDistrictChange: handleDistrictChange,
+              handleDistrictChange: () => {
+                if (profile?.county != null)
+                  {
+                    handleDistrictChange(context, profile!.county!),
+                  }
+              },
               handleAddressChange: handleAddressChange,
             ),
 

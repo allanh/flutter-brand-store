@@ -110,11 +110,13 @@ class RequiresText extends StatelessWidget {
 class HighlightTextField extends StatelessWidget {
   const HighlightTextField({
     Key? key,
+    this.text,
     required this.hintText,
     required this.handleChange,
     required this.isHighlight,
   }) : super(key: key);
 
+  final String? text;
   final String hintText;
   final void Function(String? p1) handleChange;
   final bool isHighlight;
@@ -125,6 +127,8 @@ class HighlightTextField extends StatelessWidget {
         onChanged: handleChange,
         cursorColor: UdiColors.brownGrey2,
         decoration: InputDecoration(
+            labelText: text,
+            labelStyle: const TextStyle(color: UdiColors.greyishBrown),
             isCollapsed: true,
             border: OutlineInputBorder(
                 borderSide: BorderSide(
@@ -179,6 +183,7 @@ class DropdownTextField extends StatelessWidget {
               cursorColor: UdiColors.brownGrey2,
               decoration: InputDecoration(
                   labelText: text,
+                  labelStyle: const TextStyle(color: UdiColors.greyishBrown),
                   isCollapsed: true,
                   border: OutlineInputBorder(
                       borderSide: BorderSide(

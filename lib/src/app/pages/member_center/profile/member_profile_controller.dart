@@ -280,12 +280,41 @@ class MemberProfileController extends Controller {
             _districts!.length, (index) => _districts![index].name),
         selectedItem: _districts![0].name,
         onChanged: (value) {
-          _memberProfile?.county = value;
+          if (_memberProfile?.county != value) {
+            _memberProfile?.county = value;
+            _memberProfile?.district = null;
+            _memberProfile?.zipCode = null;
+          }
         },
         onConfirmed: () {
           refreshUI();
         });
   }
 
-  void updateDistrict() {}
+  void updateDistrict(BuildContext context, String county) {
+    final currentDistricts = _districts
+        ?.where((district) => district.name == county)
+        .toList()[0]
+        .list;
+    showMaterialScrollPicker<String>(
+        context: context,
+        showDivider: false,
+        title: '請選擇鄉鎮市區',
+        headerColor: Theme.of(context).appBarTheme.backgroundColor,
+        confirmText: '確定',
+        cancelText: '取消',
+        items: List.generate(
+            currentDistricts!.length, (index) => currentDistricts[index].name),
+        selectedItem: currentDistricts[0].name,
+        onChanged: (value) {
+          _memberProfile?.district = value;
+          _memberProfile?.zipCode = currentDistricts
+              .where((district) => district.name == value)
+              .toList()[0]
+              .zip;
+        },
+        onConfirmed: () {
+          refreshUI();
+        });
+  }
 }

@@ -42,6 +42,7 @@ class AddressTile extends StatelessWidget {
       Row(children: [
         Expanded(
             child: HighlightTextField(
+                text: zipCode,
                 hintText: '郵遞區號',
                 handleChange: handleZipCodeChange,
                 isHighlight: false)),
