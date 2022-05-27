@@ -14,15 +14,14 @@ class ProductEventsView extends StatelessWidget {
     List<Widget> list = [];
     for (var event in eventList) {
       if (event.discountWording != null) {
-        list.add(Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: ProductEventView(event: event)));
+        list.add(ProductEventView(event: event));
       }
     }
-    return Row(
-      // 最多顯示兩筆
+    // 最多顯示兩筆
+    return FittedBox(
+        child: Row(
       children: list.take(2).toList(),
-    );
+    ));
   }
 }
 
@@ -34,6 +33,7 @@ class ProductEventView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
+      margin: const EdgeInsets.only(right: 8),
       decoration: BoxDecoration(
           borderRadius: const BorderRadius.only(
             topRight: Radius.circular(4),
@@ -41,14 +41,14 @@ class ProductEventView extends StatelessWidget {
           ),
           color: event.eventOnline == true
               ? UdiColors.pumpkinOrange.withOpacity(0.1)
-              : UdiColors.whiteTwo),
+              : UdiColors.white2),
       child: Row(children: [
         Container(
             decoration: BoxDecoration(
                 border: Border.all(
                     color: event.eventOnline == true
                         ? UdiColors.pumpkinOrange
-                        : UdiColors.disabledBorder),
+                        : UdiColors.pinkishGrey),
                 borderRadius: BorderRadius.circular(2.0),
                 color: Colors.white),
             child:

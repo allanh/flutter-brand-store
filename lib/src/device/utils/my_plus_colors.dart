@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
 
+/* 
+    Hex Opacity Values
+    100% — FF  95% — F2  90% — E6  85% — D9  80% — CC
+    75% — BF  70% — B3  65% — A6  60% — 99  55% — 8C
+    50% — 80  45% — 73  40% — 66  35% — 59  30% — 4D
+    25% — 40  20% — 33  15% — 26  10% — 1A  5% — 0D
+    0% — 00
+  */
 extension UdiColors on Colors {
   static const Color white = Color(0xfffbfbfb);
   static const Color white2 = Color(0xfff2f2f2);
@@ -27,14 +35,13 @@ extension UdiColors on Colors {
   static const Color defaultBorder = Color(0xffe5e5e5);
   static const Color focusedBorder = Color(0xff4c4c4c);
 
-  static Color get strawberry => const Color.fromRGBO(242, 63, 68, 1);
-  static Color get comingSoon => const Color.fromRGBO(114, 0, 255, 1);
-  static Color get reddishOrange => const Color.fromRGBO(255, 83, 20, 1);
-  static Color get strongPink => const Color.fromRGBO(255, 14, 137, 1);
-  static Color get whiteTwo => const Color.fromRGBO(242, 242, 242, 1);
-  static Color get pumpkinOrange => const Color.fromRGBO(255, 133, 0, 1);
-  static Color get disabledBorder => const Color.fromRGBO(204, 204, 204, 1);
-  static Color get brownGreyTwo => const Color.fromRGBO(180, 180, 180, 1);
+  static Color get strawberry => const Color(0xfff23f44);
+  static Color get comingSoon => const Color(0xff7200ff);
+  static Color get reddishOrange => const Color(0xffff5314);
+  static Color get strongPink => const Color(0xffff0e89);
+  static Color get pumpkinOrange => const Color(0xffff8500);
+  static Color get pinkishGrey => const Color(0xffcccccc);
+  static Color get brownGreyTwo => const Color(0xffb4b4b4);
 
   /// 限時採購漸層色
   static LinearGradient get flashSaleGradient => LinearGradient(
@@ -45,7 +52,7 @@ extension UdiColors on Colors {
 
   /// 即將開始漸層色
   static LinearGradient get comingSoonGradient => LinearGradient(
-        colors: [const Color.fromRGBO(0, 145, 255, 1), comingSoon],
+        colors: [const Color(0xff0091ff), comingSoon],
         begin: Alignment.centerLeft,
         end: Alignment.centerRight,
       );

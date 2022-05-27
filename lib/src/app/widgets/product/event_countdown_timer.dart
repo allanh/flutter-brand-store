@@ -99,7 +99,8 @@ class _EventCountDownTimerState extends State<EventCountDownTimer> {
         Text(
           widget.type == CountDownType.comingSoon ? '即將開賣' : '限時搶購',
           textAlign: TextAlign.center,
-          style: theme.textTheme.headline6!.copyWith(fontSize: 14.0),
+          style: theme.textTheme.headline6!
+              .copyWith(fontSize: 14.0, color: Colors.white),
         ),
       ]);
 

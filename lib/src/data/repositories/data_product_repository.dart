@@ -29,7 +29,7 @@ class DataProductRepository extends ProductRepository {
       // Product.current = Product.fromJson(response.data);
       return Product.fromJson(response.data);
     } else {
-      throw Exception('Failed to load site setting');
+      throw Exception('Failed to get product');
     }
   }
 }

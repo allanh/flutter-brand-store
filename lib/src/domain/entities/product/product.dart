@@ -380,6 +380,12 @@ class ProductInfo {
   factory ProductInfo.fromJson(Map<String, dynamic> json) =>
       _$ProductInfoFromJson(json);
   Map<String, dynamic> toJson() => _$ProductInfoToJson(this);
+
+  // App獨享價價差
+  int? get promotionPriceAppDiff =>
+      ((promotionPriceApp ?? 0) > 0) && proposedPrice != null
+          ? proposedPrice! - promotionPriceApp!
+          : null;
 }
 
 // 測試用

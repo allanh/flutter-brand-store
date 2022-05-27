@@ -9,6 +9,7 @@ import '../../widgets/product/base_product_row.dart';
 import '../../widgets/product/event.dart';
 import '../../widgets/product/image_slider.dart';
 import '../../widgets/product/product_name.dart';
+import '../../widgets/product/promotion_price.dart';
 import './product_controller.dart';
 import '../../../data/repositories/data_product_repository.dart';
 import 'package:go_router/go_router.dart';
@@ -65,21 +66,21 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
   Widget getBody(ProductController controller) => (controller.product != null)
       ? Container(
           width: MediaQuery.of(context).size.width,
-          color: UdiColors.whiteTwo,
-          child: Column(
+          color: UdiColors.white2,
+          child: SingleChildScrollView(
+              child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 圖片或影片
-              Flexible(
-                  child: SizedBox(
-                      height: 375,
-                      child: Stack(children: [
-                        ImageSlider(
-                            imageList: controller.product?.imageInfo ?? []),
-                        // 圖標
-                        if (controller.product?.productInfo?.isNotEmpty == true)
-                          PromotionTagsView(product: controller.product!),
-                      ]))),
+              AspectRatio(
+                aspectRatio: 1.0,
+                child: Stack(children: [
+                  ImageSlider(imageList: controller.product?.imageInfo ?? []),
+                  // 圖標
+                  if (controller.product?.productInfo?.isNotEmpty == true)
+                    PromotionTagsView(product: controller.product!),
+                ]),
+              ),
 
               // 倒數計時
               if (controller.product?.countdownDuration != null)
@@ -98,14 +99,25 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
               // 促銷活動
               if (controller.product?.eventList?.isNotEmpty == true)
                 BaseProductRow(
-                    title: '活   動',
+                    title: '活　動',
                     view: ProductEventsView(
                       //eventList: controller.product!.mockEvents,
                       eventList: controller.product!.eventList!,
                     ),
                     onMoreTap: () => debugPrint('tap event')),
+
+              // 獨享價
+              if ((controller.product?.product?.promotionPriceAppDiff ?? 0) > 0)
+                BaseProductRow(
+                    title: '獨享價',
+                    view: PromotionPriceView(
+                      promotionPrice:
+                          controller.product!.product!.promotionPriceAppDiff!,
+                    ),
+                    onMoreTap: () => debugPrint('tap event')),
+              // 規格
             ],
-          ))
+          )))
       : SizedBox(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
