@@ -45,8 +45,8 @@ class MemberProfile {
       this.birthday,
       this.birthdayModifyCount,
       this.zipCode,
-      this.city,
-      this.area,
+      this.county,
+      this.district,
       this.address,
       this.isSettingPassword,
       this.isVerifyEmail,
@@ -96,10 +96,10 @@ class MemberProfile {
   String? zipCode;
 
   @JsonKey(name: 'cityno')
-  String? city;
+  String? county;
 
   @JsonKey(name: 'areano')
-  String? area;
+  String? district;
 
   String? address;
 

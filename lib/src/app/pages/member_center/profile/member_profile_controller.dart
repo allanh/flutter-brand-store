@@ -3,8 +3,7 @@ import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:brandstores/src/domain/entities/member_profile/member_profile.dart';
 import 'member_profile_presenter.dart';
 
-// import 'package:flutter/services.dart' show rootBundle;
-// import 'dart:convert';
+import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 
 class MemberProfileController extends Controller {
   MemberProfile? _memberProfile;
@@ -239,4 +238,54 @@ class MemberProfileController extends Controller {
       refreshUI();
     }
   }
+
+  bool validateAddress(
+    String zipCode,
+    String county,
+    String district,
+    String address,
+  ) {
+    return true;
+  }
+
+  void updateAddress(
+    String? zipCode,
+    String? county,
+    String? district,
+    String? address,
+  ) {
+    if (_memberProfile?.zipCode != zipCode) {
+      _memberProfile?.zipCode = zipCode;
+    }
+    if (_memberProfile?.county != county) {
+      _memberProfile?.county = county;
+    }
+    if (_memberProfile?.district != district) {
+      _memberProfile?.district = district;
+    }
+    if (_memberProfile?.address != address) {
+      _memberProfile?.address = address;
+    }
+  }
+
+  void updateCounty(BuildContext context) {
+    showMaterialScrollPicker<String>(
+        context: context,
+        showDivider: false,
+        title: '請選擇縣市',
+        headerColor: Theme.of(context).appBarTheme.backgroundColor,
+        confirmText: '確定',
+        cancelText: '取消',
+        items: List.generate(
+            _districts!.length, (index) => _districts![index].name),
+        selectedItem: _districts![0].name,
+        onChanged: (value) {
+          _memberProfile?.county = value;
+        },
+        onConfirmed: () {
+          refreshUI();
+        });
+  }
+
+  void updateDistrict() {}
 }

@@ -42,8 +42,8 @@ class _MemberProfilePageState
         appBar: AppBar(title: const Text('會員資料')),
         body: ControlledWidgetBuilder<MemberProfileController>(
             builder: (context, controller) {
-          final List<Districts>? districts = controller.districts;
-          debugPrint(districts.toString());
+          // final List<Districts>? districts = controller.districts;
+          // debugPrint(districts.toString());
 
           final MemberProfile? profile = controller.memberProfile;
 
@@ -116,6 +116,17 @@ class _MemberProfilePageState
             controller.updateBirthday(birthday);
           }
 
+          void handleZipCodeChange(zipCode) {}
+          void handleCountyChange(BuildContext context) {
+            controller.updateCounty(context);
+          }
+
+          void handleDistrictChange() {
+            controller.updateDistrict();
+          }
+
+          void handleAddressChange(address) {}
+
           List<Widget> list = [
             /// 生日修改次數說明
             BirthdayChangeHintTile(context: context),
@@ -163,7 +174,7 @@ class _MemberProfilePageState
             /// 市話區塊
             PhoneTile(
               context: context,
-              area: profile?.area,
+              area: profile?.district,
               phone: profile?.phone,
               ext: profile?.ext,
               isValid: controller.validatePhone(profile?.areaCode ?? '',
@@ -188,14 +199,21 @@ class _MemberProfilePageState
 
             /// 地址
             AddressTile(
-                context: context,
-                zipCode: profile?.zipCode,
-                county: profile?.city,
-                district: profile?.area,
-                address: profile?.address,
-                handleChange: (char) {
-                  debugPrint('Input $char');
-                }),
+              context: context,
+              zipCode: profile?.zipCode,
+              county: profile?.county,
+              district: profile?.district,
+              address: profile?.address,
+              isValid: controller.validateAddress(
+                  profile?.zipCode ?? '',
+                  profile?.county ?? '',
+                  profile?.district ?? '',
+                  profile?.address ?? ''),
+              handleZipCodeChange: handleZipCodeChange,
+              handleCountyChange: () => handleCountyChange(context),
+              handleDistrictChange: handleDistrictChange,
+              handleAddressChange: handleAddressChange,
+            ),
 
             /// 密碼設定
             PasswordSettingTile(

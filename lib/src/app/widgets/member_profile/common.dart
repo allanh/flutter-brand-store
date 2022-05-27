@@ -158,47 +158,52 @@ class HighlightTextField extends StatelessWidget {
 class DropdownTextField extends StatelessWidget {
   const DropdownTextField({
     Key? key,
+    this.text,
     required this.hintText,
+    required this.isValid,
+    required this.handleTap,
   }) : super(key: key);
 
+  final String? text;
   final String hintText;
+  final bool isValid;
+  final void Function() handleTap;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () {
-          debugPrint('$hintText button pressed');
-        },
+        onTap: handleTap,
         child: Stack(alignment: Alignment.centerRight, children: [
           TextField(
               enabled: false,
               cursorColor: UdiColors.brownGrey2,
               decoration: InputDecoration(
+                  labelText: text,
                   isCollapsed: true,
-                  border: const OutlineInputBorder(
+                  border: OutlineInputBorder(
                       borderSide: BorderSide(
                           width: 1.0,
-                          color: (false)
-                              ? UdiColors.strawberry
-                              : UdiColors.veryLightGrey2)),
+                          color: (isValid)
+                              ? UdiColors.veryLightGrey2
+                              : UdiColors.strawberry)),
                   enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                           width: 1.0,
-                          color: (false)
-                              ? UdiColors.strawberry
-                              : UdiColors.veryLightGrey2)),
+                          color: (isValid)
+                              ? UdiColors.veryLightGrey2
+                              : UdiColors.strawberry)),
                   focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                           width: 1.0,
-                          color: (false)
-                              ? UdiColors.strawberry
-                              : UdiColors.veryLightGrey2)),
+                          color: (isValid)
+                              ? UdiColors.veryLightGrey2
+                              : UdiColors.strawberry)),
                   disabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                           width: 1.0,
-                          color: (false)
-                              ? UdiColors.strawberry
-                              : UdiColors.veryLightGrey2)),
+                          color: (isValid)
+                              ? UdiColors.veryLightGrey2
+                              : UdiColors.strawberry)),
                   hintText: hintText,
                   hintStyle: const TextStyle(color: UdiColors.brownGrey2),
                   contentPadding: const EdgeInsets.only(
