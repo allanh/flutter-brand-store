@@ -18,10 +18,14 @@ class ProductEventsView extends StatelessWidget {
       }
     }
     // 最多顯示兩筆
-    return FittedBox(
-        child: Row(
-      children: list.take(2).toList(),
-    ));
+    return Container(
+        height: 20,
+        margin: const EdgeInsets.only(top: 12),
+        child: FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Row(
+              children: list.take(2).toList(),
+            )));
   }
 }
 

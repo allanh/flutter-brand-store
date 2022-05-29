@@ -16,31 +16,27 @@ class BaseProductRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-      alignment: Alignment.topLeft,
       margin: const EdgeInsets.only(top: 8),
       padding: const EdgeInsets.only(left: 12),
       width: MediaQuery.of(context).size.width,
       decoration: const BoxDecoration(color: Colors.white),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 標題
-          SizedBox(
-              width: 50,
-              height: 44,
-              child: Center(
-                  child: Text(title,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context)
-                          .textTheme
-                          .caption
-                          ?.copyWith(color: UdiColors.brownGrey)))),
+          Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Text(title,
+                  //textAlign: TextAlign.center,
+                  style: Theme.of(context)
+                      .textTheme
+                      .caption
+                      ?.copyWith(fontSize: 14.0, color: UdiColors.brownGrey))),
           // 內容
           Container(
-            alignment: Alignment.centerLeft,
             width: MediaQuery.of(context).size.width -
                 ((onMoreTap != null) ? 130 : 90),
-            margin: const EdgeInsets.only(left: 12, right: 12),
+            margin: const EdgeInsets.symmetric(horizontal: 12),
             child: view,
           ),
           // 更多按鈕
