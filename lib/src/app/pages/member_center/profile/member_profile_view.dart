@@ -116,8 +116,7 @@ class _MemberProfilePageState
             controller.updateBirthday(birthday);
           }
 
-          void handleZipCodeChange(zipCode) {}
-          void handleCountyChange(BuildContext context) {
+          void handleCountyChange(BuildContext context, String county) {
             controller.updateCounty(context);
           }
 
@@ -125,7 +124,9 @@ class _MemberProfilePageState
             controller.updateDistrict(context, county);
           }
 
-          void handleAddressChange(address) {}
+          void handleAddressChange(String? address) {
+            controller.updateAddress(address);
+          }
 
           List<Widget> list = [
             /// 生日修改次數說明
@@ -204,13 +205,10 @@ class _MemberProfilePageState
               county: profile?.county,
               district: profile?.district,
               address: profile?.address,
-              isValid: controller.validateAddress(
-                  profile?.zipCode ?? '',
-                  profile?.county ?? '',
-                  profile?.district ?? '',
-                  profile?.address ?? ''),
-              handleZipCodeChange: handleZipCodeChange,
-              handleCountyChange: () => handleCountyChange(context),
+              isValid: controller.validateAddress(profile?.zipCode,
+                  profile?.county, profile?.district, profile?.address),
+              handleCountyChange: () =>
+                  handleCountyChange(context, profile?.county ?? ''),
               handleDistrictChange: () => {
                 if (profile?.county != null)
                   {

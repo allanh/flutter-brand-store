@@ -201,7 +201,11 @@ class MemberProfileController extends Controller {
     }
   }
 
-  bool validatePhone(String area, String phone, String ext) {
+  bool validatePhone(
+    String area,
+    String phone,
+    String ext,
+  ) {
     /// 區碼跟電話有資料
     /// 區碼需 2 到 3 個字
     /// 電話需 5 到 8 個字
@@ -240,31 +244,25 @@ class MemberProfileController extends Controller {
   }
 
   bool validateAddress(
-    String zipCode,
-    String county,
-    String district,
-    String address,
-  ) {
-    return true;
-  }
-
-  void updateAddress(
     String? zipCode,
     String? county,
     String? district,
     String? address,
   ) {
-    if (_memberProfile?.zipCode != zipCode) {
-      _memberProfile?.zipCode = zipCode;
-    }
-    if (_memberProfile?.county != county) {
-      _memberProfile?.county = county;
-    }
-    if (_memberProfile?.district != district) {
-      _memberProfile?.district = district;
-    }
+    return (zipCode == null &&
+            county == null &&
+            district == null &&
+            (address == null || address.isEmpty)) ||
+        (zipCode != null &&
+            county != null &&
+            district != null &&
+            address != null);
+  }
+
+  void updateAddress(String? address) {
     if (_memberProfile?.address != address) {
       _memberProfile?.address = address;
+      refreshUI();
     }
   }
 
@@ -284,14 +282,24 @@ class MemberProfileController extends Controller {
             _memberProfile?.county = value;
             _memberProfile?.district = null;
             _memberProfile?.zipCode = null;
+            refreshUI();
           }
+        },
+        onCancelled: () {
+          _memberProfile?.county = null;
+          _memberProfile?.district = null;
+          _memberProfile?.zipCode = null;
+          refreshUI();
         },
         onConfirmed: () {
           refreshUI();
         });
   }
 
-  void updateDistrict(BuildContext context, String county) {
+  void updateDistrict(
+    BuildContext context,
+    String county,
+  ) {
     final currentDistricts = _districts
         ?.where((district) => district.name == county)
         .toList()[0]
@@ -310,7 +318,7 @@ class MemberProfileController extends Controller {
           _memberProfile?.district = value;
           _memberProfile?.zipCode = currentDistricts
               .where((district) => district.name == value)
-              .toList()[0]
+              .first
               .zip;
         },
         onConfirmed: () {

@@ -12,7 +12,6 @@ class AddressTile extends StatelessWidget {
     required this.district,
     required this.address,
     required this.isValid,
-    required this.handleZipCodeChange,
     required this.handleCountyChange,
     required this.handleDistrictChange,
     required this.handleAddressChange,
@@ -24,7 +23,6 @@ class AddressTile extends StatelessWidget {
   final String? district;
   final String? address;
   final bool isValid;
-  final void Function(String? p1) handleZipCodeChange;
   final void Function() handleCountyChange;
   final void Function() handleDistrictChange;
   final void Function(String? p1) handleAddressChange;
@@ -41,31 +39,37 @@ class AddressTile extends StatelessWidget {
       const SizedBox(height: 8.0),
       Row(children: [
         Expanded(
-            child: HighlightTextField(
-                text: zipCode,
-                hintText: '郵遞區號',
-                handleChange: handleZipCodeChange,
-                isHighlight: false)),
+            child: DropdownTextField(
+          text: zipCode,
+          hintText: '郵遞區號',
+          isValid: isValid,
+          handleTap: handleCountyChange,
+          showArrow: false,
+        )),
         const SizedBox(width: 10.0),
         Expanded(
             child: DropdownTextField(
-                text: county,
-                hintText: '縣市',
-                isValid: isValid,
-                handleTap: handleCountyChange)),
+          text: county,
+          hintText: '縣市',
+          isValid: isValid,
+          handleTap: handleCountyChange,
+          showArrow: true,
+        )),
         const SizedBox(width: 10.0),
         Expanded(
             child: DropdownTextField(
-                text: district,
-                hintText: '鄉鎮市區',
-                isValid: isValid,
-                handleTap: handleDistrictChange))
+          text: district,
+          hintText: '鄉鎮市區',
+          isValid: isValid,
+          handleTap: handleDistrictChange,
+          showArrow: true,
+        ))
       ]),
       const SizedBox(height: 8.0),
       HighlightTextField(
           hintText: '請輸入街號、樓層',
           handleChange: handleAddressChange,
-          isHighlight: false),
+          isHighlight: isValid == false),
     ];
     if (isValid == false) {
       children.addAll([

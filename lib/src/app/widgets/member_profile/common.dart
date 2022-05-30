@@ -130,6 +130,7 @@ class HighlightTextField extends StatelessWidget {
             labelText: text,
             labelStyle: const TextStyle(color: UdiColors.greyishBrown),
             isCollapsed: true,
+            floatingLabelBehavior: FloatingLabelBehavior.never,
             border: OutlineInputBorder(
                 borderSide: BorderSide(
                     width: 1.0,
@@ -166,62 +167,67 @@ class DropdownTextField extends StatelessWidget {
     required this.hintText,
     required this.isValid,
     required this.handleTap,
+    required this.showArrow,
   }) : super(key: key);
 
   final String? text;
   final String hintText;
   final bool isValid;
   final void Function() handleTap;
+  final bool showArrow;
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> children = [
+      TextField(
+          enabled: false,
+          cursorColor: UdiColors.brownGrey2,
+          decoration: InputDecoration(
+              labelText: text,
+              labelStyle: const TextStyle(color: UdiColors.greyishBrown),
+              isCollapsed: true,
+              border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      width: 1.0,
+                      color: (isValid)
+                          ? UdiColors.veryLightGrey2
+                          : UdiColors.strawberry)),
+              enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      width: 1.0,
+                      color: (isValid)
+                          ? UdiColors.veryLightGrey2
+                          : UdiColors.strawberry)),
+              focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      width: 1.0,
+                      color: (isValid)
+                          ? UdiColors.veryLightGrey2
+                          : UdiColors.strawberry)),
+              disabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      width: 1.0,
+                      color: (isValid)
+                          ? UdiColors.veryLightGrey2
+                          : UdiColors.strawberry)),
+              hintText: hintText,
+              hintStyle: const TextStyle(color: UdiColors.brownGrey2),
+              contentPadding: const EdgeInsets.only(
+                left: 10.0,
+                top: 40.0 / 4,
+                bottom: 40.0 / 4,
+              ))),
+    ];
+    if (showArrow) {
+      children.add(const Padding(
+          padding: EdgeInsets.only(right: 9.8),
+          child: Image(
+            image: AssetImage('assets/images/icon_arrow_down.png'),
+          )));
+    }
     return GestureDetector(
         onTap: handleTap,
-        child: Stack(alignment: Alignment.centerRight, children: [
-          TextField(
-              enabled: false,
-              cursorColor: UdiColors.brownGrey2,
-              decoration: InputDecoration(
-                  labelText: text,
-                  labelStyle: const TextStyle(color: UdiColors.greyishBrown),
-                  isCollapsed: true,
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          width: 1.0,
-                          color: (isValid)
-                              ? UdiColors.veryLightGrey2
-                              : UdiColors.strawberry)),
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          width: 1.0,
-                          color: (isValid)
-                              ? UdiColors.veryLightGrey2
-                              : UdiColors.strawberry)),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          width: 1.0,
-                          color: (isValid)
-                              ? UdiColors.veryLightGrey2
-                              : UdiColors.strawberry)),
-                  disabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          width: 1.0,
-                          color: (isValid)
-                              ? UdiColors.veryLightGrey2
-                              : UdiColors.strawberry)),
-                  hintText: hintText,
-                  hintStyle: const TextStyle(color: UdiColors.brownGrey2),
-                  contentPadding: const EdgeInsets.only(
-                    left: 10.0,
-                    top: 40.0 / 4,
-                    bottom: 40.0 / 4,
-                  ))),
-          const Padding(
-              padding: EdgeInsets.only(right: 9.8),
-              child: Image(
-                image: AssetImage('assets/images/icon_arrow_down.png'),
-              ))
-        ]));
+        child: Stack(alignment: Alignment.centerRight, children: children));
   }
 }
 
