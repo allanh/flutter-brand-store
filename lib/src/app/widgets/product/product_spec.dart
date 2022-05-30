@@ -5,36 +5,34 @@ import '../../../domain/entities/product/product.dart';
 
 /// 促銷活動列
 class ProductSpecView extends StatelessWidget {
-  const ProductSpecView({Key? key, required this.info}) : super(key: key);
+  const ProductSpecView({Key? key, required this.product}) : super(key: key);
 
-  final ProductInfo info;
+  final Product product;
 
   @override
   Widget build(BuildContext context) {
     // 最多顯示兩筆
     return Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
-        constraints: const BoxConstraints(minHeight: 44),
-        child: Row(
-          children: [
-            Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-              Container(
-                alignment: Alignment.center,
-                height: 20,
-                child: Text('測試',
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          SizedBox(
+            height: 20,
+            child: FittedBox(
+                fit: BoxFit.fitWidth,
+                child: Text(product.defaultSpecText,
                     style: Theme.of(context).textTheme.caption?.copyWith(
-                        fontSize: 14.0, color: UdiColors.greyishBrown)),
-              ),
-              const SizedBox(height: 5),
-              Container(
-                alignment: Alignment.center,
-                height: 20,
-                child: Text('test',
-                    style: Theme.of(context).textTheme.caption?.copyWith(
-                        fontSize: 14.0, color: UdiColors.greyishBrown)),
-              ),
-            ])
-          ],
-        ));
+                        fontSize: 14.0, color: UdiColors.greyishBrown))),
+          ),
+          if (product.shippedNote != null)
+            Container(
+              padding: const EdgeInsets.only(top: 5),
+              height: 20,
+              child: FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Text(product.shippedNote!,
+                      style: Theme.of(context).textTheme.caption?.copyWith(
+                          fontSize: 14.0, color: UdiColors.greyishBrown))),
+            ),
+        ]));
   }
 }

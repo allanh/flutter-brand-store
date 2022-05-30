@@ -126,13 +126,12 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                             )),
 
                       // 規格
-                      if (product.product != null)
-                        BaseProductRow(
-                            title: '規　格',
-                            view: ProductSpecView(
-                              info: product.product!,
-                            ),
-                            onMoreTap: () => debugPrint('tap spac')),
+                      BaseProductRow(
+                          title: '規　格',
+                          view: ProductSpecView(
+                            product: product,
+                          ),
+                          onMoreTap: () => debugPrint('tap spac')),
                     ],
                   ),
                 ),

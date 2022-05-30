@@ -7,8 +7,14 @@ import '../../../domain/entities/product/product.dart';
 class ProductController extends Controller {
   final String? _goodsNo;
   final int? _productId;
+  // 商品
   Product? _product;
-  Product? get product => _product; // data used by the View
+  Product? get product => _product; // 商品
+
+  // 已選的規格品
+  Product? _selectedProduct;
+  Product? get selectedProduct => _selectedProduct;
+
   final ProductPresenter productPresenter;
   // Presenter should always be initialized this way
   ProductController(productsRepo, this._goodsNo, this._productId)
@@ -28,6 +34,8 @@ class ProductController extends Controller {
     productPresenter.getProductOnNext = (Product product) {
       debugPrint(product.toString());
       _product = product;
+      // TODO: 測試用
+      _selectedProduct = product;
       refreshUI(); // Refreshes the UI manually
     };
     productPresenter.getProductOnComplete = () {

@@ -35,8 +35,9 @@ const String profilePaymentRouteName = 'profile-payment';
 const String profilePersonalRouteName = 'profile-personal';
 const String profileSigninInfoRouteName = 'profile-signin';
 
-const String inputFormat = 'yyyy-MM-dd HH:mm:ss';
-const String outputFormat = 'yyyy/MM/dd HH:mm:ss';
+const String originalFullDateFormat = 'yyyy-MM-dd HH:mm:ss';
+const String fullDateFormat = 'yyyy/MM/dd HH:mm:ss';
+const String shortDateFormat = 'yyyy/MM/dd';
 
 // 價格格式
 NumberFormat numberFormat = NumberFormat("#,###");

@@ -1,4 +1,5 @@
 import 'package:brandstores/src/app/utils/constants.dart';
+import 'package:brandstores/src/extension/string_extension.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'category_main.dart';
@@ -190,7 +191,7 @@ class Product {
   // addon
   @JsonKey(name: 'addon_fixed_price')
   int? addonFixedPrice;
-  DateFormat _inputDateFormat = DateFormat(inputFormat);
+  final DateFormat _inputDateFormat = DateFormat(originalFullDateFormat);
 
   Product(
       {this.no,
@@ -288,15 +289,65 @@ class Product {
     return null;
   }
 
-  // 最小網路價
+  /// 最小網路價
   int? get minProposedPrice =>
       productInfo?.map((element) => element.proposedPrice).min;
 
-  // 是否為多價格
+  /// 是否為多價格
   bool get isRangePrice =>
       productInfo
           ?.any((element) => element.proposedPrice != minProposedPrice) ??
       false;
+
+  /// default specification text
+  String get defaultSpecText {
+    final buffer = StringBuffer();
+    buffer.write('請選擇　');
+
+    if (ShippedType.preorder == shippedType) {
+      buffer.write('出貨日期/');
+    }
+    if (specLv1Title?.isNotEmpty == true) {
+      buffer.write('$specLv1Title/');
+    }
+    if (specLv2Title?.isNotEmpty == true) {
+      buffer.write('$specLv2Title/');
+    }
+    buffer.write('數量');
+    return buffer.toString();
+  }
+
+  /**
+     * 請選擇 出貨日期/尺寸/顏色/數量
+     * 已選 M, 深黑色, 1 件
+     
+    private fun getSelectedSpecText(specName1: String?, specName2: String?, count: Int? = 0): SpannableStringBuilder? =
+        SpannableStringBuilder(getString(R.string.product_chose_text)).append(" ")
+            .apply {
+                specName1?.takeIf { it.isNotEmpty() }?.let { append("$it, ") }
+                specName2?.takeIf { it.isNotEmpty() }?.let { append("$it, ") }
+                append(getString(R.string.product_quantity_format, count))
+                val countIndex = lastIndexOf(count.toString())
+                setSpan(ForegroundColorSpan(Color.RED), countIndex, countIndex + count.toString().length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            */
+
+  /// 規格：『訂製、預購、客約』出貨日期備註
+  String? get shippedNote {
+    switch (shippedType) {
+      case ShippedType.custom:
+        return '此商品於付款完成後 $shippedCustomDay 天開始陸續出貨';
+      case ShippedType.preorder:
+        // TODO: 改從購物車拿預計出貨日
+        return null;
+      //final date = shippedPreorderDate?.first.replaceAll('-', '/');
+      //return date != null ? '預計 $date 出貨' : null;
+      case ShippedType.contact:
+        return '因商品屬性，將有專人與您約定送貨日期';
+      default:
+        return null;
+    }
+  }
 }
 
 @JsonSerializable()
