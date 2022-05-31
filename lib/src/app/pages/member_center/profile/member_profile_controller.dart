@@ -325,4 +325,6 @@ class MemberProfileController extends Controller {
           refreshUI();
         });
   }
+
+  void updateProfile() => presenter.updateProfile(_memberProfile!);
 }

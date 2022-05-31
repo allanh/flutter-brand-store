@@ -1,3 +1,4 @@
+import 'package:brandstores/src/data/utils/dio/base_res.dart';
 import 'package:brandstores/src/data/utils/dio/dio_utils.dart';
 import 'package:brandstores/src/domain/entities/member_profile/member_profile.dart';
 import 'package:brandstores/src/domain/repositories/member_profile_repository.dart';
@@ -70,5 +71,20 @@ class DataMemberProfileRepository extends MemberProfileRepository {
       return districts;
     });
     return city;
+  }
+
+  /// 會員資料更新
+  @override
+  Future<BaseResponse> updateProfile() async {
+    try {
+      final response = await HttpUtils.instance.get(Api.updateProfile);
+      if (response.isSuccess) {
+        return BaseResponse.fromJson(response);
+      }
+      throw Exception('Failed to get member center.');
+    } catch (e) {
+      debugPrint(e.toString());
+      throw Exception('Failed to get member center.');
+    }
   }
 }

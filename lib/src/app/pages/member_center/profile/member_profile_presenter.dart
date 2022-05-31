@@ -1,3 +1,4 @@
+import 'package:brandstores/src/domain/entities/member_profile/member_profile.dart';
 import 'package:brandstores/src/domain/usecases/get_member_profile_usecase.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
@@ -14,14 +15,20 @@ class MemberProfilePresenter extends Presenter {
   late Function loadDistrictsOnComplete;
   late Function loadDistrictsOnError;
 
+  late Function updateProfileOnNext;
+  late Function updateProfileOnComplete;
+  late Function updateProfileOnError;
+
   final GetMemberProfileUseCase getMemberProfileUseCase;
   final VerifyMobileUseCase verifyMobileUseCase;
   final LoadDistrictsUseCase loadDistrictsUseCase;
+  final UpdateProfileUseCase updateProfileUseCase;
 
   MemberProfilePresenter(memberProfileRepo)
       : getMemberProfileUseCase = GetMemberProfileUseCase(memberProfileRepo),
         verifyMobileUseCase = VerifyMobileUseCase(memberProfileRepo),
-        loadDistrictsUseCase = LoadDistrictsUseCase(memberProfileRepo);
+        loadDistrictsUseCase = LoadDistrictsUseCase(memberProfileRepo),
+        updateProfileUseCase = UpdateProfileUseCase(memberProfileRepo);
 
   void getMemberProfile() {
     getMemberProfileUseCase.execute(_GetMemberProfileUseCaseObserver(this),
@@ -41,11 +48,17 @@ class MemberProfilePresenter extends Presenter {
         _LoadDistrictsUseCaseObserver(this), LoadDistrictsUseCaseParams());
   }
 
+  void updateProfile(MemberProfile profile) {
+    updateProfileUseCase.execute(_UpdateProfileUseCaseObserver(this),
+        UpdateProfileUseCaseParams(profile));
+  }
+
   @override
   void dispose() {
     getMemberProfileUseCase.dispose();
     verifyMobileUseCase.dispose();
     loadDistrictsUseCase.dispose();
+    updateProfileUseCase.dispose();
   }
 }
 
@@ -115,5 +128,28 @@ class _LoadDistrictsUseCaseObserver
   @override
   void onNext(response) {
     presenter.loadDistrictsOnNext(response?.districts);
+  }
+}
+
+/// 會員資料更新
+class _UpdateProfileUseCaseObserver
+    extends Observer<UpdateProfileUseCaseResponse> {
+  final MemberProfilePresenter presenter;
+
+  _UpdateProfileUseCaseObserver(this.presenter);
+
+  @override
+  void onComplete() {
+    presenter.updateProfileOnComplete();
+  }
+
+  @override
+  void onError(e) {
+    presenter.updateProfileOnError(e);
+  }
+
+  @override
+  void onNext(response) {
+    presenter.updateProfileOnNext(response);
   }
 }

@@ -13,6 +13,7 @@
 /// - Might change if the funcationality and flow of application change
 
 import 'dart:async';
+import 'package:brandstores/src/data/utils/dio/base_res.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
 import 'package:brandstores/src/domain/entities/member_profile/member_profile.dart';
@@ -137,4 +138,41 @@ class LoadDistrictsUseCaseResponse {
 
 class LoadDistrictsUseCaseParams {
   LoadDistrictsUseCaseParams();
+}
+
+class UpdateProfileUseCase
+    extends UseCase<UpdateProfileUseCaseResponse, UpdateProfileUseCaseParams> {
+  final MemberProfileRepository memberProfileRepository;
+  UpdateProfileUseCase(this.memberProfileRepository);
+
+  @override
+  Future<Stream<UpdateProfileUseCaseResponse>> buildUseCaseStream(
+      UpdateProfileUseCaseParams? params) async {
+    final controller = StreamController<UpdateProfileUseCaseResponse>();
+
+    try {
+      // Verify mobile
+      final response = await memberProfileRepository.updateProfile();
+      // Adding it triggers the .onNext() in the 'Observer'
+      // It is usually better to wrap the response inside a response object.
+      controller.add(UpdateProfileUseCaseResponse(response));
+      logger.finest('LoadDistrictsUseCaseParams successful.');
+      controller.close();
+    } catch (e) {
+      logger.severe('LoadDistrictsUseCaseParams failure.');
+      // Trigger .onError
+      controller.addError(e);
+    }
+    return controller.stream;
+  }
+}
+
+class UpdateProfileUseCaseResponse {
+  final BaseResponse response;
+  UpdateProfileUseCaseResponse(this.response);
+}
+
+class UpdateProfileUseCaseParams {
+  final MemberProfile profile;
+  UpdateProfileUseCaseParams(this.profile);
 }

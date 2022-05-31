@@ -22,6 +22,7 @@ class Api {
   static const memberCenter = '/udi/v1/member_center';
   static const memberProfile = '/udi/v1/member_center/update/data';
   static const memberVerification = '/udi/v3/auth/send_verification';
+  static const updateProfile = '/udi/v1/member_center/update/data';
 
   // Product
   static const getProduct = '/udi/v2/goods/info';

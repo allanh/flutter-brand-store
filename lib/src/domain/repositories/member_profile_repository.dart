@@ -7,6 +7,7 @@
 /// with the business logic of the application, not with the implementation
 /// details. This also allows for easy migration between platform, should
 /// any issues arise.
+import 'package:brandstores/src/data/utils/dio/base_res.dart';
 import 'package:brandstores/src/domain/entities/member_profile/member_profile.dart';
 
 /// Repositories
@@ -24,4 +25,7 @@ abstract class MemberProfileRepository {
 
   /// 取得郵遞區號
   Future<List<Districts>> loadDistricts();
+
+  /// 會員資料更新
+  Future<BaseResponse> updateProfile();
 }

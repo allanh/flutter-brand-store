@@ -128,6 +128,10 @@ class _MemberProfilePageState
             controller.updateAddress(address);
           }
 
+          void handleUpdateData() {
+            controller.updateProfile();
+          }
+
           List<Widget> list = [
             /// 生日修改次數說明
             BirthdayChangeHintTile(context: context),
@@ -227,11 +231,7 @@ class _MemberProfilePageState
                 }),
 
             /// 儲存按鈕
-            SaveButton(
-                context: context,
-                handleSave: () {
-                  debugPrint('save button pressed');
-                }),
+            SaveButton(context: context, handleSave: handleUpdateData),
 
             /// 分隔線
             const Divider(
