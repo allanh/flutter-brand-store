@@ -1,4 +1,5 @@
 import 'package:brandstores/src/app/widgets/product/event_countdown_timer.dart';
+import 'package:brandstores/src/app/widgets/product/product_addon.dart';
 import 'package:brandstores/src/app/widgets/product/promotion_tag.dart';
 import 'package:brandstores/src/domain/entities/product/product.dart';
 import 'package:brandstores/src/domain/entities/product/spec_sku.dart';
@@ -7,7 +8,7 @@ import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import '../../../device/utils/my_plus_colors.dart';
 import '../../widgets/product/base_product_row.dart';
-import '../../widgets/product/event.dart';
+import '../../widgets/product/product_event.dart';
 import '../../widgets/product/image_slider.dart';
 import '../../widgets/product/product_name.dart';
 import '../../widgets/product/product_spec.dart';
@@ -126,12 +127,24 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                             )),
 
                       // 規格
+                      // TODO: 選規
                       BaseProductRow(
                           title: '規　格',
                           view: ProductSpecView(
                             product: product,
                           ),
                           onMoreTap: () => debugPrint('tap spac')),
+
+                      // 加價購
+                      // TODO: 加價購選規
+                      //if (product.addonInfo?.isNotEmpty == true)
+                      BaseProductRow(
+                          title: '加價購',
+                          view: ProductAddonView(
+                            addons: product.mockAddons,
+                            selectedAddons: [],
+                          ),
+                          onMoreTap: () => debugPrint('tap addon')),
                     ],
                   ),
                 ),

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../device/utils/my_plus_colors.dart';
 import '../../../domain/entities/product/product.dart';
-import '../../../extension/int_extension.dart';
+import '../../../extension/num_extension.dart';
 
 /// 單一圖標
 class ProductName extends StatelessWidget {

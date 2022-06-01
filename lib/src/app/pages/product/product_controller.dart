@@ -15,6 +15,10 @@ class ProductController extends Controller {
   Product? _selectedProduct;
   Product? get selectedProduct => _selectedProduct;
 
+  // 已選的規格品
+  List<AddToCartParams>? _selectedAddonProduct;
+  List<AddToCartParams>? get selectedAddonProduct => _selectedAddonProduct;
+
   final ProductPresenter productPresenter;
   // Presenter should always be initialized this way
   ProductController(productsRepo, this._goodsNo, this._productId)
@@ -79,4 +83,9 @@ class ProductController extends Controller {
   void onCountDownEnd() {
     getProduct(goodsNo: _goodsNo!, productId: _productId);
   }
+
+  /// 加購商品
+  void selectdAddonProduct(
+          {required String goodsNo, int? productId, required int qty}) =>
+      productPresenter.getProduct(goodsNo: goodsNo, productId: productId);
 }

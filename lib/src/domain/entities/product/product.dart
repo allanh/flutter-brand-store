@@ -320,7 +320,6 @@ class Product {
   /**
      * 請選擇 出貨日期/尺寸/顏色/數量
      * 已選 M, 深黑色, 1 件
-     
     private fun getSelectedSpecText(specName1: String?, specName2: String?, count: Int? = 0): SpannableStringBuilder? =
         SpannableStringBuilder(getString(R.string.product_chose_text)).append(" ")
             .apply {
@@ -439,7 +438,36 @@ class ProductInfo {
           : null;
 }
 
-// 測試用
+/// 加入購物車
+@JsonSerializable()
+class AddToCartParams {
+  @JsonKey(name: 'goods_no')
+  String? no;
+  @JsonKey(name: 'product_id')
+  int? productId;
+  @JsonKey(name: 'qty')
+  int? quantity;
+  @JsonKey(name: 'addon_fixed_price')
+  int? addonFixedPrice;
+  @JsonKey(name: 'delivery_date')
+  String? deliveryDate;
+  @JsonKey(name: 'addon')
+  List<AddToCartParams>? addon;
+
+  AddToCartParams(
+      {this.no,
+      this.productId,
+      this.quantity,
+      this.addonFixedPrice,
+      this.deliveryDate,
+      this.addon});
+
+  factory AddToCartParams.fromJson(Map<String, dynamic> json) =>
+      _$AddToCartParamsFromJson(json);
+  Map<String, dynamic> toJson() => _$AddToCartParamsToJson(this);
+}
+
+/// 測試用
 extension MockProduct on Product {
   List<Event> get mockEvents => [
         Event(
@@ -455,4 +483,7 @@ extension MockProduct on Product {
             ruleContent: RuleContent.productPercentOff,
             ruleInfos: [RuleInfo(perUnit: 3, discount: 7)]),
       ];
+
+  List<Product> get mockAddons =>
+      [this, this, this, this..addonFixedPrice = 999999];
 }

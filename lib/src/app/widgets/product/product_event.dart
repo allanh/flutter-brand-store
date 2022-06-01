@@ -18,9 +18,8 @@ class ProductEventsView extends StatelessWidget {
       }
     }
     // 最多顯示兩筆
-    return Container(
+    return SizedBox(
         height: 20,
-        margin: const EdgeInsets.only(top: 12),
         child: FittedBox(
             fit: BoxFit.fitWidth,
             child: Row(

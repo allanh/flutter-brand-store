@@ -17,15 +17,16 @@ class BaseProductRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
       margin: const EdgeInsets.only(top: 8),
-      padding: const EdgeInsets.only(left: 12),
+      //padding: const EdgeInsets.only(left: 12),
       width: MediaQuery.of(context).size.width,
       decoration: const BoxDecoration(color: Colors.white),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 標題
-          Padding(
-              padding: const EdgeInsets.only(top: 12),
+          Container(
+              width: 70,
+              padding: const EdgeInsets.only(left: 12, top: 12),
               child: Text(title,
                   //textAlign: TextAlign.center,
                   style: Theme.of(context)
@@ -35,15 +36,15 @@ class BaseProductRow extends StatelessWidget {
           // 內容
           Container(
             width: MediaQuery.of(context).size.width -
-                ((onMoreTap != null) ? 130 : 90),
-            margin: const EdgeInsets.symmetric(horizontal: 12),
+                ((onMoreTap != null) ? 110 : 90),
+            padding: const EdgeInsets.symmetric(vertical: 12),
             child: view,
           ),
           // 更多按鈕
           if (onMoreTap != null)
             GestureDetector(
                 child: SizedBox(
-                  width: 44,
+                  width: 40,
                   height: 44,
                   child: Image.asset(
                     'assets/images/icon_more.png',
