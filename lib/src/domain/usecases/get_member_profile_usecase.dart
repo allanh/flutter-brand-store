@@ -152,7 +152,8 @@ class UpdateProfileUseCase
 
     try {
       // Verify mobile
-      final response = await memberProfileRepository.updateProfile();
+      final response =
+          await memberProfileRepository.updateProfile(params?.profile);
       // Adding it triggers the .onNext() in the 'Observer'
       // It is usually better to wrap the response inside a response object.
       controller.add(UpdateProfileUseCaseResponse(response));

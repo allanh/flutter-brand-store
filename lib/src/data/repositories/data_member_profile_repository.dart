@@ -75,9 +75,21 @@ class DataMemberProfileRepository extends MemberProfileRepository {
 
   /// 會員資料更新
   @override
-  Future<BaseResponse> updateProfile() async {
+  Future<BaseResponse> updateProfile(MemberProfile? profile) async {
     try {
-      final response = await HttpUtils.instance.get(Api.updateProfile);
+      final response =
+          await HttpUtils.instance.post(Api.updateProfile, params: {
+        "name": profile?.name,
+        "area_code": profile?.areaCode,
+        "tel": profile?.phone,
+        "tel_ext": profile?.ext,
+        "gender": profile?.gender?.toGenderString(),
+        "birth": profile?.birthday,
+        "zip": profile?.zipCode,
+        "cityno": profile?.county,
+        "areano": profile?.district,
+        "address": profile?.address
+      });
       if (response.isSuccess) {
         return BaseResponse.fromJson(response);
       }

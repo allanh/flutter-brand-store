@@ -179,7 +179,7 @@ class _MemberProfilePageState
             /// 市話區塊
             PhoneTile(
               context: context,
-              area: profile?.district,
+              area: profile?.areaCode,
               phone: profile?.phone,
               ext: profile?.ext,
               isValid: controller.validatePhone(profile?.areaCode ?? '',

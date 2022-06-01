@@ -14,6 +14,16 @@ enum Gender {
   other
 }
 
+extension GenderValue on Gender {
+  String toGenderString() {
+    return this == Gender.male
+        ? 'M'
+        : this == Gender.female
+            ? 'F'
+            : 'O';
+  }
+}
+
 @JsonSerializable()
 class MemberProfileResponse {
   const MemberProfileResponse(this.id, this.status, this.message, this.profile);

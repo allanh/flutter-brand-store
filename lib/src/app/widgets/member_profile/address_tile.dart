@@ -67,6 +67,7 @@ class AddressTile extends StatelessWidget {
       ]),
       const SizedBox(height: 8.0),
       HighlightTextField(
+          text: address,
           hintText: '請輸入街號、樓層',
           handleChange: handleAddressChange,
           isHighlight: isValid == false),

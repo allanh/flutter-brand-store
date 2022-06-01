@@ -27,5 +27,5 @@ abstract class MemberProfileRepository {
   Future<List<Districts>> loadDistricts();
 
   /// 會員資料更新
-  Future<BaseResponse> updateProfile();
+  Future<BaseResponse> updateProfile(MemberProfile? profile);
 }

@@ -295,6 +295,7 @@ class InputTile extends StatelessWidget {
                       RequiresText(context: context, text: title),
                       const SizedBox(height: 8.0),
                       HighlightTextField(
+                          text: text,
                           hintText: hintText,
                           handleChange: handleChange,
                           isHighlight: false),
@@ -303,6 +304,7 @@ class InputTile extends StatelessWidget {
                       RequiresText(context: context, text: title),
                       const SizedBox(height: 8.0),
                       HighlightTextField(
+                          text: text,
                           hintText: hintText,
                           handleChange: handleChange,
                           isHighlight: false),

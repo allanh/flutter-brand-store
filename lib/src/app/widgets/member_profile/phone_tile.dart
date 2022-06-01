@@ -39,12 +39,14 @@ class PhoneTile extends StatelessWidget {
         SizedBox(
             width: 90.0,
             child: HighlightTextField(
+                text: area,
                 hintText: '區碼',
                 handleChange: handleAreaChange,
                 isHighlight: false)),
         const SizedBox(width: 10.0),
         Expanded(
             child: HighlightTextField(
+                text: phone,
                 hintText: '市內電話',
                 handleChange: handlePhoneChange,
                 isHighlight: false)),
@@ -52,6 +54,7 @@ class PhoneTile extends StatelessWidget {
         SizedBox(
             width: 119.0,
             child: HighlightTextField(
+                text: ext,
                 hintText: '分機',
                 handleChange: handleExtChange,
                 isHighlight: false))
