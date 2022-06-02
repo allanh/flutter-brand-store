@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:brandstores/src/app/widgets/member_profile/mobile_input_tile.dart';
-import 'package:brandstores/src/app/widgets/member_profile/validation_code_tile.dart';
-import 'package:brandstores/src/app/widgets/member_profile/mobile_operation_tile.dart';
+import 'package:brandstores/src/app/widgets/member_center/member_profile/mobile_input_tile.dart';
+import 'package:brandstores/src/app/widgets/member_center/member_profile/validation_code_tile.dart';
+import 'package:brandstores/src/app/widgets/member_center/member_profile/mobile_operation_tile.dart';
 
 /// 行動電話區塊
 /// - [context] context

@@ -1,3 +1,4 @@
+import 'package:brandstores/src/app/pages/member_center/mobile_change/mobile_change_view.dart';
 import 'package:brandstores/src/app/pages/member_center/profile/member_profile_controller.dart';
 import 'package:brandstores/src/data/repositories/data_member_profile_repository.dart';
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
@@ -7,18 +8,18 @@ import 'package:brandstores/src/domain/entities/member_profile/member_profile.da
 
 import 'package:intl/intl.dart';
 
-import 'package:brandstores/src/app/widgets/member_profile/common.dart';
-import 'package:brandstores/src/app/widgets/member_profile/birthday_change_hint_tile.dart';
-import 'package:brandstores/src/app/widgets/member_profile/address_tile.dart';
-import 'package:brandstores/src/app/widgets/member_profile/phone_tile.dart';
-import 'package:brandstores/src/app/widgets/member_profile/gender_tile.dart';
-import 'package:brandstores/src/app/widgets/member_profile/birthday_tile.dart';
-import 'package:brandstores/src/app/widgets/member_profile/password_setting_tile.dart';
-import 'package:brandstores/src/app/widgets/member_profile/profile_save_button.dart';
-import 'package:brandstores/src/app/widgets/member_profile/binding_hint_tile.dart';
-import 'package:brandstores/src/app/widgets/member_profile/binding_tile.dart';
-import 'package:brandstores/src/app/widgets/member_profile/mobile_tile.dart';
-import 'package:brandstores/src/app/widgets/member_profile/email_tile.dart';
+import 'package:brandstores/src/app/widgets/member_center/member_profile/common.dart';
+import 'package:brandstores/src/app/widgets/member_center/member_profile/birthday_change_hint_tile.dart';
+import 'package:brandstores/src/app/widgets/member_center/member_profile/address_tile.dart';
+import 'package:brandstores/src/app/widgets/member_center/member_profile/phone_tile.dart';
+import 'package:brandstores/src/app/widgets/member_center/member_profile/gender_tile.dart';
+import 'package:brandstores/src/app/widgets/member_center/member_profile/birthday_tile.dart';
+import 'package:brandstores/src/app/widgets/member_center/member_profile/password_setting_tile.dart';
+import 'package:brandstores/src/app/widgets/member_center/member_profile/profile_save_button.dart';
+import 'package:brandstores/src/app/widgets/member_center/member_profile/binding_hint_tile.dart';
+import 'package:brandstores/src/app/widgets/member_center/member_profile/binding_tile.dart';
+import 'package:brandstores/src/app/widgets/member_center/member_profile/mobile_tile.dart';
+import 'package:brandstores/src/app/widgets/member_center/member_profile/email_tile.dart';
 
 class MemberProfilePage extends View {
   MemberProfilePage({Key? key}) : super(key: key);
@@ -42,9 +43,6 @@ class _MemberProfilePageState
         appBar: AppBar(title: const Text('會員資料')),
         body: ControlledWidgetBuilder<MemberProfileController>(
             builder: (context, controller) {
-          // final List<Districts>? districts = controller.districts;
-          // debugPrint(districts.toString());
-
           final MemberProfile? profile = controller.memberProfile;
 
           void handleCountryCodeChange(code) {
@@ -67,6 +65,12 @@ class _MemberProfilePageState
 
           void handleChangeMobile(message) {
             debugPrint(message);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MobileChangePage(),
+                  fullscreenDialog: true,
+                ));
           }
 
           void handleValidationCodeChange(code) {

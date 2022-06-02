@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:brandstores/src/app/widgets/member_profile/common.dart';
+import 'package:brandstores/src/app/widgets/member_center/member_profile/common.dart';
 
 /// 建立行動電話輸入框
 /// - [context] context

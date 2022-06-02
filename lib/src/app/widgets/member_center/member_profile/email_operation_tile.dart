@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
-import 'package:brandstores/src/app/widgets/member_profile/common.dart';
+import 'package:brandstores/src/app/widgets/member_center/member_profile/common.dart';
 
 /// 建立Email驗證、變更區塊
 class EmailOperationTile extends StatelessWidget {

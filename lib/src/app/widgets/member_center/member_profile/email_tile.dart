@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:brandstores/src/app/widgets/member_profile/common.dart';
-import 'package:brandstores/src/app/widgets/member_profile/email_operation_tile.dart';
+import 'package:brandstores/src/app/widgets/member_center/member_profile/common.dart';
+import 'package:brandstores/src/app/widgets/member_center/member_profile/email_operation_tile.dart';
 
 /// Email 區塊
 /// - [email] 電子郵件
