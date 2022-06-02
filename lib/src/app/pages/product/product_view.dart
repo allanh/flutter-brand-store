@@ -1,6 +1,7 @@
 import 'package:brandstores/src/app/utils/screen_config.dart';
 import 'package:brandstores/src/app/widgets/product/event_countdown_timer.dart';
 import 'package:brandstores/src/app/widgets/product/product_addon.dart';
+import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:brandstores/src/domain/entities/product/product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
@@ -33,6 +34,15 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
   // double _top = 0.0;
   final CarouselController carouselController = CarouselController();
   double get ratio => SizeConfig.screenRatio;
+  double _top = 0;
+
+  // Tabbar
+  final _tabs = ['商品', '介紹', '推薦'];
+  TabBar get _tabBar => TabBar(
+        labelColor: Theme.of(context).primaryColor,
+        unselectedLabelColor: UdiColors.brownGrey,
+        tabs: _tabs.map((String name) => Tab(text: name)).toList(),
+      );
 
   @override
   Widget get view {
@@ -45,54 +55,68 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
   Widget _getHeader(ProductController controller) {
     return ControlledWidgetBuilder<ProductController>(
         builder: (context, controller) {
-      return Scaffold(
-        body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              SliverOverlapAbsorber(
-                  handle:
-                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                  sliver: SliverAppBar(
-                    // 倒退鍵
-                    leading: InkWell(
-                      onTap: () => context.pop(),
-                      child: const Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.white,
-                      ),
-                    ),
-                    pinned: true,
-                    //floating: true,
-                    stretch: true,
-                    expandedHeight: 375.0 * ratio,
-                    backgroundColor: Colors.black,
-                    flexibleSpace:
-                        ProductFlexibleSpaceBar(product: controller.product),
-                    actions: [
-                      // 購物車
-                      IconButton(
-                        icon: const Icon(Icons.shopping_cart),
-                        onPressed: () {},
-                      ),
-                      // 更多動作
-                      IconButton(
-                        icon: const Icon(Icons.more_vert),
-                        onPressed: () {},
-                      )
-                    ],
-                  )),
-            ];
-          },
-          body: Builder(builder: (BuildContext context) {
-            return CustomScrollView(
-              slivers: _slivers(context, controller),
-            );
-          }),
-        ),
-      );
+      return LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+        _top = constraints.biggest.height;
+        return DefaultTabController(
+            length: _tabs.length, // This is the number of tabs.
+            child: Scaffold(
+              body: NestedScrollView(
+                headerSliverBuilder:
+                    (BuildContext context, bool innerBoxIsScrolled) {
+                  return <Widget>[
+                    SliverOverlapAbsorber(
+                        handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                            context),
+                        sliver: SliverAppBar(
+                            // 倒退鍵
+                            leading: InkWell(
+                              onTap: () => context.pop(),
+                              child: const Icon(
+                                Icons.arrow_back_ios,
+                                color: Colors.white,
+                              ),
+                            ),
+                            pinned: true,
+                            //floating: true,
+                            stretch: true,
+                            expandedHeight: 375.0 * ratio,
+                            backgroundColor: Colors.black,
+                            flexibleSpace: ProductFlexibleSpaceBar(
+                                product: controller.product),
+                            actions: [
+                              // 購物車
+                              IconButton(
+                                icon: const Icon(Icons.shopping_cart),
+                                onPressed: () {},
+                              ),
+                              // 更多動作
+                              IconButton(
+                                icon: const Icon(Icons.more_vert),
+                                onPressed: () {},
+                              )
+                            ],
+                            bottom: PreferredSize(
+                              preferredSize: _tabBar.preferredSize,
+                              child: ColoredBox(
+                                color: Colors.white,
+                                child: _tabBar,
+                              ),
+                            ))),
+                  ];
+                },
+                body: Builder(builder: (BuildContext context) {
+                  return CustomScrollView(
+                    slivers: _slivers(context, controller),
+                  );
+                }),
+              ),
+            ));
+      });
     });
   }
 
+  // 商品內容列表
   List<Widget> _slivers(BuildContext context, ProductController controller) {
     List<Widget> list = [
       SliverOverlapInjector(
