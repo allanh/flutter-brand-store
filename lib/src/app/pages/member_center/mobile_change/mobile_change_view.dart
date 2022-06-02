@@ -32,8 +32,6 @@ class _MobileChangePageState
   String mobile = '';
   String validationCode = '';
 
-  bool isShowValidationCodeDescription = true;
-
   MobileChangeStatus status = MobileChangeStatus.inputPassword;
 
   Widget _buildDescriptionTile(BuildContext context) {
@@ -119,9 +117,8 @@ class _MobileChangePageState
           }
 
           void handleValidationCodeChange(text) {
-            validationCode = text;
             setState(() {
-              isShowValidationCodeDescription = false;
+              validationCode = text;
             });
           }
 
@@ -145,7 +142,6 @@ class _MobileChangePageState
               ValidationCodeInputTile(
                 handleValidationCodeChange: (text) =>
                     handleValidationCodeChange(text),
-                isShowDescription: isShowValidationCodeDescription,
               ),
               _buildSubmitButton(handlePasswordSubmit, handleMobileSubmit)
             ]);

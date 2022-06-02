@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 
 class ValidationCodeInputTile extends StatefulWidget {
-  const ValidationCodeInputTile(
-      {Key? key,
-      required this.handleValidationCodeChange,
-      required this.isShowDescription})
-      : super(key: key);
+  const ValidationCodeInputTile({
+    Key? key,
+    required this.handleValidationCodeChange,
+  }) : super(key: key);
 
   final void Function(String) handleValidationCodeChange;
-  final bool isShowDescription;
 
   @override
   State<ValidationCodeInputTile> createState() =>
@@ -17,6 +15,7 @@ class ValidationCodeInputTile extends StatefulWidget {
 }
 
 class _ValidationCodeInputTileState extends State<ValidationCodeInputTile> {
+  bool isShowDescription = true;
   @override
   Widget build(BuildContext context) {
     double fieldWidth =
@@ -30,6 +29,7 @@ class _ValidationCodeInputTileState extends State<ValidationCodeInputTile> {
         style: Theme.of(context).textTheme.headlineLarge,
         maxLength: 1,
         onChanged: (text) => widget.handleValidationCodeChange(text),
+        onTap: () => {setState(() => isShowDescription = false)},
         cursorColor: UdiColors.brownGrey2,
         keyboardType: TextInputType.number,
         decoration: const InputDecoration(
@@ -66,7 +66,7 @@ class _ValidationCodeInputTileState extends State<ValidationCodeInputTile> {
       ),
     ];
 
-    if (widget.isShowDescription) {
+    if (isShowDescription) {
       children.add(Center(
         child: Text(
           '請輸入驗證簡訊4位數驗證碼',
