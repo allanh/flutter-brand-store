@@ -4,6 +4,8 @@ import 'package:brandstores/src/app/utils/constants.dart';
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:flutter/material.dart';
 
+import '../../utils/screen_config.dart';
+
 enum CountDownType {
   comingSoon, //	是否即將開賣
   flashSale // 限時搶購
@@ -55,7 +57,7 @@ class _EventCountDownTimerState extends State<EventCountDownTimer> {
     final theme = Theme.of(context);
 
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: SizeConfig.screenWidth,
       child: Column(children: [
         // 倒數計時區塊
         Padding(
@@ -71,7 +73,7 @@ class _EventCountDownTimerState extends State<EventCountDownTimer> {
           Container(
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.only(left: 12, right: 12),
-            width: MediaQuery.of(context).size.width,
+            width: SizeConfig.screenWidth,
             height: 36,
             child: Text(widget.slogan!,
                 textAlign: TextAlign.center,

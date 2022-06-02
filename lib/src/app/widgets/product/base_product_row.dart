@@ -1,3 +1,4 @@
+import 'package:brandstores/src/app/utils/screen_config.dart';
 import 'package:flutter/material.dart';
 
 import '../../../device/utils/my_plus_colors.dart';
@@ -18,7 +19,7 @@ class BaseProductRow extends StatelessWidget {
   Widget build(BuildContext context) => Container(
       margin: const EdgeInsets.only(top: 8),
       //padding: const EdgeInsets.only(left: 12),
-      width: MediaQuery.of(context).size.width,
+      width: SizeConfig.screenWidth,
       decoration: const BoxDecoration(color: Colors.white),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,8 +36,7 @@ class BaseProductRow extends StatelessWidget {
                       ?.copyWith(fontSize: 14.0, color: UdiColors.brownGrey))),
           // 內容
           Container(
-            width: MediaQuery.of(context).size.width -
-                ((onMoreTap != null) ? 110 : 90),
+            width: SizeConfig.screenWidth - ((onMoreTap != null) ? 110 : 90),
             padding: const EdgeInsets.symmetric(vertical: 12),
             child: view,
           ),

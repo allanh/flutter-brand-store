@@ -10,11 +10,12 @@ class SmallProduct extends StatefulWidget {
   /// The callback that is called when the countdown timer is ended.
   final Product product;
   // 點擊事件，若不需要點擊可傳 null
-  final ValueChanged<bool>? isSelected;
+  //final ValueChanged<bool>? isSelected;
   final double ratio;
+  final ValueChanged<Product>? onItemTap;
 
   const SmallProduct(
-      {Key? key, required this.product, required this.ratio, this.isSelected})
+      {Key? key, required this.product, required this.ratio, this.onItemTap})
       : super(key: key);
 
   @override
@@ -27,14 +28,15 @@ class _SmallProductState extends State<SmallProduct> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: () {
-          if (widget.isSelected != null) {
-            setState(() {
-              isSelected = !isSelected;
-              //widget.isSelected!(isSelected);
-            });
-          }
-        },
+        onTap: () => {
+              if (widget.onItemTap != null) {widget.onItemTap!(widget.product)}
+              // if (widget.isSelected != null) {
+              //   setState(() {
+              //     isSelected = !isSelected;
+              //     widget.isSelected!(isSelected);
+              //   });
+              // }
+            },
         child: Column(
           children: <Widget>[
             SizedBox(
@@ -46,10 +48,10 @@ class _SmallProductState extends State<SmallProduct> {
                       // 加購品圖片
                       _buildProductImage(widget.product.imageList?.first),
                       // 選取框
-                      if (widget.isSelected != null)
-                        SelectedBorder(
-                          isSelected: isSelected,
-                        ),
+                      // if (widget.isSelected != null)
+                      //   SelectedBorder(
+                      //     isSelected: isSelected,
+                      //   ),
                     ],
                   )),
             ),

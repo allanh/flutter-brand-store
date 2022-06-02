@@ -11,7 +11,6 @@ class SelectedBorder extends StatelessWidget {
 
     return Container(
         decoration: BoxDecoration(
-          //color: _primaryColor,
           border: Border.all(width: isSelected ? 2 : 0, color: _primaryColor),
           borderRadius: BorderRadius.circular(2.0),
         ),

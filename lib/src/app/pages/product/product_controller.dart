@@ -16,8 +16,8 @@ class ProductController extends Controller {
   Product? get selectedProduct => _selectedProduct;
 
   // 已選的規格品
-  List<AddToCartParams>? _selectedAddonProduct;
-  List<AddToCartParams>? get selectedAddonProduct => _selectedAddonProduct;
+  List<AddToCartParams>? _selectedAddons;
+  List<AddToCartParams>? get selectedAddon => _selectedAddons;
 
   final ProductPresenter productPresenter;
   // Presenter should always be initialized this way
@@ -85,7 +85,14 @@ class ProductController extends Controller {
   }
 
   /// 加購商品
-  void selectdAddonProduct(
-          {required String goodsNo, int? productId, required int qty}) =>
-      productPresenter.getProduct(goodsNo: goodsNo, productId: productId);
+  void addAddonProduct(
+      {required String goodsNo, int? productId, required int qty}) {
+    _selectedAddons?.where((element) => element.no == goodsNo);
+  }
+
+  /// 刪除加購商品
+  void removeAddonProduct(
+      {required String goodsNo, int? productId, required int qty}) {
+    _selectedAddons?.removeWhere((element) => element.no == goodsNo);
+  }
 }

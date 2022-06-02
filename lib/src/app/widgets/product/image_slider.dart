@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../domain/entities/product/image_info.dart';
+import '../../utils/screen_config.dart';
 
 class ImageSlider extends StatefulWidget {
   final List<MyPlusImageInfo> imageList;
@@ -47,7 +48,7 @@ class _ImageSliderState extends State<ImageSlider> {
         return Builder(
           builder: (BuildContext context) {
             return SizedBox(
-                width: MediaQuery.of(context).size.width,
+                width: SizeConfig.screenWidth,
                 child: CachedNetworkImage(
                   imageUrl: item.url!,
                   fit: BoxFit.fill,
