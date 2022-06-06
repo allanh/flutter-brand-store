@@ -187,6 +187,8 @@ class Product {
   int? freebieGiftLimitOn;
   @JsonKey(name: 'freebie_gift_limit')
   int? freebieGiftLimit;
+  @JsonKey(name: 'image_url')
+  String? imageUrl;
 
   // addon
   @JsonKey(name: 'addon_fixed_price')
@@ -347,6 +349,9 @@ class Product {
         return null;
     }
   }
+
+  // 贈品是否已贈完
+  bool get freebieisEmpty => freebieGiftLimitOn == 1 && freebieGiftLimit == 0;
 }
 
 @JsonSerializable()

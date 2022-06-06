@@ -1,3 +1,4 @@
+import 'package:brandstores/src/app/utils/screen_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -6,16 +7,19 @@ import '../../../domain/entities/product/product.dart';
 import '../../../extension/num_extension.dart';
 import 'selected_border.dart';
 
+// 商品類型
+enum SmallProductType { addon, freebie }
+
 class SmallProduct extends StatefulWidget {
   /// The callback that is called when the countdown timer is ended.
   final Product product;
+  final SmallProductType type;
   // 點擊事件，若不需要點擊可傳 null
   //final ValueChanged<bool>? isSelected;
-  final double ratio;
   final ValueChanged<Product>? onItemTap;
 
   const SmallProduct(
-      {Key? key, required this.product, required this.ratio, this.onItemTap})
+      {Key? key, required this.product, required this.type, this.onItemTap})
       : super(key: key);
 
   @override
@@ -24,6 +28,31 @@ class SmallProduct extends StatefulWidget {
 
 class _SmallProductState extends State<SmallProduct> {
   bool isSelected = false;
+
+  // 圖片網址
+  String? get imageUrl {
+    switch (widget.type) {
+      case SmallProductType.addon:
+        return widget.product.productInfo?.first.imageUrl;
+      case SmallProductType.freebie:
+        return widget.product.imageUrl;
+    }
+  }
+
+// 價格
+  String get price {
+    String? name;
+    switch (widget.type) {
+      case SmallProductType.addon:
+        name = widget.product.addonFixedPrice?.toDollarString();
+        break;
+      case SmallProductType.freebie:
+        name =
+            '買${widget.product.freebieBuyNum}送${widget.product.freebieGiftNum}';
+        break;
+    }
+    return name ?? '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +75,7 @@ class _SmallProductState extends State<SmallProduct> {
                   child: Stack(
                     children: [
                       // 加購品圖片
-                      _buildProductImage(widget.product.imageList?.first),
+                      _buildProductImage(imageUrl),
                       // 選取框
                       // if (widget.isSelected != null)
                       //   SelectedBorder(
@@ -57,16 +86,18 @@ class _SmallProductState extends State<SmallProduct> {
             ),
 
             // 加購品價格
-            if (widget.product.addonFixedPrice != null)
-              Container(
-                  padding: EdgeInsets.only(top: 4 * widget.ratio),
-                  height: 17 * widget.ratio,
-                  child: FittedBox(
-                      fit: BoxFit.contain,
-                      child: Text(
-                          widget.product.addonFixedPrice!.toDollarString(),
-                          style: Theme.of(context).textTheme.caption?.copyWith(
-                              fontSize: 12.0, color: UdiColors.greyishBrown))))
+            Container(
+                padding: EdgeInsets.only(top: 4 * SizeConfig.screenRatio),
+                height: 17 * SizeConfig.screenRatio,
+                child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Text(price,
+                        style: Theme.of(context).textTheme.caption?.copyWith(
+                            fontSize: 12.0,
+                            color: (SmallProductType.freebie == widget.type &&
+                                    widget.product.freebieisEmpty)
+                                ? UdiColors.brownGreyTwo
+                                : UdiColors.strawberry))))
           ],
         ));
   }
@@ -79,6 +110,11 @@ class _SmallProductState extends State<SmallProduct> {
               imageUrl: url,
               fit: BoxFit.fill,
               alignment: Alignment.topCenter,
+              color: (SmallProductType.freebie == widget.type &&
+                      widget.product.freebieisEmpty)
+                  ? UdiColors.brownGreyTwo
+                  : null,
+              colorBlendMode: BlendMode.modulate,
               errorWidget: (context, url, error) => const Icon(Icons.error),
             ))
         : const Icon(Icons.error);

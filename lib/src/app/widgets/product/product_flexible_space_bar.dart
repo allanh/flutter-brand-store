@@ -1,6 +1,4 @@
-import 'package:brandstores/src/app/utils/screen_config.dart';
 import 'package:flutter/material.dart';
-import '../../../device/utils/my_plus_colors.dart';
 import '../../../domain/entities/product/product.dart';
 import 'image_slider.dart';
 import 'promotion_tag.dart';
@@ -26,7 +24,7 @@ class ProductFlexibleSpaceBar extends StatelessWidget {
                 child: const Text(
                   '商品',
                 )),
-            titlePadding: EdgeInsets.only(bottom: 75 * SizeConfig.screenRatio),
+            //titlePadding: EdgeInsets.only(bottom: 75 * SizeConfig.screenRatio),
             background:
                 // 圖片畫廊
                 AspectRatio(
