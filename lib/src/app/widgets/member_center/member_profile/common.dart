@@ -93,7 +93,7 @@ class RequiresText extends StatelessWidget {
               fontFamily: 'PingFangTC Semibold',
               fontWeight: FontWeight.w600,
               fontSize: 14.0),
-          children: const <TextSpan>[
+          children: <TextSpan>[
             TextSpan(
                 text: "*",
                 style: TextStyle(
