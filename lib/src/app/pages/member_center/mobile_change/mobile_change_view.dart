@@ -14,6 +14,7 @@ enum MobileChangeStatus {
   inputPassword,
   inputMobile,
   inputValidationCode,
+  registerConflict,
   exceedLimit,
   completed
 }
@@ -91,21 +92,23 @@ class _MobileChangePageState
         height: 36.0,
         width: MediaQuery.of(context).size.width - 24.0 - 24.0,
         child: ElevatedButton(
-            child: const Text('確定'),
-            style: ElevatedButton.styleFrom(
-                primary: Theme.of(context).appBarTheme.backgroundColor),
-            onPressed: status == MobileChangeStatus.inputPassword &&
-                    password.length > 5
-                ? () => handlePasswordSubmit(password)
-                : status == MobileChangeStatus.inputMobile && mobile.length > 9
-                    ? () => handleMobileSubmit(mobile)
-                    : status == MobileChangeStatus.inputValidationCode &&
-                            validationCode.length == 4
-                        ? () => handleValidationCodeSubmit(validationCode)
-                        : status == MobileChangeStatus.completed ||
-                                status == MobileChangeStatus.exceedLimit
-                            ? () => handleCompleted()
-                            : null),
+          child: const Text('確定'),
+          style: ElevatedButton.styleFrom(
+              primary: Theme.of(context).appBarTheme.backgroundColor),
+          onPressed: status == MobileChangeStatus.inputPassword &&
+                  password.length > 5
+              ? () => handlePasswordSubmit(password)
+              : status == MobileChangeStatus.inputMobile && mobile.length > 9
+                  ? () => handleMobileSubmit(mobile)
+                  : status == MobileChangeStatus.inputValidationCode &&
+                          validationCode.length == 4
+                      ? () => handleValidationCodeSubmit(validationCode)
+                      : status == MobileChangeStatus.completed ||
+                              status == MobileChangeStatus.exceedLimit ||
+                              status == MobileChangeStatus.registerConflict
+                          ? () => handleCompleted()
+                          : null,
+        ),
       ),
     );
   }
@@ -147,8 +150,12 @@ class _MobileChangePageState
           }
 
           void handleMobileSubmit(text) {
+            bool successful = controller.handleMobileSubmit(text);
+
             setState(() {
-              status = MobileChangeStatus.inputValidationCode;
+              status = successful
+                  ? MobileChangeStatus.inputValidationCode
+                  : MobileChangeStatus.registerConflict;
             });
           }
 
@@ -311,6 +318,41 @@ class _MobileChangePageState
                       SizedBox(
                         height: 44.0,
                         child: Text('手機綁定變更完成，\n下次請用新的手機門號登入！',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                ?.copyWith(color: UdiColors.brownGrey)),
+                      ),
+                      _buildSubmitButton(
+                        handlePasswordSubmit,
+                        handleMobileSubmit,
+                        handleValidationCodeSubmit,
+                        handleCompleted,
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ];
+          } else if (status == MobileChangeStatus.registerConflict) {
+            children = [
+              Padding(
+                padding: const EdgeInsets.only(top: 112.0),
+                child: Center(
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        width: 120.0,
+                        height: 120.0,
+                        child: Image(
+                            image: AssetImage('assets/images/empty_error.png')),
+                      ),
+                      const SizedBox(height: 22.0),
+                      SizedBox(
+                        height: 66.0,
+                        child: Text(
+                            '親愛的用戶， 此手機門號已被註冊過。\n若想繼續，請聯絡客服人員。\n為了保護您的帳戶安全，請填寫真實個人資訊。',
                             textAlign: TextAlign.center,
                             style: Theme.of(context)
                                 .textTheme

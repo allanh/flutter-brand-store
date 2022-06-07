@@ -34,6 +34,10 @@ class MobileChangeController extends Controller {
     return code.length < 5 || code.isEmpty;
   }
 
+  bool handleMobileSubmit(text) {
+    return true;
+  }
+
   String handleValidationCodeSubmit(code) {
     return '';
   }
