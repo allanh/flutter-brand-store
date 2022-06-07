@@ -14,6 +14,7 @@ enum MobileChangeStatus {
   inputPassword,
   inputMobile,
   inputValidationCode,
+  exceedLimit,
   completed
 }
 
@@ -101,7 +102,8 @@ class _MobileChangePageState
                     : status == MobileChangeStatus.inputValidationCode &&
                             validationCode.length == 4
                         ? () => handleValidationCodeSubmit(validationCode)
-                        : status == MobileChangeStatus.completed
+                        : status == MobileChangeStatus.completed ||
+                                status == MobileChangeStatus.exceedLimit
                             ? () => handleCompleted()
                             : null),
       ),
@@ -161,7 +163,9 @@ class _MobileChangePageState
             setState(() {
               status = result.isEmpty
                   ? MobileChangeStatus.completed
-                  : MobileChangeStatus.inputValidationCode;
+                  : result == 'error'
+                      ? MobileChangeStatus.exceedLimit
+                      : MobileChangeStatus.inputValidationCode;
             });
           }
 
@@ -254,6 +258,41 @@ class _MobileChangePageState
                       handleCompleted,
                     )
                   ]);
+          } else if (status == MobileChangeStatus.exceedLimit) {
+            children = [
+              Padding(
+                padding: const EdgeInsets.only(top: 112.0),
+                child: Center(
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        width: 120.0,
+                        height: 120.0,
+                        child: Image(
+                            image: AssetImage(
+                                'assets/images/empty_verification.png')),
+                      ),
+                      const SizedBox(height: 22.0),
+                      SizedBox(
+                        height: 44.0,
+                        child: Text('您已經超過本日要求簡訊驗證碼3次',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                ?.copyWith(color: UdiColors.brownGrey)),
+                      ),
+                      _buildSubmitButton(
+                        handlePasswordSubmit,
+                        handleMobileSubmit,
+                        handleValidationCodeSubmit,
+                        handleCompleted,
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ];
           } else if (status == MobileChangeStatus.completed) {
             children = [
               Padding(
