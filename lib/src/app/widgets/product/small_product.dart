@@ -88,7 +88,7 @@ class _SmallProductState extends State<SmallProduct> {
             // 加購品價格
             Container(
                 padding: EdgeInsets.only(top: 4 * SizeConfig.screenRatio),
-                height: 17 * SizeConfig.screenRatio,
+                height: 19 * SizeConfig.screenRatio,
                 child: FittedBox(
                     fit: BoxFit.contain,
                     child: Text(price,

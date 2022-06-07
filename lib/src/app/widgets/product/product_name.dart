@@ -77,8 +77,8 @@ class ProductName extends StatelessWidget {
                       child: Text(
                         '${product?.promotionApp?.rate ?? ''}折',
                         textAlign: TextAlign.center,
-                        style:
-                            theme.textTheme.caption!.copyWith(fontSize: 12.0),
+                        style: theme.textTheme.caption!
+                            .copyWith(fontSize: 12.0, color: Colors.white),
                       ),
                     ),
                 ],

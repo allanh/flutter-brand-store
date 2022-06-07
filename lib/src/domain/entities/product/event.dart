@@ -92,7 +92,7 @@ class Event {
   @JsonKey(name: 'rule_content')
   RuleContent? ruleContent;
   @JsonKey(name: 'rule_infos')
-  List<RuleInfo>? ruleInfos;
+  List<RuleInfos>? ruleInfos;
 
   Event(
       {this.availableType,
@@ -115,8 +115,9 @@ class Event {
   /// 顯示在商品主頁的活動列表
   String? get discountWording {
     List<String> list = [];
-    if (ruleInfos != null) {
-      ruleInfos?.forEach((info) {
+    if (ruleInfos?.isNotEmpty == true &&
+        ruleInfos?.first.ruleInfo?.isNotEmpty == true) {
+      ruleInfos?.first.ruleInfo?.forEach((info) {
         int perPrice = info.perPrice ?? 0;
         int perUnit = info.perUnit ?? 0;
         int discount = info.discount ?? 0;
@@ -251,6 +252,18 @@ class Event {
     }
     return list.isNotEmpty ? list.first : null;
   }
+}
+
+@JsonSerializable()
+class RuleInfos {
+  @JsonKey(name: 'rule_info')
+  List<RuleInfo>? ruleInfo;
+
+  RuleInfos({this.ruleInfo});
+
+  factory RuleInfos.fromJson(Map<String, dynamic> json) =>
+      _$RuleInfosFromJson(json);
+  Map<String, dynamic> toJson() => _$RuleInfosToJson(this);
 }
 
 @JsonSerializable()

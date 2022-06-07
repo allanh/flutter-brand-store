@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'payment.g.dart';
 
+/// 付款資訊
 @JsonSerializable()
 class Payment {
   Atm? atm;
@@ -13,6 +14,7 @@ class Payment {
   Map<String, dynamic> toJson() => _$PaymentToJson(this);
 }
 
+/// ATM
 @JsonSerializable()
 class Atm {
   @JsonKey(name: 'is_enable')
@@ -24,6 +26,7 @@ class Atm {
   Map<String, dynamic> toJson() => _$AtmToJson(this);
 }
 
+/// 信用卡
 @JsonSerializable()
 class Credit {
   @JsonKey(name: 'is_enable')
@@ -41,6 +44,7 @@ class Credit {
   Map<String, dynamic> toJson() => _$CreditToJson(this);
 }
 
+/// 分期資訊
 @JsonSerializable()
 class StagingInfo {
   // int?
@@ -59,8 +63,18 @@ class StagingInfo {
   factory StagingInfo.fromJson(Map<String, dynamic> json) =>
       _$StagingInfoFromJson(json);
   Map<String, dynamic> toJson() => _$StagingInfoToJson(this);
+
+  // 每月付款帳單，每期x元
+  int calculateMonthlyPayment(int price) {
+    if (stage != 0) {
+      return ((price * (1 + (fee ?? 0) / 100)) / stage!.toDouble()).floor();
+    } else {
+      return price;
+    }
+  }
 }
 
+/// 銀行資訊
 @JsonSerializable()
 class BonusBankInfo {
   int? stage;

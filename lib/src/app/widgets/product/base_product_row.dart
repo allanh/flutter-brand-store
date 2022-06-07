@@ -6,18 +6,23 @@ import '../../../device/utils/my_plus_colors.dart';
 /// 促銷活動
 class BaseProductRow extends StatelessWidget {
   const BaseProductRow(
-      {Key? key, required this.title, required this.view, this.onMoreTap})
+      {Key? key,
+      required this.title,
+      required this.view,
+      this.onMoreTap,
+      this.marginTop})
       : super(key: key);
 
   final String title;
   final Widget view;
+  final double? marginTop;
 
   /// The callback that is called when the more icon is tapped.
   final VoidCallback? onMoreTap;
 
   @override
   Widget build(BuildContext context) => Container(
-      margin: const EdgeInsets.only(top: 8),
+      margin: EdgeInsets.only(top: marginTop ?? 0),
       //padding: const EdgeInsets.only(left: 12),
       width: SizeConfig.screenWidth,
       decoration: const BoxDecoration(color: Colors.white),

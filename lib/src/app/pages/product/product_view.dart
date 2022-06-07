@@ -12,6 +12,8 @@ import '../../widgets/product/image_slider.dart';
 import '../../widgets/product/product_event.dart';
 import '../../widgets/product/product_freebie.dart';
 import '../../widgets/product/product_name.dart';
+import '../../widgets/product/product_payment.dart';
+import '../../widgets/product/product_shipped.dart';
 import '../../widgets/product/product_spec.dart';
 import '../../widgets/product/promotion_price.dart';
 import '../../widgets/product/promotion_tag.dart';
@@ -171,6 +173,7 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                             PromotionTagsView(product: product),
                         ]),
                       ),
+
                       // 倒數計時
                       if (product.countdownDuration != null)
                         EventCountDownTimer(
@@ -181,21 +184,26 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                           slogan: product.promotionApp?.slogan,
                           onTimerEned: () => controller.onCountDownEnd(),
                         ),
+
                       // 商品名稱
                       ProductName(product: controller.product),
+
                       // 促銷活動
                       if (product.eventList?.isNotEmpty == true)
                         BaseProductRow(
                             title: '活　動',
+                            marginTop: 8,
                             view: ProductEventsView(
                               //eventList: product.mockEvents,
                               eventList: product.eventList!,
                             ),
                             onMoreTap: () => debugPrint('tap event')),
+
                       // 獨享價
                       if ((product.product?.promotionPriceAppDiff ?? 0) > 0)
                         BaseProductRow(
                             title: '獨享價',
+                            marginTop: 8,
                             view: PromotionPriceView(
                               promotionPrice:
                                   product.product!.promotionPriceAppDiff!,
@@ -205,14 +213,17 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                       if (product.product != null)
                         BaseProductRow(
                             title: '規　格',
+                            marginTop: 8,
                             view: ProductSpecView(
                               product: product,
                             ),
                             onMoreTap: () => debugPrint('tap spac')),
 
+                      // 加購品
                       if (product.addonInfo?.isNotEmpty == true)
                         BaseProductRow(
                             title: '加價購',
+                            marginTop: 8,
                             view: ProductAddonView(
                               addons: product.addonInfo!,
                               //addons: product.mockAddons,
@@ -220,13 +231,44 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                             ),
                             onMoreTap: () => debugPrint('tap addon')),
 
+                      // 買就送
                       if (product.freebieInfo?.isNotEmpty == true)
                         BaseProductRow(
                             title: '買就送',
+                            marginTop: 8,
                             view: ProductFreeBieView(
                               freeBies: product.freebieInfo!,
                             ),
                             onMoreTap: () => debugPrint('tap freebie')),
+
+                      // 付款和運送方式
+                      Container(
+                          margin: const EdgeInsets.only(top: 8),
+                          color: Colors.white,
+                          child: Column(
+                            children: [
+                              if (product.paymentInfo != null &&
+                                  product.productInfo!.first.proposedPrice !=
+                                      null)
+                                BaseProductRow(
+                                    title: '付　款',
+                                    marginTop: 8,
+                                    view: ProductPayment(
+                                      price: product
+                                          .productInfo!.first.proposedPrice!,
+                                      info: product.paymentInfo!,
+                                    ),
+                                    onMoreTap: () => debugPrint('tap payment')),
+                              _smallDivider,
+                              if (product.shippedMethod?.isNotEmpty == true)
+                                BaseProductRow(
+                                  title: '運　送',
+                                  view: ProductShipped(
+                                    methods: product.shippedMethod!,
+                                  ),
+                                ),
+                            ],
+                          )),
                     ],
                   ),
                 ),
@@ -242,92 +284,13 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
     }
   }
 
-  // 商品內容列表
-  List<Widget> _slivers(BuildContext context, ProductController controller) {
-    List<Widget> list = [
-      SliverOverlapInjector(
-        // This is the flip side of the SliverOverlapAbsorber above.
-        handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-      ),
-    ];
+  Widget get _divider => Container(
+      width: SizeConfig.screenWidth - 24,
+      height: 1,
+      decoration: const BoxDecoration(color: UdiColors.defaultBorder));
 
-    // 未取得商品
-    if (controller.product == null) {
-      list.add(SliverToBoxAdapter(
-          child: SizedBox(
-        width: SizeConfig.screenWidth,
-        height: SizeConfig.screenHeight,
-        child: const Center(child: CircularProgressIndicator()),
-      )));
-      return list;
-    }
-
-    Product product = controller.product!;
-
-    // 倒數計時
-    if (product.countdownDuration != null) {
-      list.add(SliverToBoxAdapter(
-          child: EventCountDownTimer(
-        duration: product.countdownDuration!,
-        type: (product.status == ProductStatus.comingSoon)
-            ? CountDownType.comingSoon
-            : CountDownType.flashSale,
-        slogan: product.promotionApp?.slogan,
-        onTimerEned: () => controller.onCountDownEnd(),
-      )));
-    }
-
-    // 商品名稱
-    list.add(
-        SliverToBoxAdapter(child: ProductName(product: controller.product)));
-
-    // 促銷活動
-    if (product.eventList?.isNotEmpty == true) {
-      list.add(SliverToBoxAdapter(
-          child: BaseProductRow(
-              title: '活　動',
-              view: ProductEventsView(
-                // eventList: product.mockEvents,
-                eventList: product.eventList!,
-              ),
-              onMoreTap: () => debugPrint('tap event'))));
-    }
-
-    // 獨享價
-    if ((product.product?.promotionPriceAppDiff ?? 0) > 0) {
-      list.add(SliverToBoxAdapter(
-        child: BaseProductRow(
-            title: '獨享價',
-            view: PromotionPriceView(
-              promotionPrice: product.product!.promotionPriceAppDiff!,
-            )),
-      ));
-    }
-
-    // 規格
-    // TODO: 選規
-    list.add(SliverToBoxAdapter(
-        child: BaseProductRow(
-            title: '規　格',
-            view: ProductSpecView(
-              product: product,
-            ),
-            onMoreTap: () => debugPrint('tap spac'))));
-
-    // 加價購
-    // TODO: 加價購選規
-    if (product.addonInfo?.isNotEmpty == true) {
-      list.add(SliverToBoxAdapter(
-          child: BaseProductRow(
-              title: '加價購',
-              view: ProductAddonView(
-                addons: product.addonInfo!,
-                //addons: product.mockAddons,
-                selectedAddons: [],
-              ),
-              onMoreTap: () => debugPrint('tap addon'))));
-    }
-
-    return list;
-  }
+  Widget get _smallDivider => Container(
+      width: SizeConfig.screenWidth - 24,
+      height: 1,
+      decoration: const BoxDecoration(color: UdiColors.defaultBorder));
 }

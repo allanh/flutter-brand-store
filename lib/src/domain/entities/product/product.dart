@@ -480,13 +480,17 @@ extension MockProduct on Product {
             type: EventType.eventDiscount,
             ruleType: RuleType.noRules,
             ruleContent: RuleContent.productDiscount,
-            ruleInfos: [RuleInfo(discount: 1000)]),
+            ruleInfos: [
+              RuleInfos(ruleInfo: [RuleInfo(discount: 1000)])
+            ]),
         Event(
             eventOnline: false,
             type: EventType.eventDiscount,
             ruleType: RuleType.fillUp,
             ruleContent: RuleContent.productPercentOff,
-            ruleInfos: [RuleInfo(perUnit: 3, discount: 7)]),
+            ruleInfos: [
+              RuleInfos(ruleInfo: [RuleInfo(perUnit: 3, discount: 7)])
+            ]),
       ];
 
   List<Product> get mockAddons =>

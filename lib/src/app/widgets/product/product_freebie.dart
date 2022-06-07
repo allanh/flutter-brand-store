@@ -1,7 +1,5 @@
 import 'package:brandstores/src/app/widgets/product/small_product.dart';
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
-import 'package:brandstores/src/extension/iterable_extension.dart';
-import 'package:brandstores/src/extension/num_extension.dart';
 import 'package:flutter/material.dart';
 
 import '../../../domain/entities/product/product.dart';

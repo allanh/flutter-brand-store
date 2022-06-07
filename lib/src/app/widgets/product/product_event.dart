@@ -20,11 +20,17 @@ class ProductEventsView extends StatelessWidget {
     // 最多顯示兩筆
     return SizedBox(
         height: 20,
+        child: Row(
+          children: list.take(2).toList(),
+        )
+        /*
         child: FittedBox(
             fit: BoxFit.fitWidth,
             child: Row(
               children: list.take(2).toList(),
-            )));
+            ))
+            */
+        );
   }
 }
 
