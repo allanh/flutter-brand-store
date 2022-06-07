@@ -1,9 +1,10 @@
-import 'package:brandstores/src/data/repositories/data_mobile_change_repository.dart';
+import 'package:brandstores/src/data/repositories/data_account_change_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
-class MobileChangeController extends Controller {
-  MobileChangeController(DataMobileChangeRepository dataMobileChangeRepository);
+class AccountChangeController extends Controller {
+  AccountChangeController(
+      DataAccountChangeRepository dataMobileChangeRepository);
 
   @override
   void onInitState() {}
@@ -34,11 +35,18 @@ class MobileChangeController extends Controller {
     return code.length < 5 || code.isEmpty;
   }
 
-  bool handleMobileSubmit(text) {
+  bool handleAccountSubmit(text) {
     return true;
   }
 
   String handleValidationCodeSubmit(code) {
     return '';
+  }
+
+  bool validateEmail(String? email) {
+    var regex = RegExp(
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+    bool result = email == null || email.isEmpty || email.startsWith(regex);
+    return result;
   }
 }

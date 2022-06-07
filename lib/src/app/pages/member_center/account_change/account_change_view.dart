@@ -1,47 +1,52 @@
 import 'package:brandstores/src/app/widgets/member_center/member_profile/common.dart';
-import 'package:brandstores/src/app/widgets/member_center/mobile_change/validation_code_input_tile.dart';
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
-import 'package:brandstores/src/app/pages/member_center/mobile_change/mobile_change_controller.dart';
-import 'package:brandstores/src/data/repositories/data_mobile_change_repository.dart';
+import 'package:brandstores/src/app/pages/member_center/account_change/account_change_controller.dart';
+import 'package:brandstores/src/data/repositories/data_account_change_repository.dart';
 
-import 'package:brandstores/src/app/widgets/member_center/mobile_change/password_input_tile.dart';
-import 'package:brandstores/src/app/widgets/member_center/mobile_change/mobile_input_tile.dart';
+import 'package:brandstores/src/app/widgets/member_center/account_change/validation_code_input_tile.dart';
+import 'package:brandstores/src/app/widgets/member_center/account_change/password_input_tile.dart';
+import 'package:brandstores/src/app/widgets/member_center/account_change/mobile_input_tile.dart';
+import 'package:brandstores/src/app/widgets/member_center/account_change/email_input_tile.dart';
 
-enum MobileChangeStatus {
+enum AccountType { email, mobile }
+
+enum AccountChangeStatus {
   inputPassword,
-  inputMobile,
+  inputAccount,
   inputValidationCode,
   registerConflict,
   exceedLimit,
   completed
 }
 
-class MobileChangePage extends View {
-  MobileChangePage({Key? key}) : super(key: key);
+class AccountChangePage extends View {
+  AccountChangePage({Key? key, required this.type}) : super(key: key);
+
+  final AccountType type;
 
   @override
-  State<MobileChangePage> createState() => _MobileChangePageState();
+  State<AccountChangePage> createState() => _AccountChangePageState();
 }
 
-class _MobileChangePageState
-    extends ViewState<MobileChangePage, MobileChangeController> {
-  _MobileChangePageState()
-      : super(MobileChangeController(DataMobileChangeRepository()));
+class _AccountChangePageState
+    extends ViewState<AccountChangePage, AccountChangeController> {
+  _AccountChangePageState()
+      : super(AccountChangeController(DataAccountChangeRepository()));
 
   String password = '';
-  String mobile = '';
+  String account = '';
   String validationCode = '';
 
-  MobileChangeStatus status = MobileChangeStatus.inputPassword;
+  AccountChangeStatus status = AccountChangeStatus.inputPassword;
 
   Widget _buildDescriptionTile(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 50.0, bottom: 12.0),
       child: Center(
-        child: status == MobileChangeStatus.inputPassword
+        child: status == AccountChangeStatus.inputPassword
             ? Text(
                 '請輸入密碼以繼續',
                 style: Theme.of(context)
@@ -49,9 +54,11 @@ class _MobileChangePageState
                     .bodyText1
                     ?.copyWith(color: UdiColors.brownGrey2),
               )
-            : status == MobileChangeStatus.inputMobile
+            : status == AccountChangeStatus.inputAccount
                 ? Text(
-                    '請輸入新的手機門號',
+                    widget.type == AccountType.mobile
+                        ? '請輸入新的手機門號'
+                        : '請輸入新的電子信箱',
                     style: Theme.of(context)
                         .textTheme
                         .bodyText1
@@ -69,7 +76,7 @@ class _MobileChangePageState
                       ),
                       const SizedBox(height: 9.0),
                       Text(
-                        '+886 ${mobile.substring(0, 4)}-${mobile.substring(4, 7)}-${mobile.substring(7, 10)}',
+                        '+886 ${account.substring(0, 4)}-${account.substring(4, 7)}-${account.substring(7, 10)}',
                         style: Theme.of(context)
                             .textTheme
                             .headline6
@@ -82,10 +89,11 @@ class _MobileChangePageState
   }
 
   Widget _buildSubmitButton(
-      Function handlePasswordSubmit,
-      Function handleMobileSubmit,
-      Function handleValidationCodeSubmit,
-      Function handleCompleted) {
+    Function handlePasswordSubmit,
+    Function handleAccountSubmit,
+    Function handleValidationCodeSubmit,
+    Function handleCompleted,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(top: 24.0, left: 24.0, right: 24.0),
       child: SizedBox(
@@ -95,19 +103,24 @@ class _MobileChangePageState
           child: const Text('確定'),
           style: ElevatedButton.styleFrom(
               primary: Theme.of(context).appBarTheme.backgroundColor),
-          onPressed: status == MobileChangeStatus.inputPassword &&
-                  password.length > 5
-              ? () => handlePasswordSubmit(password)
-              : status == MobileChangeStatus.inputMobile && mobile.length > 9
-                  ? () => handleMobileSubmit(mobile)
-                  : status == MobileChangeStatus.inputValidationCode &&
-                          validationCode.length == 4
-                      ? () => handleValidationCodeSubmit(validationCode)
-                      : status == MobileChangeStatus.completed ||
-                              status == MobileChangeStatus.exceedLimit ||
-                              status == MobileChangeStatus.registerConflict
-                          ? () => handleCompleted()
-                          : null,
+          onPressed:
+              status == AccountChangeStatus.inputPassword && password.length > 5
+                  ? () => handlePasswordSubmit(password)
+                  : status == AccountChangeStatus.inputAccount &&
+                              widget.type == AccountType.mobile &&
+                              account.length > 9 ||
+                          status == AccountChangeStatus.inputAccount &&
+                              widget.type == AccountType.email &&
+                              account.isNotEmpty
+                      ? () => handleAccountSubmit(account)
+                      : status == AccountChangeStatus.inputValidationCode &&
+                              validationCode.length == 4
+                          ? () => handleValidationCodeSubmit(validationCode)
+                          : status == AccountChangeStatus.completed ||
+                                  status == AccountChangeStatus.exceedLimit ||
+                                  status == AccountChangeStatus.registerConflict
+                              ? () => handleCompleted()
+                              : null,
         ),
       ),
     );
@@ -117,26 +130,27 @@ class _MobileChangePageState
   Widget get view {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('綁定新手機門號'),
+          title:
+              Text(widget.type == AccountType.mobile ? '綁定新手機門號' : '綁定新電子信箱'),
           automaticallyImplyLeading: false,
           actions: [
             IconButton(
               icon: const Icon(Icons.close),
               onPressed: () {
-                status = MobileChangeStatus.inputPassword;
+                status = AccountChangeStatus.inputPassword;
                 Navigator.pop(context);
               },
             ),
           ],
         ),
-        body: ControlledWidgetBuilder<MobileChangeController>(
+        body: ControlledWidgetBuilder<AccountChangeController>(
             builder: (context, controller) {
           void handlePasswordChange(text) {
             setState(() => password = text);
           }
 
-          void handleMobileChange(text) {
-            setState(() => mobile = text);
+          void handleAccountChange(text) {
+            setState(() => account = text);
           }
 
           void handlePasswordSubmit(text) {
@@ -144,18 +158,24 @@ class _MobileChangePageState
             if (result) {
               debugPrint('Pass');
               setState(() {
-                status = MobileChangeStatus.inputMobile;
+                status = AccountChangeStatus.inputAccount;
               });
             }
           }
 
-          void handleMobileSubmit(text) {
-            bool successful = controller.handleMobileSubmit(text);
+          void handleAccountSubmit(text) {
+            bool successful = controller.handleAccountSubmit(text);
 
             setState(() {
-              status = successful
-                  ? MobileChangeStatus.inputValidationCode
-                  : MobileChangeStatus.registerConflict;
+              if (widget.type == AccountType.mobile) {
+                status = successful
+                    ? AccountChangeStatus.inputValidationCode
+                    : AccountChangeStatus.registerConflict;
+              } else {
+                status = successful
+                    ? AccountChangeStatus.completed
+                    : AccountChangeStatus.registerConflict;
+              }
             });
           }
 
@@ -169,10 +189,10 @@ class _MobileChangePageState
             String result = controller.handleValidationCodeSubmit(code);
             setState(() {
               status = result.isEmpty
-                  ? MobileChangeStatus.completed
+                  ? AccountChangeStatus.completed
                   : result == 'error'
-                      ? MobileChangeStatus.exceedLimit
-                      : MobileChangeStatus.inputValidationCode;
+                      ? AccountChangeStatus.exceedLimit
+                      : AccountChangeStatus.inputValidationCode;
             });
           }
 
@@ -184,30 +204,65 @@ class _MobileChangePageState
 
           List<Widget> children = [_buildDescriptionTile(context)];
 
-          if (status == MobileChangeStatus.inputPassword) {
+          if (status == AccountChangeStatus.inputPassword) {
             children.addAll([
               PasswordInputTile(
                 handlePasswordChange: (text) => handlePasswordChange(text),
               ),
               _buildSubmitButton(
                 handlePasswordSubmit,
-                handleMobileSubmit,
+                handleAccountSubmit,
                 handleValidationCodeSubmit,
                 handleCompleted,
               )
             ]);
-          } else if (status == MobileChangeStatus.inputMobile) {
+          } else if (status == AccountChangeStatus.inputAccount &&
+              widget.type == AccountType.mobile) {
             children.addAll([
               MobileInputTile(
-                  handleMobileChange: (text) => handleMobileChange(text)),
+                  handleMobileChange: (text) => handleAccountChange(text)),
               _buildSubmitButton(
                 handlePasswordSubmit,
-                handleMobileSubmit,
+                handleAccountSubmit,
                 handleValidationCodeSubmit,
                 handleCompleted,
               )
             ]);
-          } else if (status == MobileChangeStatus.inputValidationCode) {
+          } else if (status == AccountChangeStatus.inputAccount &&
+              widget.type == AccountType.email) {
+            bool isValidEmail = controller.validateEmail(account);
+            children.addAll(isValidEmail
+                ? [
+                    EmailInputTile(
+                        isValid: isValidEmail,
+                        handleEmailChange: (text) => handleAccountChange(text)),
+                    _buildSubmitButton(
+                      handlePasswordSubmit,
+                      handleAccountSubmit,
+                      handleValidationCodeSubmit,
+                      handleCompleted,
+                    )
+                  ]
+                : [
+                    EmailInputTile(
+                        isValid: isValidEmail,
+                        handleEmailChange: (text) => handleAccountChange(text)),
+                    const SizedBox(height: 12.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ErrorMessage(context: context, message: '請輸入有效Email'),
+                      ],
+                    ),
+                    const SizedBox(height: 24.0),
+                    _buildSubmitButton(
+                      handlePasswordSubmit,
+                      handleAccountSubmit,
+                      handleValidationCodeSubmit,
+                      handleCompleted,
+                    )
+                  ]);
+          } else if (status == AccountChangeStatus.inputValidationCode) {
             bool isValidCode = controller.isValidCode(validationCode);
             children.addAll(isValidCode
                 ? [
@@ -218,7 +273,7 @@ class _MobileChangePageState
                     ),
                     _buildSubmitButton(
                       handlePasswordSubmit,
-                      handleMobileSubmit,
+                      handleAccountSubmit,
                       handleValidationCodeSubmit,
                       handleCompleted,
                     )
@@ -260,12 +315,12 @@ class _MobileChangePageState
                     ),
                     _buildSubmitButton(
                       handlePasswordSubmit,
-                      handleMobileSubmit,
+                      handleAccountSubmit,
                       handleValidationCodeSubmit,
                       handleCompleted,
                     )
                   ]);
-          } else if (status == MobileChangeStatus.exceedLimit) {
+          } else if (status == AccountChangeStatus.exceedLimit) {
             children = [
               Padding(
                 padding: const EdgeInsets.only(top: 112.0),
@@ -291,7 +346,7 @@ class _MobileChangePageState
                       ),
                       _buildSubmitButton(
                         handlePasswordSubmit,
-                        handleMobileSubmit,
+                        handleAccountSubmit,
                         handleValidationCodeSubmit,
                         handleCompleted,
                       )
@@ -300,7 +355,7 @@ class _MobileChangePageState
                 ),
               )
             ];
-          } else if (status == MobileChangeStatus.completed) {
+          } else if (status == AccountChangeStatus.completed) {
             children = [
               Padding(
                 padding: const EdgeInsets.only(top: 112.0),
@@ -317,7 +372,10 @@ class _MobileChangePageState
                       const SizedBox(height: 22.0),
                       SizedBox(
                         height: 44.0,
-                        child: Text('手機綁定變更完成，\n下次請用新的手機門號登入！',
+                        child: Text(
+                            widget.type == AccountType.mobile
+                                ? '手機綁定變更完成，\n下次請用新的手機門號登入！'
+                                : 'Email綁定變更完成。\n下次請用新的電子信箱登入!',
                             textAlign: TextAlign.center,
                             style: Theme.of(context)
                                 .textTheme
@@ -326,7 +384,7 @@ class _MobileChangePageState
                       ),
                       _buildSubmitButton(
                         handlePasswordSubmit,
-                        handleMobileSubmit,
+                        handleAccountSubmit,
                         handleValidationCodeSubmit,
                         handleCompleted,
                       )
@@ -335,7 +393,7 @@ class _MobileChangePageState
                 ),
               )
             ];
-          } else if (status == MobileChangeStatus.registerConflict) {
+          } else if (status == AccountChangeStatus.registerConflict) {
             children = [
               Padding(
                 padding: const EdgeInsets.only(top: 112.0),
@@ -352,7 +410,7 @@ class _MobileChangePageState
                       SizedBox(
                         height: 66.0,
                         child: Text(
-                            '親愛的用戶， 此手機門號已被註冊過。\n若想繼續，請聯絡客服人員。\n為了保護您的帳戶安全，請填寫真實個人資訊。',
+                            '親愛的用戶， 此${widget.type == AccountType.mobile ? '手機門號' : 'Email'}已被註冊過。\n若想繼續，請聯絡客服人員。\n為了保護您的帳戶安全，請填寫真實個人資訊。',
                             textAlign: TextAlign.center,
                             style: Theme.of(context)
                                 .textTheme
@@ -361,7 +419,7 @@ class _MobileChangePageState
                       ),
                       _buildSubmitButton(
                         handlePasswordSubmit,
-                        handleMobileSubmit,
+                        handleAccountSubmit,
                         handleValidationCodeSubmit,
                         handleCompleted,
                       )

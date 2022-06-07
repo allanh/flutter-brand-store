@@ -1,4 +1,4 @@
-import 'package:brandstores/src/app/pages/member_center/mobile_change/mobile_change_view.dart';
+import 'package:brandstores/src/app/pages/member_center/account_change/account_change_view.dart';
 import 'package:brandstores/src/app/pages/member_center/profile/member_profile_controller.dart';
 import 'package:brandstores/src/data/repositories/data_member_profile_repository.dart';
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
@@ -68,7 +68,8 @@ class _MemberProfilePageState
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => MobileChangePage(),
+                  builder: (context) =>
+                      AccountChangePage(type: AccountType.mobile),
                   fullscreenDialog: true,
                 ));
           }
@@ -94,7 +95,15 @@ class _MemberProfilePageState
             controller.updateEmail(email);
           }
 
-          void handleChangeEmail(toggle) {}
+          void handleChangeEmail(toggle) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      AccountChangePage(type: AccountType.email),
+                  fullscreenDialog: true,
+                ));
+          }
 
           void handleSendValidationMail(toggle) {}
 
