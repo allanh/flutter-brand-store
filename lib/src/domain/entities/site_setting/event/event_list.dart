@@ -1,23 +1,20 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../drawer_list_item.dart';
 import '../../link.dart';
 
 part 'event_list.g.dart';
 
+
 @JsonSerializable()
-class EventListItem {
-  EventListItem(this.title, this.type, this.value);
+class EventListItem extends DrawerListItem {
+  EventListItem({required String title, required LinkType linkType, dynamic value, required List<DrawerListItem> children}) : super(title, linkType, value, children);
   static EventListItem get empty {
-    return EventListItem('', LinkType.none, '');
+    return EventListItem(title: '', linkType: LinkType.none, value: '', children: []);
   }
 
-  final String title;
-  @JsonKey(name: 'link')
-  final LinkType type;
-  @JsonKey(name: 'link_data')
-  final dynamic value;
-
   factory EventListItem.fromJson(Map<String, dynamic> json) => _$EventListItemFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$EventListItemToJson(this);
 }
 class EventList {

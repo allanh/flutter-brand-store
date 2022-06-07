@@ -30,12 +30,12 @@ class HomeController extends Controller {
       refreshUI(); // Refreshes the UI manually
     };
     homePresenter.getModulesOnComplete = () {
-      debugPrint('User retrieved');
+      debugPrint('Module list retrieved');
     };
 
-    // On error, show a snackbar, remove the user, and refresh the UI
+    // On error, show a snackbar, remove the module list, and refresh the UI
     homePresenter.getModulesOnError = (e) {
-      debugPrint('Could not retrieve user.');
+      debugPrint('Could not mudule list');
       ScaffoldMessenger.of(getContext())
           .showSnackBar(SnackBar(content: Text(e.message)));
       _moduleList = null;
@@ -46,7 +46,6 @@ class HomeController extends Controller {
   void getModules() => homePresenter.getModules();
 
   void onTap(Link? link) {
-
     if (link != null) {
       switch (link.type) {
         case LinkType.product:

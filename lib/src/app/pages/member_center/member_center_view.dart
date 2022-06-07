@@ -158,7 +158,7 @@ class Background extends StatelessWidget {
       clipper: NativeClipper(),
       child: Container(
         height: 300,
-        color: theme.appBarTheme.backgroundColor,
+        color: Theme.of(context).appBarTheme.backgroundColor,
       ),
     );
   }

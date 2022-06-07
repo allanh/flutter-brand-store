@@ -1,6 +1,15 @@
-import './product_controller.dart';
+import 'package:brandstores/src/app/widgets/product/event_countdown_timer.dart';
+import 'package:brandstores/src/app/widgets/product/promotion_tag.dart';
+import 'package:brandstores/src/domain/entities/product/product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import '../../../device/utils/my_plus_colors.dart';
+import '../../widgets/product/base_product_row.dart';
+import '../../widgets/product/event.dart';
+import '../../widgets/product/image_slider.dart';
+import '../../widgets/product/product_name.dart';
+import './product_controller.dart';
 import '../../../data/repositories/data_product_repository.dart';
 import 'package:go_router/go_router.dart';
 
@@ -19,59 +28,87 @@ class ProductPage extends View {
 class _ProductPageState extends ViewState<ProductPage, ProductController> {
   _ProductPageState(goodsNo, productId)
       : super(ProductController(DataProductRepository(), goodsNo, productId));
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  // double _top = 0.0;
+  final CarouselController carouselController = CarouselController();
 
   @override
   Widget get view {
     return ControlledWidgetBuilder<ProductController>(
-      builder: (context, controller) {
-        // if (controller.product != null) {
-        return Scaffold(
-          body: CustomScrollView(
-            slivers: <Widget>[
-              SliverAppBar(
-                expandedHeight: 250.0,
-                flexibleSpace: FlexibleSpaceBar(
-                  title: const Text('商品', textScaleFactor: 1),
-                  background: controller.product?.imageInfo?.first.url != null
-                      ? Image.network(
-                          controller.product!.imageInfo!.first.url!,
-                          fit: BoxFit.fill,
-                        )
-                      : Image.asset('assets/images/empty_cart.png'),
-                ),
-                floating: false,
-                pinned: true,
-                snap: false,
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () => context.pop(),
-                ),
-              ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (_, int index) {
-                    return ListTile(
-                      leading: Container(
-                          padding: EdgeInsets.all(8),
-                          width: 100,
-                          child: Placeholder()),
-                      title: Text('Place ${index + 1}', textScaleFactor: 2),
-                    );
-                  },
-                  childCount: 20,
-                ),
-              ),
-            ],
-          ), // This trailing comma makes auto-formatting nicer for build methods.
-        );
-        // }
-        // return const CircularProgressIndicator();
-      },
-    );
+        builder: (context, controller) {
+      return Scaffold(
+          key: globalKey,
+          appBar: getAppBar(controller),
+          body: getBody(controller));
+    });
   }
+
+  AppBar getAppBar(ProductController controller) => AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () => context.pop(),
+        ),
+        title: const Text('商品'),
+        centerTitle: true,
+        backgroundColor: Colors.black,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {},
+          )
+        ],
+      );
+
+  Widget getBody(ProductController controller) => (controller.product != null)
+      ? Container(
+          width: MediaQuery.of(context).size.width,
+          color: UdiColors.whiteTwo,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 圖片或影片
+              Flexible(
+                  child: SizedBox(
+                      height: 375,
+                      child: Stack(children: [
+                        ImageSlider(
+                            imageList: controller.product?.imageInfo ?? []),
+                        // 圖標
+                        if (controller.product?.productInfo?.isNotEmpty == true)
+                          PromotionTagsView(product: controller.product!),
+                      ]))),
+
+              // 倒數計時
+              if (controller.product?.countdownDuration != null)
+                EventCountDownTimer(
+                  duration: controller.product!.countdownDuration!,
+                  type: (controller.product?.status == ProductStatus.comingSoon)
+                      ? CountDownType.comingSoon
+                      : CountDownType.flashSale,
+                  slogan: controller.product?.promotionApp?.slogan,
+                  onTimerEned: () => controller.onCountDownEnd(),
+                ),
+
+              // 商品名稱
+              ProductName(product: controller.product),
+
+              // 促銷活動
+              if (controller.product?.eventList?.isNotEmpty == true)
+                BaseProductRow(
+                    title: '活   動',
+                    view: ProductEventsView(
+                      //eventList: controller.product!.mockEvents,
+                      eventList: controller.product!.eventList!,
+                    ),
+                    onMoreTap: () => debugPrint('tap event')),
+            ],
+          ))
+      : SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: const Center(child: CircularProgressIndicator()),
+        );
 }

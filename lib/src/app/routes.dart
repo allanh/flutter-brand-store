@@ -1,13 +1,24 @@
-import 'package:brandstores/src/app/pages/product/product_view.dart';
+import 'package:brandstores/src/domain/entities/enum/verify_type.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../login_state.dart';
-import '../app/utils/constants.dart';
 import '../app/main/main_view.dart';
-import 'pages/error/error_view.dart';
-import 'pages/auth/login/login_view.dart';
-import 'pages/auth/register/register_view.dart';
+import '../app/utils/constants.dart';
+import '../domain/entities/enum/verify_method.dart';
+import '../domain/entities/helper_center.dart';
 import '../extension/string_extension.dart';
+import 'pages/auth/login/login_view.dart';
+import 'pages/auth/password/forget_password_view.dart';
+import 'pages/auth/password/otp_view.dart';
+import 'pages/auth/password/reset_password_view.dart';
+import 'pages/auth/register/register_view.dart';
+import 'pages/static_view.dart';
+import 'pages/helper_center/article/article_view.dart';
+import 'pages/helper_center/bulletin/bulletin_view.dart';
+import 'pages/helper_center/faq/faq_view.dart';
+import 'pages/helper_center/helper_center_view.dart';
+import 'pages/product/product_view.dart';
 
 class MyPlusRouter {
   final LoginState loginState;
@@ -33,8 +44,50 @@ class MyPlusRouter {
         path: '/login',
         pageBuilder: (context, state) => MaterialPage<void>(
           key: state.pageKey,
-          child: const LoginPage(),
+          child: LoginPage(),
         ),
+      ),
+
+      /// 忘記密碼
+      GoRoute(
+        name: forgetPasswordRouteName,
+        path: '/forget-password',
+        pageBuilder: (context, state) => MaterialPage<void>(
+          key: state.pageKey,
+          child: ForgetPasswordPage(),
+        ),
+      ),
+
+      /// 驗證簡訊驗證碼
+      GoRoute(
+        name: verifyMobileCodeRouteName,
+        path: '/verify-mobile-code',
+        pageBuilder: (context, state) => MaterialPage<void>(
+          key: state.pageKey,
+          child: OtpPage(
+            state.queryParams['verifyType']?.toVerifyType ?? VerifyType.verifyAccount,
+            state.queryParams['mobile'] ?? '',
+            mobileCode: state.queryParams['mobileCode'] ?? '',
+          ),
+        ),
+      ),
+
+      /// 修改密碼
+      GoRoute(
+        name: resetPasswordRouteName,
+        path: '/reset-password',
+        pageBuilder: (context, state) {
+          String email = state.queryParams['email'] ?? '';
+          return MaterialPage<void>(
+            key: state.pageKey,
+            child: ResetPasswordPage(
+              email.isEmpty ? VerifyMethod.mobile : VerifyMethod.email,
+              mobileCode: state.queryParams['mobileCode'] ?? '',
+              mobile: state.queryParams['mobile'] ?? '',
+              email: email,
+            ),
+          );
+        },
       ),
 
       /// 註冊頁
@@ -74,15 +127,81 @@ class MyPlusRouter {
             ),
           ]),
 
+      /// 幫助中心
+      GoRoute(
+        name: serviceRouteName,
+        path: '/service',
+        pageBuilder: (context, state) => MaterialPage<void>(
+          key: state.pageKey,
+          child: const HelperCenterPage(),
+        ),
+      ),
+
+      /// 常見問題
+      GoRoute(
+        name: faqRouteName,
+        path: '/faq',
+        pageBuilder: (context, state) => MaterialPage<void>(
+          key: state.pageKey,
+          child: FaqPage(),
+        ),
+      ),
+
+      /// 服務公告
+      GoRoute(
+        name: bulletinRouteName,
+        path: '/bulletin',
+        pageBuilder: (context, state) => MaterialPage<void>(
+          key: state.pageKey,
+          child: BulletinPage(),
+        ),
+      ),
+
+      /// 會員服務條款
+      GoRoute(
+        name: termsRouteName,
+        path: '/terms',
+        pageBuilder: (context, state) => MaterialPage<void>(
+          key: state.pageKey,
+          child: ArticlePage(ArticleType.terms, title: '會員服務條款'),
+        ),
+      ),
+
+      /// 隱私權條款
+      GoRoute(
+        name: privacyRouteName,
+        path: '/privacy',
+        pageBuilder: (context, state) => MaterialPage<void>(
+          key: state.pageKey,
+          child: ArticlePage(ArticleType.privacy, title: '隱私權條款'),
+        ),
+      ),
+
+      /// 關於我們
+      GoRoute(
+        name: aboutRouteName,
+        path: '/about',
+        pageBuilder: (context, state) => MaterialPage<void>(
+          key: state.pageKey,
+          child: ArticlePage(ArticleType.about, title: '關於我們'),
+        ),
+      ),
+
       // TODO(error): 靜態頁待實作
       GoRoute(
         name: staticRouteName,
         path: '/static',
-        pageBuilder: (context, state) => MaterialPage<void>(
+        pageBuilder: (context, state) {
+          return MaterialPage<void>(
           key: state.pageKey,
-          child: ErrorPage(),
-        ),
+          child: StaticPage(
+            pageType: state.extra! as StaticPageType,
+            // pageType: state.queryParams['pageType']?.toStaticPageType ?? StaticPageType.error,
+          ),
+        );
+        },
       ),
+
       // forwarding routes to remove the need to put the 'tab' param in the code
       GoRoute(
         path: '/main',
@@ -120,7 +239,7 @@ class MyPlusRouter {
     /// 當有錯誤路徑時顯示錯誤頁
     errorPageBuilder: (context, state) => MaterialPage<void>(
       key: state.pageKey,
-      child: ErrorPage(error: state.error),
+      child: StaticPage(message: state.error.toString()),
     ),
 /*
     /// 未登入的使用者進入特定頁面，需將它轉導至登入頁

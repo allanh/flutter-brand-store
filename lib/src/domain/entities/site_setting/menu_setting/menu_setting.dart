@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../../../data/helper/json_value_converter.dart';
+import '../../drawer_list_item.dart';
 import '../../link.dart';
 
 part 'menu_setting.g.dart';
@@ -10,8 +11,8 @@ enum MenuCategory {
   @JsonValue('SUB') sub,
 }
 @JsonSerializable()
-class MenuSettingItem {
-  MenuSettingItem(this.mainID, this.patentID, this.category, this.isFolder, this.title, this.linkType, this.linkData, this.children);
+class MenuSettingItem extends DrawerListItem {
+  MenuSettingItem(this.mainID, this.patentID, this.category, this.isFolder, String title, LinkType linkType, String value, List<MenuSettingItem> children) : super(title, linkType, value, children);
   
   @JsonKey(name: 'main_id')
   final int mainID;
@@ -21,16 +22,16 @@ class MenuSettingItem {
   final MenuCategory? category;
   @JsonKey(name: 'folder_switch', fromJson: JsonValueConverter.boolFromString, toJson: JsonValueConverter.boolToString)
   final bool? isFolder;
-  final String title;
-  @JsonKey(name: 'link')
-  final LinkType linkType;
-  @JsonKey(name: 'link_data')
-  final String linkData;
-  Link get link {
-    return Link(linkType, linkData);
-  }
-  @JsonKey(defaultValue: [])
-  final List<MenuSettingItem> children;
+  // final String title;
+  // @JsonKey(name: 'link')
+  // final LinkType linkType;
+  // @JsonKey(name: 'link_data')
+  // final String linkData;
+  // Link get link {
+  //   return Link(linkType, linkData);
+  // }
+  // @JsonKey(defaultValue: [])
+  // final List<MenuSettingItem> children;
   
   factory MenuSettingItem.fromJson(Map<String, dynamic> json) => _$MenuSettingItemFromJson(json);
   Map<String, dynamic> toJson() => _$MenuSettingItemToJson(this);

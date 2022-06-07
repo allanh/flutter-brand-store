@@ -39,16 +39,15 @@ class DioWrapper {
     // 此处如果数据比较大，可以使用 compute 放在后台计算
     final res = jsonDecode(response.data);
     debugPrint('${response.statusCode} : $res');
-    if (response.statusCode == 200) {
-      final BaseResponse wrapres = BaseResponse.fromJson(res);
-      wrapres.originalResponse = response;
-      return wrapres;
+    if (response.statusCode == 200 ||
+        response.statusCode == 400 ||
+        response.statusCode == 401) {
+      final BaseResponse wrapRes = BaseResponse.fromJson(res);
+      wrapRes.originalResponse = response;
+      return wrapRes;
     } else {
       var msg = res["error"] ?? '';
       debugPrint('msg = $msg');
-      if (response.statusCode == 401) {
-        msg = 'token失效';
-      }
       return BaseResponse(
         id: "",
         status: "",

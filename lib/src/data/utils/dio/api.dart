@@ -5,6 +5,24 @@ class Api {
       kDebugMode ? 'http://35.189.170.116:8000' : 'http://35.189.170.116:8000';
 
   static const login = '/udi/v3/auth/login';
+
+  // Modify Password
+  static const accountCheck = '/udi/v3/auth/account_check';
+  static const sendVerification = '/udi/v3/auth/send_verification';
+  static const verifyMobileCode = '/udi/v3/auth/verify_mobile_code';
+  static const resetPassword = '/udi/v3/auth/reset_password';
+
+  // Register
+  static const register = '/udi/v3/auth/register';
+  static const exchangeBundle = '/udi/v3/auth/exchange_bundle';
+
+  // Third Party
+  static const thirdPartyLogin = '/udi/v3/auth/third_party_login';
+  static const thirdPartyAccountCheck = '/udi/v3/auth/third_party_account_check';
+  static const thirdPartyRegister = '/udi/v3/auth/third_party_register';
+  static const bundleMember = '/udi/v3/auth/bundle_member';
+
+
   static const memberData = '/udi/v1/member_center/update/data';
 
   // Help Center

@@ -1,138 +1,100 @@
+import 'package:brandstores/src/app/widgets/udi_style/udi_button.dart';
+import 'package:brandstores/src/app/widgets/udi_style/udi_tab_bar.dart';
+import 'package:brandstores/src/app/widgets/udi_style/email_field.dart';
+import 'package:brandstores/src/app/widgets/udi_style/mobile_field.dart';
+import 'package:brandstores/src/app/widgets/udi_style/password_field.dart';
+import 'package:brandstores/src/data/repositories/data_account_repository.dart';
+import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
-import '../../../utils/constants.dart';
-import '../../../../../login_state.dart';
+import 'login_controller.dart';
 
-// TODO(login): Navigator測試用登入頁, 之後需改寫
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class LoginPage extends View {
+  LoginPage({Key? key}) : super(key: key);
 
   @override
-  _LoginState createState() => _LoginState();
+  _PageState createState() => _PageState();
 }
 
-class _LoginState extends State<LoginPage> {
-  TextEditingController mobileTextController = TextEditingController();
-  TextEditingController passwordTextController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+class _PageState extends ViewState<LoginPage, LoginController> {
+  _PageState() : super(LoginController(DataAccountRepository()));
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.lightBlue,
-        title: const Text(
-          'Login',
-          style: TextStyle(
-              fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
-        ),
-      ),
-      body: SafeArea(
-        child: Center(
+  Widget get view => Scaffold(
+      key: globalKey,
+      appBar: AppBar(title: const Text('登入')),
+      body: Padding(
+          padding: const EdgeInsets.all(24),
           child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                            decoration: const InputDecoration(
-                                border: UnderlineInputBorder(),
-                                hintText: 'Mobile'),
-                            controller: mobileTextController),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                            enableSuggestions: false,
-                            autocorrect: false,
-                            obscureText: true,
-                            decoration: const InputDecoration(
-                                border: UnderlineInputBorder(),
-                                hintText: 'Password'),
-                            controller: passwordTextController),
-                      ),
-                    ],
-                  ),
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all<Color>(
-                              Theme.of(context).primaryColor),
-                          shape: MaterialStateProperty.all<OutlinedBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4.0),
-                              side: BorderSide(
-                                  color: Theme.of(context).primaryColor),
-                            ),
-                          ),
-                        ),
-                        onPressed: () {
-                          context.goNamed(registerRouteName);
-                        },
-                        child: const Text(
-                          'Register',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          foregroundColor:
-                              MaterialStateProperty.all<Color>(Colors.white),
-                          shape: MaterialStateProperty.all<OutlinedBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4.0),
-                              side: const BorderSide(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        onPressed: () {
-                          saveLoginState(context);
-                        },
-                        child: const Text('Login'),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
+              key: _formKey,
+              child: ControlledWidgetBuilder<LoginController>(
+                builder: (context, controller) => _viewBody(controller),
+              ))));
+
+  Column _viewBody(LoginController controller) {
+    return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+      UdiTabBar(
+        const ['手機號碼', 'Email'],
+        onTap: (tabIndex) => setState(() => controller.switchTab(tabIndex)),
       ),
-    );
+      const SizedBox(height: 16),
+      controller.tabIndex == 0 ? _mobileWidget(controller) : _emailWidget(controller),
+      const SizedBox(height: 16),
+      _passwordWidget(controller),
+      _forgetPasswordWidget(controller),
+      _loginButtonWidget(controller),
+      _registerWidget(controller)
+    ]);
   }
 
-// TODO(login): Navigator測試用登入, 之後需放到 controller
-  void saveLoginState(BuildContext context) {
-    Provider.of<LoginState>(context, listen: false).loggedIn = true;
-  }
+  Widget _mobileWidget(LoginController controller) => MobileField(
+      defaultValue: controller.inputMobile,
+      onValueChange: (mobile) => setState(() => controller.onMobileChange(mobile)),
+      onFocusChange: (isFocus) => setState(() => controller.checkMobile()),
+      errorMessage: controller.mobileError);
+
+  EmailField _emailWidget(LoginController controller) => EmailField(
+      defaultValue: controller.inputEmail,
+      onValueChange: (email) => setState(() => controller.onEmailChange(email)),
+      onFocusChange: (isFocus) => setState(() => controller.checkEmail()),
+      errorMessage: controller.emailError);
+
+  PasswordField _passwordWidget(LoginController controller) => PasswordField(
+      onValueChange: (password) => setState(() => controller.onPasswordChange(password)),
+      errorMessage: controller.passwordError);
+
+  SizedBox _loginButtonWidget(LoginController controller) => SizedBox(
+      width: double.infinity,
+      child: UdiButton(
+        text: '登入',
+        onPressed: controller.isEnableButton ? () => controller.login() : null,
+      ));
+
+  Align _forgetPasswordWidget(LoginController controller) => Align(
+      alignment: AlignmentDirectional.topEnd,
+      child: TextButton(
+          onPressed: () => controller.forgotPassword(),
+          child: Text('忘記密碼？',
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
+                decoration: TextDecoration.underline,
+              ))));
+
+  Row _registerWidget(LoginController controller) =>
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        const Text('還不是會員嗎？',
+            style: TextStyle(
+              color: UdiColors.secondaryText,
+              fontWeight: FontWeight.normal,
+            )),
+        TextButton(
+            onPressed: () => controller.register(),
+            child: Text('註冊會員',
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  decoration: TextDecoration.underline,
+                )))
+      ]);
 }

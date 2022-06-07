@@ -20,7 +20,7 @@ class _PageState extends ViewState<BulletinPage, BulletinController> {
 
   @override
   Widget get view => Scaffold(
-      appBar: AppBar(title: Text(widget.title ?? '')),
+      appBar: AppBar(title: Text(widget.title ?? '服務公告')),
       body: ControlledWidgetBuilder<BulletinController>(
           builder: ((context, controller) {
         return Column(children: [

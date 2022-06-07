@@ -16,6 +16,7 @@ class MainController extends Controller {
 
   @override
   void onInitState() {
+    
     getSiteSetting();
   }
   @override

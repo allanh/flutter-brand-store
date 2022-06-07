@@ -18,8 +18,7 @@ class ProductController extends Controller {
   @override
   void onInitState() {
     if (_goodsNo != null) {
-      // TODO: 商品解析JSON問題待解
-      //getProduct(goodsNo: _goodsNo!, productId: _productId);
+      getProduct(goodsNo: _goodsNo!, productId: _productId);
     }
   }
 
@@ -45,11 +44,6 @@ class ProductController extends Controller {
     };
   }
 
-  void getProduct({required String goodsNo, int? productId}) =>
-      productPresenter.getProduct(goodsNo: goodsNo, productId: productId);
-  void getProductwithError() =>
-      productPresenter.getProduct(goodsNo: 'M04009000020119', productId: 57544);
-
   @override
   void onResumed() => debugPrint('On resumed');
 
@@ -63,5 +57,18 @@ class ProductController extends Controller {
   void onDisposed() {
     productPresenter.dispose(); // don't forget to dispose of the presenter
     super.onDisposed();
+  }
+
+  /// 取得商品
+  void getProduct({required String goodsNo, int? productId}) =>
+      productPresenter.getProduct(goodsNo: goodsNo, productId: productId);
+
+  /// 測試錯誤資料用
+  void getProductwithError() =>
+      productPresenter.getProduct(goodsNo: 'M04009000020119', productId: 57544);
+
+  /// 倒數結束後重取資料
+  void onCountDownEnd() {
+    getProduct(goodsNo: _goodsNo!, productId: _productId);
   }
 }

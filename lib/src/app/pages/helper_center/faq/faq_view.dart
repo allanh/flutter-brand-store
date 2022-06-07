@@ -20,7 +20,7 @@ class _PageState extends ViewState<FaqPage, FaqController> {
 
   @override
   Widget get view => Scaffold(
-      appBar: AppBar(title: Text(widget.title ?? '')),
+      appBar: AppBar(title: Text(widget.title ?? '常見問題')),
       body: ControlledWidgetBuilder<FaqController>(
           builder: (context, controller) {
         return Column(children: [
