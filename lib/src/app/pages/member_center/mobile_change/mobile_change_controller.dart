@@ -29,4 +29,12 @@ class MobileChangeController extends Controller {
   bool handleCheckPassword(String password) {
     return true;
   }
+
+  bool isValidCode(code) {
+    return code.length < 5 || code.isEmpty;
+  }
+
+  String handleValidationCodeSubmit(code) {
+    return '';
+  }
 }
