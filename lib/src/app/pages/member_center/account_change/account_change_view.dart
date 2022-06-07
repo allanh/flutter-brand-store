@@ -322,115 +322,86 @@ class _AccountChangePageState
                   ]);
           } else if (status == AccountChangeStatus.exceedLimit) {
             children = [
-              Padding(
-                padding: const EdgeInsets.only(top: 112.0),
-                child: Center(
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        width: 120.0,
-                        height: 120.0,
-                        child: Image(
-                            image: AssetImage(
-                                'assets/images/empty_verification.png')),
-                      ),
-                      const SizedBox(height: 22.0),
-                      SizedBox(
-                        height: 44.0,
-                        child: Text('您已經超過本日要求簡訊驗證碼3次',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1
-                                ?.copyWith(color: UdiColors.brownGrey)),
-                      ),
-                      _buildSubmitButton(
-                        handlePasswordSubmit,
-                        handleAccountSubmit,
-                        handleValidationCodeSubmit,
-                        handleCompleted,
-                      )
-                    ],
-                  ),
-                ),
+              _buildResultDescriptionView(
+                context,
+                'assets/images/empty_verification.png',
+                '您已經超過本日要求簡訊驗證碼3次',
+                handlePasswordSubmit,
+                handleAccountSubmit,
+                handleValidationCodeSubmit,
+                handleCompleted,
               )
             ];
           } else if (status == AccountChangeStatus.completed) {
             children = [
-              Padding(
-                padding: const EdgeInsets.only(top: 112.0),
-                child: Center(
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        width: 120.0,
-                        height: 120.0,
-                        child: Image(
-                            image: AssetImage(
-                                'assets/images/icon_completed_stroke.png')),
-                      ),
-                      const SizedBox(height: 22.0),
-                      SizedBox(
-                        height: 44.0,
-                        child: Text(
-                            widget.type == AccountType.mobile
-                                ? '手機綁定變更完成，\n下次請用新的手機門號登入！'
-                                : 'Email綁定變更完成。\n下次請用新的電子信箱登入!',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1
-                                ?.copyWith(color: UdiColors.brownGrey)),
-                      ),
-                      _buildSubmitButton(
-                        handlePasswordSubmit,
-                        handleAccountSubmit,
-                        handleValidationCodeSubmit,
-                        handleCompleted,
-                      )
-                    ],
-                  ),
-                ),
+              _buildResultDescriptionView(
+                context,
+                'assets/images/icon_completed_stroke.png',
+                widget.type == AccountType.mobile
+                    ? '手機綁定變更完成，\n下次請用新的手機門號登入！'
+                    : 'Email綁定變更完成。\n下次請用新的電子信箱登入!',
+                handlePasswordSubmit,
+                handleAccountSubmit,
+                handleValidationCodeSubmit,
+                handleCompleted,
               )
             ];
           } else if (status == AccountChangeStatus.registerConflict) {
             children = [
-              Padding(
-                padding: const EdgeInsets.only(top: 112.0),
-                child: Center(
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        width: 120.0,
-                        height: 120.0,
-                        child: Image(
-                            image: AssetImage('assets/images/empty_error.png')),
-                      ),
-                      const SizedBox(height: 22.0),
-                      SizedBox(
-                        height: 66.0,
-                        child: Text(
-                            '親愛的用戶， 此${widget.type == AccountType.mobile ? '手機門號' : 'Email'}已被註冊過。\n若想繼續，請聯絡客服人員。\n為了保護您的帳戶安全，請填寫真實個人資訊。',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1
-                                ?.copyWith(color: UdiColors.brownGrey)),
-                      ),
-                      _buildSubmitButton(
-                        handlePasswordSubmit,
-                        handleAccountSubmit,
-                        handleValidationCodeSubmit,
-                        handleCompleted,
-                      )
-                    ],
-                  ),
-                ),
+              _buildResultDescriptionView(
+                context,
+                'assets/images/empty_error.png',
+                '親愛的用戶， 此${widget.type == AccountType.mobile ? '手機門號' : 'Email'}已被註冊過。\n若想繼續，請聯絡客服人員。\n為了保護您的帳戶安全，請填寫真實個人資訊。',
+                handlePasswordSubmit,
+                handleAccountSubmit,
+                handleValidationCodeSubmit,
+                handleCompleted,
               )
             ];
           }
 
           return Column(children: children);
         }));
+  }
+
+  Padding _buildResultDescriptionView(
+    BuildContext context,
+    String image,
+    String description,
+    void Function(dynamic text) handlePasswordSubmit,
+    void Function(dynamic text) handleAccountSubmit,
+    void Function(dynamic code) handleValidationCodeSubmit,
+    void Function() handleCompleted,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 112.0),
+      child: Center(
+        child: Column(
+          children: [
+            SizedBox(
+              width: 120.0,
+              height: 120.0,
+              child: Image(image: AssetImage(image)),
+            ),
+            const SizedBox(height: 22.0),
+            SizedBox(
+              height: 44.0,
+              child: Text(description,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      ?.copyWith(color: UdiColors.brownGrey)),
+            ),
+            _buildSubmitButton(
+              handlePasswordSubmit,
+              handleAccountSubmit,
+              handleValidationCodeSubmit,
+              handleCompleted,
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -75,16 +75,23 @@ class _ValidationCodeInputTileState extends State<ValidationCodeInputTile> {
 
     if (_isShowDescription) {
       children.add(
-        const Padding(
-          padding: EdgeInsets.only(top: 25.0),
-          child: Text(
-            '請輸入驗證簡訊4位數驗證碼',
-            style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.normal,
-                color: UdiColors.brownGrey),
-          ),
-        ),
+        GestureDetector(
+            onTap: () {
+              setState(() {
+                _isShowDescription = false;
+                _node.nextFocus();
+              });
+            },
+            child: const Padding(
+              padding: EdgeInsets.only(top: 25.0),
+              child: Text(
+                '請輸入驗證簡訊4位數驗證碼',
+                style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.normal,
+                    color: UdiColors.brownGrey),
+              ),
+            )),
       );
     }
 
