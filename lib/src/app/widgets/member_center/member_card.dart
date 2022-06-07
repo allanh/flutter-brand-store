@@ -19,7 +19,9 @@ class MemberCard extends StatelessWidget {
   }
 
   void handleAvatarTapped() {
-    avatarTapped();
+    if (member != null) {
+      avatarTapped();
+    }
   }
 
   @override
@@ -39,7 +41,8 @@ class MemberCard extends StatelessWidget {
               child: GestureDetector(
                   onTap: handleAvatarTapped,
                   child: const CircleAvatar(
-                      backgroundImage: AssetImage('assets/images/icon_user.png'))),
+                      backgroundImage:
+                          AssetImage('assets/images/icon_user.png'))),
             ),
             const SizedBox(width: 12.0),
             member == null

@@ -2,9 +2,9 @@
 /// styles it, and depends on the 'Controller' to handle its events. The
 /// 'View' has-a 'Controller'.
 
+import 'package:brandstores/src/app/pages/auth/login/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
-
 import 'package:brandstores/src/data/repositories/data_member_center_repository.dart';
 
 import 'package:brandstores/src/domain/entities/link.dart';
@@ -74,8 +74,13 @@ class _MemberCenterPageState
   }
 
   void openLoginPage() {
-    /// TODO: implement open login page
     debugPrint('Login button tapped.');
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginPage(),
+          fullscreenDialog: true,
+        ));
   }
 
   void openMemberUpdatePage() {
@@ -91,24 +96,24 @@ class _MemberCenterPageState
         builder: (context, controller) {
       final ThemeData theme = Theme.of(context);
 
-      if (controller.memberCenter != null) {
-        return Scaffold(
-            key: globalKey,
-            body: Stack(children: [
-              Background(theme: theme),
-              ListView(children: _buildCardList(controller))
-            ]));
-      }
-      return Container();
+      controller.getMemberCenter();
+
+      return Scaffold(
+          body: Stack(children: [
+        Background(theme: theme),
+        ListView(children: _buildCardList(context, controller)),
+      ]));
     });
   }
 
-  List<Widget> _buildCardList(MemberCenterController controller) {
+  List<Widget> _buildCardList(
+      BuildContext context, MemberCenterController controller) {
     List<Widget> children = [];
-    if (controller.memberCenter!.member == null ||
-        controller.memberCenter!.member?.online == "NO") {
+
+    if (controller.memberCenter?.member == null ||
+        controller.memberCenter?.member?.online == "NO") {
       children.add(MemberCard(
-        member: controller.memberCenter!.member,
+        member: controller.memberCenter?.member,
         loginButtonTapped: openLoginPage,
         avatarTapped: openMemberUpdatePage,
       ));
@@ -123,17 +128,19 @@ class _MemberCenterPageState
             message: controller.memberCenter!.member!.nextLevelDescription)
       ]);
     }
-    children.addAll([
-      ServicesCard(
-        services: controller.memberCenter!.services,
-        tapped: openServicePage,
-      ),
-      HorizontalProductListCard(productList: [
-        controller.memberCenter!.newGoodsInfo,
-        controller.memberCenter!.bestSellersInfo
-      ]),
-      BannerCard(imageUrls: _buildBannerList(controller))
-    ]);
+    if (controller.memberCenter != null) {
+      children.addAll([
+        ServicesCard(
+          services: controller.memberCenter!.services,
+          tapped: openServicePage,
+        ),
+        HorizontalProductListCard(productList: [
+          controller.memberCenter!.newGoodsInfo,
+          controller.memberCenter!.bestSellersInfo
+        ]),
+        BannerCard(imageUrls: _buildBannerList(controller))
+      ]);
+    }
 
     return children;
   }

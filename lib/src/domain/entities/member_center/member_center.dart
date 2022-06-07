@@ -42,7 +42,7 @@ class MemberCenter {
   final String greeting;
 
   /// 會員相關資料 (PS: 未登入時為 null)
-  final Member? member;
+  Member? member;
 
   /// 最近訂單 (PS: 未登入時為 null)
   final Order? order;
@@ -91,7 +91,7 @@ class MemberCenter {
   @JsonKey(name: 'bestsellers')
   final ProductInfo bestSellersInfo;
 
-  const MemberCenter(
+  MemberCenter(
       this.greeting,
       this.member,
       this.order,
