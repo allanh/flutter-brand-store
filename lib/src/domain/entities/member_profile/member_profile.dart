@@ -176,15 +176,15 @@ class BindingInfo {
 
 @JsonSerializable()
 class Binding {
-  const Binding(this.bindingId, this.openId);
+  Binding(this.bindingId, this.openId);
 
   /// 會員與第三方的綁定 id
   @JsonKey(name: 'bundle_id')
-  final int? bindingId;
+  int? bindingId;
 
   /// 第三方的 open id
   @JsonKey(name: 'openid')
-  final String? openId;
+  String? openId;
 
   factory Binding.fromJson(Map<String, dynamic> json) =>
       _$BindingFromJson(json);

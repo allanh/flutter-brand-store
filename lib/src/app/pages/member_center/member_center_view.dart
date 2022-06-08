@@ -96,7 +96,9 @@ class _MemberCenterPageState
         builder: (context, controller) {
       final ThemeData theme = Theme.of(context);
 
-      controller.getMemberCenter();
+      if (controller.memberCenter == null) {
+        controller.getMemberCenter();
+      }
 
       return Scaffold(
           body: Stack(children: [

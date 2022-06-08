@@ -327,4 +327,46 @@ class MemberProfileController extends Controller {
   }
 
   void updateProfile() => presenter.updateProfile(_memberProfile!);
+
+  void handleBinding(String name) {
+    // TODO: 串接API
+    if (name == 'Facebook') {
+      _memberProfile?.bindingInfo?.facebookBinding?.bindingId = 1111;
+      _memberProfile?.bindingInfo?.facebookBinding?.openId = '1111';
+      refreshUI();
+    } else if (name == 'Google') {
+      _memberProfile?.bindingInfo?.googleBinding?.bindingId = 2222;
+      _memberProfile?.bindingInfo?.googleBinding?.openId = '2222';
+      refreshUI();
+    } else if (name == 'Line') {
+      _memberProfile?.bindingInfo?.lineBinding?.bindingId = 3333;
+      _memberProfile?.bindingInfo?.lineBinding?.openId = '3333';
+      refreshUI();
+    } else if (name == 'Apple') {
+      _memberProfile?.bindingInfo?.appleBinding?.bindingId = 4444;
+      _memberProfile?.bindingInfo?.appleBinding?.openId = '4444';
+      refreshUI();
+    }
+  }
+
+  void handleUnbinding(String name) {
+    // TODO: 串接API
+    if (name == 'Facebook') {
+      _memberProfile?.bindingInfo?.facebookBinding?.bindingId = null;
+      _memberProfile?.bindingInfo?.facebookBinding?.openId = null;
+      refreshUI();
+    } else if (name == 'Google') {
+      _memberProfile?.bindingInfo?.googleBinding?.bindingId = null;
+      _memberProfile?.bindingInfo?.googleBinding?.openId = null;
+      refreshUI();
+    } else if (name == 'Line') {
+      _memberProfile?.bindingInfo?.lineBinding?.bindingId = null;
+      _memberProfile?.bindingInfo?.lineBinding?.openId = null;
+      refreshUI();
+    } else if (name == 'Apple') {
+      _memberProfile?.bindingInfo?.appleBinding?.bindingId = null;
+      _memberProfile?.bindingInfo?.appleBinding?.openId = null;
+      refreshUI();
+    }
+  }
 }
