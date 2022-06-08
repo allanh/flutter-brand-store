@@ -23,6 +23,9 @@ import 'package:brandstores/src/app/pages/member_center/level_description/level_
 import 'package:brandstores/src/app/pages/helper_center/helper_center_view.dart';
 import 'package:brandstores/src/app/pages/member_center/profile/member_profile_view.dart';
 
+import 'package:brandstores/login_state.dart';
+import 'package:provider/provider.dart';
+
 /// In the case of Flutter
 /// - The 'View' is comprised of 2 classes
 ///   * One that extends 'View', which would be the root 'Widget'
@@ -96,7 +99,15 @@ class _MemberCenterPageState
         builder: (context, controller) {
       final ThemeData theme = Theme.of(context);
 
-      if (controller.memberCenter == null) {
+      /// 登出狀態，清空會員資料
+      if (Provider.of<LoginState>(context, listen: false).loggedIn == false &&
+          controller.memberCenter?.member != null) {
+        controller.clearMember();
+      }
+
+      /// 登入狀態，取會員資料
+      if (Provider.of<LoginState>(context, listen: false).loggedIn == true &&
+          controller.memberCenter?.member == null) {
         controller.getMemberCenter();
       }
 

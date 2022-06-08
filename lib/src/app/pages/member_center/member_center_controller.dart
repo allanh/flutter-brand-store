@@ -37,7 +37,9 @@ class MemberCenterController extends Controller {
         super();
 
   @override
-  void onInitState() {}
+  void onInitState() {
+    getMemberCenter();
+  }
 
   /// Also, ervery 'Controller' has to implement initListeners() that
   /// initializes the listeners for the 'Presenter' for consistency.
@@ -89,4 +91,9 @@ class MemberCenterController extends Controller {
   }
 
   void getMemberCenter() => memberCenterPresenter.getMemberCenter();
+
+  void clearMember() {
+    _memberCenter?.member = null;
+  }
+
 }
