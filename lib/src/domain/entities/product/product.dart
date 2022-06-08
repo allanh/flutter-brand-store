@@ -352,6 +352,11 @@ class Product {
 
   // 贈品是否已贈完
   bool get freebieisEmpty => freebieGiftLimitOn == 1 && freebieGiftLimit == 0;
+
+  // 保存期限字串
+  String? get expiryString => (expiry != null)
+      ? (expiry == Expiry.ever ? '永久' : '$expireDate$expireDateType')
+      : null;
 }
 
 @JsonSerializable()
@@ -495,4 +500,11 @@ extension MockProduct on Product {
 
   List<Product> get mockAddons =>
       [this, this, this, this..addonFixedPrice = 999999];
+
+  // 廣告
+  String get mockAd =>
+      'https://storage.googleapis.com/udi_upload/202203223836db79199b4c2db32c099b4763c482';
+
+  // 鑑賞期
+  String? get orderHesitate => '7天';
 }

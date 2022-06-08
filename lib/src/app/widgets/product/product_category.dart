@@ -15,8 +15,6 @@ class ProductCategoryView extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-      constraints.maxWidth;
-
       List<Widget> columnChildren = [];
       // 各層分類
       categoryMain.categoryLevel?.forEachIndexed((index, category) {

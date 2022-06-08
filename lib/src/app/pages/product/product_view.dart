@@ -1,5 +1,6 @@
 import 'package:brandstores/src/app/utils/screen_config.dart';
 import 'package:brandstores/src/app/widgets/product/event_countdown_timer.dart';
+import 'package:brandstores/src/app/widgets/product/product_ad.dart';
 import 'package:brandstores/src/app/widgets/product/product_addon.dart';
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:brandstores/src/domain/entities/product/product.dart';
@@ -10,8 +11,10 @@ import 'package:carousel_slider/carousel_slider.dart';
 import '../../widgets/product/base_product_row.dart';
 import '../../widgets/product/image_slider.dart';
 import '../../widgets/product/product_category.dart';
+import '../../widgets/product/product_divider.dart';
 import '../../widgets/product/product_event.dart';
 import '../../widgets/product/product_freebie.dart';
+import '../../widgets/product/product_introduction.dart';
 import '../../widgets/product/product_name.dart';
 import '../../widgets/product/product_payment.dart';
 import '../../widgets/product/product_shipped.dart';
@@ -260,7 +263,7 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                                       info: product.paymentInfo!,
                                     ),
                                     onMoreTap: () => debugPrint('tap payment')),
-                              _smallDivider,
+                              const ProductDivider(),
                               if (product.shippedMethod?.isNotEmpty == true)
                                 BaseProductRow(
                                   title: '運　送',
@@ -289,7 +292,7 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                                               color: UdiColors.greyishBrown))),
 
                               // 品牌
-                              _smallDivider,
+                              const ProductDivider(),
                               if (product.brandName != null)
                                 BaseProductRow(
                                   title: '品　牌',
@@ -308,7 +311,7 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
 
                               // 標籤
                               if (product.tags?.isNotEmpty == true)
-                                _smallDivider,
+                                const ProductDivider(),
                               if (product.tags?.isNotEmpty == true)
                                 BaseProductRow(
                                     title: '標　籤',
@@ -316,7 +319,7 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                                     onMoreTap: () => debugPrint('tap tags')),
 
                               // 分類
-                              _smallDivider,
+                              const ProductDivider(),
                               if (product.categoryMain != null)
                                 BaseProductRow(
                                     title: '分　類',
@@ -325,6 +328,19 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                                     )),
                             ],
                           )),
+
+                      // 廣告
+                      /*
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: ProductAd(
+                            imageUrl: product.mockAd,
+                            height: 78 * SizeConfig.screenRatio),
+                      ),
+                      */
+
+                      // 商品介紹
+                      ProductIntroduction(product: product)
                     ],
                   ),
                 ),
@@ -339,14 +355,4 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
       );
     }
   }
-
-  Widget get _divider => Container(
-      width: SizeConfig.screenWidth - 24,
-      height: 1,
-      decoration: const BoxDecoration(color: UdiColors.defaultBorder));
-
-  Widget get _smallDivider => Container(
-      width: SizeConfig.screenWidth - 24,
-      height: 1,
-      decoration: const BoxDecoration(color: UdiColors.defaultBorder));
 }
