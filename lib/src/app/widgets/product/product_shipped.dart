@@ -33,7 +33,8 @@ class ProductShipped extends StatelessWidget {
             child: _getShippedCost(context)));
       }
 
-      list.add(Column(children: children));
+      list.add(Column(
+          crossAxisAlignment: CrossAxisAlignment.start, children: children));
       list.add(const SizedBox(height: 8));
     }
     list.removeLast();

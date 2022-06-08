@@ -9,12 +9,14 @@ import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import '../../widgets/product/base_product_row.dart';
 import '../../widgets/product/image_slider.dart';
+import '../../widgets/product/product_category.dart';
 import '../../widgets/product/product_event.dart';
 import '../../widgets/product/product_freebie.dart';
 import '../../widgets/product/product_name.dart';
 import '../../widgets/product/product_payment.dart';
 import '../../widgets/product/product_shipped.dart';
 import '../../widgets/product/product_spec.dart';
+import '../../widgets/product/product_tags.dart';
 import '../../widgets/product/promotion_price.dart';
 import '../../widgets/product/promotion_tag.dart';
 import './product_controller.dart';
@@ -252,7 +254,6 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                                       null)
                                 BaseProductRow(
                                     title: '付　款',
-                                    marginTop: 8,
                                     view: ProductPayment(
                                       price: product
                                           .productInfo!.first.proposedPrice!,
@@ -267,6 +268,61 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                                     methods: product.shippedMethod!,
                                   ),
                                 ),
+                            ],
+                          )),
+
+                      // 商品資訊
+                      Container(
+                          margin: const EdgeInsets.only(top: 8),
+                          color: Colors.white,
+                          child: Column(
+                            children: [
+                              // 編號
+                              BaseProductRow(
+                                  title: '編　號',
+                                  view: Text('${product.no}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .caption
+                                          ?.copyWith(
+                                              fontSize: 14.0,
+                                              color: UdiColors.greyishBrown))),
+
+                              // 品牌
+                              _smallDivider,
+                              if (product.brandName != null)
+                                BaseProductRow(
+                                  title: '品　牌',
+                                  view: Text('${product.brandName}',
+                                      textAlign: TextAlign.left,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .caption
+                                          ?.copyWith(
+                                              fontSize: 14.0,
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              decoration:
+                                                  TextDecoration.underline)),
+                                ),
+
+                              // 標籤
+                              if (product.tags?.isNotEmpty == true)
+                                _smallDivider,
+                              if (product.tags?.isNotEmpty == true)
+                                BaseProductRow(
+                                    title: '標　籤',
+                                    view: ProductTagsView(tags: product.tags!),
+                                    onMoreTap: () => debugPrint('tap tags')),
+
+                              // 分類
+                              _smallDivider,
+                              if (product.categoryMain != null)
+                                BaseProductRow(
+                                    title: '分　類',
+                                    view: ProductCategoryView(
+                                      categoryMain: product.categoryMain!,
+                                    )),
                             ],
                           )),
                     ],

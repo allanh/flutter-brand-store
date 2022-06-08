@@ -92,6 +92,7 @@ class MyApp extends StatelessWidget {
               fontWeight: FontWeight.w400,
               fontSize: 14.0,
               color: setting.layout.setting.title,
+              height: 1.42857, // 20pt
             ),
             bodyText1: base.bodyText1!.copyWith(
               fontWeight: FontWeight.w500,
