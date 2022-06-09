@@ -1,5 +1,5 @@
 import 'package:brandstores/src/app/utils/constants.dart';
-import 'package:brandstores/src/extension/string_extension.dart';
+import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'category_main.dart';
@@ -357,6 +357,10 @@ class Product {
   String? get expiryString => (expiry != null)
       ? (expiry == Expiry.ever ? '永久' : '$expireDate$expireDateType')
       : null;
+
+  // 取得規格商品
+  ProductInfo? getProudctInfo(int productId) =>
+      productInfo?.firstWhereOrNull((info) => info.productId == productId);
 }
 
 @JsonSerializable()

@@ -8,45 +8,45 @@ import '../../../extension/num_extension.dart';
 import 'selected_border.dart';
 
 // 商品類型
-enum SmallProductType { addon, freebie }
+enum SmallProductItemType { addon, freebie }
 
-class SmallProduct extends StatefulWidget {
+class SmallProductItem extends StatefulWidget {
   /// The callback that is called when the countdown timer is ended.
   final Product product;
-  final SmallProductType type;
+  final SmallProductItemType type;
   // 點擊事件，若不需要點擊可傳 null
   //final ValueChanged<bool>? isSelected;
-  final ValueChanged<Product>? onItemTap;
+  final ValueChanged<Product>? onTapItem;
 
-  const SmallProduct(
-      {Key? key, required this.product, required this.type, this.onItemTap})
+  const SmallProductItem(
+      {Key? key, required this.product, required this.type, this.onTapItem})
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _SmallProductState();
+  State<StatefulWidget> createState() => _SmallProductItemState();
 }
 
-class _SmallProductState extends State<SmallProduct> {
-  bool isSelected = false;
+class _SmallProductItemState extends State<SmallProductItem> {
+  //bool _isSelected = false;
 
   // 圖片網址
-  String? get imageUrl {
+  String? get _imageUrl {
     switch (widget.type) {
-      case SmallProductType.addon:
+      case SmallProductItemType.addon:
         return widget.product.productInfo?.first.imageUrl;
-      case SmallProductType.freebie:
+      case SmallProductItemType.freebie:
         return widget.product.imageUrl;
     }
   }
 
 // 價格
-  String get price {
+  String get _price {
     String? name;
     switch (widget.type) {
-      case SmallProductType.addon:
+      case SmallProductItemType.addon:
         name = widget.product.addonFixedPrice?.toDollarString();
         break;
-      case SmallProductType.freebie:
+      case SmallProductItemType.freebie:
         name =
             '買${widget.product.freebieBuyNum}送${widget.product.freebieGiftNum}';
         break;
@@ -58,7 +58,7 @@ class _SmallProductState extends State<SmallProduct> {
   Widget build(BuildContext context) {
     return InkWell(
         onTap: () => {
-              if (widget.onItemTap != null) {widget.onItemTap!(widget.product)}
+              if (widget.onTapItem != null) {widget.onTapItem!(widget.product)}
               // if (widget.isSelected != null) {
               //   setState(() {
               //     isSelected = !isSelected;
@@ -74,8 +74,8 @@ class _SmallProductState extends State<SmallProduct> {
                   aspectRatio: 1,
                   child: Stack(
                     children: [
-                      // 加購品圖片
-                      _buildProductImage(imageUrl),
+                      // 商品圖片
+                      _buildProductImage(_imageUrl),
                       // 選取框
                       // if (widget.isSelected != null)
                       //   SelectedBorder(
@@ -84,20 +84,18 @@ class _SmallProductState extends State<SmallProduct> {
                     ],
                   )),
             ),
-
-            // 加購品價格
-            Container(
-                padding: EdgeInsets.only(top: 4 * SizeConfig.screenRatio),
-                height: 19 * SizeConfig.screenRatio,
-                child: FittedBox(
-                    fit: BoxFit.contain,
-                    child: Text(price,
-                        style: Theme.of(context).textTheme.caption?.copyWith(
-                            fontSize: 12.0,
-                            color: (SmallProductType.freebie == widget.type &&
-                                    widget.product.freebieisEmpty)
-                                ? UdiColors.brownGreyTwo
-                                : UdiColors.strawberry))))
+            const SizedBox(height: 4),
+            // 商品價格
+            FittedBox(
+                fit: BoxFit.contain,
+                child: Text(_price,
+                    style: Theme.of(context).textTheme.caption?.copyWith(
+                        height: 1.4166, // 17pt
+                        fontSize: 12.0,
+                        color: (SmallProductItemType.freebie == widget.type &&
+                                widget.product.freebieisEmpty)
+                            ? UdiColors.brownGreyTwo
+                            : UdiColors.strawberry)))
           ],
         ));
   }
@@ -110,7 +108,7 @@ class _SmallProductState extends State<SmallProduct> {
               imageUrl: url,
               fit: BoxFit.fill,
               alignment: Alignment.topCenter,
-              color: (SmallProductType.freebie == widget.type &&
+              color: (SmallProductItemType.freebie == widget.type &&
                       widget.product.freebieisEmpty)
                   ? UdiColors.brownGreyTwo
                   : null,

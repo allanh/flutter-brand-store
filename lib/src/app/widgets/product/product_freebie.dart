@@ -1,4 +1,4 @@
-import 'package:brandstores/src/app/widgets/product/small_product.dart';
+import 'package:brandstores/src/app/widgets/product/small_product_item.dart';
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -40,13 +40,13 @@ class ProductFreeBieView extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 4,
-          childAspectRatio: 60 / 81,
+          childAspectRatio: 60 / 90,
           crossAxisSpacing: 8 * ratio),
       itemBuilder: (context, index) {
-        return SmallProduct(
-            type: SmallProductType.freebie,
+        return SmallProductItem(
+            type: SmallProductItemType.freebie,
             product: freeBies[index],
-            onItemTap: (product) => debugPrint('tap addon: ${product.no}')
+            onTapItem: (product) => debugPrint('tap addon: ${product.no}')
             //isSelected: (bool value) {
             // setState(() {
             //   if (value) {

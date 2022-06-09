@@ -2,6 +2,7 @@ import 'package:brandstores/src/app/utils/screen_config.dart';
 import 'package:brandstores/src/app/widgets/product/event_countdown_timer.dart';
 import 'package:brandstores/src/app/widgets/product/product_ad.dart';
 import 'package:brandstores/src/app/widgets/product/product_addon.dart';
+import 'package:brandstores/src/app/widgets/product/product_recommend.dart';
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:brandstores/src/domain/entities/product/product.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +63,7 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
   Widget get view {
     return ControlledWidgetBuilder<ProductController>(
         builder: (context, controller) {
-      return Scaffold(key: globalKey, body: _getHeader(controller));
+      return Scaffold(key: globalKey, body: _body(controller));
     });
   }
 
@@ -99,7 +100,8 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
     });
   }
 
-  Widget _getHeader(ProductController controller) {
+  ///
+  Widget _body(ProductController controller) {
     return ControlledWidgetBuilder<ProductController>(
         builder: (context, controller) {
       return LayoutBuilder(
@@ -157,7 +159,8 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
       return Container(
           width: MediaQuery.of(context).size.width,
           color: UdiColors.white2,
-          padding: EdgeInsets.only(top: _statusBarHeight + kToolbarHeight),
+          padding: EdgeInsets.only(
+              top: _statusBarHeight + kToolbarHeight, bottom: 58),
           child: LayoutBuilder(
             builder:
                 (BuildContext context, BoxConstraints viewportConstraints) {
@@ -283,7 +286,7 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                               // 編號
                               BaseProductRow(
                                   title: '編　號',
-                                  view: Text('${product.no}',
+                                  view: Text(product.no!,
                                       style: Theme.of(context)
                                           .textTheme
                                           .caption
@@ -296,7 +299,7 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                               if (product.brandName != null)
                                 BaseProductRow(
                                   title: '品　牌',
-                                  view: Text('${product.brandName}',
+                                  view: Text(product.brandName!,
                                       textAlign: TextAlign.left,
                                       style: Theme.of(context)
                                           .textTheme
@@ -340,7 +343,18 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                       */
 
                       // 商品介紹
-                      ProductIntroduction(product: product)
+                      ProductIntroduction(product: product),
+
+                      // 推薦好貨
+                      //if (product.recomList?.isNotEmpty == true)
+
+                      ProductRecommend(recomList: [
+                        product,
+                        product,
+                        product,
+                        product,
+                        product,
+                      ])
                     ],
                   ),
                 ),

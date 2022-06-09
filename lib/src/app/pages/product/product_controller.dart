@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:go_router/go_router.dart';
+import '../../../domain/entities/link.dart';
+import '../../utils/constants.dart';
 import './product_presenter.dart';
 import '../../../domain/entities/product/product.dart';
 
@@ -94,5 +96,21 @@ class ProductController extends Controller {
   void removeAddonProduct(
       {required String goodsNo, int? productId, required int qty}) {
     _selectedAddons?.removeWhere((element) => element.no == goodsNo);
+  }
+
+  // 點擊連結
+  void onTap(Link? link) {
+    if (link != null) {
+      switch (link.type) {
+        case LinkType.product:
+          getContext().goNamed(productRouteName,
+              params: {QueryKey.goodsNo: link.value});
+          break;
+        default:
+          debugPrint('default link');
+      }
+    } else {
+      debugPrint('no link');
+    }
   }
 }
