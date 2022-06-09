@@ -3,6 +3,7 @@
 /// 'View' has-a 'Controller'.
 
 import 'package:brandstores/src/app/pages/auth/login/login_view.dart';
+import 'package:brandstores/src/app/pages/member_center/products/member_products_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:brandstores/src/data/repositories/data_member_center_repository.dart';
@@ -73,6 +74,18 @@ class _MemberCenterPageState
     if (service.linkType == LinkType.service) {
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const HelperCenterPage()));
+    } else if (service.linkType == LinkType.bought) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  MemberProductsPage(type: MemberProductsType.bought)));
+    } else if (service.linkType == LinkType.cookie) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  MemberProductsPage(type: MemberProductsType.history)));
     }
   }
 

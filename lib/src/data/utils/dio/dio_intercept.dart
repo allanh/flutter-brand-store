@@ -27,6 +27,9 @@ class AuthInterceptor extends Interceptor {
       case Api.memberCenter:
       case Api.modules:
       case Api.getProduct:
+      case Api.bougthProducts:
+      case Api.historyProducts:
+      case Api.favoriteProducts:
         return true;
     }
     return false;

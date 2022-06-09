@@ -4,7 +4,7 @@ import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
 class AccountChangeController extends Controller {
   AccountChangeController(
-      DataAccountChangeRepository dataMobileChangeRepository);
+      DataAccountChangeRepository dataAccountChangeRepository);
 
   @override
   void onInitState() {}
