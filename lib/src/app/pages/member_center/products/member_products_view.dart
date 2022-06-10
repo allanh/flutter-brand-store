@@ -83,17 +83,123 @@ class _MemberProductsPageState
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: TabBarView(
               children: [
-                bought != null && bought.products.isNotEmpty
-                    ? _buildProductView(bought.products, context)
-                    : _buildEmptyView(0, handleGoHome),
-                favorite != null && favorite.products.isNotEmpty
-                    ? _buildProductView(favorite.products, context)
-                    : _buildEmptyView(1, handleGoHome),
                 history != null && history.products.isNotEmpty
-                    ? _buildProductView(history.products, context)
-                    : _buildEmptyView(2, handleGoHome)
+                    ? _buildHistoryProductView(history.products, context)
+                    : _buildEmptyView(2, handleGoHome),
+                favorite != null && favorite.products.isNotEmpty
+                    ? _buildFavoriteProductView(favorite.products, context)
+                    : _buildEmptyView(1, handleGoHome),
+                bought != null && bought.products.isNotEmpty
+                    ? _buildBoughtProductView(bought.products, context)
+                    : _buildEmptyView(0, handleGoHome),
               ],
             )));
+  }
+
+  Column _buildFavoriteProductView(
+      List<MemberProduct> products, BuildContext context) {
+    String? selectedValue = 'ALL';
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 12.0, left: 12.0),
+          child: SizedBox(
+            height: 36.0,
+            width: 108.0,
+            child: InputDecorator(
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: UdiColors.veryLightGrey2),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(4.0),
+                  ),
+                ),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton(
+                  style: const TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.bold,
+                    color: UdiColors.greyishBrown,
+                  ),
+                  icon: const Icon(Icons.keyboard_arrow_down_outlined,
+                      size: 24.0),
+                  isDense: true,
+                  isExpanded: true,
+                  value: selectedValue,
+                  onChanged: (String? value) {
+                    setState(() {
+                      selectedValue = value;
+                    });
+                  },
+                  items: const [
+                    DropdownMenuItem(child: Text('全部收藏'), value: 'ALL')
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        Expanded(child: _buildProductView(products, context)),
+      ],
+    );
+  }
+
+  Column _buildBoughtProductView(
+      List<MemberProduct> products, BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 18.0, left: 12.0),
+          child: SizedBox(
+            height: 30.0,
+            child: Text('您最近一年內購買的商品。',
+                style: Theme.of(context)
+                    .textTheme
+                    .caption
+                    ?.copyWith(color: UdiColors.brownGrey)),
+          ),
+        ),
+        Expanded(child: _buildProductView(products, context)),
+      ],
+    );
+  }
+
+  Column _buildHistoryProductView(
+      List<MemberProduct> products, BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 18.0),
+          child: SizedBox(
+            height: 30.0,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('您最近三個月內瀏覽的商品。',
+                      style: Theme.of(context)
+                          .textTheme
+                          .caption
+                          ?.copyWith(color: UdiColors.brownGrey)),
+                  SizedBox(
+                    height: 24.0,
+                    child: OutlinedButton(
+                      onPressed: () {},
+                      child: const Text('刪除全部'),
+                      style: OutlinedButton.styleFrom(
+                        primary: Theme.of(context).appBarTheme.backgroundColor,
+                      ),
+                    ),
+                  )
+                ]),
+          ),
+        ),
+        Expanded(child: _buildProductView(products, context)),
+      ],
+    );
   }
 
   ListView _buildProductView(
