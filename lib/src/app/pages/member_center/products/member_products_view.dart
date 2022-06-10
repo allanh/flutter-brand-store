@@ -86,8 +86,8 @@ class _MemberProductsPageState
                 history != null && history.products.isNotEmpty
                     ? _buildHistoryProductView(history.products, context)
                     : _buildEmptyView(MemberProductsType.history, handleGoHome),
-                history != null && history.products.isNotEmpty
-                    ? _buildFavoriteProductView(history.products, context)
+                favorite != null && favorite.products.isNotEmpty
+                    ? _buildFavoriteProductView(favorite.products, context)
                     : _buildEmptyView(
                         MemberProductsType.favorite, handleGoHome),
                 bought != null && bought.products.isNotEmpty
