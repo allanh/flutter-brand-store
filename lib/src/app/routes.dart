@@ -8,6 +8,7 @@ import '../app/utils/constants.dart';
 import '../domain/entities/enum/verify_method.dart';
 import '../domain/entities/helper_center.dart';
 import '../extension/string_extension.dart';
+import '../domain/entities/member_center/member_center.dart';
 import 'pages/auth/login/login_view.dart';
 import 'pages/auth/password/forget_password_view.dart';
 import 'pages/auth/password/otp_view.dart';
@@ -19,6 +20,10 @@ import 'pages/helper_center/bulletin/bulletin_view.dart';
 import 'pages/helper_center/faq/faq_view.dart';
 import 'pages/helper_center/helper_center_view.dart';
 import 'pages/product/product_view.dart';
+import 'pages/member_center/products/member_products_view.dart';
+import 'pages/member_center/profile/member_profile_view.dart';
+import 'pages/member_center/level_description/level_description_view.dart';
+import 'pages/member_center/account_change/account_change_view.dart';
 
 class MyPlusRouter {
   final LoginState loginState;
@@ -43,6 +48,7 @@ class MyPlusRouter {
         name: loginRouteName,
         path: '/login',
         pageBuilder: (context, state) => MaterialPage<void>(
+          fullscreenDialog: true,
           key: state.pageKey,
           child: LoginPage(),
         ),
@@ -65,7 +71,8 @@ class MyPlusRouter {
         pageBuilder: (context, state) => MaterialPage<void>(
           key: state.pageKey,
           child: OtpPage(
-            state.queryParams['verifyType']?.toVerifyType ?? VerifyType.verifyAccount,
+            state.queryParams['verifyType']?.toVerifyType ??
+                VerifyType.verifyAccount,
             state.queryParams['mobile'] ?? '',
             mobileCode: state.queryParams['mobileCode'] ?? '',
           ),
@@ -187,18 +194,72 @@ class MyPlusRouter {
         ),
       ),
 
+      /// 買過商品
+      GoRoute(
+        name: boughtProductsRouteName,
+        path: '/bought-products',
+        pageBuilder: (context, state) => MaterialPage<void>(
+            key: state.pageKey,
+            child: MemberProductsPage(type: MemberProductsType.bought)),
+      ),
+
+      /// 瀏覽紀錄
+      GoRoute(
+        name: historyProductsRouteName,
+        path: '/history-products',
+        pageBuilder: (context, state) => MaterialPage<void>(
+            key: state.pageKey,
+            child: MemberProductsPage(type: MemberProductsType.bought)),
+      ),
+
+      /// 會員資料
+      GoRoute(
+        name: memberInfoRouteName,
+        path: '/member-info',
+        pageBuilder: (context, state) =>
+            MaterialPage<void>(key: state.pageKey, child: MemberProfilePage()),
+      ),
+
+      /// 會員等級說明
+      GoRoute(
+        name: memberLevelInfoRouteName,
+        path: '/member-level-info',
+        pageBuilder: (context, state) => MaterialPage<void>(
+            key: state.pageKey,
+            child: LevelDescriptionPage(
+                levelSettings: state.extra! as List<LevelSetting>)),
+      ),
+
+      /// 會員手機帳號變更
+      GoRoute(
+        name: mobileAccountChangeRouteName,
+        path: '/mobile-acount-change',
+        pageBuilder: (context, state) => MaterialPage<void>(
+            key: state.pageKey,
+            child: AccountChangePage(type: AccountType.mobile)),
+      ),
+
+      /// 會員信箱帳號變更
+      GoRoute(
+        name: emailAccountChangeRouteName,
+        path: '/email-account-change',
+        pageBuilder: (context, state) => MaterialPage<void>(
+            key: state.pageKey,
+            child: AccountChangePage(type: AccountType.email)),
+      ),
+
       // TODO(error): 靜態頁待實作
       GoRoute(
         name: staticRouteName,
         path: '/static',
         pageBuilder: (context, state) {
           return MaterialPage<void>(
-          key: state.pageKey,
-          child: StaticPage(
-            pageType: state.extra! as StaticPageType,
-            // pageType: state.queryParams['pageType']?.toStaticPageType ?? StaticPageType.error,
-          ),
-        );
+            key: state.pageKey,
+            child: StaticPage(
+              pageType: state.extra! as StaticPageType,
+              // pageType: state.queryParams['pageType']?.toStaticPageType ?? StaticPageType.error,
+            ),
+          );
         },
       ),
 

@@ -1,17 +1,21 @@
 /// Represents only the UI of the page. The 'View' builds the page's UI,
 /// styles it, and depends on the 'Controller' to handle its events. The
 /// 'View' has-a 'Controller'.
-
-import 'package:brandstores/src/app/pages/auth/login/login_view.dart';
-import 'package:brandstores/src/app/pages/member_center/products/member_products_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
+
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
+import 'package:brandstores/src/app/utils/constants.dart';
+import 'package:brandstores/login_state.dart';
+
+import 'member_center_controller.dart';
+
 import 'package:brandstores/src/data/repositories/data_member_center_repository.dart';
 
 import 'package:brandstores/src/domain/entities/link.dart';
 import 'package:brandstores/src/domain/entities/member_center/member_center.dart';
-
-import 'member_center_controller.dart';
 
 import 'package:brandstores/src/app/widgets/member_center/member_card.dart';
 import 'package:brandstores/src/app/widgets/member_center/member_level_card.dart';
@@ -19,13 +23,6 @@ import 'package:brandstores/src/app/widgets/member_center/services_card.dart';
 import 'package:brandstores/src/app/widgets/member_center/horizontal_product_list_card.dart';
 import 'package:brandstores/src/app/widgets/member_center/banner_card.dart';
 import 'package:brandstores/src/app/widgets/member_center/level_upgrade_message_card.dart';
-
-import 'package:brandstores/src/app/pages/member_center/level_description/level_description_view.dart';
-import 'package:brandstores/src/app/pages/helper_center/helper_center_view.dart';
-import 'package:brandstores/src/app/pages/member_center/profile/member_profile_view.dart';
-
-import 'package:brandstores/login_state.dart';
-import 'package:provider/provider.dart';
 
 /// In the case of Flutter
 /// - The 'View' is comprised of 2 classes
@@ -63,45 +60,38 @@ class _MemberCenterPageState
       : super(MemberCenterController(DataMemberCenterRepository()));
 
   void openLevelDescriptionPage(List<LevelSetting> levelSettings) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                LevelDescriptionPage(levelSettings: levelSettings)));
+    context.pushNamed(memberLevelInfoRouteName, extra: levelSettings);
+  }
+
+  void openLoginPage() {
+    context.pushNamed(loginRouteName);
+  }
+
+  void openMemberUpdatePage() {
+    context.pushNamed(memberInfoRouteName);
   }
 
   void openServicePage(Service service) {
     if (service.linkType == LinkType.service) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const HelperCenterPage()));
-    } else if (service.linkType == LinkType.bought) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  MemberProductsPage(type: MemberProductsType.bought)));
-    } else if (service.linkType == LinkType.cookie) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  MemberProductsPage(type: MemberProductsType.history)));
+      context.pushNamed(serviceRouteName);
+    } else if (Provider.of<LoginState>(context, listen: false).loggedIn ==
+        false) {
+      openLoginPage();
+    } else {
+      switch (service.linkType) {
+        case LinkType.bought:
+          context.pushNamed(boughtProductsRouteName);
+          break;
+        case LinkType.cookie:
+          context.pushNamed(historyProductsRouteName);
+          break;
+        case LinkType.updatemember:
+          context.pushNamed(memberInfoRouteName);
+          break;
+        default:
+          break;
+      }
     }
-  }
-
-  void openLoginPage() {
-    debugPrint('Login button tapped.');
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => LoginPage(),
-          fullscreenDialog: true,
-        ));
-  }
-
-  void openMemberUpdatePage() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => MemberProfilePage()));
   }
 
   /// - The 'ViewState' contains the 'view' getter, which is technically

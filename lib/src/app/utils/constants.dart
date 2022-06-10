@@ -29,6 +29,14 @@ const String paymentRouteName = 'payment';
 const String personalRouteName = 'personal';
 const String searchRouteName = 'search'; // 搜尋頁
 
+/// 會員中心
+const String boughtProductsRouteName = 'bought-products'; // 買過商品
+const String historyProductsRouteName = 'history-products'; // 瀏覽紀錄
+const String memberInfoRouteName = 'member-info'; // 會員資料
+const String memberLevelInfoRouteName = 'member-level-info'; // 會員等級說明
+const String mobileAccountChangeRouteName = 'mobile-acount-change'; // 會員手機帳號變更
+const String emailAccountChangeRouteName = 'email-account-change'; // 會員信箱帳號變更
+
 // DeepLink
 const String profileMoreInfoRouteName = 'profile-moreInfo';
 const String profilePaymentRouteName = 'profile-payment';

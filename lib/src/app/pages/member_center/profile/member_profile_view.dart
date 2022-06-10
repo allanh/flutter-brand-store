@@ -1,11 +1,12 @@
-import 'package:brandstores/src/app/pages/member_center/account_change/account_change_view.dart';
 import 'package:brandstores/src/app/pages/member_center/profile/member_profile_controller.dart';
+import 'package:brandstores/src/app/utils/constants.dart';
 import 'package:brandstores/src/app/widgets/member_center/account_change/result_description_view.dart';
 import 'package:brandstores/src/data/repositories/data_member_profile_repository.dart';
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:brandstores/src/domain/entities/member_profile/member_profile.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:intl/intl.dart';
 
@@ -65,14 +66,15 @@ class _MemberProfilePageState
           }
 
           void handleChangeMobile(message) {
-            debugPrint(message);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      AccountChangePage(type: AccountType.mobile),
-                  fullscreenDialog: true,
-                ));
+            // debugPrint(message);
+            context.pushNamed(mobileAccountChangeRouteName);
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //       builder: (context) =>
+            //           AccountChangePage(type: AccountType.mobile),
+            //       fullscreenDialog: true,
+            //     ));
           }
 
           void handleValidationCodeChange(code) {
@@ -97,13 +99,14 @@ class _MemberProfilePageState
           }
 
           void handleChangeEmail(toggle) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      AccountChangePage(type: AccountType.email),
-                  fullscreenDialog: true,
-                ));
+            context.pushNamed(emailAccountChangeRouteName);
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //       builder: (context) =>
+            //           AccountChangePage(type: AccountType.email),
+            //       fullscreenDialog: true,
+            //     ));
           }
 
           void handleSendValidationMail(toggle) {}

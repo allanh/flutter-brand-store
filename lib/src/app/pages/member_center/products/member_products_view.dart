@@ -41,7 +41,7 @@ class _MemberProductsPageState
       : super(MemberProductsController(DataMemberProductsRepository()));
 
   void handleGoHome(BuildContext context) {
-    Navigator.pop(context);
+    context.goNamed(rootRouteName);
   }
 
   Container _buildTabBar(BuildContext context) {
