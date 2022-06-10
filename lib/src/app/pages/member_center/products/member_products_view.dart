@@ -85,19 +85,22 @@ class _MemberProductsPageState
               children: [
                 history != null && history.products.isNotEmpty
                     ? _buildHistoryProductView(history.products, context)
-                    : _buildEmptyView(2, handleGoHome),
-                favorite != null && favorite.products.isNotEmpty
-                    ? _buildFavoriteProductView(favorite.products, context)
-                    : _buildEmptyView(1, handleGoHome),
+                    : _buildEmptyView(MemberProductsType.history, handleGoHome),
+                history != null && history.products.isNotEmpty
+                    ? _buildFavoriteProductView(history.products, context)
+                    : _buildEmptyView(
+                        MemberProductsType.favorite, handleGoHome),
                 bought != null && bought.products.isNotEmpty
                     ? _buildBoughtProductView(bought.products, context)
-                    : _buildEmptyView(0, handleGoHome),
+                    : _buildEmptyView(MemberProductsType.bought, handleGoHome),
               ],
             )));
   }
 
   Column _buildFavoriteProductView(
-      List<MemberProduct> products, BuildContext context) {
+    List<MemberProduct> products,
+    BuildContext context,
+  ) {
     String? selectedValue = 'ALL';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,13 +145,17 @@ class _MemberProductsPageState
             ),
           ),
         ),
-        Expanded(child: _buildProductView(products, context)),
+        Expanded(
+            child: _buildProductView(
+                products, context, MemberProductsType.favorite)),
       ],
     );
   }
 
   Column _buildBoughtProductView(
-      List<MemberProduct> products, BuildContext context) {
+    List<MemberProduct> products,
+    BuildContext context,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -163,13 +170,17 @@ class _MemberProductsPageState
                     ?.copyWith(color: UdiColors.brownGrey)),
           ),
         ),
-        Expanded(child: _buildProductView(products, context)),
+        Expanded(
+            child: _buildProductView(
+                products, context, MemberProductsType.bought)),
       ],
     );
   }
 
   Column _buildHistoryProductView(
-      List<MemberProduct> products, BuildContext context) {
+    List<MemberProduct> products,
+    BuildContext context,
+  ) {
     return Column(
       children: [
         Padding(
@@ -197,27 +208,35 @@ class _MemberProductsPageState
                 ]),
           ),
         ),
-        Expanded(child: _buildProductView(products, context)),
+        Expanded(
+            child: _buildProductView(
+                products, context, MemberProductsType.history)),
       ],
     );
   }
 
   ListView _buildProductView(
-      List<MemberProduct> products, BuildContext context) {
-    return ListView(children: _buildProductLists(products, context));
+    List<MemberProduct> products,
+    BuildContext context,
+    MemberProductsType type,
+  ) {
+    return ListView(children: _buildProductLists(products, context, type));
   }
 
   List<Widget> _buildProductLists(
-      List<MemberProduct> products, BuildContext context) {
+    List<MemberProduct> products,
+    BuildContext context,
+    MemberProductsType type,
+  ) {
     return List.generate(products.length,
-        (index) => _buildProductList(products[index], context));
+        (index) => _buildProductList(context, products[index], type));
   }
 
-  Image _buildEmptyImage(int index) {
+  Image _buildEmptyImage(MemberProductsType type) {
     return Image(
-      image: AssetImage(index == 0
+      image: AssetImage(type == MemberProductsType.history
           ? 'assets/images/empty_browser.png'
-          : index == 1
+          : type == MemberProductsType.favorite
               ? 'assets/images/empty_favorite.png'
               : 'assets/images/empty_bought.png'),
       width: 120.0,
@@ -225,11 +244,14 @@ class _MemberProductsPageState
     );
   }
 
-  Text _buildEmptyMessage(BuildContext context, int index) {
+  Text _buildEmptyMessage(
+    BuildContext context,
+    MemberProductsType type,
+  ) {
     return Text(
-        index == 0
+        type == MemberProductsType.history
             ? '您目前沒有瀏覽紀錄'
-            : index == 1
+            : type == MemberProductsType.favorite
                 ? '您目前沒有收藏商品'
                 : '您目前沒有買過東西',
         style: Theme.of(context)
@@ -239,14 +261,16 @@ class _MemberProductsPageState
   }
 
   Center _buildEmptyView(
-      int index, Function(BuildContext context) handleGoHome) {
+    MemberProductsType type,
+    Function(BuildContext context) handleGoHome,
+  ) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _buildEmptyImage(index),
+          _buildEmptyImage(type),
           const SizedBox(height: 20.0),
-          _buildEmptyMessage(context, index),
+          _buildEmptyMessage(context, type),
           const SizedBox(height: 24.0),
           SizedBox(
             width: 108.0,
@@ -263,7 +287,11 @@ class _MemberProductsPageState
     );
   }
 
-  SizedBox _buildProductList(MemberProduct product, BuildContext context) {
+  SizedBox _buildProductList(
+    BuildContext context,
+    MemberProduct product,
+    MemberProductsType type,
+  ) {
     return SizedBox(
       height: 146.0,
       child: Padding(
@@ -272,7 +300,7 @@ class _MemberProductsPageState
           children: [
             _buildProductImage(product),
             const SizedBox(width: 8.0),
-            _buildProductInformation(product, context),
+            _buildProductInformation(context, product, type),
           ],
         ),
       ),
@@ -280,7 +308,10 @@ class _MemberProductsPageState
   }
 
   Expanded _buildProductInformation(
-      MemberProduct product, BuildContext context) {
+    BuildContext context,
+    MemberProduct product,
+    MemberProductsType type,
+  ) {
     return Expanded(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -294,7 +325,7 @@ class _MemberProductsPageState
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _buildPrice(product, context),
-                  _buildActionButtons(),
+                  _buildActionButtons(type),
                 ],
               )
             ],
@@ -343,32 +374,42 @@ class _MemberProductsPageState
     );
   }
 
-  Row _buildActionButtons() {
-    return Row(
-      children: [
+  Row _buildActionButtons(MemberProductsType type) {
+    List<IconButton> buttons = [
+      IconButton(
+          padding: EdgeInsets.zero,
+          visualDensity: VisualDensity.compact,
+          color: UdiColors.brownGrey,
+          iconSize: 28.0,
+          onPressed: () {},
+          icon: const Icon(Icons.shopping_cart_outlined)),
+      IconButton(
+          padding: EdgeInsets.zero,
+          visualDensity: VisualDensity.compact,
+          color: UdiColors.brownGrey,
+          iconSize: 28.0,
+          onPressed: () {},
+          icon: type == MemberProductsType.favorite
+              ? Icon(
+                  Icons.favorite,
+                  color: Theme.of(context).appBarTheme.backgroundColor,
+                )
+              : const Icon(Icons.favorite_outline)),
+    ];
+    if (type == MemberProductsType.history) {
+      buttons.insert(
+        1,
         IconButton(
-            padding: EdgeInsets.zero,
-            visualDensity: VisualDensity.compact,
-            color: UdiColors.brownGrey,
-            iconSize: 28.0,
-            onPressed: () {},
-            icon: const Icon(Icons.shopping_cart_outlined)),
-        IconButton(
-            padding: EdgeInsets.zero,
-            visualDensity: VisualDensity.compact,
-            color: UdiColors.brownGrey,
-            iconSize: 28.0,
-            onPressed: () {},
-            icon: const Icon(Icons.delete_outline_outlined)),
-        IconButton(
-            padding: EdgeInsets.zero,
-            visualDensity: VisualDensity.compact,
-            color: UdiColors.brownGrey,
-            iconSize: 28.0,
-            onPressed: () {},
-            icon: const Icon(Icons.favorite_outline)),
-      ],
-    );
+          padding: EdgeInsets.zero,
+          visualDensity: VisualDensity.compact,
+          color: UdiColors.brownGrey,
+          iconSize: 28.0,
+          onPressed: () {},
+          icon: const Icon(Icons.delete_outline_outlined),
+        ),
+      );
+    }
+    return Row(children: buttons);
   }
 
   Row _buildPrice(MemberProduct product, BuildContext context) {
