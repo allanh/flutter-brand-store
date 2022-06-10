@@ -44,6 +44,43 @@ class _MemberProductsPageState
     context.goNamed(rootRouteName);
   }
 
+  @override
+  Widget get view {
+    return ControlledWidgetBuilder<MemberProductsController>(
+        builder: (context, controller) {
+      MemberProducts? bought = controller.boughtProducts;
+      MemberProducts? favorite = controller.favoriteProducts;
+      MemberProducts? history = controller.historyProducts;
+      return Scaffold(
+        key: globalKey,
+        appBar: AppBar(title: const Text('我的商品'), actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: IconButton(
+                onPressed: () => debugPrint('open shopping cart'),
+                icon: const Icon(Icons.shopping_cart_outlined)),
+          )
+        ]),
+        body: Column(
+          children: [
+            Expanded(
+              child: DefaultTabController(
+                initialIndex: widget.type.index,
+                length: MemberProductsType.values.length,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      _buildTabBar(context),
+                      _buildTabBarView(context, bought, favorite, history),
+                    ]),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
   Container _buildTabBar(BuildContext context) {
     return Container(
       padding: EdgeInsets.zero,
@@ -421,35 +458,5 @@ class _MemberProductsPageState
                 )),
       ],
     );
-  }
-
-  @override
-  Widget get view {
-    return ControlledWidgetBuilder<MemberProductsController>(
-        builder: (context, controller) {
-      MemberProducts? bought = controller.boughtProducts;
-      MemberProducts? favorite = controller.favoriteProducts;
-      MemberProducts? history = controller.historyProducts;
-      return Scaffold(
-        key: globalKey,
-        appBar: AppBar(title: Text('我的商品')),
-        body: Column(
-          children: [
-            Expanded(
-              child: DefaultTabController(
-                initialIndex: widget.type.index,
-                length: MemberProductsType.values.length,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      _buildTabBar(context),
-                      _buildTabBarView(context, bought, favorite, history),
-                    ]),
-              ),
-            ),
-          ],
-        ),
-      );
-    });
   }
 }
