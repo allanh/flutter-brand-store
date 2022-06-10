@@ -66,15 +66,7 @@ class _MemberProfilePageState
           }
 
           void handleChangeMobile(message) {
-            // debugPrint(message);
             context.pushNamed(mobileAccountChangeRouteName);
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) =>
-            //           AccountChangePage(type: AccountType.mobile),
-            //       fullscreenDialog: true,
-            //     ));
           }
 
           void handleValidationCodeChange(code) {
@@ -100,13 +92,6 @@ class _MemberProfilePageState
 
           void handleChangeEmail(toggle) {
             context.pushNamed(emailAccountChangeRouteName);
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) =>
-            //           AccountChangePage(type: AccountType.email),
-            //       fullscreenDialog: true,
-            //     ));
           }
 
           void handleSendValidationMail(toggle) {}

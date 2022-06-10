@@ -71,7 +71,7 @@ class _MemberCenterPageState
     context.pushNamed(memberInfoRouteName);
   }
 
-  void openServicePage(Service service) {
+  void openServicePage(BuildContext context, Service service) {
     if (service.linkType == LinkType.service) {
       context.pushNamed(serviceRouteName);
     } else if (Provider.of<LoginState>(context, listen: false).loggedIn ==
@@ -87,6 +87,9 @@ class _MemberCenterPageState
           break;
         case LinkType.updatemember:
           context.pushNamed(memberInfoRouteName);
+          break;
+        case LinkType.fastcheckout:
+          context.pushNamed(paymentSettingRouteName);
           break;
         default:
           break;
@@ -148,7 +151,7 @@ class _MemberCenterPageState
       children.addAll([
         ServicesCard(
           services: controller.memberCenter!.services,
-          tapped: openServicePage,
+          tapped: (service) => openServicePage(context, service),
         ),
         HorizontalProductListCard(productList: [
           controller.memberCenter!.newGoodsInfo,

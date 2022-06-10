@@ -14,6 +14,7 @@ import 'pages/auth/password/forget_password_view.dart';
 import 'pages/auth/password/otp_view.dart';
 import 'pages/auth/password/reset_password_view.dart';
 import 'pages/auth/register/register_view.dart';
+import 'pages/member_center/payment_setting/invoice_setting/invoice_setting_view.dart';
 import 'pages/static_view.dart';
 import 'pages/helper_center/article/article_view.dart';
 import 'pages/helper_center/bulletin/bulletin_view.dart';
@@ -24,6 +25,7 @@ import 'pages/member_center/products/member_products_view.dart';
 import 'pages/member_center/profile/member_profile_view.dart';
 import 'pages/member_center/level_description/level_description_view.dart';
 import 'pages/member_center/account_change/account_change_view.dart';
+import 'pages/member_center/payment_setting/payment_setting_view.dart';
 
 class MyPlusRouter {
   final LoginState loginState;
@@ -246,6 +248,22 @@ class MyPlusRouter {
         pageBuilder: (context, state) => MaterialPage<void>(
             key: state.pageKey,
             child: AccountChangePage(type: AccountType.email)),
+      ),
+
+      /// 結帳設定
+      GoRoute(
+        name: paymentSettingRouteName,
+        path: '/payment-setting',
+        pageBuilder: (context, state) => MaterialPage<void>(
+            key: state.pageKey, child: const PaymentSettingPage()),
+      ),
+
+      /// 發票設定
+      GoRoute(
+        name: invoiceSettingRouteName,
+        path: '/invoice-setting',
+        pageBuilder: (context, state) =>
+            MaterialPage<void>(key: state.pageKey, child: InvoiceSettingPage()),
       ),
 
       // TODO(error): 靜態頁待實作
