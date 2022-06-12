@@ -109,231 +109,240 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
         return DefaultTabController(
             length: _tabs.length, // This is the number of tabs.
             child: Scaffold(
-                extendBodyBehindAppBar: true,
-                appBar: AppBar(
-                  toolbarHeight: kToolbarHeight,
-                  leading: InkWell(
-                    onTap: () => context.pop(),
-                    child: const Icon(
-                      Icons.arrow_back_ios,
-                      color: Colors.white,
-                    ),
+              extendBodyBehindAppBar: true,
+              appBar: AppBar(
+                toolbarHeight: kToolbarHeight,
+                leading: InkWell(
+                  onTap: () => context.pop(),
+                  child: const Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
                   ),
-                  title: const Text('商品'),
-                  centerTitle: true,
-                  backgroundColor: Colors.black,
-                  actions: [
-                    // 購物車
-                    IconButton(
-                      icon: const Icon(Icons.shopping_cart),
-                      onPressed: () {},
-                    ),
-                    // 更多動作
-                    IconButton(
-                      icon: const Icon(Icons.more_vert),
-                      onPressed: () {},
-                    )
-                  ],
-                  bottom: _showAppbar == true
-                      ? PreferredSize(
-                          preferredSize: Size.fromHeight(40 * ratio),
-                          child: AnimatedOpacity(
-                            duration: const Duration(milliseconds: 300),
-                            opacity: 1.0,
-                            child: ColoredBox(
-                              color: Colors.white,
-                              child: _tabBar,
-                            ),
-                          ))
-                      : null,
                 ),
-                body: getBody(controller)));
+                title: const Text('商品'),
+                centerTitle: true,
+                backgroundColor: Colors.black,
+                actions: [
+                  // 購物車
+                  IconButton(
+                    icon: const Icon(Icons.shopping_cart),
+                    onPressed: () {},
+                  ),
+                  // 更多動作
+                  IconButton(
+                    icon: const Icon(Icons.more_vert),
+                    onPressed: () {},
+                  )
+                ],
+                bottom: _showAppbar == true
+                    ? PreferredSize(
+                        preferredSize: Size.fromHeight(40 * ratio),
+                        child: AnimatedOpacity(
+                          duration: const Duration(milliseconds: 300),
+                          opacity: 1.0,
+                          child: ColoredBox(
+                            color: Colors.white,
+                            child: _tabBar,
+                          ),
+                        ))
+                    : null,
+              ),
+              body: (controller.product != null)
+                  ? Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        _getBody(controller, controller.product!),
+                        Container(
+                            width: SizeConfig.screenWidth,
+                            height: 50,
+                            decoration:
+                                const BoxDecoration(color: Colors.white),
+                            child: TextButton(
+                                onPressed: () {}, child: Text('test'))),
+                      ],
+                    )
+                  : _error,
+            ));
       });
     });
   }
 
-  Widget getBody(ProductController controller) {
-    if (controller.product != null) {
-      Product product = controller.product!;
+  /// 商品內容
+  Widget _getBody(ProductController controller, Product product) => Container(
+      width: MediaQuery.of(context).size.width,
+      color: UdiColors.white2,
+      padding:
+          EdgeInsets.only(top: _statusBarHeight + kToolbarHeight, bottom: 50),
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints viewportConstraints) {
+          return SingleChildScrollView(
+            controller: _scrollBottomBarController,
+            child: ConstrainedBox(
+              constraints:
+                  BoxConstraints(minHeight: viewportConstraints.maxHeight),
+              child: Column(
+                children: [
+                  // 圖片或影片
+                  AspectRatio(
+                    aspectRatio: 1.0,
+                    child: Stack(children: [
+                      ImageSlider(imageList: product.imageInfo ?? []),
+                      // 圖標
+                      if (product.productInfo?.isNotEmpty == true)
+                        PromotionTagsView(product: product),
+                    ]),
+                  ),
 
-      return Container(
-          width: MediaQuery.of(context).size.width,
-          color: UdiColors.white2,
-          padding: EdgeInsets.only(
-              top: _statusBarHeight + kToolbarHeight, bottom: 58),
-          child: LayoutBuilder(
-            builder:
-                (BuildContext context, BoxConstraints viewportConstraints) {
-              return SingleChildScrollView(
-                controller: _scrollBottomBarController,
-                child: ConstrainedBox(
-                  constraints:
-                      BoxConstraints(minHeight: viewportConstraints.maxHeight),
-                  child: Column(
-                    children: [
-                      // 圖片或影片
-                      AspectRatio(
-                        aspectRatio: 1.0,
-                        child: Stack(children: [
-                          ImageSlider(imageList: product.imageInfo ?? []),
-                          // 圖標
-                          if (product.productInfo?.isNotEmpty == true)
-                            PromotionTagsView(product: product),
-                        ]),
-                      ),
+                  // 倒數計時
+                  if (product.countdownDuration != null)
+                    EventCountDownTimer(
+                      duration: product.countdownDuration!,
+                      type: (product.status == ProductStatus.comingSoon)
+                          ? CountDownType.comingSoon
+                          : CountDownType.flashSale,
+                      slogan: product.promotionApp?.slogan,
+                      onTimerEned: () => controller.onCountDownEnd(),
+                    ),
 
-                      // 倒數計時
-                      if (product.countdownDuration != null)
-                        EventCountDownTimer(
-                          duration: product.countdownDuration!,
-                          type: (product.status == ProductStatus.comingSoon)
-                              ? CountDownType.comingSoon
-                              : CountDownType.flashSale,
-                          slogan: product.promotionApp?.slogan,
-                          onTimerEned: () => controller.onCountDownEnd(),
+                  // 商品名稱
+                  ProductName(product: controller.product),
+
+                  // 促銷活動
+                  if (product.eventList?.isNotEmpty == true)
+                    BaseProductRow(
+                        title: '活　動',
+                        marginTop: 8,
+                        view: ProductEventsView(
+                          //eventList: product.mockEvents,
+                          eventList: product.eventList!,
                         ),
+                        onMoreTap: () => debugPrint('tap event')),
 
-                      // 商品名稱
-                      ProductName(product: controller.product),
+                  // 獨享價
+                  if ((product.product?.promotionPriceAppDiff ?? 0) > 0)
+                    BaseProductRow(
+                        title: '獨享價',
+                        marginTop: 8,
+                        view: PromotionPriceView(
+                          promotionPrice:
+                              product.product!.promotionPriceAppDiff!,
+                        )),
 
-                      // 促銷活動
-                      if (product.eventList?.isNotEmpty == true)
-                        BaseProductRow(
-                            title: '活　動',
-                            marginTop: 8,
-                            view: ProductEventsView(
-                              //eventList: product.mockEvents,
-                              eventList: product.eventList!,
-                            ),
-                            onMoreTap: () => debugPrint('tap event')),
+                  // 規格
+                  if (product.product != null)
+                    BaseProductRow(
+                        title: '規　格',
+                        marginTop: 8,
+                        view: ProductSpecView(
+                          product: product,
+                        ),
+                        onMoreTap: () => debugPrint('tap spac')),
 
-                      // 獨享價
-                      if ((product.product?.promotionPriceAppDiff ?? 0) > 0)
-                        BaseProductRow(
-                            title: '獨享價',
-                            marginTop: 8,
-                            view: PromotionPriceView(
-                              promotionPrice:
-                                  product.product!.promotionPriceAppDiff!,
-                            )),
+                  // 加購品
+                  if (product.addonInfo?.isNotEmpty == true)
+                    BaseProductRow(
+                        title: '加價購',
+                        marginTop: 8,
+                        view: ProductAddonView(
+                          addons: product.addonInfo!,
+                          //addons: product.mockAddons,
+                          selectedAddons: [],
+                        ),
+                        onMoreTap: () => debugPrint('tap addon')),
 
-                      // 規格
-                      if (product.product != null)
-                        BaseProductRow(
-                            title: '規　格',
-                            marginTop: 8,
-                            view: ProductSpecView(
-                              product: product,
-                            ),
-                            onMoreTap: () => debugPrint('tap spac')),
+                  // 買就送
+                  if (product.freebieInfo?.isNotEmpty == true)
+                    BaseProductRow(
+                        title: '買就送',
+                        marginTop: 8,
+                        view: ProductFreeBieView(
+                          freeBies: product.freebieInfo!,
+                        ),
+                        onMoreTap: () => debugPrint('tap freebie')),
 
-                      // 加購品
-                      if (product.addonInfo?.isNotEmpty == true)
-                        BaseProductRow(
-                            title: '加價購',
-                            marginTop: 8,
-                            view: ProductAddonView(
-                              addons: product.addonInfo!,
-                              //addons: product.mockAddons,
-                              selectedAddons: [],
-                            ),
-                            onMoreTap: () => debugPrint('tap addon')),
-
-                      // 買就送
-                      if (product.freebieInfo?.isNotEmpty == true)
-                        BaseProductRow(
-                            title: '買就送',
-                            marginTop: 8,
-                            view: ProductFreeBieView(
-                              freeBies: product.freebieInfo!,
-                            ),
-                            onMoreTap: () => debugPrint('tap freebie')),
-
-                      // 付款和運送方式
-                      Container(
-                          margin: const EdgeInsets.only(top: 8),
-                          color: Colors.white,
-                          child: Column(
-                            children: [
-                              if (product.paymentInfo != null &&
-                                  product.productInfo!.first.proposedPrice !=
-                                      null)
-                                BaseProductRow(
-                                    title: '付　款',
-                                    view: ProductPayment(
-                                      price: product
-                                          .productInfo!.first.proposedPrice!,
-                                      info: product.paymentInfo!,
-                                    ),
-                                    onMoreTap: () => debugPrint('tap payment')),
-                              const ProductDivider(),
-                              if (product.shippedMethod?.isNotEmpty == true)
-                                BaseProductRow(
-                                  title: '運　送',
-                                  view: ProductShipped(
-                                    methods: product.shippedMethod!,
-                                  ),
+                  // 付款和運送方式
+                  Container(
+                      margin: const EdgeInsets.only(top: 8),
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          if (product.paymentInfo != null &&
+                              product.productInfo!.first.proposedPrice != null)
+                            BaseProductRow(
+                                title: '付　款',
+                                view: ProductPayment(
+                                  price:
+                                      product.productInfo!.first.proposedPrice!,
+                                  info: product.paymentInfo!,
                                 ),
-                            ],
-                          )),
+                                onMoreTap: () => debugPrint('tap payment')),
+                          const ProductDivider(),
+                          if (product.shippedMethod?.isNotEmpty == true)
+                            BaseProductRow(
+                              title: '運　送',
+                              view: ProductShipped(
+                                methods: product.shippedMethod!,
+                              ),
+                            ),
+                        ],
+                      )),
 
-                      // 商品資訊
-                      Container(
-                          margin: const EdgeInsets.only(top: 8),
-                          color: Colors.white,
-                          child: Column(
-                            children: [
-                              // 編號
-                              BaseProductRow(
-                                  title: '編　號',
-                                  view: Text(product.no!,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .caption
-                                          ?.copyWith(
-                                              fontSize: 14.0,
-                                              color: UdiColors.greyishBrown))),
+                  // 商品資訊
+                  Container(
+                      margin: const EdgeInsets.only(top: 8),
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          // 編號
+                          BaseProductRow(
+                              title: '編　號',
+                              view: Text(product.no!,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .caption
+                                      ?.copyWith(
+                                          fontSize: 14.0,
+                                          color: UdiColors.greyishBrown))),
 
-                              // 品牌
-                              const ProductDivider(),
-                              if (product.brandName != null)
-                                BaseProductRow(
-                                  title: '品　牌',
-                                  view: Text(product.brandName!,
-                                      textAlign: TextAlign.left,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .caption
-                                          ?.copyWith(
-                                              fontSize: 14.0,
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              decoration:
-                                                  TextDecoration.underline)),
-                                ),
+                          // 品牌
+                          const ProductDivider(),
+                          if (product.brandName != null)
+                            BaseProductRow(
+                              title: '品　牌',
+                              view: Text(product.brandName!,
+                                  textAlign: TextAlign.left,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .caption
+                                      ?.copyWith(
+                                          fontSize: 14.0,
+                                          color: Theme.of(context).primaryColor,
+                                          decoration:
+                                              TextDecoration.underline)),
+                            ),
 
-                              // 標籤
-                              if (product.tags?.isNotEmpty == true)
-                                const ProductDivider(),
-                              if (product.tags?.isNotEmpty == true)
-                                BaseProductRow(
-                                    title: '標　籤',
-                                    view: ProductTagsView(tags: product.tags!),
-                                    onMoreTap: () => debugPrint('tap tags')),
+                          // 標籤
+                          if (product.tags?.isNotEmpty == true)
+                            const ProductDivider(),
+                          if (product.tags?.isNotEmpty == true)
+                            BaseProductRow(
+                                title: '標　籤',
+                                view: ProductTagsView(tags: product.tags!),
+                                onMoreTap: () => debugPrint('tap tags')),
 
-                              // 分類
-                              const ProductDivider(),
-                              if (product.categoryMain != null)
-                                BaseProductRow(
-                                    title: '分　類',
-                                    view: ProductCategoryView(
-                                      categoryMain: product.categoryMain!,
-                                    )),
-                            ],
-                          )),
+                          // 分類
+                          const ProductDivider(),
+                          if (product.categoryMain != null)
+                            BaseProductRow(
+                                title: '分　類',
+                                view: ProductCategoryView(
+                                  categoryMain: product.categoryMain!,
+                                )),
+                        ],
+                      )),
 
-                      // 廣告
-                      /*
+                  // 廣告
+                  /*
                       Padding(
                         padding: const EdgeInsets.only(top: 8),
                         child: ProductAd(
@@ -342,31 +351,24 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                       ),
                       */
 
-                      // 商品介紹
-                      ProductIntroduction(product: product),
+                  // 商品介紹
+                  ProductIntroduction(product: product),
 
-                      // 推薦好貨
-                      //if (product.recomList?.isNotEmpty == true)
+                  // 推薦好貨
+                  if (product.recomList?.isNotEmpty == true)
+                    ProductRecommend(recomList: product.recomList!),
+                  const SizedBox(height: 8)
+                ],
+              ),
+            ),
+          );
+        },
+      ));
 
-                      ProductRecommend(recomList: [
-                        product,
-                        product,
-                        product,
-                        product,
-                        product,
-                      ])
-                    ],
-                  ),
-                ),
-              );
-            },
-          ));
-    } else {
-      return SizedBox(
+  /// 錯誤頁
+  Widget get _error => SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: const Center(child: CircularProgressIndicator()),
       );
-    }
-  }
 }
