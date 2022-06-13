@@ -41,7 +41,7 @@ class PaymentSettingPage extends StatelessWidget {
           children: [
             _buildListTile(
                 context, '常用信用卡', PaymentSettingType.credit, handleOpenPage,
-                badge: 4),
+                badge: 4123),
             const Divider(thickness: 1.0, color: UdiColors.veryLightGrey2),
             _buildListTile(
                 context, '常用收件地址', PaymentSettingType.address, handleOpenPage,
@@ -49,7 +49,7 @@ class PaymentSettingPage extends StatelessWidget {
             const Divider(thickness: 1.0, color: UdiColors.veryLightGrey2),
             _buildListTile(
                 context, '常用超商門市', PaymentSettingType.store, handleOpenPage,
-                badge: 10),
+                badge: 1067894567),
             const Divider(thickness: 1.0, color: UdiColors.veryLightGrey2),
             _buildListTile(
                 context, '發票設定', PaymentSettingType.invoice, handleOpenPage,
