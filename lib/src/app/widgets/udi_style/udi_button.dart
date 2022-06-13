@@ -2,23 +2,33 @@ import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:flutter/material.dart';
 
 class UdiButton extends StatelessWidget {
-  const UdiButton({
-    Key? key,
-    this.text = '',
-    this.onPressed,
-    this.buttonType = ButtonType.basicButton,
-  }) : super(key: key);
+  const UdiButton(
+      {Key? key,
+      this.text = '',
+      this.onPressed,
+      this.buttonType = ButtonType.basicButton,
+      this.padding = const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+      this.radius = 4.0,
+      this.opacity = 1.0})
+      : super(key: key);
   final String text;
   final VoidCallback? onPressed;
   final ButtonType buttonType;
+  final EdgeInsets padding;
+  final double radius; // 圓角
+  final double opacity; // 透明度
 
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
       onPressed: onPressed,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-        child: Text(text, style: const TextStyle(fontSize: 18)),
+        padding: padding,
+        child: Text(text,
+            style: Theme.of(context)
+                .textTheme
+                .headline6
+                ?.copyWith(fontSize: 18.0, color: Colors.white)),
       ),
       style: _getStyle(context, onPressed != null),
     );
@@ -34,17 +44,29 @@ class UdiButton extends StatelessWidget {
     }
   }
 
-  ButtonStyle _basicButtonStyle(BuildContext context, bool isEnable) => OutlinedButton.styleFrom(
+  ButtonStyle _basicButtonStyle(BuildContext context, bool isEnable) =>
+      OutlinedButton.styleFrom(
         primary: isEnable ? Colors.white : UdiColors.disabledText,
-        backgroundColor: isEnable ? Theme.of(context).primaryColor : UdiColors.white2,
-        side: isEnable ? null : const BorderSide(color: UdiColors.defaultBorder),
+        backgroundColor: isEnable
+            ? Theme.of(context).primaryColor.withOpacity(opacity)
+            : UdiColors.white2,
+        side:
+            isEnable ? null : const BorderSide(color: UdiColors.defaultBorder),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(radius),
+        ),
       );
 
   ButtonStyle _secondaryButtonStyle(BuildContext context, bool isEnable) =>
       OutlinedButton.styleFrom(
-        primary: isEnable ? Theme.of(context).primaryColor : UdiColors.disabledText,
+        primary:
+            isEnable ? Theme.of(context).primaryColor : UdiColors.disabledText,
         backgroundColor: isEnable ? Colors.transparent : UdiColors.white2,
-        side: BorderSide(color: isEnable ? UdiColors.border : UdiColors.defaultBorder),
+        side: BorderSide(
+            color: isEnable ? UdiColors.border : UdiColors.defaultBorder),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(radius),
+        ),
       );
 }
 

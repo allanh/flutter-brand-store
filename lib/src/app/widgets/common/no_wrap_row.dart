@@ -21,8 +21,10 @@ class NoWrapRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Container(
+          // 限制單行高度
           constraints:
               BoxConstraints(minHeight: minHeight ?? 0, maxHeight: maxHeight),
+          // 不會捲動的 ScrollView，第二行後不顯示
           child: SingleChildScrollView(
             physics: const NeverScrollableScrollPhysics(),
             child: Wrap(

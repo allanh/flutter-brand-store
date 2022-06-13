@@ -41,7 +41,6 @@ extension UdiColors on Colors {
   static Color get strongPink => const Color(0xffff0e89);
   static Color get pumpkinOrange => const Color(0xffff8500);
   static Color get pinkishGrey => const Color(0xffcccccc);
-  static Color get brownGreyTwo => const Color(0xffb4b4b4);
 
   /// 限時採購漸層色
   static LinearGradient get flashSaleGradient => LinearGradient(

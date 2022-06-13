@@ -69,7 +69,7 @@ class ProductEventView extends StatelessWidget {
                         style: Theme.of(context).textTheme.caption?.copyWith(
                               color: event.eventOnline == true
                                   ? UdiColors.pumpkinOrange
-                                  : UdiColors.brownGreyTwo,
+                                  : UdiColors.brownGrey2,
                               height: 1.4166,
                               fontSize: 12.0,
                             )))),
@@ -81,7 +81,7 @@ class ProductEventView extends StatelessWidget {
                 style: Theme.of(context).textTheme.caption?.copyWith(
                       color: event.eventOnline == true
                           ? UdiColors.pumpkinOrange
-                          : UdiColors.brownGreyTwo,
+                          : UdiColors.brownGrey2,
                       height: 1.4166,
                       fontSize: 12.0,
                     )))

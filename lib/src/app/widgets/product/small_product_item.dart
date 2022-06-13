@@ -94,7 +94,7 @@ class _SmallProductItemState extends State<SmallProductItem> {
                         fontSize: 12.0,
                         color: (SmallProductItemType.freebie == widget.type &&
                                 widget.product.freebieisEmpty)
-                            ? UdiColors.brownGreyTwo
+                            ? UdiColors.brownGrey2
                             : UdiColors.strawberry)))
           ],
         ));
@@ -110,7 +110,7 @@ class _SmallProductItemState extends State<SmallProductItem> {
               alignment: Alignment.topCenter,
               color: (SmallProductItemType.freebie == widget.type &&
                       widget.product.freebieisEmpty)
-                  ? UdiColors.brownGreyTwo
+                  ? UdiColors.brownGrey2
                   : null,
               colorBlendMode: BlendMode.modulate,
               errorWidget: (context, url, error) => const Icon(Icons.error),

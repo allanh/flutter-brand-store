@@ -20,7 +20,7 @@ class ProductItem extends StatelessWidget {
     int? _price;
     if (productId != null) {
       _price = product.getProudctInfo(productId!)?.proposedPrice;
-    } else {
+    } else if (product.productInfo?.isNotEmpty == true) {
       _price = product.productInfo?.first.proposedPrice;
     }
     return _price != null ? _price.toDollarString() : '無法取得價格';

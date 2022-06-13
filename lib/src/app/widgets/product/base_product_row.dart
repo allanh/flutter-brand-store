@@ -9,7 +9,7 @@ class BaseProductRow extends StatelessWidget {
       {Key? key,
       required this.title,
       required this.view,
-      this.onMoreTap,
+      this.moreTapped,
       this.marginTop})
       : super(key: key);
 
@@ -18,7 +18,7 @@ class BaseProductRow extends StatelessWidget {
   final double? marginTop;
 
   /// The callback that is called when the more icon is tapped.
-  final VoidCallback? onMoreTap;
+  final VoidCallback? moreTapped;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -42,12 +42,12 @@ class BaseProductRow extends StatelessWidget {
                       ?.copyWith(fontSize: 14.0, color: UdiColors.brownGrey))),
           // 內容
           Container(
-            width: SizeConfig.screenWidth - ((onMoreTap != null) ? 110 : 90),
+            width: SizeConfig.screenWidth - ((moreTapped != null) ? 110 : 90),
             padding: const EdgeInsets.symmetric(vertical: 12),
             child: view,
           ),
           // 更多按鈕
-          if (onMoreTap != null)
+          if (moreTapped != null)
             GestureDetector(
                 child: SizedBox(
                   width: 40,
@@ -58,7 +58,7 @@ class BaseProductRow extends StatelessWidget {
                     height: 20,
                   ),
                 ),
-                onTap: () => onMoreTap!()),
+                onTap: () => moreTapped!()),
         ],
       ));
 }
