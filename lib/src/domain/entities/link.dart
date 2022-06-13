@@ -40,6 +40,8 @@ enum LinkType {
   allEvent,
   @JsonValue('neweventview')
   event,
+  @JsonValue('coupon')
+  coupon
 }
 
 @JsonSerializable()
