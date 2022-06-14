@@ -3,6 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
 import '../../../../../data/repositories/member_center/data_invoice_setting_repository.dart';
+import '../../../../widgets/member_center/payment_setting/carrier_card.dart';
+import '../../../../widgets/member_center/payment_setting/citizen_digital_certification_carrier.dart';
+import '../../../../widgets/member_center/payment_setting/donation_invoice_carrier.dart';
+import '../../../../widgets/member_center/payment_setting/member_account_carrier.dart';
+import '../../../../widgets/member_center/payment_setting/mobile_carrier.dart';
+import '../../../../widgets/member_center/payment_setting/value_added_tax_carrier.dart';
 import 'invoice_setting_controller.dart';
 
 class InvoiceSettingPage extends View {
@@ -22,65 +28,107 @@ class _InvoiceSettingPageState
             DataInvoiceSettingRepository(),
           ),
         );
-  final List<int> _items = List<int>.generate(5, (int index) => index);
+
+  final List<CarrierCard> _carrierCards = <CarrierCard>[
+    /// 會員載具
+    CarrierCard(
+        key: const Key('0'),
+        item: MemberAccountCarrier(isDefault: true),
+        height: 120.0,
+        isSelected: true),
+
+    /// 個人-手機條碼載具
+    CarrierCard(
+        key: const Key('1'),
+        item: MobileCarrier(isDefault: false),
+        height: 171.0,
+        isSelected: false),
+
+    /// 個人-自然人憑證
+    CarrierCard(
+        key: const Key('2'),
+        item: CitizenDigitalCertificateCarrier(isDefault: false),
+        height: 190.0,
+        isSelected: false),
+
+    /// 公司-三聯式電子發票
+    CarrierCard(
+        key: const Key('3'),
+        item: ValueAddedTaxCarrier(isDefault: false),
+        height: 305.0,
+        isSelected: false),
+
+    /// 捐贈發票
+    CarrierCard(
+        key: const Key('4'),
+        item: DonationInvoiceCarrier(isDefault: false),
+        height: 290.0,
+        isSelected: false),
+  ];
+
+  void handleCarriers(int oldIndex, int newIndex) {
+    if (oldIndex < newIndex) {
+      newIndex -= 1;
+    }
+    final CarrierCard _carrier = _carrierCards.removeAt(oldIndex);
+    _carrierCards.insert(newIndex, _carrier);
+    _carrierCards.asMap().forEach((index, card) {
+      card.isSelected = index == 0;
+      if (card.item is DefaultCarrierInterface) {
+        (card.item as DefaultCarrierInterface).isDefault =
+            _carrierCards.indexOf(card) == 0;
+      }
+    });
+  }
+
+  Widget header = Builder(builder: (context) {
+    return Column(
+      children: [
+        const SizedBox(height: 12.0),
+        Text('結帳時，發票預設為會員載具，您可以設定其他常用的發票資料。',
+            style: Theme.of(context)
+                .textTheme
+                .caption
+                ?.copyWith(color: UdiColors.brownGrey)),
+        const SizedBox(height: 12.0),
+        Row(
+          children: [
+            Container(
+                color: Theme.of(context).appBarTheme.backgroundColor,
+                height: 24.0,
+                width: 4.0),
+            const SizedBox(
+              width: 6.0,
+            ),
+            Text('預設發票設定',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.copyWith(color: UdiColors.greyishBrown))
+          ],
+        ),
+        const SizedBox(height: 12.0),
+      ],
+    );
+  });
+
   @override
   Widget get view {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    final Color oddItemColor = colorScheme.primary.withOpacity(0.05);
-    final Color evenItemColor = colorScheme.primary.withOpacity(0.15);
     return ControlledWidgetBuilder<InvoiceSettingController>(
         builder: (context, controller) {
       return Scaffold(
-          appBar: AppBar(
-            title: const Text('發票設定'),
-          ),
+          appBar: AppBar(title: const Text('發票設定')),
           body: ReorderableListView(
-            header: Column(
-              children: [
-                const SizedBox(height: 12.0),
-                Text('結帳時，發票預設為會員載具，您可以設定其他常用的發票資料。',
-                    style: Theme.of(context)
-                        .textTheme
-                        .caption
-                        ?.copyWith(color: UdiColors.brownGrey)),
-                const SizedBox(height: 12.0),
-                Row(
-                  children: [
-                    Container(
-                        color: Theme.of(context).appBarTheme.backgroundColor,
-                        height: 24.0,
-                        width: 4.0),
-                    const SizedBox(
-                      width: 6.0,
-                    ),
-                    Text('預設發票設定',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge
-                            ?.copyWith(color: UdiColors.greyishBrown))
-                  ],
-                ),
-                const SizedBox(height: 12.0),
-              ],
-            ),
+            proxyDecorator: (child, index, animation) {
+              CarrierCard card = _carrierCards[index];
+              card.isSelected = true;
+              return card;
+            },
+            header: header,
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            children: <Widget>[
-              for (int index = 0; index < _items.length; index += 1)
-                ListTile(
-                  key: Key('$index'),
-                  tileColor: _items[index].isOdd ? oddItemColor : evenItemColor,
-                  title: Text('Item ${_items[index]}'),
-                  trailing: const Icon(Icons.drag_handle),
-                ),
-            ],
+            children: _carrierCards,
             onReorder: (int oldIndex, int newIndex) {
-              setState(() {
-                if (oldIndex < newIndex) {
-                  newIndex -= 1;
-                }
-                final int item = _items.removeAt(oldIndex);
-                _items.insert(newIndex, item);
-              });
+              setState(() => handleCarriers(oldIndex, newIndex));
             },
           ));
     });
