@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
 import '../../../../../data/repositories/member_center/data_invoice_setting_repository.dart';
-import '../../../../widgets/member_center/payment_setting/carrier_card.dart';
+import '../../../../widgets/member_center/payment_setting/reorderable_card.dart';
 import '../../../../widgets/member_center/payment_setting/citizen_digital_certification_carrier.dart';
 import '../../../../widgets/member_center/payment_setting/donation_invoice_carrier.dart';
 import '../../../../widgets/member_center/payment_setting/member_account_carrier.dart';
@@ -29,37 +29,37 @@ class _InvoiceSettingPageState
           ),
         );
 
-  final List<CarrierCard> _carrierCards = <CarrierCard>[
+  final List<ReorderableCard> _carrierCards = <ReorderableCard>[
     /// 會員載具
-    CarrierCard(
+    ReorderableCard(
         key: const Key('0'),
-        item: MemberAccountCarrier(isDefault: true),
+        item: MemberAccountCarrier(isDefault: true, id: '202021211345'),
         height: 120.0,
         isSelected: true),
 
     /// 個人-手機條碼載具
-    CarrierCard(
+    ReorderableCard(
         key: const Key('1'),
         item: MobileCarrier(isDefault: false),
         height: 171.0,
         isSelected: false),
 
     /// 個人-自然人憑證
-    CarrierCard(
+    ReorderableCard(
         key: const Key('2'),
         item: CitizenDigitalCertificateCarrier(isDefault: false),
         height: 190.0,
         isSelected: false),
 
     /// 公司-三聯式電子發票
-    CarrierCard(
+    ReorderableCard(
         key: const Key('3'),
         item: ValueAddedTaxCarrier(isDefault: false),
         height: 305.0,
         isSelected: false),
 
     /// 捐贈發票
-    CarrierCard(
+    ReorderableCard(
         key: const Key('4'),
         item: DonationInvoiceCarrier(isDefault: false),
         height: 290.0,
@@ -70,7 +70,7 @@ class _InvoiceSettingPageState
     if (oldIndex < newIndex) {
       newIndex -= 1;
     }
-    final CarrierCard _carrier = _carrierCards.removeAt(oldIndex);
+    final ReorderableCard _carrier = _carrierCards.removeAt(oldIndex);
     _carrierCards.insert(newIndex, _carrier);
     _carrierCards.asMap().forEach((index, card) {
       card.isSelected = index == 0;
@@ -118,18 +118,24 @@ class _InvoiceSettingPageState
         builder: (context, controller) {
       return Scaffold(
           appBar: AppBar(title: const Text('發票設定')),
-          body: ReorderableListView(
-            proxyDecorator: (child, index, animation) {
-              CarrierCard card = _carrierCards[index];
-              card.isSelected = true;
-              return card;
-            },
-            header: header,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            children: _carrierCards,
-            onReorder: (int oldIndex, int newIndex) {
-              setState(() => handleCarriers(oldIndex, newIndex));
-            },
+          body: Padding(
+            padding: const EdgeInsets.only(bottom: 44.0),
+            child: ReorderableListView(
+              proxyDecorator: (child, index, animation) {
+                return Material(
+                  child: Container(
+                    transform: Matrix4.identity()..scale(1.01, 1.05),
+                    child: child,
+                  ),
+                );
+              },
+              header: header,
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              children: _carrierCards,
+              onReorder: (int oldIndex, int newIndex) {
+                setState(() => handleCarriers(oldIndex, newIndex));
+              },
+            ),
           ));
     });
   }

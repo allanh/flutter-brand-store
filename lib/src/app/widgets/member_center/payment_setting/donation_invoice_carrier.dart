@@ -1,8 +1,10 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 
 import '../../../../device/utils/my_plus_colors.dart';
 import 'carrier_action_buttons.dart';
-import 'carrier_card.dart';
+import 'reorderable_card.dart';
 import 'default_indicator.dart';
 
 enum DonationType { genesis, jtf, other }
@@ -52,6 +54,28 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
 
   @override
   Widget build(BuildContext context) {
+    Text _searchButtonTitle = Text(
+      '捐贈碼查詢',
+      style: TextStyle(
+          fontSize: 12.0,
+          fontWeight: FontWeight.normal,
+          color: Theme.of(context).appBarTheme.backgroundColor),
+    );
+
+    Text _donationTitle = const Text(
+      '捐贈發票',
+      style: TextStyle(fontSize: 14.0),
+    );
+
+    Text _hintTitle = const Text(
+      '請選擇欲捐贈的機構',
+      style: TextStyle(fontSize: 12.0, color: UdiColors.brownGrey),
+    );
+
+    void handleClose() {}
+
+    void handleReset() {}
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Column(
@@ -60,12 +84,13 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('捐贈發票', style: TextStyle(fontSize: 14.0)),
-              CloseButton(onPressed: () {})
+              _donationTitle,
+              CloseButton(
+                onPressed: handleClose,
+              ),
             ],
           ),
-          const Text('請選擇欲捐贈的機構',
-              style: TextStyle(fontSize: 12.0, color: UdiColors.brownGrey)),
+          _hintTitle,
           const SizedBox(height: 10.0),
           _buildCheckboxOption(context, DonationType.genesis,
               title: '創世基金會', value: isGenesisChecked),
@@ -84,24 +109,23 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
                 child: TextField(
                   cursorColor: UdiColors.veryLightGrey2,
                   decoration: InputDecoration(
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 18.0),
-                      hintText: '請輸入捐贈碼',
-                      hintStyle: const TextStyle(
-                          fontSize: 12.0, color: UdiColors.brownGrey2),
-                      border: _buildTextFieldBorder(),
-                      enabledBorder: _buildTextFieldBorder(),
-                      focusedBorder: _buildTextFieldBorder()),
+                    contentPadding:
+                        const EdgeInsets.symmetric(horizontal: 18.0),
+                    hintText: '請輸入捐贈碼',
+                    hintStyle: const TextStyle(
+                      fontSize: 12.0,
+                      color: UdiColors.brownGrey2,
+                    ),
+                    border: _buildTextFieldBorder(),
+                    enabledBorder: _buildTextFieldBorder(),
+                    focusedBorder: _buildTextFieldBorder(),
+                  ),
                 ),
               ),
             ),
             const SizedBox(width: 12.0),
             InkWell(
-              child: Text('捐贈碼查詢',
-                  style: TextStyle(
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.normal,
-                      color: Theme.of(context).appBarTheme.backgroundColor)),
+              child: _searchButtonTitle,
               onTap: () {},
             ),
           ]),
@@ -113,9 +137,17 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
             children: widget.isDefault
                 ? [
                     const DefaultIndicator(),
-                    const CarrierActionButtons(),
+                    CarrierActionButtons(
+                      handleReset: handleReset,
+                      handleSubmit: null,
+                    ),
                   ]
-                : [const CarrierActionButtons()],
+                : [
+                    CarrierActionButtons(
+                      handleReset: handleReset,
+                      handleSubmit: null,
+                    ),
+                  ],
           )
         ],
       ),
@@ -124,15 +156,19 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
 
   SizedBox _buildCheckboxOption(BuildContext context, DonationType type,
       {bool value = false, String title = ''}) {
+    TextStyle style = Theme.of(context)
+        .textTheme
+        .caption!
+        .copyWith(color: UdiColors.greyishBrown);
+
     return SizedBox(
       height: 24.0,
       child: Row(children: [
         _buildCheckbox(context, type, handleCheckedValues, value: value),
-        Text(title,
-            style: Theme.of(context)
-                .textTheme
-                .caption
-                ?.copyWith(color: UdiColors.greyishBrown)),
+        Text(
+          title,
+          style: style,
+        ),
       ]),
     );
   }
@@ -140,6 +176,10 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
   Checkbox _buildCheckbox(BuildContext context, DonationType type,
       Function(bool, bool, bool) handleCheckedValues,
       {bool value = false}) {
+    Color selectedColor = value
+        ? Theme.of(context).appBarTheme.backgroundColor!
+        : UdiColors.brownGrey2;
+
     return Checkbox(
         visualDensity: VisualDensity.compact,
         shape: RoundedRectangleBorder(
@@ -147,10 +187,9 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
         ),
         side: MaterialStateBorderSide.resolveWith(
           (states) => BorderSide(
-              width: 1.0,
-              color: value
-                  ? Theme.of(context).appBarTheme.backgroundColor!
-                  : UdiColors.brownGrey2),
+            width: 1.0,
+            color: selectedColor,
+          ),
         ),
         fillColor: MaterialStateProperty.resolveWith(getColor),
         value: value,
@@ -167,8 +206,8 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
 
   OutlineInputBorder _buildTextFieldBorder() {
     return OutlineInputBorder(
-        borderSide:
-            const BorderSide(color: UdiColors.veryLightGrey2, width: 1.0),
-        borderRadius: BorderRadius.circular(4.0));
+      borderSide: const BorderSide(color: UdiColors.veryLightGrey2, width: 1.0),
+      borderRadius: BorderRadius.circular(4.0),
+    );
   }
 }

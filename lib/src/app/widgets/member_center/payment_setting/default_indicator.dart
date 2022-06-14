@@ -10,8 +10,13 @@ class DefaultIndicator extends StatelessWidget {
       height: 18.0,
       color: Theme.of(context).appBarTheme.backgroundColor,
       child: const Center(
-          child: Text('預設',
-              style: TextStyle(color: Colors.white, fontSize: 12.0))),
+          child: Text(
+        '預設',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 12.0,
+        ),
+      )),
     );
   }
 }
