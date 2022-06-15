@@ -125,7 +125,11 @@ class _InvoiceSettingPageState
                 return Material(
                   child: Container(
                     transform: Matrix4.identity()..scale(1.01, 1.05),
-                    child: child,
+                    child: ReorderableCard(
+                      isSelected: true,
+                      height: _carrierCards[index].height,
+                      item: _carrierCards[index].item,
+                    ),
                   ),
                 );
               },
