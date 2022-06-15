@@ -30,8 +30,8 @@ class ProductIntroductionWidget extends StatelessWidget {
                   child: Column(
                     children: [
                       // 第一張商品圖片
-                      if (product.firstImage?.isNotEmpty == true)
-                        _image(product.firstImage!),
+                      if (product.firstImage != null)
+                        _image(product.firstImage),
                       const SizedBox(height: 16),
                       Container(
                         color: Colors.white,

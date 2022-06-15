@@ -43,18 +43,20 @@ class ProductItemWidget extends StatelessWidget {
                     aspectRatio: 1,
                     child: Stack(
                       children: [
-                        _buildProductImage(product.firstImage),
+                        _buildProductImage(product.imageUrl),
                       ],
                     )),
 
                 const SizedBox(height: 8),
                 if (product.name != null)
-                  Text(product.name!,
-                      maxLines: 2,
-                      style: Theme.of(context).textTheme.caption?.copyWith(
-                          height: 1.714, // 24pt
-                          fontSize: 14.0,
-                          color: UdiColors.greyishBrown)),
+                  SizedBox(
+                      height: 48,
+                      child: Text(product.name!,
+                          maxLines: 2,
+                          style: Theme.of(context).textTheme.caption?.copyWith(
+                              height: 1.714, // 24pt
+                              fontSize: 14.0,
+                              color: UdiColors.greyishBrown))),
 
                 //const SizedBox(height: 8),
                 // 商品價格

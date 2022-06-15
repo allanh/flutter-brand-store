@@ -265,10 +265,9 @@ class Product {
   Map<String, dynamic> toJson() => _$ProductToJson(this);
 
   /// 第一張圖片
-  String? get firstImage => imageInfo
-      ?.firstWhereOrNull(
-          (element) => element.url != null && element.type == ImageType.image)
-      ?.imageUrl;
+  String? get firstImage => imageList
+      ?.firstWhereOrNull((element) => element.type == ImageType.image)
+      ?.url;
 
   /// 非空值的圖片或影片列表
   List<MyPlusImageInfo>? get imageList =>

@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
-
-import '../../pages/home/home_controller.dart';
-
-import '../../../domain/entities/module/module.dart';
 
 class ProudctVideoWidget extends StatefulWidget {
   const ProudctVideoWidget({
     Key? key,
-    required this.module,
+    required this.videoId,
   }) : super(key: key);
-  final Module module;
+  final String videoId;
 
   @override
   State<StatefulWidget> createState() => _ProudctVideoWidgetState();
@@ -24,7 +19,7 @@ class _ProudctVideoWidgetState extends State<ProudctVideoWidget> {
   void initState() {
     super.initState();
     _controller = YoutubePlayerController(
-      initialVideoId: widget.module.youtubeUrl ?? ' ',
+      initialVideoId: widget.videoId,
       flags: const YoutubePlayerFlags(
         mute: false,
         autoPlay: false,
@@ -53,6 +48,50 @@ class _ProudctVideoWidgetState extends State<ProudctVideoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.shrink();
+    return YoutubePlayerBuilder(
+      player: YoutubePlayer(
+        controller: _controller,
+        showVideoProgressIndicator: true,
+        progressIndicatorColor: Colors.blueAccent,
+        actionsPadding: const EdgeInsets.only(left: 16.0),
+        bottomActions: [
+          CurrentPosition(),
+          const SizedBox(width: 10.0),
+          ProgressBar(isExpanded: true),
+          const SizedBox(width: 10.0),
+          RemainingDuration(),
+          //FullScreenButton(),
+        ],
+        onReady: () {
+          _isPlayerReady = true;
+        },
+      ),
+      builder: (context, player) {
+        return Column(
+          children: [
+            Stack(
+              children: [
+                player,
+                IconButton(
+                  icon: Icon(
+                    _controller.value.isPlaying
+                        ? Icons.pause
+                        : Icons.play_arrow,
+                  ),
+                  onPressed: _isPlayerReady
+                      ? () {
+                          _controller.value.isPlaying
+                              ? _controller.pause()
+                              : _controller.play();
+                          setState(() {});
+                        }
+                      : null,
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
   }
 }

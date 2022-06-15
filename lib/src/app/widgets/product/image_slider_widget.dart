@@ -1,3 +1,4 @@
+import 'package:brandstores/src/app/widgets/product/product_video_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -28,7 +29,7 @@ class _ImageSliderWidgetState extends State<ImageSliderWidget> {
                 aspectRatio: 1,
                 viewportFraction: 1.0,
                 enableInfiniteScroll: false,
-                //enlargeCenterPage: false,
+                enlargeCenterPage: true,
                 onPageChanged: (index, reason) {
                   setState(() {
                     _current = index;
@@ -45,10 +46,16 @@ class _ImageSliderWidgetState extends State<ImageSliderWidget> {
   List<Widget> get _items => widget.imageList.map((item) {
         return Builder(
           builder: (BuildContext context) {
-            return SizedBox(
+            return Container(
                 width: SizeConfig.screenWidth,
+                decoration: BoxDecoration(
+                    color: ImageType.video == item.type
+                        ? Colors.black
+                        : Colors.white),
                 child: ImageType.video == item.type
-                    ? getVideo(item.url!)
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [getVideo(item.url!)])
                     : getImage(item.url!));
           },
         );
@@ -63,8 +70,8 @@ class _ImageSliderWidgetState extends State<ImageSliderWidget> {
       );
 
   /// 影片
-  Widget getVideo(String url) => VideoWidget(
-        module: Module(ModuleType.video, 0, 0, 0, false, ''),
+  Widget getVideo(String videoId) => ProudctVideoWidget(
+        videoId: videoId,
       );
 
   /// 小圓點
