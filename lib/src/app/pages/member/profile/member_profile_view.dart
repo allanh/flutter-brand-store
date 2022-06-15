@@ -1,4 +1,4 @@
-import 'package:brandstores/src/app/pages/member_center/profile/member_profile_controller.dart';
+import 'package:brandstores/src/app/pages/member/profile/member_profile_controller.dart';
 import 'package:brandstores/src/app/utils/constants.dart';
 import 'package:brandstores/src/app/widgets/member_center/account_change/result_description_view.dart';
 import 'package:brandstores/src/data/repositories/data_member_profile_repository.dart';

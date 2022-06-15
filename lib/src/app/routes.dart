@@ -14,18 +14,18 @@ import 'pages/auth/password/forget_password_view.dart';
 import 'pages/auth/password/otp_view.dart';
 import 'pages/auth/password/reset_password_view.dart';
 import 'pages/auth/register/register_view.dart';
-import 'pages/member_center/payment_setting/invoice_setting/invoice_setting_view.dart';
 import 'pages/static_view.dart';
 import 'pages/helper_center/article/article_view.dart';
 import 'pages/helper_center/bulletin/bulletin_view.dart';
 import 'pages/helper_center/faq/faq_view.dart';
 import 'pages/helper_center/helper_center_view.dart';
 import 'pages/product/product_view.dart';
-import 'pages/member_center/products/member_products_view.dart';
-import 'pages/member_center/profile/member_profile_view.dart';
-import 'pages/member_center/level_description/level_description_view.dart';
-import 'pages/member_center/account_change/account_change_view.dart';
-import 'pages/member_center/payment_setting/payment_setting_view.dart';
+import 'pages/member/profile/member_profile_view.dart';
+import 'pages/member/level/level_description_view.dart';
+import 'pages/member/account_change/account_change_view.dart';
+import 'pages/member/products/member_products_view.dart';
+import 'pages/member/checkout_setting/invoice/invoice_setting_view.dart';
+import 'pages/member/checkout_setting/checkout_setting_view.dart';
 
 class MyPlusRouter {
   final LoginState loginState;
@@ -211,7 +211,7 @@ class MyPlusRouter {
         path: '/history-products',
         pageBuilder: (context, state) => MaterialPage<void>(
             key: state.pageKey,
-            child: MemberProductsPage(type: MemberProductsType.bought)),
+            child: MemberProductsPage(type: MemberProductsType.history)),
       ),
 
       /// 會員資料
@@ -252,10 +252,10 @@ class MyPlusRouter {
 
       /// 結帳設定
       GoRoute(
-        name: paymentSettingRouteName,
-        path: '/payment-setting',
+        name: checkoutSettingRouteName,
+        path: '/checkout-setting',
         pageBuilder: (context, state) => MaterialPage<void>(
-            key: state.pageKey, child: const PaymentSettingPage()),
+            key: state.pageKey, child: const CheckoutSettingPage()),
       ),
 
       /// 發票設定

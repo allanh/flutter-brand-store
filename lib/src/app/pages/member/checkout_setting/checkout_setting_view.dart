@@ -4,20 +4,20 @@ import 'package:go_router/go_router.dart';
 
 import '../../../utils/constants.dart';
 
-enum PaymentSettingType { credit, address, store, invoice }
+enum CheckoutSettingType { credit, address, store, invoice }
 
-class PaymentSettingPage extends StatelessWidget {
-  const PaymentSettingPage({Key? key}) : super(key: key);
+class CheckoutSettingPage extends StatelessWidget {
+  const CheckoutSettingPage({Key? key}) : super(key: key);
 
-  void handleOpenPage(BuildContext context, PaymentSettingType type) {
+  void handleOpenPage(BuildContext context, CheckoutSettingType type) {
     switch (type) {
-      case PaymentSettingType.credit:
+      case CheckoutSettingType.credit:
         break;
-      case PaymentSettingType.address:
+      case CheckoutSettingType.address:
         break;
-      case PaymentSettingType.store:
+      case CheckoutSettingType.store:
         break;
-      case PaymentSettingType.invoice:
+      case CheckoutSettingType.invoice:
         context.pushNamed(invoiceSettingRouteName);
         break;
     }
@@ -40,19 +40,19 @@ class PaymentSettingPage extends StatelessWidget {
         body: ListView(
           children: [
             _buildListTile(
-                context, '常用信用卡', PaymentSettingType.credit, handleOpenPage,
+                context, '常用信用卡', CheckoutSettingType.credit, handleOpenPage,
                 badge: 4123),
             const Divider(thickness: 1.0, color: UdiColors.veryLightGrey2),
             _buildListTile(
-                context, '常用收件地址', PaymentSettingType.address, handleOpenPage,
+                context, '常用收件地址', CheckoutSettingType.address, handleOpenPage,
                 badge: 120),
             const Divider(thickness: 1.0, color: UdiColors.veryLightGrey2),
             _buildListTile(
-                context, '常用超商門市', PaymentSettingType.store, handleOpenPage,
+                context, '常用超商門市', CheckoutSettingType.store, handleOpenPage,
                 badge: 1067894567),
             const Divider(thickness: 1.0, color: UdiColors.veryLightGrey2),
             _buildListTile(
-                context, '發票設定', PaymentSettingType.invoice, handleOpenPage,
+                context, '發票設定', CheckoutSettingType.invoice, handleOpenPage,
                 badge: 10),
             const Divider(thickness: 1.0, color: UdiColors.veryLightGrey2),
           ],
@@ -60,7 +60,7 @@ class PaymentSettingPage extends StatelessWidget {
   }
 
   SizedBox _buildListTile(BuildContext context, String title,
-      PaymentSettingType type, Function handleOpenPage,
+      CheckoutSettingType type, Function handleOpenPage,
       {int badge = 0}) {
     List<Widget> items = [
       const Icon(Icons.arrow_forward_ios_rounded,

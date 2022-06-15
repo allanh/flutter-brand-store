@@ -89,7 +89,7 @@ class _MemberCenterPageState
           context.pushNamed(memberInfoRouteName);
           break;
         case LinkType.fastcheckout:
-          context.pushNamed(paymentSettingRouteName);
+          context.pushNamed(checkoutSettingRouteName);
           break;
         default:
           break;

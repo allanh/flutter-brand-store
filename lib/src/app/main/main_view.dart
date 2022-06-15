@@ -7,7 +7,7 @@ import './main_controller.dart';
 import '../../data/repositories/data_site_setting_repository.dart';
 import '../drawer/my_plus_drawer_view.dart';
 import '../pages/home/home_view.dart';
-import '../pages/member_center/member_center_view.dart';
+import '../pages/member/center/member_center_view.dart';
 import '../../domain/entities/site_setting/layout_setting/sidebar.dart';
 import '../utils/constants.dart';
 

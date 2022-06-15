@@ -3,7 +3,7 @@ import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 
-import 'package:brandstores/src/app/pages/member_center/account_change/account_change_controller.dart';
+import 'package:brandstores/src/app/pages/member/account_change/account_change_controller.dart';
 
 import 'package:brandstores/src/data/repositories/data_account_change_repository.dart';
 

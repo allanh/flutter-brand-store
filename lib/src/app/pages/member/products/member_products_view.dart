@@ -4,7 +4,7 @@ import 'package:brandstores/src/domain/entities/member_center/member_products/me
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
-import 'package:brandstores/src/app/pages/member_center/products/member_products_controller.dart';
+import 'package:brandstores/src/app/pages/member/products/member_products_controller.dart';
 import 'package:brandstores/src/data/repositories/data_member_products_repository.dart';
 import 'package:go_router/go_router.dart';
 
