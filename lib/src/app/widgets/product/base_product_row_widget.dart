@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import '../../../device/utils/my_plus_colors.dart';
 
 /// 促銷活動
-class BaseProductRow extends StatelessWidget {
-  const BaseProductRow(
+class BaseProductRowWidget extends StatelessWidget {
+  const BaseProductRowWidget(
       {Key? key,
       required this.title,
       required this.view,

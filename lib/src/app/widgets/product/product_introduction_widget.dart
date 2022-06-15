@@ -4,11 +4,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../domain/entities/product/product.dart';
-import 'product_divider.dart';
+import 'product_divider_widget.dart';
 
 /// 商品介紹
-class ProductIntroduction extends StatelessWidget {
-  const ProductIntroduction({Key? key, required this.product})
+class ProductIntroductionWidget extends StatelessWidget {
+  const ProductIntroductionWidget({Key? key, required this.product})
       : super(key: key);
 
   final Product product;
@@ -30,8 +30,8 @@ class ProductIntroduction extends StatelessWidget {
                   child: Column(
                     children: [
                       // 第一張商品圖片
-                      if (product.imageList?.isNotEmpty == true)
-                        _image(product.imageList!.first),
+                      if (product.firstImage?.isNotEmpty == true)
+                        _image(product.firstImage!),
                       const SizedBox(height: 16),
                       Container(
                         color: Colors.white,
@@ -91,7 +91,7 @@ class ProductIntroduction extends StatelessWidget {
         const SizedBox(
           height: 10,
         ),
-        ProductDivider(
+        ProductDividerWidget(
           dividerWidth: SizeConfig.screenWidth,
         )
       ]));

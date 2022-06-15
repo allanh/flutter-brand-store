@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:brandstores/src/app/utils/constants.dart';
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +10,7 @@ enum CountDownType {
   flashSale // 限時搶購
 }
 
-class EventCountDownTimer extends StatefulWidget {
+class EventCountDownTimerWidget extends StatefulWidget {
   /// 倒數類型
   final CountDownType type;
 
@@ -22,7 +21,7 @@ class EventCountDownTimer extends StatefulWidget {
   // 標語
   final String? slogan;
 
-  const EventCountDownTimer(
+  const EventCountDownTimerWidget(
       {Key? key,
       required this.type,
       required this.duration,
@@ -31,10 +30,10 @@ class EventCountDownTimer extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _EventCountDownTimerState();
+  State<StatefulWidget> createState() => _EventCountDownTimerWidgetState();
 }
 
-class _EventCountDownTimerState extends State<EventCountDownTimer> {
+class _EventCountDownTimerWidgetState extends State<EventCountDownTimerWidget> {
   Timer? _timer;
   Duration _duration = const Duration();
   int get _day => _duration.inHours ~/ 24;

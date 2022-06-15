@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../domain/entities/product/event.dart';
 
 /// 促銷活動列
-class ProductEventsView extends StatelessWidget {
-  const ProductEventsView({Key? key, required this.eventList})
+class ProductEventsWidget extends StatelessWidget {
+  const ProductEventsWidget({Key? key, required this.eventList})
       : super(key: key);
 
   final List<Event> eventList;
@@ -14,7 +14,7 @@ class ProductEventsView extends StatelessWidget {
     List<Widget> list = [];
     for (var event in eventList) {
       if (event.discountWording != null) {
-        list.add(ProductEventView(event: event));
+        list.add(ProductEventWidget(event: event));
       }
     }
     // 最多顯示兩筆
@@ -35,8 +35,8 @@ class ProductEventsView extends StatelessWidget {
 }
 
 /// 單一促銷活動
-class ProductEventView extends StatelessWidget {
-  const ProductEventView({Key? key, required this.event}) : super(key: key);
+class ProductEventWidget extends StatelessWidget {
+  const ProductEventWidget({Key? key, required this.event}) : super(key: key);
 
   final Event event;
 

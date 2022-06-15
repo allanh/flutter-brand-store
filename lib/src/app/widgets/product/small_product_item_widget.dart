@@ -1,16 +1,14 @@
-import 'package:brandstores/src/app/utils/screen_config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../device/utils/my_plus_colors.dart';
 import '../../../domain/entities/product/product.dart';
 import '../../../extension/num_extension.dart';
-import 'selected_border.dart';
 
 // 商品類型
 enum SmallProductItemType { addon, freebie }
 
-class SmallProductItem extends StatefulWidget {
+class SmallProductItemWidget extends StatefulWidget {
   /// The callback that is called when the countdown timer is ended.
   final Product product;
   final SmallProductItemType type;
@@ -18,15 +16,15 @@ class SmallProductItem extends StatefulWidget {
   //final ValueChanged<bool>? isSelected;
   final ValueChanged<Product>? onTapItem;
 
-  const SmallProductItem(
+  const SmallProductItemWidget(
       {Key? key, required this.product, required this.type, this.onTapItem})
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _SmallProductItemState();
+  State<StatefulWidget> createState() => _SmallProductItemWidgetState();
 }
 
-class _SmallProductItemState extends State<SmallProductItem> {
+class _SmallProductItemWidgetState extends State<SmallProductItemWidget> {
   //bool _isSelected = false;
 
   // 圖片網址

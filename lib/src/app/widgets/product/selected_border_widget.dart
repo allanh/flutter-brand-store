@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-class SelectedBorder extends StatelessWidget {
-  const SelectedBorder({Key? key, required this.isSelected}) : super(key: key);
+class SelectedBorderWidget extends StatelessWidget {
+  const SelectedBorderWidget({Key? key, required this.isSelected})
+      : super(key: key);
 
   final bool isSelected;
 

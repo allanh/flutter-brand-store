@@ -3,8 +3,9 @@ import 'package:brandstores/src/domain/entities/product/shipped_method.dart';
 import 'package:flutter/material.dart';
 
 /// 付款列
-class ProductShipped extends StatelessWidget {
-  const ProductShipped({Key? key, required this.methods}) : super(key: key);
+class ProductShippedWidget extends StatelessWidget {
+  const ProductShippedWidget({Key? key, required this.methods})
+      : super(key: key);
 
   final List<ShippedMethod> methods;
 

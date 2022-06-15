@@ -5,8 +5,9 @@ import '../../../domain/entities/product/payment.dart';
 import '../../../extension/num_extension.dart';
 
 /// 付款列
-class ProductPayment extends StatelessWidget {
-  const ProductPayment({Key? key, required this.price, required this.info})
+class ProductPaymentWidget extends StatelessWidget {
+  const ProductPaymentWidget(
+      {Key? key, required this.price, required this.info})
       : super(key: key);
 
   final int price;

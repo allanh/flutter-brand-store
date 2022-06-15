@@ -4,8 +4,8 @@ import '../../../device/utils/my_plus_colors.dart';
 import '../../utils/constants.dart';
 
 /// App 獨享價列
-class PromotionPriceView extends StatelessWidget {
-  const PromotionPriceView({Key? key, required this.promotionPrice})
+class PromotionPriceWidget extends StatelessWidget {
+  const PromotionPriceWidget({Key? key, required this.promotionPrice})
       : super(key: key);
 
   final int promotionPrice;

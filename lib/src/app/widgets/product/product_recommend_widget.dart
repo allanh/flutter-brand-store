@@ -1,13 +1,13 @@
-import 'package:brandstores/src/app/utils/screen_config.dart';
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:flutter/material.dart';
 
 import '../../../domain/entities/link.dart';
 import '../../../domain/entities/product/product.dart';
-import 'product_item.dart';
+import 'product_item_widget.dart';
 
-class ProductRecommend extends StatelessWidget {
-  const ProductRecommend({Key? key, required this.recomList, this.onTapItem})
+class ProductRecommendWidget extends StatelessWidget {
+  const ProductRecommendWidget(
+      {Key? key, required this.recomList, this.onTapItem})
       : super(key: key);
 
   final List<Product> recomList;
@@ -34,7 +34,7 @@ class ProductRecommend extends StatelessWidget {
                   padding: EdgeInsets.only(
                       left: index == 0 ? 12 : 0,
                       right: index == (recomList.length - 1) ? 12 : 0),
-                  child: ProductItem(
+                  child: ProductItemWidget(
                     product: recomList[index],
                     onTapItem: (link) => {
                       if (onTapItem != null)

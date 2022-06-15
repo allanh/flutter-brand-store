@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../../../device/utils/my_plus_colors.dart';
 
-class ProductDivider extends StatelessWidget {
-  const ProductDivider({Key? key, this.dividerWidth}) : super(key: key);
+class ProductDividerWidget extends StatelessWidget {
+  const ProductDividerWidget({Key? key, this.dividerWidth}) : super(key: key);
 
   final double? dividerWidth;
 

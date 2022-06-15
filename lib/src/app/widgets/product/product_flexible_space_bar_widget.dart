@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../../domain/entities/product/product.dart';
-import 'image_slider.dart';
-import 'promotion_tag.dart';
+import 'image_slider_widget.dart';
+import 'promotion_tag_widget.dart';
 
-class ProductFlexibleSpaceBar extends StatelessWidget {
-  const ProductFlexibleSpaceBar({Key? key, this.product}) : super(key: key);
+class ProductFlexibleSpaceBarWidget extends StatelessWidget {
+  const ProductFlexibleSpaceBarWidget({Key? key, this.product})
+      : super(key: key);
 
   final Product? product;
 
@@ -33,10 +34,10 @@ class ProductFlexibleSpaceBar extends StatelessWidget {
                 padding: EdgeInsets.only(top: _statusBarHeight),
                 child: (product != null)
                     ? Stack(children: [
-                        ImageSlider(imageList: product!.imageInfo ?? []),
+                        ImageSliderWidget(imageList: product!.imageList ?? []),
                         // 圖標
                         if (product!.productInfo!.isNotEmpty == true)
-                          PromotionTagsView(product: product!),
+                          PromotionTagsWidget(product: product!),
                       ])
                     : const Center(child: CircularProgressIndicator()),
               ),

@@ -6,7 +6,7 @@ import '../../utils/screen_config.dart';
 import '../udi_style/udi_button.dart';
 
 /// 底部按鈕列
-class ProductBottomBar extends StatelessWidget {
+class ProductBottomBarWidget extends StatelessWidget {
   final Product product;
 
   /// The callback that is called when the favorite icon is tapped.
@@ -18,7 +18,7 @@ class ProductBottomBar extends StatelessWidget {
   /// The callback that is called when the buyNow button is tapped.
   final VoidCallback? buyNowTapped;
 
-  const ProductBottomBar(
+  const ProductBottomBarWidget(
       {Key? key,
       required this.product,
       this.favoriteTapped,

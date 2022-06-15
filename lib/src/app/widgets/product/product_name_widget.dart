@@ -7,8 +7,8 @@ import '../../../extension/num_extension.dart';
 import '../../utils/screen_config.dart';
 
 /// 單一圖標
-class ProductName extends StatelessWidget {
-  const ProductName({Key? key, required this.product}) : super(key: key);
+class ProductNameWidget extends StatelessWidget {
+  const ProductNameWidget({Key? key, required this.product}) : super(key: key);
 
   final Product? product;
 

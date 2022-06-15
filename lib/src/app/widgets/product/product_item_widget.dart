@@ -6,12 +6,12 @@ import '../../../domain/entities/product/product.dart';
 import '../../../extension/num_extension.dart';
 import '../member/center/horizontal_product_list_card.dart';
 
-class ProductItem extends StatelessWidget {
+class ProductItemWidget extends StatelessWidget {
   final Product product;
   final int? productId;
   final ValueChanged<Product>? onTapItem;
 
-  const ProductItem(
+  const ProductItemWidget(
       {Key? key, required this.product, this.productId, this.onTapItem})
       : super(key: key);
 
@@ -43,7 +43,7 @@ class ProductItem extends StatelessWidget {
                     aspectRatio: 1,
                     child: Stack(
                       children: [
-                        _buildProductImage(product.imageList?.first),
+                        _buildProductImage(product.firstImage),
                       ],
                     )),
 

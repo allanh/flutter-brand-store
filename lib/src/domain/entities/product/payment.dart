@@ -67,7 +67,7 @@ class StagingInfo {
   // 每月付款帳單，每期x元
   int calculateMonthlyPayment(int price) {
     if (stage != 0) {
-      return ((price * (1 + (fee ?? 0) / 100)) / stage!.toDouble()).floor();
+      return ((price * (1 + (fee ?? 0) / 100)) / stage!.toDouble()).ceil();
     } else {
       return price;
     }

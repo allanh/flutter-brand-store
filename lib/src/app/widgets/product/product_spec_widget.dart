@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import '../../../domain/entities/product/product.dart';
 
 /// 促銷活動列
-class ProductSpecView extends StatelessWidget {
-  const ProductSpecView({Key? key, required this.product}) : super(key: key);
+class ProductSpecWidget extends StatelessWidget {
+  const ProductSpecWidget({Key? key, required this.product}) : super(key: key);
 
   final Product product;
 

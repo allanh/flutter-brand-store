@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../common/no_wrap_row.dart';
 
 /// 商品標籤列
-class ProductTagsView extends StatelessWidget {
-  const ProductTagsView({Key? key, required this.tags}) : super(key: key);
+class ProductTagsWidget extends StatelessWidget {
+  const ProductTagsWidget({Key? key, required this.tags}) : super(key: key);
 
   final String tags;
 

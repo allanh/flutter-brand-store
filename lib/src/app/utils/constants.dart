@@ -12,6 +12,8 @@ const String resetPasswordRouteName = 'reset-password'; // 驗證簡訊驗證碼
 const String mainRouteName = 'main'; // 主頁
 const String mainProductRouteName = 'main-product'; // 主頁->商品頁
 const String productRouteName = 'product'; // 商品頁
+const String productImageRouteName = 'product-imaege'; // 商品頁->圖片
+
 const String favoriteRouteName = 'favorite'; // 收藏頁
 const String memberRouteName = 'member'; // 會員頁
 const String cartRouteName = 'cart'; // 購物車

@@ -5,8 +5,8 @@ import 'package:collection/collection.dart';
 import '../../../domain/entities/product/category_main.dart';
 
 /// 分類列
-class ProductCategoryView extends StatelessWidget {
-  const ProductCategoryView({Key? key, required this.categoryMain})
+class ProductCategoryWidget extends StatelessWidget {
+  const ProductCategoryWidget({Key? key, required this.categoryMain})
       : super(key: key);
 
   final CategoryMain categoryMain;

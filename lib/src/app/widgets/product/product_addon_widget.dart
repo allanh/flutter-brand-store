@@ -1,4 +1,4 @@
-import 'package:brandstores/src/app/widgets/product/small_product_item.dart';
+import 'package:brandstores/src/app/widgets/product/small_product_item_widget.dart';
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:brandstores/src/extension/iterable_extension.dart';
 import 'package:brandstores/src/extension/num_extension.dart';
@@ -8,8 +8,8 @@ import '../../../domain/entities/product/product.dart';
 import '../../utils/screen_config.dart';
 
 /// 加價購列
-class ProductAddonView extends StatelessWidget {
-  const ProductAddonView(
+class ProductAddonWidget extends StatelessWidget {
+  const ProductAddonWidget(
       {Key? key,
       required this.addons,
       required this.selectedAddons,
@@ -76,7 +76,7 @@ class ProductAddonView extends StatelessWidget {
           childAspectRatio: 60 / 90,
           crossAxisSpacing: 8 * ratio),
       itemBuilder: (context, index) {
-        return SmallProductItem(
+        return SmallProductItemWidget(
             type: SmallProductItemType.addon,
             product: addons[index],
             onTapItem: (product) => debugPrint('tap addon: ${product.no}')

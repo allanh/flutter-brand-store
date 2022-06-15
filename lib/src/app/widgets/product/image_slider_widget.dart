@@ -1,26 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../../domain/entities/module/module.dart';
 import '../../../domain/entities/product/image_info.dart';
 import '../../utils/screen_config.dart';
+import '../home/video_widget.dart';
 
-class ImageSlider extends StatefulWidget {
+class ImageSliderWidget extends StatefulWidget {
   final List<MyPlusImageInfo> imageList;
 
-  const ImageSlider({Key? key, required this.imageList}) : super(key: key);
+  const ImageSliderWidget({Key? key, required this.imageList})
+      : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _ImageSliderState();
+  State<StatefulWidget> createState() => _ImageSliderWidgetState();
 }
 
-class _ImageSliderState extends State<ImageSlider> {
+class _ImageSliderWidgetState extends State<ImageSliderWidget> {
   int _current = 0;
   final CarouselController _controller = CarouselController();
-
-  List<MyPlusImageInfo> get imageList => widget.imageList
-      .where(
-          (element) => element.url != null && element.type == ImageType.image)
-      .toList();
 
   @override
   Widget build(BuildContext context) => widget.imageList.isNotEmpty
@@ -39,31 +37,41 @@ class _ImageSliderState extends State<ImageSlider> {
             carouselController: _controller,
             items: _items,
           ),
-          if (imageList.length > 1) _indictor
+          if (widget.imageList.length > 1) _indictor
         ])
       : const Center(child: CircularProgressIndicator());
 
   /// 圖片或影片列表
-  List<Widget> get _items => imageList.map((item) {
+  List<Widget> get _items => widget.imageList.map((item) {
         return Builder(
           builder: (BuildContext context) {
             return SizedBox(
                 width: SizeConfig.screenWidth,
-                child: CachedNetworkImage(
-                  imageUrl: item.url!,
-                  fit: BoxFit.fill,
-                  alignment: Alignment.topCenter,
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                ));
+                child: ImageType.video == item.type
+                    ? getVideo(item.url!)
+                    : getImage(item.url!));
           },
         );
       }).toList();
 
+  /// 圖片
+  Widget getImage(String url) => CachedNetworkImage(
+        imageUrl: url,
+        fit: BoxFit.fill,
+        alignment: Alignment.topCenter,
+        errorWidget: (context, url, error) => const Icon(Icons.error),
+      );
+
+  /// 影片
+  Widget getVideo(String url) => VideoWidget(
+        module: Module(ModuleType.video, 0, 0, 0, false, ''),
+      );
+
   /// 小圓點
   Widget get _indictor => Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: imageList.isNotEmpty
-          ? imageList.asMap().entries.map((entry) {
+      children: widget.imageList.isNotEmpty
+          ? widget.imageList.asMap().entries.map((entry) {
               return GestureDetector(
                 onTap: () => _controller.animateToPage(entry.key),
                 child: Container(

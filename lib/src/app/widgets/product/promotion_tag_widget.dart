@@ -4,8 +4,9 @@ import '../../../domain/entities/product/product.dart';
 import '../../../domain/entities/product/promotion.dart';
 
 /// 單一圖標
-class PromotionTag extends StatelessWidget {
-  const PromotionTag({Key? key, required this.tagText, required this.image})
+class PromotionTagWidget extends StatelessWidget {
+  const PromotionTagWidget(
+      {Key? key, required this.tagText, required this.image})
       : super(key: key);
 
   final String tagText;
@@ -38,8 +39,9 @@ class PromotionTag extends StatelessWidget {
 }
 
 /// 全部圖標
-class PromotionTagsView extends StatelessWidget {
-  const PromotionTagsView({Key? key, required this.product}) : super(key: key);
+class PromotionTagsWidget extends StatelessWidget {
+  const PromotionTagsWidget({Key? key, required this.product})
+      : super(key: key);
 
   final Product product;
 
@@ -62,23 +64,23 @@ class PromotionTagsView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   if (info?.tag?.lowQuantity == true)
-                    PromotionTag(
+                    PromotionTagWidget(
                         tagText: '最後${info?.quantity ?? ''}件',
                         image: 'assets/images/icon_product_tag_label_01.png'),
                   if (info?.tagProd?.flashSale == true && promotionRate != null)
-                    PromotionTag(
+                    PromotionTagWidget(
                         tagText: '限時$promotionRate折',
                         image: 'assets/images/icon_product_tag_label_01.png'),
                   if (info?.tagProd?.isNew == true)
-                    const PromotionTag(
+                    const PromotionTagWidget(
                         tagText: '新貨架到',
                         image: 'assets/images/icon_product_tag_label_02.png'),
                   if (info?.tagProd?.istop10Sale == true)
-                    const PromotionTag(
+                    const PromotionTagWidget(
                         tagText: '口碑暢銷',
                         image: 'assets/images/icon_product_tag_label_03.png'),
                   if (info?.tagProd?.istop10Favorite == true)
-                    const PromotionTag(
+                    const PromotionTagWidget(
                         tagText: '精選收藏',
                         image: 'assets/images/icon_product_tag_label_04.png'),
                 ])));
