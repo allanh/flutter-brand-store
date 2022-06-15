@@ -67,13 +67,22 @@ class _InvoiceSettingPageState
   ];
 
   void handleCarriers(int oldIndex, int newIndex) {
+    /// 調整 index 避免發生 out of bounds
     if (oldIndex < newIndex) {
       newIndex -= 1;
     }
+
+    /// 取出被拖移的卡片
     final ReorderableCard _carrier = _carrierCards.removeAt(oldIndex);
+
+    /// 根據新的位置插入被拖移的卡片
     _carrierCards.insert(newIndex, _carrier);
+
+    /// 將第一張卡片設定為選擇狀態，其他則為非選擇
     _carrierCards.asMap().forEach((index, card) {
       card.isSelected = index == 0;
+
+      /// 顯示卡片預設的標籤
       if (card.item is DefaultCarrierInterface) {
         (card.item as DefaultCarrierInterface).isDefault =
             _carrierCards.indexOf(card) == 0;
@@ -122,6 +131,7 @@ class _InvoiceSettingPageState
             padding: const EdgeInsets.only(bottom: 44.0),
             child: ReorderableListView(
               proxyDecorator: (child, index, animation) {
+                /// 將卡片放大並且設定選擇狀態，讓邊框變色
                 return Material(
                   child: Container(
                     transform: Matrix4.identity()..scale(1.01, 1.05),
