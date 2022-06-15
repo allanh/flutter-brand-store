@@ -4,7 +4,7 @@
 /// optionally set by the 'Controller' and will be called if set uppon
 /// the 'Usecase' sending back data, completing, or erroring.
 
-import 'package:brandstores/src/domain/usecases/get_member_center_usecase.dart';
+import 'package:brandstores/src/domain/usecases/member/get_member_center_usecase.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
 /// The 'Presenter' is comprised of two classes: 'Presenter' and 'Observer<T>'

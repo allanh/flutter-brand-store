@@ -5,7 +5,7 @@
 /// 'ViewState' uses the 'Controller', not the other way around.
 /// When the 'ViewState' calls a handler from the 'Controller',
 /// 'refreshUI()' can be called to update the view.
-import 'package:brandstores/src/domain/entities/member_center/member_center.dart';
+import 'package:brandstores/src/domain/entities/member/member_center.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'member_center_presenter.dart';

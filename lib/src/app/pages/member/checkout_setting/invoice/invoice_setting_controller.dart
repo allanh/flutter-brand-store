@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
-import '../../../../../data/repositories/member_center/data_invoice_setting_repository.dart';
+import '../../../../../data/repositories/member/data_invoice_setting_repository.dart';
 import 'invoice_setting_presenter.dart';
 
 class InvoiceSettingController extends Controller {

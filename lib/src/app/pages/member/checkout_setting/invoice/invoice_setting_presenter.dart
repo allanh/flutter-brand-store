@@ -1,4 +1,4 @@
-import 'package:brandstores/src/domain/usecases/member_center/get_invoice_setting_usecase.dart';
+import 'package:brandstores/src/domain/usecases/member/get_invoice_setting_usecase.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
 class InvoiceSettingPresenter extends Presenter {

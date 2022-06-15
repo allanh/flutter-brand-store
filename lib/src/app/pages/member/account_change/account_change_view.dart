@@ -5,15 +5,15 @@ import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 
 import 'package:brandstores/src/app/pages/member/account_change/account_change_controller.dart';
 
-import 'package:brandstores/src/data/repositories/data_account_change_repository.dart';
+import 'package:brandstores/src/data/repositories/member/data_account_change_repository.dart';
 
-import 'package:brandstores/src/app/widgets/member_center/member_profile/common.dart';
+import 'package:brandstores/src/app/widgets/member/profile/common.dart';
 
-import 'package:brandstores/src/app/widgets/member_center/account_change/validation_code_input_tile.dart';
-import 'package:brandstores/src/app/widgets/member_center/account_change/password_input_tile.dart';
-import 'package:brandstores/src/app/widgets/member_center/account_change/mobile_input_tile.dart';
-import 'package:brandstores/src/app/widgets/member_center/account_change/email_input_tile.dart';
-import 'package:brandstores/src/app/widgets/member_center/account_change/result_description_view.dart';
+import 'package:brandstores/src/app/widgets/member/account_change/validation_code_input_tile.dart';
+import 'package:brandstores/src/app/widgets/member/account_change/password_input_tile.dart';
+import 'package:brandstores/src/app/widgets/member/account_change/mobile_input_tile.dart';
+import 'package:brandstores/src/app/widgets/member/account_change/email_input_tile.dart';
+import 'package:brandstores/src/app/widgets/member/account_change/result_description_view.dart';
 
 enum AccountType { email, mobile }
 

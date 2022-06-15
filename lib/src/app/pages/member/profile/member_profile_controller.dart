@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
-import 'package:brandstores/src/domain/entities/member_profile/member_profile.dart';
+import 'package:brandstores/src/domain/entities/member/member_profile.dart';
 import 'member_profile_presenter.dart';
 
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';

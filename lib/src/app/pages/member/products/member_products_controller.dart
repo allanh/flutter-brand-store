@@ -1,8 +1,8 @@
 import 'package:brandstores/src/app/pages/member/products/member_products_presenter.dart';
-import 'package:brandstores/src/domain/entities/member_center/member_products/member_products.dart';
+import 'package:brandstores/src/domain/entities/member/member_products.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
-import 'package:brandstores/src/data/repositories/data_member_products_repository.dart';
+import 'package:brandstores/src/data/repositories/member/data_member_products_repository.dart';
 
 class MemberProductsController extends Controller {
   MemberProductsController(

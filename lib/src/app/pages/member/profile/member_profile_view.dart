@@ -1,27 +1,27 @@
 import 'package:brandstores/src/app/pages/member/profile/member_profile_controller.dart';
 import 'package:brandstores/src/app/utils/constants.dart';
-import 'package:brandstores/src/app/widgets/member_center/account_change/result_description_view.dart';
-import 'package:brandstores/src/data/repositories/data_member_profile_repository.dart';
+import 'package:brandstores/src/app/widgets/member/account_change/result_description_view.dart';
+import 'package:brandstores/src/data/repositories/member/data_member_profile_repository.dart';
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
-import 'package:brandstores/src/domain/entities/member_profile/member_profile.dart';
+import 'package:brandstores/src/domain/entities/member/member_profile.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:intl/intl.dart';
 
-import 'package:brandstores/src/app/widgets/member_center/member_profile/common.dart';
-import 'package:brandstores/src/app/widgets/member_center/member_profile/birthday_change_hint_tile.dart';
-import 'package:brandstores/src/app/widgets/member_center/member_profile/address_tile.dart';
-import 'package:brandstores/src/app/widgets/member_center/member_profile/phone_tile.dart';
-import 'package:brandstores/src/app/widgets/member_center/member_profile/gender_tile.dart';
-import 'package:brandstores/src/app/widgets/member_center/member_profile/birthday_tile.dart';
-import 'package:brandstores/src/app/widgets/member_center/member_profile/password_setting_tile.dart';
-import 'package:brandstores/src/app/widgets/member_center/member_profile/profile_save_button.dart';
-import 'package:brandstores/src/app/widgets/member_center/member_profile/binding_hint_tile.dart';
-import 'package:brandstores/src/app/widgets/member_center/member_profile/binding_tile.dart';
-import 'package:brandstores/src/app/widgets/member_center/member_profile/mobile_tile.dart';
-import 'package:brandstores/src/app/widgets/member_center/member_profile/email_tile.dart';
+import 'package:brandstores/src/app/widgets/member/profile/common.dart';
+import 'package:brandstores/src/app/widgets/member/profile/birthday_change_hint_tile.dart';
+import 'package:brandstores/src/app/widgets/member/profile/address_tile.dart';
+import 'package:brandstores/src/app/widgets/member/profile/phone_tile.dart';
+import 'package:brandstores/src/app/widgets/member/profile/gender_tile.dart';
+import 'package:brandstores/src/app/widgets/member/profile/birthday_tile.dart';
+import 'package:brandstores/src/app/widgets/member/profile/password_setting_tile.dart';
+import 'package:brandstores/src/app/widgets/member/profile/profile_save_button.dart';
+import 'package:brandstores/src/app/widgets/member/profile/binding_hint_tile.dart';
+import 'package:brandstores/src/app/widgets/member/profile/binding_tile.dart';
+import 'package:brandstores/src/app/widgets/member/profile/mobile_tile.dart';
+import 'package:brandstores/src/app/widgets/member/profile/email_tile.dart';
 
 class MemberProfilePage extends View {
   MemberProfilePage({Key? key}) : super(key: key);

@@ -1,5 +1,5 @@
-import 'package:brandstores/src/domain/entities/member_profile/member_profile.dart';
-import 'package:brandstores/src/domain/usecases/get_member_profile_usecase.dart';
+import 'package:brandstores/src/domain/entities/member/member_profile.dart';
+import 'package:brandstores/src/domain/usecases/member/get_member_profile_usecase.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
 class MemberProfilePresenter extends Presenter {

@@ -1,5 +1,5 @@
 import 'package:brandstores/src/domain/entities/link.dart';
-import 'package:brandstores/src/domain/entities/member_center/member_center.dart';
+import 'package:brandstores/src/domain/entities/member/member_center.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:go_router/go_router.dart';
@@ -15,20 +15,24 @@ class MyPlusDrawerController extends Controller {
   MemberCenter? get memberCenter => _memberCenter;
   final MyPlusDrawerPresenter myPlusDrawerPresenter;
   MyPlusDrawerController(drawerInfoRepo, memberCenterRepo)
-      : myPlusDrawerPresenter = MyPlusDrawerPresenter(drawerInfoRepo, memberCenterRepo),
+      : myPlusDrawerPresenter =
+            MyPlusDrawerPresenter(drawerInfoRepo, memberCenterRepo),
         super();
   @override
   void onInitState() {
     getDrawerInfo();
   }
+
   void onTap(Link link) {
     Navigator.pop(getContext());
     getContext().goNamed(link.type.name);
     // getContext().pushNamed(link.type.name);
   }
+
   @override
   void initListeners() {
-    myPlusDrawerPresenter.getDrawerOnNext = (SiteSetting siteSetting, MemberCenter memberCenter) {
+    myPlusDrawerPresenter.getDrawerOnNext =
+        (SiteSetting siteSetting, MemberCenter memberCenter) {
       debugPrint(siteSetting.toString());
       _siteSetting = siteSetting;
       _memberCenter = memberCenter;
@@ -36,7 +40,6 @@ class MyPlusDrawerController extends Controller {
     };
     myPlusDrawerPresenter.getDrawerOnComplete = () {
       debugPrint('Drawer info retrieved');
-      
     };
 
     // On error, show a snackbar, remove the user, and refresh the UI

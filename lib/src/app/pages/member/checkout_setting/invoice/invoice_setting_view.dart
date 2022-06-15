@@ -2,13 +2,13 @@ import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
-import '../../../../../data/repositories/member_center/data_invoice_setting_repository.dart';
-import '../../../../widgets/member_center/payment_setting/reorderable_card.dart';
-import '../../../../widgets/member_center/payment_setting/citizen_digital_certification_carrier.dart';
-import '../../../../widgets/member_center/payment_setting/donation_invoice_carrier.dart';
-import '../../../../widgets/member_center/payment_setting/member_account_carrier.dart';
-import '../../../../widgets/member_center/payment_setting/mobile_carrier.dart';
-import '../../../../widgets/member_center/payment_setting/value_added_tax_carrier.dart';
+import '../../../../../data/repositories/member/data_invoice_setting_repository.dart';
+import '../../../../widgets/member/checkout_setting/reorderable_card.dart';
+import '../../../../widgets/member/checkout_setting/citizen_digital_certification_carrier.dart';
+import '../../../../widgets/member/checkout_setting/donation_invoice_carrier.dart';
+import '../../../../widgets/member/checkout_setting/member_account_carrier.dart';
+import '../../../../widgets/member/checkout_setting/mobile_carrier.dart';
+import '../../../../widgets/member/checkout_setting/value_added_tax_carrier.dart';
 import 'invoice_setting_controller.dart';
 
 class InvoiceSettingPage extends View {

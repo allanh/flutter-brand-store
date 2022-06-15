@@ -1,4 +1,4 @@
-import 'package:brandstores/src/domain/entities/member_center/member_center.dart';
+import 'package:brandstores/src/domain/entities/member/member_center.dart';
 import 'package:flutter/material.dart';
 
 class LevelDescriptionPage extends StatefulWidget {

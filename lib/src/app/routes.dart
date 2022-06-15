@@ -8,7 +8,7 @@ import '../app/utils/constants.dart';
 import '../domain/entities/enum/verify_method.dart';
 import '../domain/entities/helper_center.dart';
 import '../extension/string_extension.dart';
-import '../domain/entities/member_center/member_center.dart';
+import '../domain/entities/member/member_center.dart';
 import 'pages/auth/login/login_view.dart';
 import 'pages/auth/password/forget_password_view.dart';
 import 'pages/auth/password/otp_view.dart';
