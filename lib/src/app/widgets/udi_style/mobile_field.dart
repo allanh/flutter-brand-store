@@ -41,10 +41,15 @@ class _MobileFieldState extends State<MobileField> {
         mainAxisSize: MainAxisSize.max,
         children: [
           Container(
-              child: const Text('+886', style: TextStyle(fontSize: 16)),
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+              child: const Text('+886',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.normal,
+                    color: UdiColors.normalText,
+                  )),
+              padding: const EdgeInsets.fromLTRB(0, 12, 12, 12),
               decoration: const BoxDecoration(
-                border: Border(bottom: BorderSide(color: UdiColors.defaultBorder, width: 2)),
+                border: Border(bottom: BorderSide(color: UdiColors.defaultBorder, width: 1)),
               )),
           const SizedBox(width: 16),
           Expanded(
@@ -86,11 +91,12 @@ class _MobileFieldState extends State<MobileField> {
           prefixIcon: prefixIcon == null ? null : Icon(prefixIcon, color: UdiColors.normalIcon),
           hintText: hintText,
           isDense: true,
-          contentPadding: const EdgeInsets.symmetric(vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(vertical: 12),
           errorText: showErrorBolder ? '' : null,
           errorBorder: _border(UdiColors.danger),
+          focusedErrorBorder: _border(UdiColors.danger),
           focusedBorder: _border(UdiColors.focusedBorder),
-          border: _border(UdiColors.defaultBorder),
+          enabledBorder: _border(UdiColors.defaultBorder),
           errorStyle: const TextStyle(height: 0, color: Colors.transparent),
           suffixIcon: suffixIcon);
 

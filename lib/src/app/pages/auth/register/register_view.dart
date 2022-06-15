@@ -1,138 +1,180 @@
+import 'package:brandstores/src/app/widgets/udi_style/mobile_field.dart';
+import 'package:brandstores/src/app/widgets/udi_style/password_field.dart';
+import 'package:brandstores/src/app/widgets/udi_style/udi_button.dart';
+import 'package:brandstores/src/app/widgets/udi_style/udi_field.dart';
+import 'package:brandstores/src/app/widgets/udi_style/udi_tab_bar.dart';
+import 'package:brandstores/src/data/repositories/data_account_repository.dart';
+import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 import '../../../utils/constants.dart';
-import '../../../../../login_state.dart';
+import '../../../widgets/udi_style/address_field.dart';
+import 'register_controller.dart';
 
-// TODO(login): Navigator測試用註冊頁, 之後需改寫
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+class RegisterPage extends View {
+  RegisterPage({Key? key}) : super(key: key);
 
   @override
-  _RegisterState createState() => _RegisterState();
+  _PageState createState() => _PageState();
 }
 
-class _RegisterState extends State<RegisterPage> {
-  TextEditingController mobileTextController = TextEditingController();
-  TextEditingController passwordTextController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+class _PageState extends ViewState<RegisterPage, RegisterController> {
+  _PageState() : super(RegisterController(DataAccountRepository()));
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.lightBlue,
-        title: const Text(
-          'Register',
-          style: TextStyle(
-              fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
-        ),
-      ),
-      body: SafeArea(
-        child: Center(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+  Widget get view => Scaffold(
+      key: globalKey,
+      appBar: AppBar(title: const Text('註冊')),
+      body: Form(
+          key: _formKey,
+          child: ControlledWidgetBuilder<RegisterController>(
+            builder: (context, controller) => Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                            decoration: const InputDecoration(
-                                border: UnderlineInputBorder(),
-                                hintText: 'Mobile'),
-                            controller: mobileTextController),
-                      ),
-                    ],
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: _viewBody(controller),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                            enableSuggestions: false,
-                            autocorrect: false,
-                            obscureText: true,
-                            decoration: const InputDecoration(
-                                border: UnderlineInputBorder(),
-                                hintText: 'Password'),
-                            controller: passwordTextController),
-                      ),
-                    ],
-                  ),
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all<Color>(
-                              Theme.of(context).primaryColor),
-                          shape: MaterialStateProperty.all<OutlinedBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4.0),
-                              side: BorderSide(
-                                  color: Theme.of(context).primaryColor),
-                            ),
-                          ),
-                        ),
-                        onPressed: () async {
-                          saveLoginState(context);
-                        },
-                        child: const Text(
-                          'Register',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          foregroundColor:
-                              MaterialStateProperty.all<Color>(Colors.white),
-                          shape: MaterialStateProperty.all<OutlinedBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4.0),
-                              side: const BorderSide(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        onPressed: () {
-                          context.goNamed(loginRouteName);
-                        },
-                        child: const Text('Cancel'),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                  ],
-                ),
+                _termsAndPrivacy(controller)
               ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
+          )));
 
-// TODO(login): Navigator測試用登入, 之後需放到 controller
-  void saveLoginState(BuildContext context) {
-    Provider.of<LoginState>(context, listen: false).loggedIn = true;
-  }
+  Widget _termsAndPrivacy(RegisterController controller) => ColoredBox(
+        color: UdiColors.white2,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('註冊帳號即表示你同意', style: secondaryTextStyle),
+            _getTextButton('會員服務條款', termsRouteName),
+            Text('與', style: secondaryTextStyle),
+            _getTextButton('隱私權條款', privacyRouteName),
+          ],
+        ),
+      );
+
+  TextButton _getTextButton(String text, String routeName) => TextButton(
+        onPressed: () => context.pushNamed(routeName),
+        child: Text(text,
+            style: TextStyle(
+              color: Theme.of(context).primaryColor,
+              fontWeight: FontWeight.normal,
+              decoration: TextDecoration.underline,
+            )),
+      );
+
+  TextStyle get secondaryTextStyle => const TextStyle(
+        fontSize: 14,
+        color: UdiColors.secondaryText,
+        fontWeight: FontWeight.normal,
+      );
+
+  Widget _viewBody(RegisterController controller) => Builder(builder: (context) {
+        return SingleChildScrollView(
+          child: Column(children: [
+            UdiTabBar(const ['手機號碼', 'Email'], onTap: (tabIndex) => setState(() => controller.switchTab(tabIndex))),
+            const SizedBox(height: 16),
+            _nameField(controller),
+            const SizedBox(height: 16),
+            controller.tabIndex == 0 ? _mobileWidget(controller) : _emailWidget(controller),
+            const SizedBox(height: 16),
+            _passwordField(controller),
+            const SizedBox(height: 16),
+            _passwordConfirmField(controller),
+            const SizedBox(height: 16),
+            _gender(context, controller),
+            const SizedBox(height: 16),
+            GestureDetector(
+                onTap: () {
+                  DatePicker.showDatePicker(
+                    context,
+                    showTitleActions: true,
+                    maxTime: DateTime.now(),
+                    locale: LocaleType.tw,
+                    onConfirm: (date) => setState(()=> controller.onBirthdayChange(date)),
+                  );
+                },
+                child: const UdiField(
+                  hintText: '請選擇生日',
+                  enabled: false,
+                  suffixIcon: Image(image: AssetImage('assets/images/icon_date_picker.png')),
+                )),
+            const SizedBox(height: 16),
+            AddressField(
+              onValueChange: (zip, city, area, address) => controller.onAddressChange(zip, city, area, address),
+            ),
+            const SizedBox(height: 24),
+            _submitButton(controller),
+          ]),
+        );
+      });
+
+  UdiField _nameField(RegisterController controller) => UdiField(
+      hintText: '請輸入姓名',
+      maxLength: 20,
+      onValueChange: (value) => setState(() => controller.onNameChange(value)),
+      onFocusChange: (isFocus) => setState(() => controller.checkName()),
+      errorMessage: controller.nameError);
+
+  Widget _mobileWidget(RegisterController controller) => MobileField(
+      defaultValue: controller.mobile,
+      onValueChange: (mobile) => setState(() => controller.onMobileChange(mobile)),
+      onFocusChange: (isFocus) => setState(() => controller.checkMobile()),
+      errorMessage: controller.mobileError);
+
+  Widget _emailWidget(RegisterController controller) => UdiField(
+      hintText: '請輸入Email',
+      defaultValue: controller.email,
+      onValueChange: (email) => setState(() => controller.onEmailChange(email)),
+      onFocusChange: (isFocus) => setState(() => controller.checkEmail()),
+      errorMessage: controller.emailError);
+
+  Widget _passwordField(RegisterController controller) => PasswordField(
+      hintText: '請輸入6-20碼英數字',
+      onValueChange: (value) => setState(() => controller.onPasswordChange(value)),
+      onFocusChange: (isFocus) => setState(() => controller.checkMobile()),
+      errorMessage: controller.passwordError);
+
+  Widget _passwordConfirmField(RegisterController controller) => PasswordField(
+      hintText: '再次輸入密碼',
+      onValueChange: (value) => setState(() => controller.onPasswordConfirmChange(value)),
+      onFocusChange: (isFocus) => setState(() => controller.checkMobile()),
+      errorMessage: controller.passwordConfirmError);
+
+  Row _gender(BuildContext context, RegisterController controller) => Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          getRadio('M', controller),
+          Text('男性', style: textStyle),
+          const SizedBox(width: 12),
+          getRadio('F', controller),
+          Text('女性', style: textStyle),
+          const SizedBox(width: 12),
+          getRadio('O', controller),
+          Text('不公開', style: textStyle),
+        ],
+      );
+
+  TextStyle get textStyle => const TextStyle(color: UdiColors.normalText, fontWeight: FontWeight.normal);
+
+  Radio getRadio(String radioValue, RegisterController controller) => Radio(
+        value: radioValue,
+        onChanged: (value) => setState(() => controller.gender = value.toString()),
+        groupValue: controller.gender,
+        activeColor: Theme.of(context).primaryColor,
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        visualDensity: const VisualDensity(horizontal: VisualDensity.minimumDensity, vertical: VisualDensity.minimumDensity),
+      );
+
+  SizedBox _submitButton(RegisterController controller) => SizedBox(
+      width: double.infinity,
+      child: UdiButton(
+        text: '註冊',
+        onPressed: controller.isEnableButton ? () => controller.checkAccountStatus() : null,
+      ));
 }

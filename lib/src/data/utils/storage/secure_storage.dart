@@ -1,4 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import '../../../domain/entities/site_setting/site_setting.dart';
+import '../../../domain/entities/site_setting/store_setting/login.dart';
+import 'my_key.dart';
 
 class SecureStorage {
   final _storage = const FlutterSecureStorage();
@@ -37,5 +43,15 @@ class SecureStorage {
     var containsKey =
         await _storage.containsKey(key: key, aOptions: _getAndroidOptions());
     return containsKey;
+  }
+
+  Future<Login?> getLoginSetting(String key) async {
+    var data = await read(MyKey.siteSetting);
+    if (data != null) {
+      Map<String, dynamic> map = jsonDecode(data) as Map<String, dynamic>;
+      var siteSetting = SiteSetting.fromJson(map);
+      return siteSetting.store.login;
+    }
+    return null;
   }
 }

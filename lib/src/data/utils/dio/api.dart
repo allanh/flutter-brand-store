@@ -7,12 +7,12 @@ class Api {
   static const login = '/udi/v3/auth/login';
 
   // Modify Password
-  static const accountCheck = '/udi/v3/auth/account_check';
   static const sendVerification = '/udi/v3/auth/send_verification';
   static const verifyMobileCode = '/udi/v3/auth/verify_mobile_code';
   static const resetPassword = '/udi/v3/auth/reset_password';
 
   // Register
+  static const accountCheck = '/udi/v3/auth/account_check';
   static const register = '/udi/v3/auth/register';
   static const exchangeBundle = '/udi/v3/auth/exchange_bundle';
 

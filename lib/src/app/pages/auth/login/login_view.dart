@@ -79,6 +79,7 @@ class _PageState extends ViewState<LoginPage, LoginController> {
           child: Text('忘記密碼？',
               style: TextStyle(
                 color: Theme.of(context).primaryColor,
+                fontWeight: FontWeight.normal,
                 decoration: TextDecoration.underline,
               ))));
 
@@ -94,6 +95,7 @@ class _PageState extends ViewState<LoginPage, LoginController> {
             child: Text('註冊會員',
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
+                  fontWeight: FontWeight.normal,
                   decoration: TextDecoration.underline,
                 )))
       ]);
