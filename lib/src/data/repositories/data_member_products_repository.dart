@@ -10,14 +10,14 @@ class DataMemberProductsRepository extends MemberProductsRepository {
   factory DataMemberProductsRepository() => _instance;
 
   @override
-  Future<MemberProducts> getMemberHistoryProducts() async {
+  Future<MemberProductsInfo> getMemberBrowseProducts(int page) async {
     try {
       final response =
           await HttpUtils.instance.post(Api.historyProducts, params: {
-        'current_page': 1,
+        'current_page': page,
       });
       if (response.isSuccess) {
-        return MemberProducts.fromJson(response.data);
+        return MemberProductsInfo.fromJson(response.data);
       }
       throw Exception('Failed to get member history products.');
     } catch (e) {
@@ -26,15 +26,15 @@ class DataMemberProductsRepository extends MemberProductsRepository {
   }
 
   @override
-  Future<MemberProducts> getMemberFavoriteProducts() async {
+  Future<MemberProductsInfo> getMemberFavoriteProducts(int page) async {
     try {
       final response =
           await HttpUtils.instance.post(Api.favoriteProducts, params: {
         "filter": "new_goods",
-        "current_page": 1,
+        "current_page": page,
       });
       if (response.isSuccess) {
-        return MemberProducts.fromJson(response.data);
+        return MemberProductsInfo.fromJson(response.data);
       }
       throw Exception('Failed to get member favorite products.');
     } catch (e) {
@@ -43,15 +43,15 @@ class DataMemberProductsRepository extends MemberProductsRepository {
   }
 
   @override
-  Future<MemberProducts> getMemberBoughtProducts() async {
+  Future<MemberProductsInfo> getMemberBoughtProducts(int page) async {
     try {
       final response =
           await HttpUtils.instance.post(Api.bougthProducts, params: {
-        "current_page": "1",
+        "current_page": page.toString(),
         "limit": "10",
       });
       if (response.isSuccess) {
-        return MemberProducts.fromJson(response.data);
+        return MemberProductsInfo.fromJson(response.data);
       }
       throw Exception('Failed to get member bought products.');
     } catch (e) {

@@ -10,7 +10,7 @@ class MemberProductsResponse {
   final String? message;
 
   @JsonKey(name: 'data')
-  final MemberProducts memberProducts;
+  final MemberProductsInfo memberProducts;
 
   const MemberProductsResponse(
       this.id, this.status, this.message, this.memberProducts);
@@ -21,11 +21,11 @@ class MemberProductsResponse {
 }
 
 @JsonSerializable()
-class MemberProducts {
+class MemberProductsInfo {
   final int? total;
 
   @JsonKey(name: 'current_page')
-  final int? currentPage;
+  int? currentPage;
 
   @JsonKey(name: 'total_page')
   final int? totalPage;
@@ -35,12 +35,12 @@ class MemberProducts {
   @JsonKey(name: 'detail')
   final List<MemberProduct> products;
 
-  const MemberProducts(
+  MemberProductsInfo(
       this.total, this.currentPage, this.totalPage, this.limit, this.products);
 
-  factory MemberProducts.fromJson(Map<String, dynamic> json) =>
-      _$MemberProductsFromJson(json);
-  Map<String, dynamic> toJson() => _$MemberProductsToJson(this);
+  factory MemberProductsInfo.fromJson(Map<String, dynamic> json) =>
+      _$MemberProductsInfoFromJson(json);
+  Map<String, dynamic> toJson() => _$MemberProductsInfoToJson(this);
 }
 
 enum GoodsStatus {

@@ -207,17 +207,17 @@ class MyPlusRouter {
 
       /// 瀏覽紀錄
       GoRoute(
-        name: historyProductsRouteName,
-        path: '/history-products',
+        name: browseProductsRouteName,
+        path: '/browse-products',
         pageBuilder: (context, state) => MaterialPage<void>(
             key: state.pageKey,
-            child: MemberProductsPage(type: MemberProductsType.history)),
+            child: MemberProductsPage(type: MemberProductsType.browse)),
       ),
 
       /// 會員資料
       GoRoute(
-        name: memberInfoRouteName,
-        path: '/member-info',
+        name: memberProfileRouteName,
+        path: '/member-profile',
         pageBuilder: (context, state) =>
             MaterialPage<void>(key: state.pageKey, child: MemberProfilePage()),
       ),

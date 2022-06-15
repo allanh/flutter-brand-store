@@ -1,3 +1,4 @@
+import 'package:brandstores/src/app/pages/member/products/member_products_presenter.dart';
 import 'package:brandstores/src/app/utils/constants.dart';
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:brandstores/src/domain/entities/member_center/member_products/member_products.dart';
@@ -8,12 +9,12 @@ import 'package:brandstores/src/app/pages/member/products/member_products_contro
 import 'package:brandstores/src/data/repositories/data_member_products_repository.dart';
 import 'package:go_router/go_router.dart';
 
-enum MemberProductsType { history, favorite, bought }
+enum MemberProductsType { browse, favorite, bought }
 
 extension MemberProductsExtension on MemberProductsType {
   String get value {
     switch (this) {
-      case MemberProductsType.history:
+      case MemberProductsType.browse:
         return '瀏覽紀錄';
       case MemberProductsType.favorite:
         return '我的收藏';
@@ -38,7 +39,8 @@ class MemberProductsPage extends View {
 class _MemberProductsPageState
     extends ViewState<MemberProductsPage, MemberProductsController> {
   _MemberProductsPageState()
-      : super(MemberProductsController(DataMemberProductsRepository()));
+      : super(MemberProductsController(
+            DataMemberProductsRepository(), ScrollController()));
 
   void handleGoHome(BuildContext context) {
     context.goNamed(rootRouteName);
@@ -48,9 +50,9 @@ class _MemberProductsPageState
   Widget get view {
     return ControlledWidgetBuilder<MemberProductsController>(
         builder: (context, controller) {
-      MemberProducts? bought = controller.boughtProducts;
-      MemberProducts? favorite = controller.favoriteProducts;
-      MemberProducts? history = controller.historyProducts;
+      MemberProductsInfo? boughtProducts = controller.boughtProductsInfo;
+      MemberProductsInfo? favoriteProducts = controller.favoriteProductsInfo;
+      MemberProductsInfo? browseProducts = controller.browseProductsInfo;
       return Scaffold(
         key: globalKey,
         appBar: AppBar(title: const Text('我的商品'), actions: [
@@ -71,7 +73,13 @@ class _MemberProductsPageState
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       _buildTabBar(context),
-                      _buildTabBarView(context, bought, favorite, history),
+                      _buildTabBarView(
+                        context,
+                        controller,
+                        boughtProducts,
+                        favoriteProducts,
+                        browseProducts,
+                      ),
                     ]),
               ),
             ),
@@ -113,30 +121,50 @@ class _MemberProductsPageState
     );
   }
 
-  Expanded _buildTabBarView(BuildContext context, MemberProducts? bought,
-      MemberProducts? favorite, MemberProducts? history) {
+  Expanded _buildTabBarView(
+      BuildContext context,
+      MemberProductsController controller,
+      MemberProductsInfo? boughtProductsInfo,
+      MemberProductsInfo? favoriteProductsInfo,
+      MemberProductsInfo? browseProductsInfo) {
     return Expanded(
         child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: TabBarView(
               children: [
-                history != null && history.products.isNotEmpty
-                    ? _buildHistoryProductView(history.products, context)
-                    : _buildEmptyView(MemberProductsType.history, handleGoHome),
-                favorite != null && favorite.products.isNotEmpty
-                    ? _buildFavoriteProductView(favorite.products, context)
+                browseProductsInfo != null &&
+                        browseProductsInfo.products.isNotEmpty
+                    ? _buildBrowseProductsView(
+                        context,
+                        controller,
+                        browseProductsInfo,
+                      )
+                    : _buildEmptyView(MemberProductsType.browse, handleGoHome),
+                favoriteProductsInfo != null &&
+                        favoriteProductsInfo.products.isNotEmpty
+                    ? _buildFavoriteProductView(
+                        context,
+                        controller,
+                        favoriteProductsInfo,
+                      )
                     : _buildEmptyView(
                         MemberProductsType.favorite, handleGoHome),
-                bought != null && bought.products.isNotEmpty
-                    ? _buildBoughtProductView(bought.products, context)
+                boughtProductsInfo != null &&
+                        boughtProductsInfo.products.isNotEmpty
+                    ? _buildBoughtProductView(
+                        context,
+                        controller,
+                        boughtProductsInfo,
+                      )
                     : _buildEmptyView(MemberProductsType.bought, handleGoHome),
               ],
             )));
   }
 
   Column _buildFavoriteProductView(
-    List<MemberProduct> products,
     BuildContext context,
+    MemberProductsController controller,
+    MemberProductsInfo productsInfo,
   ) {
     String? selectedValue = 'ALL';
     return Column(
@@ -183,15 +211,17 @@ class _MemberProductsPageState
           ),
         ),
         Expanded(
-            child: _buildProductView(
-                products, context, MemberProductsType.favorite)),
+          child: _buildProductView(
+              context, controller, productsInfo, MemberProductsType.favorite),
+        ),
       ],
     );
   }
 
   Column _buildBoughtProductView(
-    List<MemberProduct> products,
     BuildContext context,
+    MemberProductsController controller,
+    MemberProductsInfo productsInfo,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -209,14 +239,19 @@ class _MemberProductsPageState
         ),
         Expanded(
             child: _buildProductView(
-                products, context, MemberProductsType.bought)),
+          context,
+          controller,
+          productsInfo,
+          MemberProductsType.bought,
+        )),
       ],
     );
   }
 
-  Column _buildHistoryProductView(
-    List<MemberProduct> products,
+  Column _buildBrowseProductsView(
     BuildContext context,
+    MemberProductsController controller,
+    MemberProductsInfo productsInfo,
   ) {
     return Column(
       children: [
@@ -247,31 +282,58 @@ class _MemberProductsPageState
         ),
         Expanded(
             child: _buildProductView(
-                products, context, MemberProductsType.history)),
+          context,
+          controller,
+          productsInfo,
+          MemberProductsType.browse,
+        )),
       ],
     );
   }
 
   ListView _buildProductView(
-    List<MemberProduct> products,
     BuildContext context,
+    MemberProductsController controller,
+    MemberProductsInfo productsInfo,
     MemberProductsType type,
   ) {
-    return ListView(children: _buildProductLists(products, context, type));
-  }
+    final products = productsInfo.products;
+    final currentPage = productsInfo.currentPage ?? 0;
+    int nextPage = currentPage + 1;
 
-  List<Widget> _buildProductLists(
-    List<MemberProduct> products,
-    BuildContext context,
-    MemberProductsType type,
-  ) {
-    return List.generate(products.length,
-        (index) => _buildProductList(context, products[index], type));
+    return ListView.builder(
+      itemCount: products.length,
+      itemExtent: 146.0,
+      itemBuilder: ((context, index) {
+        if (index + 5 == products.length) {
+          debugPrint('Get next page products');
+          switch (type) {
+            case MemberProductsType.browse:
+              if (controller.hasNextBrowseProductsPage()) {
+                controller.getBrowseProducts(nextPage);
+              }
+
+              break;
+            case MemberProductsType.favorite:
+              if (controller.hasNextFavoriteProductsPage()) {
+                controller.getFavoriteProducts(nextPage);
+              }
+
+              break;
+            case MemberProductsType.bought:
+              if (controller.hasNextBoughtProductsPage()) {
+                controller.getBoughtProducts(nextPage);
+              }
+          }
+        }
+        return _buildProductList(context, products[index], type);
+      }),
+    );
   }
 
   Image _buildEmptyImage(MemberProductsType type) {
     return Image(
-      image: AssetImage(type == MemberProductsType.history
+      image: AssetImage(type == MemberProductsType.browse
           ? 'assets/images/empty_browser.png'
           : type == MemberProductsType.favorite
               ? 'assets/images/empty_favorite.png'
@@ -286,7 +348,7 @@ class _MemberProductsPageState
     MemberProductsType type,
   ) {
     return Text(
-        type == MemberProductsType.history
+        type == MemberProductsType.browse
             ? '您目前沒有瀏覽紀錄'
             : type == MemberProductsType.favorite
                 ? '您目前沒有收藏商品'
@@ -433,7 +495,7 @@ class _MemberProductsPageState
                 )
               : const Icon(Icons.favorite_outline)),
     ];
-    if (type == MemberProductsType.history) {
+    if (type == MemberProductsType.browse) {
       buttons.insert(
         1,
         IconButton(

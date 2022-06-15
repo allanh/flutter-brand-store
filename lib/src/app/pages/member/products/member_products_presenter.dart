@@ -2,9 +2,9 @@ import 'package:brandstores/src/domain/usecases/member_center/get_member_product
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
 class MemberProductsPresenter extends Presenter {
-  late Function getMemberHistoryProductsOnNext;
-  late Function getMemberHistoryProductsOnComplete;
-  late Function getMemberHistoryProductsOnError;
+  late Function getMemberBrowseProductsOnNext;
+  late Function getMemberBrowseProductsOnComplete;
+  late Function getMemberBrowseProductsOnError;
 
   late Function getMemberFavoriteProductsOnNext;
   late Function getMemberFavoriteProductsOnComplete;
@@ -14,63 +14,63 @@ class MemberProductsPresenter extends Presenter {
   late Function getMemberBoughtProductsOnComplete;
   late Function getMemberBoughtProductsOnError;
 
-  final GetMemberHistoryProductsUseCase getMemberHistoryProductsUseCase;
+  final GetMemberBrowseProductsUseCase getMemberBrowseProductsUseCase;
   final GetMemberFavoriteProductsUseCase getMemberFavoriteProductsUseCase;
   final GetMemberBoughtProductsUseCase getMemberBoughtProductsUseCase;
 
   MemberProductsPresenter(memberProductsRepo)
-      : getMemberHistoryProductsUseCase =
-            GetMemberHistoryProductsUseCase(memberProductsRepo),
+      : getMemberBrowseProductsUseCase =
+            GetMemberBrowseProductsUseCase(memberProductsRepo),
         getMemberFavoriteProductsUseCase =
             GetMemberFavoriteProductsUseCase(memberProductsRepo),
         getMemberBoughtProductsUseCase =
             GetMemberBoughtProductsUseCase(memberProductsRepo);
 
-  void getMemberHistoryProducts() {
-    getMemberHistoryProductsUseCase.execute(
-        _GetMemberHistoryProductsUseCaseObserver(this),
-        GetMemberHistoryProductsUseCaseParams());
+  void getMemberBrowseProducts(int page) {
+    getMemberBrowseProductsUseCase.execute(
+        _GetMemberBrowseProductsUseCaseObserver(this),
+        GetMemberBrowseProductsUseCaseParams(page));
   }
 
-  void getMemberFavoriteProducts() {
+  void getMemberFavoriteProducts(int page) {
     getMemberFavoriteProductsUseCase.execute(
         _GetMemberFavoriteProductsUseCaseObserver(this),
-        GetMemberFavoriteProductsUseCaseParams());
+        GetMemberFavoriteProductsUseCaseParams(page));
   }
 
-  void getMemberBoughtProducts() {
+  void getMemberBoughtProducts(int page) {
     getMemberBoughtProductsUseCase.execute(
         _GetMemberBoughtProductsUseCaseObserver(this),
-        GetMemberBoughtProductsUseCaseParams());
+        GetMemberBoughtProductsUseCaseParams(page));
   }
 
   @override
   void dispose() {
-    getMemberHistoryProductsUseCase.dispose();
+    getMemberBrowseProductsUseCase.dispose();
     getMemberFavoriteProductsUseCase.dispose();
     getMemberBoughtProductsUseCase.dispose();
   }
 }
 
-class _GetMemberHistoryProductsUseCaseObserver
-    extends Observer<GetMemberHistoryProductsUseCaseResponse> {
+class _GetMemberBrowseProductsUseCaseObserver
+    extends Observer<GetMemberBrowseProductsUseCaseResponse> {
   final MemberProductsPresenter presenter;
 
-  _GetMemberHistoryProductsUseCaseObserver(this.presenter);
+  _GetMemberBrowseProductsUseCaseObserver(this.presenter);
 
   @override
   void onComplete() {
-    presenter.getMemberHistoryProductsOnComplete();
+    presenter.getMemberBrowseProductsOnComplete();
   }
 
   @override
   void onError(e) {
-    presenter.getMemberHistoryProductsOnError(e);
+    presenter.getMemberBrowseProductsOnError(e);
   }
 
   @override
   void onNext(response) {
-    presenter.getMemberHistoryProductsOnNext(response?.products);
+    presenter.getMemberBrowseProductsOnNext(response?.products);
   }
 }
 

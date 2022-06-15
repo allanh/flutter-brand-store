@@ -3,30 +3,30 @@ import 'package:brandstores/src/domain/entities/member_center/member_products/me
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:brandstores/src/domain/repositories/member_products_repository.dart';
 
-class GetMemberHistoryProductsUseCase extends UseCase<
-    GetMemberHistoryProductsUseCaseResponse,
-    GetMemberHistoryProductsUseCaseParams> {
+class GetMemberBrowseProductsUseCase extends UseCase<
+    GetMemberBrowseProductsUseCaseResponse,
+    GetMemberBrowseProductsUseCaseParams> {
   final MemberProductsRepository memberProductsRepository;
-  GetMemberHistoryProductsUseCase(this.memberProductsRepository);
+  GetMemberBrowseProductsUseCase(this.memberProductsRepository);
 
   @override
-  Future<Stream<GetMemberHistoryProductsUseCaseResponse?>> buildUseCaseStream(
-      GetMemberHistoryProductsUseCaseParams? params) async {
+  Future<Stream<GetMemberBrowseProductsUseCaseResponse?>> buildUseCaseStream(
+      GetMemberBrowseProductsUseCaseParams? params) async {
     final controller =
-        StreamController<GetMemberHistoryProductsUseCaseResponse>();
+        StreamController<GetMemberBrowseProductsUseCaseResponse>();
 
     try {
       // get member history products
-      final memberHistoryProducts =
-          await memberProductsRepository.getMemberHistoryProducts();
+      final memberBrowseProducts =
+          await memberProductsRepository.getMemberBrowseProducts(params!.page);
       // Adding it triggers the .onNext() in the 'Observer'
       // It is usually better to wrap the response inside a response object.
       controller
-          .add(GetMemberHistoryProductsUseCaseResponse(memberHistoryProducts));
-      logger.finest('GetMemberHistoryProductsUseCase successful.');
+          .add(GetMemberBrowseProductsUseCaseResponse(memberBrowseProducts));
+      logger.finest('GetMemberBrowseProductsUseCase successful.');
       controller.close();
     } catch (e) {
-      logger.severe('GetMemberHistoryProductsUseCase failure.');
+      logger.severe('GetMemberBrowseProductsUseCase failure.');
       // Trigger .onError
       controller.addError(e);
     }
@@ -35,14 +35,15 @@ class GetMemberHistoryProductsUseCase extends UseCase<
 }
 
 /// Wrapping response inside an object makes it easier to change later
-class GetMemberHistoryProductsUseCaseResponse {
-  final MemberProducts products;
-  GetMemberHistoryProductsUseCaseResponse(this.products);
+class GetMemberBrowseProductsUseCaseResponse {
+  final MemberProductsInfo products;
+  GetMemberBrowseProductsUseCaseResponse(this.products);
 }
 
 /// Wrapping params inside an object makes it easier to change later
-class GetMemberHistoryProductsUseCaseParams {
-  GetMemberHistoryProductsUseCaseParams();
+class GetMemberBrowseProductsUseCaseParams {
+  int page;
+  GetMemberBrowseProductsUseCaseParams(this.page);
 }
 
 class GetMemberFavoriteProductsUseCase extends UseCase<
@@ -59,8 +60,8 @@ class GetMemberFavoriteProductsUseCase extends UseCase<
 
     try {
       // get member history products
-      final memberFavoriteProducts =
-          await memberProductsRepository.getMemberFavoriteProducts();
+      final memberFavoriteProducts = await memberProductsRepository
+          .getMemberFavoriteProducts(params!.page);
       // Adding it triggers the .onNext() in the 'Observer'
       // It is usually better to wrap the response inside a response object.
       controller.add(
@@ -78,13 +79,14 @@ class GetMemberFavoriteProductsUseCase extends UseCase<
 
 /// Wrapping response inside an object makes it easier to change later
 class GetMemberFavoriteProductsUseCaseResponse {
-  final MemberProducts products;
+  final MemberProductsInfo products;
   GetMemberFavoriteProductsUseCaseResponse(this.products);
 }
 
 /// Wrapping params inside an object makes it easier to change later
 class GetMemberFavoriteProductsUseCaseParams {
-  GetMemberFavoriteProductsUseCaseParams();
+  int page;
+  GetMemberFavoriteProductsUseCaseParams(this.page);
 }
 
 class GetMemberBoughtProductsUseCase extends UseCase<
@@ -102,7 +104,7 @@ class GetMemberBoughtProductsUseCase extends UseCase<
     try {
       // get member history products
       final memberBoughtProducts =
-          await memberProductsRepository.getMemberBoughtProducts();
+          await memberProductsRepository.getMemberBoughtProducts(params!.page);
       // Adding it triggers the .onNext() in the 'Observer'
       // It is usually better to wrap the response inside a response object.
       controller
@@ -120,11 +122,12 @@ class GetMemberBoughtProductsUseCase extends UseCase<
 
 /// Wrapping response inside an object makes it easier to change later
 class GetMemberBoughtProductsUseCaseResponse {
-  final MemberProducts products;
+  final MemberProductsInfo products;
   GetMemberBoughtProductsUseCaseResponse(this.products);
 }
 
 /// Wrapping params inside an object makes it easier to change later
 class GetMemberBoughtProductsUseCaseParams {
-  GetMemberBoughtProductsUseCaseParams();
+  int page;
+  GetMemberBoughtProductsUseCaseParams(this.page);
 }

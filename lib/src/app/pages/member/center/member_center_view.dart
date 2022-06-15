@@ -68,7 +68,7 @@ class _MemberCenterPageState
   }
 
   void openMemberUpdatePage() {
-    context.pushNamed(memberInfoRouteName);
+    context.pushNamed(memberProfileRouteName);
   }
 
   void openServicePage(BuildContext context, Service service) {
@@ -83,10 +83,10 @@ class _MemberCenterPageState
           context.pushNamed(boughtProductsRouteName);
           break;
         case LinkType.cookie:
-          context.pushNamed(historyProductsRouteName);
+          context.pushNamed(browseProductsRouteName);
           break;
         case LinkType.updatemember:
-          context.pushNamed(memberInfoRouteName);
+          context.pushNamed(memberProfileRouteName);
           break;
         case LinkType.fastcheckout:
           context.pushNamed(checkoutSettingRouteName);

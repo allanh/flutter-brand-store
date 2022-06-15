@@ -6,51 +6,68 @@ import 'package:brandstores/src/data/repositories/data_member_products_repositor
 
 class MemberProductsController extends Controller {
   MemberProductsController(
-      DataMemberProductsRepository dataMemberProductsRepository)
-      : presenter = MemberProductsPresenter(dataMemberProductsRepository);
+    DataMemberProductsRepository dataMemberProductsRepository,
+    this.scrollController,
+  ) : presenter = MemberProductsPresenter(dataMemberProductsRepository);
 
   final MemberProductsPresenter presenter;
 
-  MemberProducts? _historyProducts;
-  MemberProducts? get historyProducts => _historyProducts;
+  ScrollController scrollController = ScrollController();
 
-  MemberProducts? _favoriteProducts;
-  MemberProducts? get favoriteProducts => _favoriteProducts;
+  MemberProductsInfo? _browseProductsInfo;
+  MemberProductsInfo? get browseProductsInfo => _browseProductsInfo;
 
-  MemberProducts? _boughtProducts;
-  MemberProducts? get boughtProducts => _boughtProducts;
+  MemberProductsInfo? _favoriteProductsInfo;
+  MemberProductsInfo? get favoriteProductsInfo => _favoriteProductsInfo;
+
+  MemberProductsInfo? _boughtProductsInfo;
+  MemberProductsInfo? get boughtProductsInfo => _boughtProductsInfo;
 
   @override
   void onInitState() {
-    getHistoryProducts();
-    getFavoriteProducts();
-    getBoughtProducts();
+    getBrowseProducts(1);
+    getFavoriteProducts(1);
+    getBoughtProducts(1);
   }
 
   @override
   void initListeners() {
-    presenter.getMemberHistoryProductsOnNext = (MemberProducts products) {
-      _historyProducts = products;
+    presenter.getMemberBrowseProductsOnNext =
+        (MemberProductsInfo productsInfo) {
+      if (_browseProductsInfo == null) {
+        _browseProductsInfo = productsInfo;
+      } else {
+        _browseProductsInfo!.currentPage = productsInfo.currentPage;
+        _browseProductsInfo!.products.insertAll(
+            _browseProductsInfo!.products.length, productsInfo.products);
+      }
 
       /// The 'Controller' has access to the 'ViewState' and can refresh
       /// the 'ControllerWidgets' via 'refreshUI()'.
       refreshUI();
     };
 
-    presenter.getMemberHistoryProductsOnComplete = () {
+    presenter.getMemberBrowseProductsOnComplete = () {
       debugPrint('History products retrieved.');
     };
 
-    presenter.getMemberHistoryProductsOnError = (e) {
+    presenter.getMemberBrowseProductsOnError = (e) {
       debugPrint('Could not retrieve history products');
 
-      _historyProducts = null;
+      _browseProductsInfo = null;
 
       refreshUI();
     };
 
-    presenter.getMemberFavoriteProductsOnNext = (MemberProducts products) {
-      _favoriteProducts = products;
+    presenter.getMemberFavoriteProductsOnNext =
+        (MemberProductsInfo productsInfo) {
+      if (_favoriteProductsInfo == null) {
+        _favoriteProductsInfo = productsInfo;
+      } else {
+        _favoriteProductsInfo!.currentPage = productsInfo.currentPage;
+        _favoriteProductsInfo!.products.insertAll(
+            _favoriteProductsInfo!.products.length, productsInfo.products);
+      }
 
       /// The 'Controller' has access to the 'ViewState' and can refresh
       /// the 'ControllerWidgets' via 'refreshUI()'.
@@ -64,13 +81,20 @@ class MemberProductsController extends Controller {
     presenter.getMemberFavoriteProductsOnError = (e) {
       debugPrint('Could not retrieve favorite products');
 
-      _favoriteProducts = null;
+      _favoriteProductsInfo = null;
 
       refreshUI();
     };
 
-    presenter.getMemberBoughtProductsOnNext = (MemberProducts products) {
-      _boughtProducts = products;
+    presenter.getMemberBoughtProductsOnNext =
+        (MemberProductsInfo productsInfo) {
+      if (_boughtProductsInfo == null) {
+        _boughtProductsInfo = productsInfo;
+      } else {
+        _boughtProductsInfo!.currentPage = productsInfo.currentPage;
+        _boughtProductsInfo!.products.insertAll(
+            _boughtProductsInfo!.products.length, productsInfo.products);
+      }
 
       /// The 'Controller' has access to the 'ViewState' and can refresh
       /// the 'ControllerWidgets' via 'refreshUI()'.
@@ -84,7 +108,7 @@ class MemberProductsController extends Controller {
     presenter.getMemberBoughtProductsOnError = (e) {
       debugPrint('Could not retrieve bought products');
 
-      _boughtProducts = null;
+      _boughtProductsInfo = null;
 
       refreshUI();
     };
@@ -103,12 +127,32 @@ class MemberProductsController extends Controller {
   void onDisposed() {
     // don't forget to dispose of the presenter
     presenter.dispose();
+    scrollController.dispose();
     super.onDisposed();
   }
 
-  void getHistoryProducts() => presenter.getMemberHistoryProducts();
+  void getBrowseProducts(int page) => presenter.getMemberBrowseProducts(page);
 
-  void getFavoriteProducts() => presenter.getMemberFavoriteProducts();
+  void getFavoriteProducts(int page) =>
+      presenter.getMemberFavoriteProducts(page);
 
-  void getBoughtProducts() => presenter.getMemberBoughtProducts();
+  void getBoughtProducts(int page) => presenter.getMemberBoughtProducts(page);
+
+  bool hasNextBrowseProductsPage() {
+    final totalPage = _browseProductsInfo?.totalPage ?? 0;
+    final currentPage = _browseProductsInfo?.currentPage ?? 0;
+    return currentPage < totalPage;
+  }
+
+  bool hasNextFavoriteProductsPage() {
+    final totalPage = _favoriteProductsInfo?.totalPage ?? 0;
+    final currentPage = _favoriteProductsInfo?.currentPage ?? 0;
+    return currentPage < totalPage;
+  }
+
+  bool hasNextBoughtProductsPage() {
+    final totalPage = _boughtProductsInfo?.totalPage ?? 0;
+    final currentPage = _boughtProductsInfo?.currentPage ?? 0;
+    return currentPage < totalPage;
+  }
 }
