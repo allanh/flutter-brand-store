@@ -28,12 +28,10 @@ class PhoneTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> children = [
-      const Text('市話',
-          style: TextStyle(
-              color: UdiColors.greyishBrown,
-              fontFamily: 'PingFangTC Semibold',
-              fontWeight: FontWeight.w600,
-              fontSize: 14.0)),
+      Text(
+        '市話',
+        style: Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 14.0),
+      ),
       const SizedBox(height: 8.0),
       Row(children: [
         SizedBox(

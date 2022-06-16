@@ -14,6 +14,9 @@ class MobileInputTile extends StatefulWidget {
 class _MobileInputTileState extends State<MobileInputTile> {
   @override
   Widget build(BuildContext context) {
+    const UnderlineInputBorder _underlineInputBorder = UnderlineInputBorder(
+      borderSide: BorderSide(color: UdiColors.veryLightGrey2),
+    );
     return Padding(
       padding: const EdgeInsets.only(top: 42.0, left: 24.0, right: 24.0),
       child: Row(
@@ -28,15 +31,9 @@ class _MobileInputTileState extends State<MobileInputTile> {
               decoration: InputDecoration(
                 counterText: '',
                 hintText: '+886',
-                border: UnderlineInputBorder(
-                  borderSide: BorderSide(color: UdiColors.veryLightGrey2),
-                ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: UdiColors.veryLightGrey2),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: UdiColors.veryLightGrey2),
-                ),
+                border: _underlineInputBorder,
+                enabledBorder: _underlineInputBorder,
+                focusedBorder: _underlineInputBorder,
               ),
             ),
           ),
@@ -49,19 +46,16 @@ class _MobileInputTileState extends State<MobileInputTile> {
               onChanged: (text) => widget.handleMobileChange(text),
               cursorColor: UdiColors.brownGrey2,
               keyboardType: TextInputType.phone,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 counterText: '',
                 hintText: '請輸入手機號碼',
-                hintStyle: TextStyle(color: UdiColors.brownGrey2),
-                border: UnderlineInputBorder(
-                  borderSide: BorderSide(color: UdiColors.veryLightGrey2),
-                ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: UdiColors.veryLightGrey2),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: UdiColors.veryLightGrey2),
-                ),
+                hintStyle: Theme.of(context).textTheme.caption!.copyWith(
+                      fontSize: 16.0,
+                      color: UdiColors.brownGrey2,
+                    ),
+                border: _underlineInputBorder,
+                enabledBorder: _underlineInputBorder,
+                focusedBorder: _underlineInputBorder,
               ),
             ),
           ),

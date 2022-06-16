@@ -85,15 +85,15 @@ class HeaderView extends StatelessWidget {
     return SizedBox(
       height: 40.0,
       child: Row(
-        children: const [
+        children: [
           Padding(
-            padding: EdgeInsets.only(left: 14.0, top: 10.0, bottom: 10.0),
+            padding: const EdgeInsets.only(left: 14.0, top: 10.0, bottom: 10.0),
             child: Text(
               '我的服務',
-              style: TextStyle(
-                  fontFamily: 'PingFangTC-Semibold',
-                  fontSize: 14.0,
-                  color: Color.fromRGBO(76, 76, 76, 1.0)),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText2!
+                  .copyWith(fontSize: 14.0),
             ),
           ),
         ],

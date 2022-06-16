@@ -1,3 +1,4 @@
+import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:brandstores/src/domain/entities/member/member_center.dart';
 
@@ -125,12 +126,12 @@ class LevelDescriptionButton extends StatelessWidget {
                 primary: Colors.white,
                 shape: const StadiumBorder()),
             onPressed: _handleTap,
-            child: const Text('等級說明',
-                softWrap: false,
-                style: TextStyle(
-                    fontFamily: 'PingFangTC-Regular',
-                    fontSize: 12.0,
-                    color: Color.fromRGBO(76, 76, 76, 1))),
+            child: Text(
+              '等級說明',
+              softWrap: false,
+              style:
+                  Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
+            ),
           ),
         ),
       ],
@@ -148,10 +149,11 @@ class LevelBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const textStyle = TextStyle(
-        fontFamily: 'PingFangTC-Regular',
-        fontSize: 12.0,
-        color: Color.fromRGBO(180, 180, 180, 1));
+    TextStyle textStyle = Theme.of(context).textTheme.caption!.copyWith(
+          fontSize: 12.0,
+          color: UdiColors.brownGrey2,
+        );
+
     return Padding(
         padding: const EdgeInsets.only(left: 24.0, right: 24.0),
         child: Column(
@@ -165,7 +167,7 @@ class LevelBar extends StatelessWidget {
             /// 最小等級/最大等級
             Row(
               children: <Widget>[
-                const Expanded(
+                Expanded(
                     child: Text('Lv.1',
                         textAlign: TextAlign.left, style: textStyle)),
                 Expanded(
@@ -241,24 +243,19 @@ class Information extends StatelessWidget {
         children: [
           Text(
             name,
-            style: const TextStyle(
-                fontFamily: 'PingFangTC-Semibold',
-                fontSize: 16.0,
-                color: Color.fromRGBO(76, 76, 76, 1.0)),
+            style: Theme.of(context).textTheme.bodyText2!,
           ),
           Text(
             member.levelName,
-            style: const TextStyle(
-                fontFamily: 'PingFangTC-Semibold',
-                fontSize: 16.0,
-                color: color2),
+            style:
+                Theme.of(context).textTheme.bodyText2!.copyWith(color: color2),
           ),
           Text(
             member.period,
-            style: const TextStyle(
-                fontFamily: 'PingFangTC-Semibold',
-                fontSize: 12.0,
-                color: color2),
+            style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                  color: color2,
+                  fontSize: 12.0,
+                ),
           ),
         ],
       ),

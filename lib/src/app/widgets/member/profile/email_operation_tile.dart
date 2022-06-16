@@ -21,6 +21,12 @@ class EmailOperationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    HyperLinkButton _emailHyperLinkButton = HyperLinkButton(
+      context: context,
+      text: 'Email變更',
+      enable: true,
+      handleTap: handleChangeEmail,
+    );
     return Padding(
         padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
         child: SizedBox(
@@ -35,12 +41,10 @@ class EmailOperationTile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(children: [
-                      Text(email,
-                          style: const TextStyle(
-                              color: UdiColors.greyishBrown,
-                              fontFamily: 'PingFangTC Regular',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14.0)),
+                      Text(
+                        email,
+                        style: Theme.of(context).textTheme.caption,
+                      ),
                       const SizedBox(width: 10.0),
                       Image(
                           image: AssetImage(isValidation
@@ -51,24 +55,17 @@ class EmailOperationTile extends StatelessWidget {
                     Row(
                         children: isValidation
                             ? [
-                                HyperLinkButton(
-                                    context: context,
-                                    text: 'Email變更',
-                                    enable: true,
-                                    handleTap: handleChangeEmail)
+                                _emailHyperLinkButton,
                               ]
                             : [
                                 HyperLinkButton(
-                                    context: context,
-                                    text: '發送驗證信',
-                                    enable: true,
-                                    handleTap: handleSendValidationMail),
+                                  context: context,
+                                  text: '發送驗證信',
+                                  enable: true,
+                                  handleTap: handleSendValidationMail,
+                                ),
                                 const SizedBox(width: 4),
-                                HyperLinkButton(
-                                    context: context,
-                                    text: 'Email變更',
-                                    enable: true,
-                                    handleTap: handleChangeEmail)
+                                _emailHyperLinkButton,
                               ])
                   ])
             ])));

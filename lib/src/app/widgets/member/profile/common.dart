@@ -16,15 +16,15 @@ class HyperLinkText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text,
-        style: TextStyle(
+    return Text(
+      text,
+      style: Theme.of(context).textTheme.caption!.copyWith(
             color: active
                 ? Theme.of(context).appBarTheme.backgroundColor
                 : UdiColors.brownGrey2,
-            fontFamily: 'PingFangTC Regular',
-            fontWeight: FontWeight.w400,
             fontSize: 12.0,
-            decoration: TextDecoration.underline));
+          ),
+    );
   }
 }
 
@@ -63,12 +63,13 @@ class ValidResultText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(isValid ? '已驗證' : '未驗證',
-        style: TextStyle(
+    return Text(
+      isValid ? '已驗證' : '未驗證',
+      style: Theme.of(context).textTheme.caption!.copyWith(
             color: isValid ? UdiColors.green : UdiColors.strawberry,
-            fontFamily: 'PingFangTC Regular',
-            fontWeight: FontWeight.w400,
-            fontSize: 12.0));
+            fontSize: 12.0,
+          ),
+    );
   }
 }
 
@@ -88,19 +89,18 @@ class RequiresText extends StatelessWidget {
     return RichText(
       text: TextSpan(
           text: text,
-          style: const TextStyle(
-              color: UdiColors.greyishBrown,
-              fontFamily: 'PingFangTC Semibold',
-              fontWeight: FontWeight.w600,
-              fontSize: 14.0),
+          style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                color: UdiColors.greyishBrown,
+                fontSize: 14.0,
+              ),
           children: <TextSpan>[
             TextSpan(
-                text: "*",
-                style: TextStyle(
+              text: "*",
+              style: Theme.of(context).textTheme.bodyText2!.copyWith(
                     color: UdiColors.strawberry,
-                    fontFamily: 'PingFangTC Semibold',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14.0))
+                    fontSize: 14.0,
+                  ),
+            )
           ]),
     );
   }
@@ -123,34 +123,32 @@ class HighlightTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    OutlineInputBorder _outlineInputBorder = OutlineInputBorder(
+      borderSide: BorderSide(
+        width: 1.0,
+        color: isHighlight ? UdiColors.strawberry : UdiColors.veryLightGrey2,
+      ),
+    );
+
     return TextField(
         onChanged: handleChange,
         cursorColor: UdiColors.brownGrey2,
         decoration: InputDecoration(
             labelText: text,
-            labelStyle: const TextStyle(color: UdiColors.greyishBrown),
+            labelStyle: Theme.of(context).textTheme.caption!.copyWith(
+                  color: UdiColors.greyishBrown,
+                  fontSize: 16.0,
+                ),
             isCollapsed: true,
             floatingLabelBehavior: FloatingLabelBehavior.never,
-            border: OutlineInputBorder(
-                borderSide: BorderSide(
-                    width: 1.0,
-                    color: isHighlight
-                        ? UdiColors.strawberry
-                        : UdiColors.veryLightGrey2)),
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                    width: 1.0,
-                    color: isHighlight
-                        ? UdiColors.strawberry
-                        : UdiColors.veryLightGrey2)),
-            focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                    width: 1.0,
-                    color: isHighlight
-                        ? UdiColors.strawberry
-                        : UdiColors.veryLightGrey2)),
+            border: _outlineInputBorder,
+            enabledBorder: _outlineInputBorder,
+            focusedBorder: _outlineInputBorder,
             hintText: hintText,
-            hintStyle: const TextStyle(color: UdiColors.brownGrey2),
+            hintStyle: Theme.of(context).textTheme.caption!.copyWith(
+                  color: UdiColors.brownGrey2,
+                  fontSize: 16.0,
+                ),
             contentPadding: const EdgeInsets.only(
               left: 10.0,
               top: 40.0 / 4,
@@ -178,40 +176,33 @@ class DropdownTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    OutlineInputBorder _outlineInputBorder = OutlineInputBorder(
+      borderSide: BorderSide(
+        width: 1.0,
+        color: (isValid) ? UdiColors.veryLightGrey2 : UdiColors.strawberry,
+      ),
+    );
+
     List<Widget> children = [
       TextField(
           enabled: false,
           cursorColor: UdiColors.brownGrey2,
           decoration: InputDecoration(
               labelText: text,
-              labelStyle: const TextStyle(color: UdiColors.greyishBrown),
+              labelStyle: Theme.of(context).textTheme.caption!.copyWith(
+                    color: UdiColors.greyishBrown,
+                    fontSize: 16.0,
+                  ),
               isCollapsed: true,
-              border: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1.0,
-                      color: (isValid)
-                          ? UdiColors.veryLightGrey2
-                          : UdiColors.strawberry)),
-              enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1.0,
-                      color: (isValid)
-                          ? UdiColors.veryLightGrey2
-                          : UdiColors.strawberry)),
-              focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1.0,
-                      color: (isValid)
-                          ? UdiColors.veryLightGrey2
-                          : UdiColors.strawberry)),
-              disabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 1.0,
-                      color: (isValid)
-                          ? UdiColors.veryLightGrey2
-                          : UdiColors.strawberry)),
+              border: _outlineInputBorder,
+              enabledBorder: _outlineInputBorder,
+              focusedBorder: _outlineInputBorder,
+              disabledBorder: _outlineInputBorder,
               hintText: hintText,
-              hintStyle: const TextStyle(color: UdiColors.brownGrey2),
+              hintStyle: Theme.of(context).textTheme.caption!.copyWith(
+                    color: UdiColors.brownGrey2,
+                    fontSize: 16.0,
+                  ),
               contentPadding: const EdgeInsets.only(
                 left: 10.0,
                 top: 40.0 / 4,
@@ -227,7 +218,10 @@ class DropdownTextField extends StatelessWidget {
     }
     return GestureDetector(
         onTap: handleTap,
-        child: Stack(alignment: Alignment.centerRight, children: children));
+        child: Stack(
+          alignment: Alignment.centerRight,
+          children: children,
+        ));
   }
 }
 
@@ -283,6 +277,18 @@ class InputTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    HighlightTextField _highlightTextField = HighlightTextField(
+      text: text,
+      hintText: hintText,
+      handleChange: handleChange,
+      isHighlight: false,
+    );
+
+    RequiresText _requiresText = RequiresText(
+      context: context,
+      text: title,
+    );
+
     return Padding(
         padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
         child: SizedBox(
@@ -292,22 +298,14 @@ class InputTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: isValid
                   ? [
-                      RequiresText(context: context, text: title),
+                      _requiresText,
                       const SizedBox(height: 8.0),
-                      HighlightTextField(
-                          text: text,
-                          hintText: hintText,
-                          handleChange: handleChange,
-                          isHighlight: false),
+                      _highlightTextField,
                     ]
                   : [
-                      RequiresText(context: context, text: title),
+                      _requiresText,
                       const SizedBox(height: 8.0),
-                      HighlightTextField(
-                          text: text,
-                          hintText: hintText,
-                          handleChange: handleChange,
-                          isHighlight: false),
+                      _highlightTextField,
                       const SizedBox(height: 3.0),
                       ErrorMessage(context: context, message: errorText)
                     ]),

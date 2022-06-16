@@ -19,6 +19,10 @@ class BrithdayTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    OutlineInputBorder _outlineInputBorder = const OutlineInputBorder(
+      borderSide: BorderSide(width: 1.0, color: UdiColors.veryLightGrey2),
+    );
+
     return Padding(
       padding: const EdgeInsets.only(
         left: 12.0,
@@ -29,12 +33,13 @@ class BrithdayTile extends StatelessWidget {
           height: 80.0,
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const Text('生日',
-                style: TextStyle(
-                    color: UdiColors.greyishBrown,
-                    fontFamily: 'PingFangTC Semibold',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14.0)),
+            Text(
+              '生日',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText2!
+                  .copyWith(fontSize: 14.0),
+            ),
             const SizedBox(height: 8.0),
             SizedBox(
               height: 40.0,
@@ -58,17 +63,12 @@ class BrithdayTile extends StatelessWidget {
                         hintText: '請選擇生日',
                         enabled: false,
                         suffixIcon: const Image(
-                          image: AssetImage('assets/images/icon_date_picker.png'),
+                          image:
+                              AssetImage('assets/images/icon_date_picker.png'),
                         ),
-                        border: const OutlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 1.0, color: UdiColors.veryLightGrey2)),
-                        enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 1.0, color: UdiColors.veryLightGrey2)),
-                        disabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(
-                                width: 1.0, color: UdiColors.veryLightGrey2)),
+                        border: _outlineInputBorder,
+                        enabledBorder: _outlineInputBorder,
+                        disabledBorder: _outlineInputBorder,
                         labelText: birthday,
                         labelStyle: TextStyle(
                             color: birthday != null

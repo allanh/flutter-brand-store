@@ -15,11 +15,14 @@ class ReorderableCard extends StatefulWidget {
 
   late Widget item;
 
+  bool? isEditing;
+
   ReorderableCard({
     Key? key,
     required this.item,
     required this.height,
     required this.isSelected,
+    this.isEditing = false,
   }) : super(key: key);
 
   @override

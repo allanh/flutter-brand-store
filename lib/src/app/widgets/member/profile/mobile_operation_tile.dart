@@ -42,12 +42,10 @@ class MobileOperationTile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(children: [
-                      Text(sensitiveMobile,
-                          style: const TextStyle(
-                              color: UdiColors.greyishBrown,
-                              fontFamily: 'PingFangTC Regular',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14.0)),
+                      Text(
+                        sensitiveMobile,
+                        style: Theme.of(context).textTheme.caption!,
+                      ),
                       const SizedBox(width: 10.0),
                       Image(
                           image: AssetImage(isValidation

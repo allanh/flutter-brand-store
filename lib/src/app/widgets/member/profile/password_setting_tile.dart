@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:brandstores/src/app/widgets/member/profile/common.dart';
+
 /// 建立密碼設定區塊
 class PasswordSettingTile extends StatelessWidget {
   const PasswordSettingTile({
@@ -23,24 +24,23 @@ class PasswordSettingTile extends StatelessWidget {
             height: 80.0,
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('密碼',
-                  style: TextStyle(
-                      color: UdiColors.greyishBrown,
-                      fontFamily: 'PingFangTC Semibold',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14.0)),
+              Text(
+                '密碼',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText2!
+                    .copyWith(fontSize: 14.0),
+              ),
               const SizedBox(height: 8.0),
               Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(children: [
-                      Text(isSettingPassword ? '************' : '-',
-                          style: TextStyle(
-                              color: UdiColors.greyishBrown,
-                              fontFamily: 'PingFangTC Regular',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14.0)),
+                      Text(
+                        isSettingPassword ? '************' : '-',
+                        style: Theme.of(context).textTheme.caption!,
+                      ),
                     ]),
                     Row(children: [
                       isSettingPassword

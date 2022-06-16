@@ -82,15 +82,13 @@ class _ValidationCodeInputTileState extends State<ValidationCodeInputTile> {
                 _node.nextFocus();
               });
             },
-            child: const Padding(
-              padding: EdgeInsets.only(top: 25.0),
-              child: Text(
-                '請輸入驗證簡訊4位數驗證碼',
-                style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.normal,
-                    color: UdiColors.brownGrey),
-              ),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 25.0),
+              child: Text('請輸入驗證簡訊4位數驗證碼',
+                  style: Theme.of(context)
+                      .textTheme
+                      .caption!
+                      .copyWith(fontSize: 16.0)),
             )),
       );
     }
@@ -118,10 +116,10 @@ class _ValidationCodeInputTileState extends State<ValidationCodeInputTile> {
               order: NumericFocusOrder(index.toDouble()),
               child: TextField(
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                    fontSize: 40.0,
-                    fontWeight: FontWeight.w600,
-                    color: UdiColors.greyishBrown),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText2!
+                    .copyWith(fontSize: 40.0),
                 maxLength: 1,
                 onChanged: (text) => handleCodeChange(text, index),
                 onTap: () {
@@ -131,7 +129,6 @@ class _ValidationCodeInputTileState extends State<ValidationCodeInputTile> {
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   counterText: '',
-                  hintStyle: const TextStyle(color: UdiColors.brownGrey2),
                   border: _underlineInputBorder,
                   enabledBorder: _underlineInputBorder,
                   focusedBorder: _underlineInputBorder,

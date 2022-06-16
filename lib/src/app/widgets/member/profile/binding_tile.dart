@@ -33,12 +33,13 @@ class BindingTile extends StatelessWidget {
                   Row(children: [
                     Image(height: 46.0, width: 46.0, image: AssetImage(image)),
                     const SizedBox(width: 16.0),
-                    Text(isBinding ? '已綁定' : '尚未綁定',
-                        style: const TextStyle(
-                            color: UdiColors.brownGrey,
-                            fontFamily: 'PingFangTC Regular',
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14.0))
+                    Text(
+                      isBinding ? '已綁定' : '尚未綁定',
+                      style: Theme.of(context)
+                          .textTheme
+                          .caption!
+                          .copyWith(color: UdiColors.brownGrey),
+                    ),
                   ]),
                   Row(children: [
                     isBinding

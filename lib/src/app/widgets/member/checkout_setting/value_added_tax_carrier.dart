@@ -13,9 +13,27 @@ class ValueAddedTaxCarrier extends StatefulWidget
   ValueAddedTaxCarrier({
     Key? key,
     required this.isDefault,
+    this.isExpand = false,
+    this.code = '',
+    this.title = '',
+    required this.handleCollapse,
+    required this.handleExpand,
+    required this.handleSubmit,
   }) : super(key: key);
   @override
   bool isDefault;
+
+  String code;
+
+  String title;
+
+  bool isExpand;
+
+  Function handleCollapse;
+
+  Function handleExpand;
+
+  Function handleSubmit;
 
   @override
   State<ValueAddedTaxCarrier> createState() => _ValueAddedTaxCarrierState();
@@ -24,17 +42,20 @@ class ValueAddedTaxCarrier extends StatefulWidget
 class _ValueAddedTaxCarrierState extends State<ValueAddedTaxCarrier> {
   @override
   Widget build(BuildContext context) {
+    TextStyle _hintStyle = Theme.of(context)
+        .textTheme
+        .caption!
+        .copyWith(color: UdiColors.brownGrey2);
+
     SizedBox _taxIdInputTile = SizedBox(
       height: 36.0,
       child: TextField(
+        onChanged: (text) => setState(() => widget.code = text),
         cursorColor: UdiColors.veryLightGrey2,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(horizontal: 18.0),
           hintText: '請輸入統一編號',
-          hintStyle: const TextStyle(
-            fontSize: 14.0,
-            color: UdiColors.brownGrey2,
-          ),
+          hintStyle: _hintStyle,
           border: _buildTextFieldBorder(),
           enabledBorder: _buildTextFieldBorder(),
           focusedBorder: _buildTextFieldBorder(),
@@ -45,14 +66,12 @@ class _ValueAddedTaxCarrierState extends State<ValueAddedTaxCarrier> {
     SizedBox _titleInputTile = SizedBox(
       height: 36.0,
       child: TextField(
+        onChanged: (text) => setState(() => widget.title = text),
         cursorColor: UdiColors.veryLightGrey2,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(horizontal: 18.0),
           hintText: '請輸入發票抬頭',
-          hintStyle: const TextStyle(
-            fontSize: 14.0,
-            color: UdiColors.brownGrey2,
-          ),
+          hintStyle: _hintStyle,
           border: _buildTextFieldBorder(),
           enabledBorder: _buildTextFieldBorder(),
           focusedBorder: _buildTextFieldBorder(),
@@ -60,79 +79,89 @@ class _ValueAddedTaxCarrierState extends State<ValueAddedTaxCarrier> {
       ),
     );
 
-    Text _title = const Text(
+    Text _title = Text(
       '公司-三聯式電子發票',
-      style: TextStyle(fontSize: 14.0),
+      style: Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 14.0),
     );
 
-    Text _hintMessage = const Text(
+    Text _hintMessage = Text(
       '於鑑賞期過後寄出電子發票至訂購人Email。',
-      style: TextStyle(fontSize: 12.0, color: UdiColors.brownGrey),
+      style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
     );
 
-    Text _taxIdTitle = const Text(
+    Text _taxIdTitle = Text(
       '統一編號*',
-      style: TextStyle(fontSize: 14.0),
+      style: Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 14.0),
     );
 
-    Text _companyTitle = const Text(
+    Text _companyTitle = Text(
       '發票抬頭',
-      style: TextStyle(fontSize: 14.0),
+      style: Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 14.0),
     );
-
-    void handleClose() {}
 
     void handleReset() {}
 
+    CarrierActionButtons _carrierActionButtons = CarrierActionButtons(
+      handleReset: handleReset,
+      handleSubmit: widget.code.isEmpty || widget.title.isEmpty
+          ? null
+          : () => widget.handleSubmit(
+                widget.code,
+                widget.title,
+              ),
+    );
+
+    Row _topRow = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _title,
+        widget.isExpand
+            ? CloseButton(
+                onPressed: () => widget.handleCollapse(),
+              )
+            : IconButton(
+                onPressed: () => widget.handleExpand(),
+                icon: const Icon(Icons.edit_rounded),
+                color: UdiColors.brownGrey,
+              )
+      ],
+    );
+    Row _bottomRow = Row(
+      mainAxisAlignment: widget.isDefault
+          ? MainAxisAlignment.spaceBetween
+          : MainAxisAlignment.end,
+      children: widget.isDefault
+          ? [
+              const DefaultIndicator(),
+              _carrierActionButtons,
+            ]
+          : [_carrierActionButtons],
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _title,
-              CloseButton(
-                onPressed: handleClose,
-              )
-            ],
-          ),
-          _hintMessage,
-          const SizedBox(height: 12.0),
-          const Divider(
-            height: 1.0,
-            color: UdiColors.veryLightGrey2,
-          ),
-          const SizedBox(height: 12.0),
-          _taxIdTitle,
-          const SizedBox(height: 8.0),
-          _taxIdInputTile,
-          const SizedBox(height: 15.0),
-          _companyTitle,
-          const SizedBox(height: 8.0),
-          _titleInputTile,
-          const SizedBox(height: 20.0),
-          Row(
-            mainAxisAlignment: widget.isDefault
-                ? MainAxisAlignment.spaceBetween
-                : MainAxisAlignment.end,
-            children: widget.isDefault
-                ? [
-                    const DefaultIndicator(),
-                    CarrierActionButtons(
-                      handleReset: handleReset,
-                      handleSubmit: null,
-                    ),
-                  ]
-                : [
-                    CarrierActionButtons(
-                      handleReset: handleReset,
-                      handleSubmit: null,
-                    )
-                  ],
-          )
-        ],
+        children: widget.isExpand
+            ? [
+                _topRow,
+                _hintMessage,
+                const SizedBox(height: 12.0),
+                const Divider(
+                  height: 1.0,
+                  color: UdiColors.veryLightGrey2,
+                ),
+                const SizedBox(height: 12.0),
+                _taxIdTitle,
+                const SizedBox(height: 8.0),
+                _taxIdInputTile,
+                const SizedBox(height: 15.0),
+                _companyTitle,
+                const SizedBox(height: 8.0),
+                _titleInputTile,
+                const SizedBox(height: 20.0),
+                _bottomRow
+              ]
+            : [_topRow],
       ),
     );
   }

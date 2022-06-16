@@ -11,6 +11,14 @@ import '../../../../widgets/member/checkout_setting/mobile_carrier.dart';
 import '../../../../widgets/member/checkout_setting/value_added_tax_carrier.dart';
 import 'invoice_setting_controller.dart';
 
+enum InvoiceType {
+  memberAccountCarrier,
+  mobileCarrier,
+  citizenDigitalCertificateCarrier,
+  valueAddedTaxCarrier,
+  donationInvoice,
+}
+
 class InvoiceSettingPage extends View {
   InvoiceSettingPage({
     Key? key,
@@ -28,103 +36,190 @@ class _InvoiceSettingPageState
             DataInvoiceSettingRepository(),
           ),
         );
+  bool _isExpandedMobileCarrier = false;
+  bool _isExpandedCitizenDigitalCertificateCarrier = false;
+  bool _isExpandedValueAddedTaxCarrier = false;
+  bool _isExpandedDonationInvoice = false;
 
-  final List<ReorderableCard> _carrierCards = <ReorderableCard>[
-    /// 會員載具
-    ReorderableCard(
-        key: const Key('0'),
-        item: MemberAccountCarrier(isDefault: true, id: '202021211345'),
-        height: 120.0,
-        isSelected: true),
-
-    /// 個人-手機條碼載具
-    ReorderableCard(
-        key: const Key('1'),
-        item: MobileCarrier(isDefault: false),
-        height: 171.0,
-        isSelected: false),
-
-    /// 個人-自然人憑證
-    ReorderableCard(
-        key: const Key('2'),
-        item: CitizenDigitalCertificateCarrier(isDefault: false),
-        height: 190.0,
-        isSelected: false),
-
-    /// 公司-三聯式電子發票
-    ReorderableCard(
-        key: const Key('3'),
-        item: ValueAddedTaxCarrier(isDefault: false),
-        height: 305.0,
-        isSelected: false),
-
-    /// 捐贈發票
-    ReorderableCard(
-        key: const Key('4'),
-        item: DonationInvoiceCarrier(isDefault: false),
-        height: 290.0,
-        isSelected: false),
+  List<InvoiceType> invoiceTypes = [
+    InvoiceType.memberAccountCarrier,
+    InvoiceType.mobileCarrier,
+    InvoiceType.citizenDigitalCertificateCarrier,
+    InvoiceType.valueAddedTaxCarrier,
+    InvoiceType.donationInvoice,
   ];
-
-  void handleCarriers(int oldIndex, int newIndex) {
-    /// 調整 index 避免發生 out of bounds
-    if (oldIndex < newIndex) {
-      newIndex -= 1;
-    }
-
-    /// 取出被拖移的卡片
-    final ReorderableCard _carrier = _carrierCards.removeAt(oldIndex);
-
-    /// 根據新的位置插入被拖移的卡片
-    _carrierCards.insert(newIndex, _carrier);
-
-    /// 將第一張卡片設定為選擇狀態，其他則為非選擇
-    _carrierCards.asMap().forEach((index, card) {
-      card.isSelected = index == 0;
-
-      /// 顯示卡片預設的標籤
-      if (card.item is DefaultCarrierInterface) {
-        (card.item as DefaultCarrierInterface).isDefault =
-            _carrierCards.indexOf(card) == 0;
-      }
-    });
-  }
-
-  Widget header = Builder(builder: (context) {
-    return Column(
-      children: [
-        const SizedBox(height: 12.0),
-        Text('結帳時，發票預設為會員載具，您可以設定其他常用的發票資料。',
-            style: Theme.of(context)
-                .textTheme
-                .caption
-                ?.copyWith(color: UdiColors.brownGrey)),
-        const SizedBox(height: 12.0),
-        Row(
-          children: [
-            Container(
-                color: Theme.of(context).appBarTheme.backgroundColor,
-                height: 24.0,
-                width: 4.0),
-            const SizedBox(
-              width: 6.0,
-            ),
-            Text('預設發票設定',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge
-                    ?.copyWith(color: UdiColors.greyishBrown))
-          ],
-        ),
-        const SizedBox(height: 12.0),
-      ],
-    );
-  });
 
   @override
   Widget get view {
     return ControlledWidgetBuilder<InvoiceSettingController>(
         builder: (context, controller) {
+      void handleCarrierExpand(InvoiceType type, bool isExpand) {
+        setState(() {
+          switch (type) {
+            case InvoiceType.memberAccountCarrier:
+              break;
+            case InvoiceType.mobileCarrier:
+              _isExpandedMobileCarrier = isExpand;
+              break;
+            case InvoiceType.citizenDigitalCertificateCarrier:
+              _isExpandedCitizenDigitalCertificateCarrier = isExpand;
+              break;
+            case InvoiceType.valueAddedTaxCarrier:
+              _isExpandedValueAddedTaxCarrier = isExpand;
+              break;
+            case InvoiceType.donationInvoice:
+              _isExpandedDonationInvoice = isExpand;
+              break;
+          }
+        });
+      }
+
+      void handleCollapse(InvoiceType type) {
+        handleCarrierExpand(type, false);
+      }
+
+      void handleExpand(InvoiceType type) {
+        handleCarrierExpand(type, true);
+      }
+
+      void handleSubmitMobileCarrier(String code) {}
+
+      void handleSubmitCitizenDigitalCertificateCarrier(String code) {}
+
+      void handleSubmitValueAddedTaxCarrier(String code, String title) {}
+
+      List<ReorderableCard> _buildReorderableCards(
+          List<InvoiceType> invoiceTypes) {
+        return List.generate(invoiceTypes.length, (index) {
+          switch (invoiceTypes[index]) {
+
+            /// 會員載具
+            case InvoiceType.memberAccountCarrier:
+              return ReorderableCard(
+                  key: ValueKey(index),
+                  item: MemberAccountCarrier(
+                      isDefault: index == 0, id: '202021211345'),
+                  height: 120.0,
+                  isSelected: index == 0);
+
+            /// 個人-手機條碼載具
+            case InvoiceType.mobileCarrier:
+              return ReorderableCard(
+                  key: ValueKey(index),
+                  item: MobileCarrier(
+                    isDefault: index == 0,
+                    isExpand: _isExpandedMobileCarrier,
+                    handleCollapse: () =>
+                        handleCollapse(InvoiceType.mobileCarrier),
+                    handleEapand: () => handleExpand(InvoiceType.mobileCarrier),
+                    handleSubmit: (code) => handleSubmitMobileCarrier,
+                  ),
+                  height: _isExpandedMobileCarrier ? 171.0 : 56.0,
+                  isSelected: index == 0);
+
+            /// 個人-自然人憑證
+            case InvoiceType.citizenDigitalCertificateCarrier:
+              return ReorderableCard(
+                  key: ValueKey(index),
+                  item: CitizenDigitalCertificateCarrier(
+                    isDefault: index == 0,
+                    isExpand: _isExpandedCitizenDigitalCertificateCarrier,
+                    handleCollapse: () => handleCollapse(
+                        InvoiceType.citizenDigitalCertificateCarrier),
+                    handleExpand: () => handleExpand(
+                        InvoiceType.citizenDigitalCertificateCarrier),
+                    handleSubmit: (code) =>
+                        handleSubmitCitizenDigitalCertificateCarrier,
+                  ),
+                  height: _isExpandedCitizenDigitalCertificateCarrier
+                      ? 190.0
+                      : 56.0,
+                  isSelected: index == 0);
+
+            /// 公司-三聯式電子發票
+            case InvoiceType.valueAddedTaxCarrier:
+              return ReorderableCard(
+                  key: ValueKey(index),
+                  item: ValueAddedTaxCarrier(
+                    isDefault: index == 0,
+                    isExpand: _isExpandedValueAddedTaxCarrier,
+                    handleCollapse: () =>
+                        handleCollapse(InvoiceType.valueAddedTaxCarrier),
+                    handleExpand: () =>
+                        handleExpand(InvoiceType.valueAddedTaxCarrier),
+                    handleSubmit: (code, title) =>
+                        handleSubmitValueAddedTaxCarrier,
+                  ),
+                  height: _isExpandedValueAddedTaxCarrier ? 305.0 : 56.0,
+                  isSelected: index == 0);
+
+            /// 捐贈發票
+            case InvoiceType.donationInvoice:
+              return ReorderableCard(
+                  key: ValueKey(index),
+                  item: DonationInvoiceCarrier(
+                    isDefault: index == 0,
+                    isExpand: _isExpandedDonationInvoice,
+                    handleCollpase: () =>
+                        handleCollapse(InvoiceType.donationInvoice),
+                    handleExpand: () =>
+                        handleExpand(InvoiceType.donationInvoice),
+                  ),
+                  height: _isExpandedDonationInvoice ? 290.0 : 56.0,
+                  isSelected: index == 0);
+          }
+        });
+      }
+
+      List<ReorderableCard> _carrierCards =
+          _buildReorderableCards(invoiceTypes);
+
+      void handleCarriers(int oldIndex, int newIndex) {
+        /// 調整 index 避免發生 out of bounds
+        if (oldIndex < newIndex) {
+          newIndex -= 1;
+        }
+
+        /// 取出被拖移的載具
+        InvoiceType _type = invoiceTypes.removeAt(oldIndex);
+
+        /// 根據新的位置插入被拖移的載具
+        invoiceTypes.insert(newIndex, _type);
+
+        /// 根據重新排列的載具製作卡片
+        _carrierCards = _buildReorderableCards(invoiceTypes);
+      }
+
+      Widget header = Builder(builder: (context) {
+        return Column(
+          children: [
+            const SizedBox(height: 12.0),
+            Text('結帳時，發票預設為會員載具，您可以設定其他常用的發票資料。',
+                style: Theme.of(context)
+                    .textTheme
+                    .caption
+                    ?.copyWith(color: UdiColors.brownGrey)),
+            const SizedBox(height: 12.0),
+            Row(
+              children: [
+                Container(
+                    color: Theme.of(context).appBarTheme.backgroundColor,
+                    height: 24.0,
+                    width: 4.0),
+                const SizedBox(
+                  width: 6.0,
+                ),
+                Text(
+                  '預設發票設定',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                )
+              ],
+            ),
+            const SizedBox(height: 12.0),
+          ],
+        );
+      });
+
       return Scaffold(
           appBar: AppBar(title: const Text('發票設定')),
           body: Padding(

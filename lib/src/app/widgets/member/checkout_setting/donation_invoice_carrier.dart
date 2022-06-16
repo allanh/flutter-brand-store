@@ -15,10 +15,22 @@ class DonationInvoiceCarrier extends StatefulWidget
   DonationInvoiceCarrier({
     Key? key,
     required this.isDefault,
+    this.isExpand = false,
+    this.code = '',
+    required this.handleCollpase,
+    required this.handleExpand,
   }) : super(key: key);
 
   @override
   bool isDefault;
+
+  String code;
+
+  bool isExpand;
+
+  Function handleCollpase;
+
+  Function handleExpand;
   @override
   State<DonationInvoiceCarrier> createState() => _DonationInvoiceCarrierState();
 }
@@ -62,94 +74,107 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
           color: Theme.of(context).appBarTheme.backgroundColor),
     );
 
-    Text _donationTitle = const Text(
+    Text _donationTitle = Text(
       '捐贈發票',
-      style: TextStyle(fontSize: 14.0),
+      style: Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 14.0),
     );
 
-    Text _hintTitle = const Text(
+    Text _hintTitle = Text(
       '請選擇欲捐贈的機構',
-      style: TextStyle(fontSize: 12.0, color: UdiColors.brownGrey),
+      style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
     );
-
-    void handleClose() {}
 
     void handleReset() {}
 
+    Row _topRow = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _donationTitle,
+        widget.isExpand
+            ? CloseButton(
+                onPressed: () => widget.handleCollpase(),
+              )
+            : IconButton(
+                onPressed: () => widget.handleExpand(),
+                icon: const Icon(Icons.edit_rounded),
+                color: UdiColors.brownGrey,
+              ),
+      ],
+    );
+
+    TextStyle _hintStyle = Theme.of(context).textTheme.caption!.copyWith(
+          color: UdiColors.brownGrey2,
+          fontSize: 12.0,
+        );
+
+    Row inputCodeRow = Row(children: [
+      Padding(
+        padding: const EdgeInsets.only(left: 40.0, top: 8.0),
+        child: SizedBox(
+          height: 36.0,
+          width: 110.0,
+          child: TextField(
+            cursorColor: UdiColors.veryLightGrey2,
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 18.0),
+              hintText: '請輸入捐贈碼',
+              hintStyle: _hintStyle,
+              border: _buildTextFieldBorder(),
+              enabledBorder: _buildTextFieldBorder(),
+              focusedBorder: _buildTextFieldBorder(),
+            ),
+          ),
+        ),
+      ),
+      const SizedBox(width: 12.0),
+      InkWell(
+        child: _searchButtonTitle,
+        onTap: () {},
+      ),
+    ]);
+
+    CarrierActionButtons _carrierActionButtons = CarrierActionButtons(
+      handleReset: handleReset,
+      handleSubmit: null,
+    );
+
+    Row _bottomRow = Row(
+      mainAxisAlignment: widget.isDefault
+          ? MainAxisAlignment.spaceBetween
+          : MainAxisAlignment.end,
+      children: widget.isDefault
+          ? [
+              const DefaultIndicator(),
+              _carrierActionButtons,
+            ]
+          : [
+              _carrierActionButtons,
+            ],
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _donationTitle,
-              CloseButton(
-                onPressed: handleClose,
-              ),
-            ],
-          ),
-          _hintTitle,
-          const SizedBox(height: 10.0),
-          _buildCheckboxOption(context, DonationType.genesis,
-              title: '創世基金會', value: isGenesisChecked),
-          const SizedBox(height: 13.0),
-          _buildCheckboxOption(context, DonationType.jtf,
-              title: '董氏基金會', value: isJtfChecked),
-          const SizedBox(height: 13.0),
-          _buildCheckboxOption(context, DonationType.other,
-              title: '其他機構', value: isOtherChecked),
-          Row(children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 40.0, top: 8.0),
-              child: SizedBox(
-                height: 36.0,
-                width: 110.0,
-                child: TextField(
-                  cursorColor: UdiColors.veryLightGrey2,
-                  decoration: InputDecoration(
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 18.0),
-                    hintText: '請輸入捐贈碼',
-                    hintStyle: const TextStyle(
-                      fontSize: 12.0,
-                      color: UdiColors.brownGrey2,
-                    ),
-                    border: _buildTextFieldBorder(),
-                    enabledBorder: _buildTextFieldBorder(),
-                    focusedBorder: _buildTextFieldBorder(),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 12.0),
-            InkWell(
-              child: _searchButtonTitle,
-              onTap: () {},
-            ),
-          ]),
-          const SizedBox(height: 20.0),
-          Row(
-            mainAxisAlignment: widget.isDefault
-                ? MainAxisAlignment.spaceBetween
-                : MainAxisAlignment.end,
-            children: widget.isDefault
-                ? [
-                    const DefaultIndicator(),
-                    CarrierActionButtons(
-                      handleReset: handleReset,
-                      handleSubmit: null,
-                    ),
-                  ]
-                : [
-                    CarrierActionButtons(
-                      handleReset: handleReset,
-                      handleSubmit: null,
-                    ),
-                  ],
-          )
-        ],
+        children: widget.isExpand
+            ? [
+                _topRow,
+                _hintTitle,
+                const SizedBox(height: 10.0),
+                _buildCheckboxOption(context, DonationType.genesis,
+                    title: '創世基金會', value: isGenesisChecked),
+                const SizedBox(height: 13.0),
+                _buildCheckboxOption(context, DonationType.jtf,
+                    title: '董氏基金會', value: isJtfChecked),
+                const SizedBox(height: 13.0),
+                _buildCheckboxOption(context, DonationType.other,
+                    title: '其他機構', value: isOtherChecked),
+                inputCodeRow,
+                const SizedBox(height: 20.0),
+                _bottomRow
+              ]
+            : [
+                _topRow,
+              ],
       ),
     );
   }

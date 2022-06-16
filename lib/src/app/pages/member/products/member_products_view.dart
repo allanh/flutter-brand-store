@@ -186,11 +186,10 @@ class _MemberProductsPageState
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton(
-                  style: const TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                    color: UdiColors.greyishBrown,
-                  ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6!
+                      .copyWith(fontSize: 14.0),
                   icon: const Icon(Icons.keyboard_arrow_down_outlined,
                       size: 24.0),
                   isDense: true,
@@ -442,9 +441,13 @@ class _MemberProductsPageState
           const Icon(Icons.access_time_filled,
               size: 14.0, color: UdiColors.brownGrey2),
           const SizedBox(width: 4.0),
-          Text(product.saleDate ?? '',
-              style:
-                  const TextStyle(fontSize: 12.0, color: UdiColors.brownGrey))
+          Text(
+            product.saleDate ?? '',
+            style: Theme.of(context).textTheme.caption!.copyWith(
+                  color: UdiColors.brownGrey,
+                  fontSize: 12.0,
+                ),
+          )
         ],
       ),
     );
@@ -463,12 +466,12 @@ class _MemberProductsPageState
   Padding _buildProductName(MemberProduct product, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, right: 12.0),
-      child: Text(product.name ?? '',
-          softWrap: true,
-          maxLines: 2,
-          style: Theme.of(context).textTheme.caption?.copyWith(
-                color: UdiColors.greyishBrown,
-              )),
+      child: Text(
+        product.name ?? '',
+        softWrap: true,
+        maxLines: 2,
+        style: Theme.of(context).textTheme.caption!,
+      ),
     );
   }
 

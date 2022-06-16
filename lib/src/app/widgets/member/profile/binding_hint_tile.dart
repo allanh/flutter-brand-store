@@ -32,23 +32,26 @@ class BindingHintTile extends StatelessWidget {
                           color: Theme.of(context).appBarTheme.backgroundColor,
                         ),
                         const SizedBox(width: 9.0),
-                        Text('綁定帳號',
-                            style: TextStyle(
-                                color: UdiColors.greyishBrown,
-                                fontFamily: 'PingFangTC Semibold',
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14.0))
+                        Text(
+                          '綁定帳號',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText2!
+                              .copyWith(fontSize: 14.0),
+                        )
                       ],
                     )),
                 const SizedBox(width: 9.0),
                 SizedBox(
-                    height: 24.0,
-                    child: Text('綁定帳號後，下次可使用這些帳號快速登入。',
-                        style: TextStyle(
-                            color: UdiColors.brownGrey,
-                            fontFamily: 'PingFangTC Regular',
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14.0)))
+                  height: 24.0,
+                  child: Text(
+                    '綁定帳號後，下次可使用這些帳號快速登入。',
+                    style: Theme.of(context)
+                        .textTheme
+                        .caption!
+                        .copyWith(color: UdiColors.brownGrey),
+                  ),
+                )
               ],
             )));
   }

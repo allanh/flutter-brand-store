@@ -30,12 +30,10 @@ class AddressTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var children = [
-      const Text('地址',
-          style: TextStyle(
-              color: UdiColors.greyishBrown,
-              fontFamily: 'PingFangTC Semibold',
-              fontWeight: FontWeight.w600,
-              fontSize: 14.0)),
+      Text(
+        '地址',
+        style: Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 14.0),
+      ),
       const SizedBox(height: 8.0),
       Row(children: [
         Expanded(

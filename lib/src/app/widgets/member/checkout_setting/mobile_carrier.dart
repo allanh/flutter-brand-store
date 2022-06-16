@@ -12,10 +12,25 @@ class MobileCarrier extends StatefulWidget implements DefaultCarrierInterface {
   MobileCarrier({
     Key? key,
     required this.isDefault,
+    this.isExpand = false,
+    this.code = '',
+    required this.handleCollapse,
+    required this.handleEapand,
+    required this.handleSubmit,
   }) : super(key: key);
 
   @override
   bool isDefault;
+
+  String code;
+
+  bool isExpand;
+
+  Function handleCollapse;
+
+  Function handleEapand;
+
+  Function handleSubmit;
 
   @override
   State<MobileCarrier> createState() => _MobileCarrierState();
@@ -24,71 +39,91 @@ class MobileCarrier extends StatefulWidget implements DefaultCarrierInterface {
 class _MobileCarrierState extends State<MobileCarrier> {
   @override
   Widget build(BuildContext context) {
-    Text _title = const Text('個人-手機條碼載具', style: TextStyle(fontSize: 14.0));
+    void handleReset() {}
 
-    Text _hintMessage = const Text(
-      '"/"開頭，共8碼',
-      style: TextStyle(fontSize: 12.0, color: UdiColors.brownGrey),
+    Text _title = Text(
+      '個人-手機條碼載具',
+      style: Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 14.0),
     );
 
-    void handleClose() {}
+    Text _hintMessage = Text(
+      '"/"開頭，共8碼',
+      style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
+    );
 
-    void handleReset() {}
+    TextStyle _hintStyle = Theme.of(context)
+        .textTheme
+        .caption!
+        .copyWith(color: UdiColors.brownGrey2);
+
+    SizedBox _codeInputField = SizedBox(
+      height: 36.0,
+      child: TextField(
+        onChanged: (text) => setState(() => widget.code = text),
+        cursorColor: UdiColors.veryLightGrey2,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 18.0),
+          hintText: '請輸入手機條碼',
+          hintStyle: _hintStyle,
+          border: _buildTextFieldBorder(),
+          enabledBorder: _buildTextFieldBorder(),
+          focusedBorder: _buildTextFieldBorder(),
+        ),
+      ),
+    );
+
+    CarrierActionButtons _carrierActionButtons = CarrierActionButtons(
+      handleReset: handleReset,
+      handleSubmit:
+          widget.code.isEmpty ? null : widget.handleSubmit(widget.code),
+    );
+
+    Row _bottomRow = Row(
+      mainAxisAlignment: widget.isDefault
+          ? MainAxisAlignment.spaceBetween
+          : MainAxisAlignment.end,
+      children: widget.isDefault
+          ? [
+              const DefaultIndicator(),
+              _carrierActionButtons,
+            ]
+          : [
+              _carrierActionButtons,
+            ],
+    );
+
+    Row _topRow = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _title,
+        widget.isExpand
+            ? CloseButton(
+                onPressed: () => widget.handleCollapse(),
+              )
+            : IconButton(
+                onPressed: () => widget.handleEapand(),
+                icon: const Icon(Icons.edit_rounded),
+                color: UdiColors.brownGrey,
+              )
+      ],
+    );
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _title,
-              CloseButton(
-                onPressed: handleClose,
-              )
-            ],
-          ),
-          _hintMessage,
-          const SizedBox(height: 6.0),
-          SizedBox(
-            height: 36.0,
-            child: TextField(
-              cursorColor: UdiColors.veryLightGrey2,
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 18.0),
-                hintText: '請輸入手機條碼',
-                hintStyle: const TextStyle(
-                  fontSize: 14.0,
-                  color: UdiColors.brownGrey2,
-                ),
-                border: _buildTextFieldBorder(),
-                enabledBorder: _buildTextFieldBorder(),
-                focusedBorder: _buildTextFieldBorder(),
-              ),
-            ),
-          ),
-          const SizedBox(height: 20.0),
-          Row(
-            mainAxisAlignment: widget.isDefault
-                ? MainAxisAlignment.spaceBetween
-                : MainAxisAlignment.end,
-            children: widget.isDefault
-                ? [
-                    const DefaultIndicator(),
-                    CarrierActionButtons(
-                      handleReset: handleReset,
-                      handleSubmit: null,
-                    ),
-                  ]
-                : [
-                    CarrierActionButtons(
-                      handleReset: handleReset,
-                      handleSubmit: null,
-                    ),
-                  ],
-          )
-        ],
+        children: widget.isExpand
+            ? [
+                _topRow,
+                _hintMessage,
+                const SizedBox(height: 6.0),
+                _codeInputField,
+                const SizedBox(height: 20.0),
+                _bottomRow
+              ]
+            : [
+                _topRow,
+              ],
       ),
     );
   }

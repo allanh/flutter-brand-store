@@ -24,7 +24,10 @@ class EmailInputTile extends StatelessWidget {
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
           hintText: '請輸入Email',
-          hintStyle: const TextStyle(color: UdiColors.brownGrey2),
+          hintStyle: Theme.of(context).textTheme.caption!.copyWith(
+                color: UdiColors.brownGrey2,
+                fontSize: 16.0,
+              ),
           border: _underlineInputBorder,
           enabledBorder: _underlineInputBorder,
           focusedBorder: _underlineInputBorder,

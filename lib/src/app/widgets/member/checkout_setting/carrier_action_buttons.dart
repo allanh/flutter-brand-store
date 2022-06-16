@@ -37,6 +37,7 @@ class _CarrierActionButtonsState extends State<CarrierActionButtons> {
                 style: _style,
               )),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(primary: _themeColor),
             onPressed:
                 widget.handleSubmit != null ? () => widget.handleSubmit : null,
             child: const Text('儲存'),

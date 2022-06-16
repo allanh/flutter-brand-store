@@ -52,16 +52,10 @@ class MemberCard extends StatelessWidget {
                       elevation: 0,
                     ),
                     onPressed: handleTapped,
-                    child: const Text('登入/註冊',
-                        style: TextStyle(color: Color.fromRGBO(76, 76, 76, 1))),
+                    child: Text('登入/註冊',
+                        style: Theme.of(context).textTheme.bodyText2),
                   )
-                : Text(
-                    name,
-                    style: const TextStyle(
-                        fontFamily: 'PingFangTC-Semibold',
-                        fontSize: 16.0,
-                        color: Color.fromRGBO(76, 76, 76, 1.0)),
-                  )
+                : Text(name, style: Theme.of(context).textTheme.bodyText2)
           ]),
           color: Colors.white,
           elevation: 5,

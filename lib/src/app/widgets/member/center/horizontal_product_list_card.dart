@@ -1,3 +1,4 @@
+import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:brandstores/src/domain/entities/member/member_center.dart';
 
@@ -189,11 +190,11 @@ class HorizontalProductListView extends StatelessWidget {
                   children:
 
                       /// 產生 15 個商品
-                      _buildProductList()),
+                      _buildProductList(context)),
     );
   }
 
-  List<Widget> _buildProductList() {
+  List<Widget> _buildProductList(BuildContext context) {
     return List.generate(
         products.length,
         (index) => Padding(
@@ -210,7 +211,7 @@ class HorizontalProductListView extends StatelessWidget {
                 const SizedBox(height: 8),
 
                 /// 商品名稱
-                _buildProductName(products[index]),
+                _buildProductName(context, products[index]),
                 const SizedBox(height: 8),
 
                 /// 商品價格區塊
@@ -221,7 +222,7 @@ class HorizontalProductListView extends StatelessWidget {
                         /// 價格
                         Expanded(
                           flex: 2,
-                          child: _buildPrice(products[index]),
+                          child: _buildPrice(context, products[index]),
                         ),
 
                         /// 收藏按鈕
@@ -232,22 +233,23 @@ class HorizontalProductListView extends StatelessWidget {
             )));
   }
 
-  Text _buildPrice(Product product) {
-    return Text("\$ ${product.maxPrice.toString()}",
-        style: const TextStyle(
-            fontFamily: 'PingFangTC-Semibold',
-            fontSize: 16.0,
-            color: Color.fromRGBO(242, 63, 68, 1)));
+  Text _buildPrice(BuildContext context, Product product) {
+    return Text(
+      "\$ ${product.maxPrice.toString()}",
+      style: Theme.of(context)
+          .textTheme
+          .bodyText2!
+          .copyWith(color: UdiColors.strawberry),
+    );
   }
 
-  SizedBox _buildProductName(Product product) {
+  SizedBox _buildProductName(BuildContext context, Product product) {
     return SizedBox(
       height: 48.0,
-      child: Text(product.name,
-          style: const TextStyle(
-              fontFamily: 'PingFangTC-Regular',
-              fontSize: 14.0,
-              color: Color.fromRGBO(76, 76, 76, 1))),
+      child: Text(
+        product.name,
+        style: Theme.of(context).textTheme.caption!,
+      ),
     );
   }
 
@@ -280,11 +282,10 @@ class EmptyProductView extends StatelessWidget {
           image: AssetImage('assets/images/empty_cart.png'),
         ),
         const SizedBox(height: 24.0),
-        Text('目前尚未有$tab。',
-            style: const TextStyle(
-                fontFamily: 'PingFangTC-Regular',
-                fontSize: 14.0,
-                color: Color.fromRGBO(127, 127, 127, 1)))
+        Text(
+          '目前尚未有$tab。',
+          style: Theme.of(context).textTheme.caption!,
+        )
       ],
     );
   }

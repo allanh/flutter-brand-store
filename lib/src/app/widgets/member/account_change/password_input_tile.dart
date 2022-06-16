@@ -16,6 +16,10 @@ class _PasswordInputTileState extends State<PasswordInputTile> {
 
   @override
   Widget build(BuildContext context) {
+    UnderlineInputBorder _underlineInputBorder = const UnderlineInputBorder(
+      borderSide: BorderSide(color: UdiColors.veryLightGrey2),
+    );
+
     return Padding(
       padding: const EdgeInsets.only(top: 42.0, left: 24.0, right: 24.0),
       child: TextField(
@@ -25,16 +29,13 @@ class _PasswordInputTileState extends State<PasswordInputTile> {
         keyboardType: TextInputType.text,
         decoration: InputDecoration(
           hintText: '請輸入6-20碼英數字',
-          hintStyle: const TextStyle(color: UdiColors.brownGrey2),
-          border: const UnderlineInputBorder(
-            borderSide: BorderSide(color: UdiColors.veryLightGrey2),
-          ),
-          enabledBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: UdiColors.veryLightGrey2),
-          ),
-          focusedBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: UdiColors.veryLightGrey2),
-          ),
+          hintStyle: Theme.of(context).textTheme.caption!.copyWith(
+                color: UdiColors.brownGrey2,
+                fontSize: 16.0,
+              ),
+          border: _underlineInputBorder,
+          enabledBorder: _underlineInputBorder,
+          focusedBorder: _underlineInputBorder,
           prefixIcon: const Icon(
             Icons.lock,
             color: UdiColors.brownGrey,

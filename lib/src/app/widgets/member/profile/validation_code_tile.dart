@@ -25,6 +25,8 @@ class ValidationCodeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const OutlineInputBorder _outlineInputBorder = OutlineInputBorder(
+        borderSide: BorderSide(width: 1.0, color: UdiColors.veryLightGrey2));
     return Padding(
         padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0),
         child: SizedBox(
@@ -37,30 +39,14 @@ class ValidationCodeTile extends StatelessWidget {
                     child: TextField(
                         onChanged: handleValidationCodeChange,
                         cursorColor: UdiColors.brownGrey2,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             isCollapsed: true,
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 1.0,
-                                    color: (false)
-                                        ? UdiColors.strawberry
-                                        : UdiColors.veryLightGrey2)),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 1.0,
-                                    color: (false)
-                                        ? UdiColors.strawberry
-                                        : UdiColors.veryLightGrey2)),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 1.0,
-                                    color: (false)
-                                        ? UdiColors.strawberry
-                                        : UdiColors.veryLightGrey2)),
+                            border: _outlineInputBorder,
+                            enabledBorder: _outlineInputBorder,
+                            focusedBorder: _outlineInputBorder,
                             hintText: '請輸入驗證碼',
-                            hintStyle:
-                                const TextStyle(color: UdiColors.brownGrey2),
-                            contentPadding: const EdgeInsets.only(
+                            hintStyle: TextStyle(color: UdiColors.brownGrey2),
+                            contentPadding: EdgeInsets.only(
                               left: 10.0,
                               top: 40.0 / 4,
                               bottom: 40.0 / 4,
@@ -78,12 +64,13 @@ class ValidationCodeTile extends StatelessWidget {
                         child: const Text('提交')))
               ]),
               const SizedBox(height: 4.0),
-              Text('請耐心等候驗證簡訊，約300秒後可重新發送。',
-                  style: TextStyle(
+              Text(
+                '請耐心等候驗證簡訊，約300秒後可重新發送。',
+                style: Theme.of(context).textTheme.caption!.copyWith(
                       color: UdiColors.brownGrey2,
-                      fontFamily: 'PingFangTC Regular',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12.0))
+                      fontSize: 12.0,
+                    ),
+              )
             ])));
   }
 }

@@ -31,30 +31,28 @@ class _MemberAccountCarrierState extends State<MemberAccountCarrier> {
 
     Color _themeColor = Theme.of(context).appBarTheme.backgroundColor!;
 
-    TextStyle _style =
-        Theme.of(context).textTheme.caption!.copyWith(color: _themeColor);
-
     Text _actionTitle = Text(
       '發票歸戶',
-      style: _style,
+      style: Theme.of(context).textTheme.caption!.copyWith(color: _themeColor),
     );
 
     SizedBox _actionButton = SizedBox(
-        height: 24.0,
-        width: 88.0,
-        child: OutlinedButton(
-          onPressed: handleAction,
-          child: _actionTitle,
-        ));
+      height: 24.0,
+      width: 88.0,
+      child: OutlinedButton(
+        onPressed: handleAction,
+        child: _actionTitle,
+      ),
+    );
 
     Text _carrierId = Text(
       '會員載具   ID:${widget.id}',
-      style: const TextStyle(fontSize: 14.0),
+      style: Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 14.0),
     );
 
-    Text _hintMessage = const Text(
+    Text _hintMessage = Text(
       '若您未申請發票歸戶，中獎發票將寄發至您的訂購人地址。',
-      style: TextStyle(fontSize: 12.0, color: UdiColors.brownGrey),
+      style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
     );
 
     return Padding(

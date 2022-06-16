@@ -11,14 +11,12 @@ class LevelUpgradeMessageCard extends StatelessWidget {
     return SizedBox(
         height: 40.0,
         child: Card(
-            child: Text(
-              message,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                  fontFamily: 'PingFangTC-Regular',
-                  fontSize: 12.0,
-                  color: Colors.white),
-            ),
+            child: Text(message,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.caption!.copyWith(
+                      color: Colors.white,
+                      fontSize: 12.0,
+                    )),
             color: theme.appBarTheme.backgroundColor,
             elevation: 4,
             margin: const EdgeInsets.only(top: 16.0, left: 22.0, right: 22.0),
