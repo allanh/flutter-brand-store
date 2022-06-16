@@ -10,7 +10,6 @@ const String verifyMobileCodeRouteName = 'verify-mobile-code'; // 驗證簡訊�
 const String resetPasswordRouteName = 'reset-password'; // 驗證簡訊驗證碼
 
 const String mainRouteName = 'main'; // 主頁
-const String mainProductRouteName = 'main-product'; // 主頁->商品頁
 const String productRouteName = 'product'; // 商品頁
 const String productImageRouteName = 'product-imaege'; // 商品頁->圖片
 
@@ -61,4 +60,6 @@ NumberFormat numberFormat = NumberFormat("#,###");
 class QueryKey {
   static const String goodsNo = 'goods_no';
   static const String productId = 'product_id';
+  static const String index = 'index';
+  static const String imagePaths = 'imagePaths';
 }

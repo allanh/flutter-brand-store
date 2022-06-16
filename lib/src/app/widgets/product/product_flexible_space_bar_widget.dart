@@ -34,7 +34,7 @@ class ProductFlexibleSpaceBarWidget extends StatelessWidget {
                 padding: EdgeInsets.only(top: _statusBarHeight),
                 child: (product != null)
                     ? Stack(children: [
-                        ImageSliderWidget(imageList: product!.imageList ?? []),
+                        ImageSliderWidget(imageList: product!.mediaList ?? []),
                         // 圖標
                         if (product!.productInfo!.isNotEmpty == true)
                           PromotionTagsWidget(product: product!),

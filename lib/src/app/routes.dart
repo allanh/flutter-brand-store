@@ -31,6 +31,8 @@ import 'pages/member/checkout_setting/invoice/invoice_setting_view.dart';
 import 'pages/member/checkout_setting/checkout_setting_view.dart';
 import 'pages/member/checkout_setting/shipping/shipping_infos_view.dart';
 
+import 'widgets/product/full_screen_image_slider_widget.dart';
+
 class MyPlusRouter {
   final LoginState loginState;
 
@@ -129,21 +131,7 @@ class MyPlusRouter {
               child: MainPage(tab: tab),
             );
           },
-          routes: [
-            GoRoute(
-              name: mainProductRouteName,
-              path: 'product/:goods_no',
-              pageBuilder: (context, state) {
-                String? goodsNo = state.params[QueryKey.goodsNo];
-                String? productId = state.params[QueryKey.productId];
-                return MaterialPage<void>(
-                  key: state.pageKey,
-                  child: ProductPage(
-                      goodsNo: goodsNo, productId: productId?.toInt()),
-                );
-              },
-            ),
-          ]),
+          routes: []),
 
       /// 幫助中心
       GoRoute(
@@ -372,17 +360,38 @@ class MyPlusRouter {
         redirect: (state) => state
             .namedLocation(homeRouteName, params: {'tab': searchRouteName}),
       ),
+
       GoRoute(
-          name: productRouteName,
-          path: '/product-redirector/:goods_no',
-          redirect: (state) {
-            // TODO: error handling
-            String goodsNo = state.params[QueryKey.goodsNo] ?? '';
-            return state.namedLocation(mainProductRouteName, params: {
-              'tab': mainRouteName,
-              'goods_no': goodsNo,
-            });
-          }),
+        name: productRouteName,
+        path: '/product/:goods_no',
+        pageBuilder: (context, state) {
+          String? goodsNo = state.params[QueryKey.goodsNo];
+          String? productId = state.params[QueryKey.productId];
+          return MaterialPage<void>(
+            key: state.pageKey,
+            child: ProductPage(goodsNo: goodsNo, productId: productId?.toInt()),
+          );
+        },
+        routes: <GoRoute>[
+          GoRoute(
+            name: productImageRouteName,
+            path: 'image/:index',
+            pageBuilder: (context, state) {
+              int? index = state.params[QueryKey.index]?.toInt();
+              final Map<String, Object> params =
+                  state.extra! as Map<String, Object>;
+              final List<String> imagePaths =
+                  params[QueryKey.imagePaths]! as List<String>;
+              return MaterialPage<void>(
+                  key: state.pageKey,
+                  child: FullScreenImageSliderWidget(
+                    imagePaths: imagePaths,
+                    currentIndex: index,
+                  ));
+            },
+          ),
+        ],
+      ),
     ],
 
     /// 當有錯誤路徑時顯示錯誤頁

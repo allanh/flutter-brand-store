@@ -211,7 +211,12 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                   AspectRatio(
                     aspectRatio: 1.0,
                     child: Stack(children: [
-                      ImageSliderWidget(imageList: product.imageList ?? []),
+                      ImageSliderWidget(
+                        imageList: product.mediaList ?? [],
+                        imageTapped: (index) {
+                          controller.handleImageTapped(index);
+                        },
+                      ),
                       // 圖標
                       if (product.productInfo?.isNotEmpty == true)
                         PromotionTagsWidget(product: product),

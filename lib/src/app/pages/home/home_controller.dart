@@ -49,8 +49,8 @@ class HomeController extends Controller {
     if (link != null) {
       switch (link.type) {
         case LinkType.product:
-          getContext().goNamed(productRouteName,
-                params: {QueryKey.goodsNo: link.value});
+          getContext().pushNamed(productRouteName,
+              params: {QueryKey.goodsNo: link.value});
           break;
         default:
           debugPrint('default link');
@@ -59,6 +59,7 @@ class HomeController extends Controller {
       debugPrint('no link');
     }
   }
+
   void buttonPressed() {
     refreshUI();
   }

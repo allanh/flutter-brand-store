@@ -113,4 +113,15 @@ class ProductController extends Controller {
       debugPrint('no link');
     }
   }
+
+  // 點擊圖片
+  void handleImageTapped(int index) {
+    getContext().pushNamed(productImageRouteName, params: {
+      QueryKey.goodsNo: _product?.no ?? '',
+      QueryKey.index: index.toString(),
+    }, extra: <String, Object>{
+      QueryKey.imagePaths:
+          _product?.imageList?.map((e) => e.url!).toList() ?? []
+    });
+  }
 }

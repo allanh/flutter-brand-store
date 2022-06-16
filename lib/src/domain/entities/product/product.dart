@@ -264,14 +264,13 @@ class Product {
       _$ProductFromJson(json);
   Map<String, dynamic> toJson() => _$ProductToJson(this);
 
-  /// 第一張圖片
-  String? get firstImage => imageList
-      ?.firstWhereOrNull((element) => element.type == ImageType.image)
-      ?.url;
-
   /// 非空值的圖片或影片列表
-  List<MyPlusImageInfo>? get imageList =>
+  List<MyPlusImageInfo>? get mediaList =>
       imageInfo?.where((element) => element.url?.isNotEmpty == true).toList();
+
+  /// 只有圖片列表
+  List<MyPlusImageInfo>? get imageList =>
+      mediaList?.where((element) => element.type == ImageType.image).toList();
 
   /// 倒數時間
   Duration? get countdownDuration {
