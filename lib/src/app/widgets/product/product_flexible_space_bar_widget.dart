@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../domain/entities/product/product.dart';
 import 'image_slider_widget.dart';
-import 'promotion_tag_widget.dart';
+import 'promotion_tag_row_widget.dart';
 
 class ProductFlexibleSpaceBarWidget extends StatelessWidget {
   const ProductFlexibleSpaceBarWidget({Key? key, this.product})

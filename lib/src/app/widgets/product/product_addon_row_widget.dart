@@ -8,8 +8,8 @@ import '../../../domain/entities/product/product.dart';
 import '../../utils/screen_config.dart';
 
 /// 加價購列
-class ProductAddonWidget extends StatelessWidget {
-  const ProductAddonWidget(
+class ProductAddonRowWidget extends StatelessWidget {
+  const ProductAddonRowWidget(
       {Key? key,
       required this.addons,
       required this.selectedAddons,

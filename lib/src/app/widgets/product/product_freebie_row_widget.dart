@@ -6,8 +6,8 @@ import '../../../domain/entities/product/product.dart';
 import '../../utils/screen_config.dart';
 
 /// 加價購列
-class ProductFreeBieWidget extends StatelessWidget {
-  const ProductFreeBieWidget({Key? key, required this.freeBies})
+class ProductFreeBieRowWidget extends StatelessWidget {
+  const ProductFreeBieRowWidget({Key? key, required this.freeBies})
       : super(key: key);
 
   final List<Product> freeBies;

@@ -4,8 +4,8 @@ import '../../../domain/entities/product/product.dart';
 import '../../../domain/entities/product/promotion.dart';
 
 /// 單一圖標
-class PromotionTagWidget extends StatelessWidget {
-  const PromotionTagWidget(
+class PromotionTagRowWidget extends StatelessWidget {
+  const PromotionTagRowWidget(
       {Key? key, required this.tagText, required this.image})
       : super(key: key);
 
@@ -64,23 +64,23 @@ class PromotionTagsWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   if (info?.tag?.lowQuantity == true)
-                    PromotionTagWidget(
+                    PromotionTagRowWidget(
                         tagText: '最後${info?.quantity ?? ''}件',
                         image: 'assets/images/icon_product_tag_label_01.png'),
                   if (info?.tagProd?.flashSale == true && promotionRate != null)
-                    PromotionTagWidget(
+                    PromotionTagRowWidget(
                         tagText: '限時$promotionRate折',
                         image: 'assets/images/icon_product_tag_label_01.png'),
                   if (info?.tagProd?.isNew == true)
-                    const PromotionTagWidget(
+                    const PromotionTagRowWidget(
                         tagText: '新貨架到',
                         image: 'assets/images/icon_product_tag_label_02.png'),
                   if (info?.tagProd?.istop10Sale == true)
-                    const PromotionTagWidget(
+                    const PromotionTagRowWidget(
                         tagText: '口碑暢銷',
                         image: 'assets/images/icon_product_tag_label_03.png'),
                   if (info?.tagProd?.istop10Favorite == true)
-                    const PromotionTagWidget(
+                    const PromotionTagRowWidget(
                         tagText: '精選收藏',
                         image: 'assets/images/icon_product_tag_label_04.png'),
                 ])));

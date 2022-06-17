@@ -1,6 +1,7 @@
 import 'package:brandstores/src/app/utils/screen_config.dart';
-import 'package:brandstores/src/app/widgets/product/event_countdown_timer_widget.dart';
-import 'package:brandstores/src/app/widgets/product/product_addon_widget.dart';
+import 'package:brandstores/src/app/widgets/product/event_countdown_row_widget.dart';
+import 'package:brandstores/src/app/widgets/product/product_addon_row_widget.dart';
+import 'package:brandstores/src/app/widgets/product/product_app_bar.dart';
 import 'package:brandstores/src/app/widgets/product/product_recommend_widget.dart';
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:brandstores/src/domain/entities/product/product.dart';
@@ -11,21 +12,21 @@ import 'package:carousel_slider/carousel_slider.dart';
 import '../../widgets/product/base_product_row_widget.dart';
 import '../../widgets/product/image_slider_widget.dart';
 import '../../widgets/product/product_bottom_bar_widget.dart';
-import '../../widgets/product/product_category_widget.dart';
+import '../../widgets/product/product_category_row_widget.dart';
 import '../../widgets/product/product_divider_widget.dart';
-import '../../widgets/product/product_event_widget.dart';
-import '../../widgets/product/product_freebie_widget.dart';
+import '../../widgets/product/product_event_row_widget.dart';
+import '../../widgets/product/product_freebie_row_widget.dart';
 import '../../widgets/product/product_introduction_widget.dart';
 import '../../widgets/product/product_name_widget.dart';
-import '../../widgets/product/product_payment_widget.dart';
+import '../../widgets/product/product_payment_row_widget.dart';
 import '../../widgets/product/product_shipped_widget.dart';
-import '../../widgets/product/product_spec_widget.dart';
-import '../../widgets/product/product_tags_widget.dart';
-import '../../widgets/product/promotion_price_widget.dart';
-import '../../widgets/product/promotion_tag_widget.dart';
+import '../../widgets/product/product_spec_row_widget.dart';
+import '../../widgets/product/product_tags_row_widget.dart';
+import '../../widgets/product/promotion_price_row_widget.dart';
+import '../../widgets/product/promotion_tag_row_widget.dart';
+import '../../widgets/product/product_recommend_widget.dart';
 import './product_controller.dart';
 import '../../../data/repositories/data_product_repository.dart';
-import 'package:go_router/go_router.dart';
 
 class ProductPage extends View {
   final String? goodsNo;
@@ -50,34 +51,12 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
   final ScrollController _scrollController =
       ScrollController(); // set controller on scrolling
   bool _isScrollingDown = false;
-  bool _showAppbar = false; //this is to show app bar
+  bool _showTabBar = false; //this is to show tab bar
 
-  // Tabbar
+  // TabBar
   final _tabs = ['商品', '介紹', '推薦'];
   final introductionKey = GlobalKey();
   final recommendKey = GlobalKey();
-  TabBar get _tabBar => TabBar(
-        labelColor: Theme.of(context).primaryColor,
-        unselectedLabelColor: UdiColors.brownGrey,
-        tabs: _tabs.map((String name) => Tab(text: name)).toList(),
-        onTap: (int index) {
-          switch (index) {
-            case 0: // 捲動到最上面
-              _scrollController.jumpTo(30);
-              break;
-            case 1: // 捲動到商品介紹
-              if (introductionKey.currentContext != null) {
-                Scrollable.ensureVisible(introductionKey.currentContext!);
-              }
-              break;
-            case 2: // 捲動到推薦商品
-              if (recommendKey.currentContext != null) {
-                Scrollable.ensureVisible(recommendKey.currentContext!);
-              }
-              break;
-          }
-        },
-      );
 
   @override
   Widget get view {
@@ -96,7 +75,7 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
   /// 是否顯示 tabbar
   void _showTabbar(bool isShow) {
     setState(() {
-      _showAppbar = isShow;
+      _showTabBar = isShow;
     });
   }
 
@@ -120,7 +99,6 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
     });
   }
 
-  ///
   Widget _body(ProductController controller) {
     return ControlledWidgetBuilder<ProductController>(
         builder: (context, controller) {
@@ -130,51 +108,36 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
             length: _tabs.length, // This is the number of tabs.
             child: Scaffold(
               extendBodyBehindAppBar: true,
-              appBar: AppBar(
-                toolbarHeight: kToolbarHeight,
-                leading: InkWell(
-                  onTap: () => context.pop(),
-                  child: const Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.white,
-                  ),
-                ),
-                title: const Text('商品'),
-                centerTitle: true,
-                backgroundColor: Colors.black,
-                actions: [
-                  // 購物車
-                  IconButton(
-                    icon: const Icon(Icons.shopping_cart),
-                    onPressed: () {},
-                  ),
-                  // 更多動作
-                  IconButton(
-                    icon: const Icon(Icons.more_vert),
-                    onPressed: () {},
-                  )
-                ],
-                // Tabbar列
-                bottom: _showAppbar == true
-                    ? PreferredSize(
-                        preferredSize: Size.fromHeight(40 * ratio),
-                        child: AnimatedOpacity(
-                          duration: const Duration(milliseconds: 300),
-                          opacity: 1.0,
-                          child: ColoredBox(
-                            color: Colors.white,
-                            // TabBar
-                            child: _tabBar,
-                          ),
-                        ))
-                    : null,
+              // AppBar
+              appBar: ProductAppBarWidget(
+                controller: controller,
+                showTabBar: _showTabBar,
+                tabs: _tabs,
+                onTabBarTap: (int index) {
+                  switch (index) {
+                    case 0: // 捲動到最上面
+                      _scrollController.jumpTo(30);
+                      break;
+                    case 1: // 捲動到商品介紹
+                      if (introductionKey.currentContext != null) {
+                        Scrollable.ensureVisible(
+                            introductionKey.currentContext!);
+                      }
+                      break;
+                    case 2: // 捲動到推薦商品
+                      if (recommendKey.currentContext != null) {
+                        Scrollable.ensureVisible(recommendKey.currentContext!);
+                      }
+                      break;
+                  }
+                },
               ),
               body: (controller.product != null)
                   ? Stack(
                       alignment: Alignment.bottomCenter,
                       children: [
                         // 商品主頁內容
-                        _getBody(controller, controller.product!),
+                        _buildBody(controller, controller.product!),
 
                         // 底部按鈕列
                         ProductBottomBarWidget(
@@ -192,7 +155,7 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
   }
 
   /// 商品內容
-  Widget _getBody(ProductController controller, Product product) => Container(
+  Widget _buildBody(ProductController controller, Product product) => Container(
       width: MediaQuery.of(context).size.width,
       color: UdiColors.white2,
       padding: EdgeInsets.only(
@@ -225,11 +188,11 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
 
                   // 倒數計時
                   if (product.countdownDuration != null)
-                    EventCountDownTimerWidget(
+                    EventCountDownRowWidget(
                       duration: product.countdownDuration!,
                       type: (product.status == ProductStatus.comingSoon)
-                          ? CountDownType.comingSoon
-                          : CountDownType.flashSale,
+                          ? EventCountDownType.comingSoon
+                          : EventCountDownType.flashSale,
                       slogan: product.promotionApp?.slogan,
                       onTimerEned: () => controller.onCountDownEnd(),
                     ),
@@ -238,22 +201,22 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                   ProductNameWidget(product: controller.product),
 
                   // 促銷活動
-                  if (product.eventList?.isNotEmpty == true)
-                    BaseProductRowWidget(
-                        title: '活　動',
-                        marginTop: 8,
-                        view: ProductEventsWidget(
-                          //eventList: product.mockEvents,
-                          eventList: product.eventList!,
-                        ),
-                        moreTapped: () => debugPrint('tap event')),
+                  //if (product.eventList?.isNotEmpty == true)
+                  BaseProductRowWidget(
+                      title: '活　動',
+                      marginTop: 8,
+                      view: ProductEventsRowWidget(
+                        eventList: product.mockEvents,
+                        //eventList: product.eventList!,
+                      ),
+                      moreTapped: () => debugPrint('tap event')),
 
                   // 獨享價
                   if ((product.product?.promotionPriceAppDiff ?? 0) > 0)
                     BaseProductRowWidget(
                         title: '獨享價',
                         marginTop: 8,
-                        view: PromotionPriceWidget(
+                        view: PromotionPriceRowWidget(
                           promotionPrice:
                               product.product!.promotionPriceAppDiff!,
                         )),
@@ -263,7 +226,7 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                     BaseProductRowWidget(
                         title: '規　格',
                         marginTop: 8,
-                        view: ProductSpecWidget(
+                        view: ProductSpecRowWidget(
                           product: product,
                         ),
                         moreTapped: () => debugPrint('tap spac')),
@@ -273,7 +236,7 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                     BaseProductRowWidget(
                         title: '加價購',
                         marginTop: 8,
-                        view: ProductAddonWidget(
+                        view: ProductAddonRowWidget(
                           addons: product.addonInfo!,
                           //addons: product.mockAddons,
                           selectedAddons: [],
@@ -285,7 +248,7 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                     BaseProductRowWidget(
                         title: '買就送',
                         marginTop: 8,
-                        view: ProductFreeBieWidget(
+                        view: ProductFreeBieRowWidget(
                           freeBies: product.freebieInfo!,
                         ),
                         moreTapped: () => debugPrint('tap freebie')),
@@ -300,7 +263,7 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                               product.productInfo!.first.proposedPrice != null)
                             BaseProductRowWidget(
                                 title: '付　款',
-                                view: ProductPaymentWidget(
+                                view: ProductPaymentRowWidget(
                                   price:
                                       product.productInfo!.first.proposedPrice!,
                                   info: product.paymentInfo!,
@@ -357,7 +320,7 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                           if (product.tags?.isNotEmpty == true)
                             BaseProductRowWidget(
                                 title: '標　籤',
-                                view: ProductTagsWidget(tags: product.tags!),
+                                view: ProductTagsRowWidget(tags: product.tags!),
                                 moreTapped: () => debugPrint('tap tags')),
 
                           // 分類
@@ -365,7 +328,7 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                           if (product.categoryMain != null)
                             BaseProductRowWidget(
                                 title: '分　類',
-                                view: ProductCategoryWidget(
+                                view: ProductCategoryRowWidget(
                                   categoryMain: product.categoryMain!,
                                 )),
                         ],

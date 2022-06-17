@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../domain/entities/product/event.dart';
 
 /// 促銷活動列
-class ProductEventsWidget extends StatelessWidget {
-  const ProductEventsWidget({Key? key, required this.eventList})
+class ProductEventsRowWidget extends StatelessWidget {
+  const ProductEventsRowWidget({Key? key, required this.eventList})
       : super(key: key);
 
   final List<Event> eventList;
@@ -14,29 +14,31 @@ class ProductEventsWidget extends StatelessWidget {
     List<Widget> list = [];
     for (var event in eventList) {
       if (event.discountWording != null) {
-        list.add(ProductEventWidget(event: event));
+        list.add(ProductEventRowWidget(event: event));
       }
     }
     // 最多顯示兩筆
     return SizedBox(
         height: 20,
-        child: Row(
-          children: list.take(2).toList(),
-        )
-        /*
+        // 自動縮小
         child: FittedBox(
             fit: BoxFit.fitWidth,
             child: Row(
               children: list.take(2).toList(),
             ))
-            */
+        /*
+        Row(
+          children: list.take(2).toList(),
+        )
+        */
         );
   }
 }
 
 /// 單一促銷活動
-class ProductEventWidget extends StatelessWidget {
-  const ProductEventWidget({Key? key, required this.event}) : super(key: key);
+class ProductEventRowWidget extends StatelessWidget {
+  const ProductEventRowWidget({Key? key, required this.event})
+      : super(key: key);
 
   final Event event;
 
@@ -48,6 +50,7 @@ class ProductEventWidget extends StatelessWidget {
             topRight: Radius.circular(4),
             bottomRight: Radius.circular(4),
           ),
+          // 活動是否過期的顏色
           color: event.eventOnline == true
               ? UdiColors.pumpkinOrange.withOpacity(0.1)
               : UdiColors.white2),
@@ -55,6 +58,7 @@ class ProductEventWidget extends StatelessWidget {
         Container(
             decoration: BoxDecoration(
                 border: Border.all(
+                    // 活動是否過期的顏色
                     color: event.eventOnline == true
                         ? UdiColors.pumpkinOrange
                         : UdiColors.pinkishGrey),

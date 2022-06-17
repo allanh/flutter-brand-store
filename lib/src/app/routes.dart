@@ -33,6 +33,8 @@ import 'pages/member/checkout_setting/shipping/shipping_infos_view.dart';
 
 import 'widgets/product/full_screen_image_slider_widget.dart';
 
+import 'widgets/product/dialog/full_screen_image_slider_widget.dart';
+
 class MyPlusRouter {
   final LoginState loginState;
 

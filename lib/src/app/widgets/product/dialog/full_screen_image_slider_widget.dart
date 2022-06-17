@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-import 'gallery_image_widget.dart';
+import '../gallery_small_image_widget.dart';
 
 /// 全螢幕的畫廊
 class FullScreenImageSliderWidget extends StatefulWidget {
@@ -87,7 +87,7 @@ class _FullScreenImageSliderWidgetState
     );
   }
 
-  /// AppbAR
+  /// AppBar
   Widget _buildAppBar() => Positioned(
       top: 0.0,
       left: 0.0,
@@ -128,7 +128,7 @@ class _FullScreenImageSliderWidgetState
               enlargeCenterPage: true,
               initialPage: _currentIndex,
               height: 60,
-              // 換樣動作
+              // 換頁動作
               onPageChanged: (index, reason) {
                 setState(() {
                   _currentIndex = index;

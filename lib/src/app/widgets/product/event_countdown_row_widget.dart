@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 
 import '../../utils/screen_config.dart';
 
-enum CountDownType {
+enum EventCountDownType {
   comingSoon, //	是否即將開賣
   flashSale // 限時搶購
 }
 
-class EventCountDownTimerWidget extends StatefulWidget {
+class EventCountDownRowWidget extends StatefulWidget {
   /// 倒數類型
-  final CountDownType type;
+  final EventCountDownType type;
 
   /// The callback that is called when the countdown timer is ended.
   final VoidCallback onTimerEned;
@@ -21,7 +21,7 @@ class EventCountDownTimerWidget extends StatefulWidget {
   // 標語
   final String? slogan;
 
-  const EventCountDownTimerWidget(
+  const EventCountDownRowWidget(
       {Key? key,
       required this.type,
       required this.duration,
@@ -30,10 +30,10 @@ class EventCountDownTimerWidget extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _EventCountDownTimerWidgetState();
+  State<StatefulWidget> createState() => _EventCountDownRowWidgetState();
 }
 
-class _EventCountDownTimerWidgetState extends State<EventCountDownTimerWidget> {
+class _EventCountDownRowWidgetState extends State<EventCountDownRowWidget> {
   Timer? _timer;
   Duration _duration = const Duration();
   int get _day => _duration.inHours ~/ 24;
@@ -77,14 +77,14 @@ class _EventCountDownTimerWidgetState extends State<EventCountDownTimerWidget> {
             child: Text(widget.slogan!,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.caption!.copyWith(
-                    color: widget.type == CountDownType.comingSoon
+                    color: widget.type == EventCountDownType.comingSoon
                         ? UdiColors.comingSoon
                         : UdiColors.strawberry)),
             decoration: const BoxDecoration(color: Colors.white),
           )
       ]),
       decoration: BoxDecoration(
-          gradient: widget.type == CountDownType.comingSoon
+          gradient: widget.type == EventCountDownType.comingSoon
               ? UdiColors.comingSoonGradient
               : UdiColors.flashSaleGradient),
     );
@@ -93,12 +93,12 @@ class _EventCountDownTimerWidgetState extends State<EventCountDownTimerWidget> {
   /// 倒數類型文字 widget
   Widget leadingView(ThemeData theme) => Row(children: [
         Image(
-            image: widget.type == CountDownType.comingSoon
+            image: widget.type == EventCountDownType.comingSoon
                 ? const AssetImage("assets/images/icon_clock.png")
                 : const AssetImage("assets/images/icon_lightning.png")),
         const SizedBox(width: 5),
         Text(
-          widget.type == CountDownType.comingSoon ? '即將開賣' : '限時搶購',
+          widget.type == EventCountDownType.comingSoon ? '即將開賣' : '限時搶購',
           textAlign: TextAlign.center,
           style: theme.textTheme.headline6!
               .copyWith(fontSize: 14.0, color: Colors.white),
@@ -109,7 +109,7 @@ class _EventCountDownTimerWidgetState extends State<EventCountDownTimerWidget> {
   Widget timerView(ThemeData theme) => Row(
         children: [
           Text(
-            widget.type == CountDownType.comingSoon
+            widget.type == EventCountDownType.comingSoon
                 ? '開賣倒數 $_day 天'
                 : '距結束只剩 $_day 天',
             textAlign: TextAlign.center,
@@ -147,7 +147,7 @@ class _EventCountDownTimerWidgetState extends State<EventCountDownTimerWidget> {
           time,
           textAlign: TextAlign.center,
           style: theme.textTheme.caption!.copyWith(
-              color: widget.type == CountDownType.comingSoon
+              color: widget.type == EventCountDownType.comingSoon
                   ? UdiColors.comingSoon
                   : UdiColors.strawberry),
         ),

@@ -1,8 +1,8 @@
 import 'package:brandstores/src/app/utils/screen_config.dart';
 import 'package:flutter/material.dart';
 
-class ProductAdWidget extends StatelessWidget {
-  const ProductAdWidget(
+class ProductAdRowWidget extends StatelessWidget {
+  const ProductAdRowWidget(
       {Key? key, required this.imageUrl, required this.height})
       : super(key: key);
 
