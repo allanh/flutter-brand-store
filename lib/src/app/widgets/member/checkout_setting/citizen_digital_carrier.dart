@@ -8,9 +8,9 @@ import 'reorderable_card.dart';
 import 'default_indicator.dart';
 
 /// 個人-自然人憑證
-class CitizenDigitalCertificateCarrier extends StatefulWidget
+class CitizenDigitalCarrier extends StatefulWidget
     implements DefaultCarrierInterface {
-  CitizenDigitalCertificateCarrier({
+  CitizenDigitalCarrier({
     Key? key,
     required this.isDefault,
     this.isExpand = false,
@@ -22,7 +22,7 @@ class CitizenDigitalCertificateCarrier extends StatefulWidget
   @override
   bool isDefault;
 
-  String code;
+  String? code;
 
   bool isExpand;
 
@@ -33,15 +33,24 @@ class CitizenDigitalCertificateCarrier extends StatefulWidget
   Function handleSubmit;
 
   @override
-  State<CitizenDigitalCertificateCarrier> createState() =>
-      _CitizenDigitalCertificateCarrierState();
+  State<CitizenDigitalCarrier> createState() => _CitizenDigitalCarrierState();
 }
 
-class _CitizenDigitalCertificateCarrierState
-    extends State<CitizenDigitalCertificateCarrier> {
+class _CitizenDigitalCarrierState extends State<CitizenDigitalCarrier> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    void handleReset() => widget.code = '';
+    void handleReset() {
+      _controller.text = '';
+      widget.code = null;
+    }
 
     TextStyle _hintStyle = Theme.of(context)
         .textTheme
@@ -51,9 +60,15 @@ class _CitizenDigitalCertificateCarrierState
     SizedBox _certificateCodeInputTile = SizedBox(
       height: 36.0,
       child: TextField(
+        controller: _controller,
+        textInputAction: TextInputAction.send,
+        maxLength: 16,
         onChanged: (text) => setState(() => widget.code = text),
         cursorColor: UdiColors.veryLightGrey2,
         decoration: InputDecoration(
+          labelText: widget.code,
+          counterText: '',
+          floatingLabelBehavior: FloatingLabelBehavior.never,
           contentPadding: const EdgeInsets.symmetric(horizontal: 18.0),
           hintText: '請輸入自然人憑證',
           hintStyle: _hintStyle,
@@ -74,10 +89,16 @@ class _CitizenDigitalCertificateCarrierState
       style: Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 14.0),
     );
 
+    Text _subtitle = Text(
+      widget.code ?? '',
+      style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
+    );
+
     CarrierActionButtons _carrierActionButtons = CarrierActionButtons(
-      handleReset: handleReset,
-      handleSubmit:
-          widget.code.isEmpty ? null : widget.handleSubmit(widget.code),
+      handleReset: () => handleReset(),
+      handleSubmit: widget.code != null && widget.code!.isNotEmpty
+          ? () => widget.handleSubmit(widget.code)
+          : null,
     );
 
     Row _topRow = Row(
@@ -121,7 +142,14 @@ class _CitizenDigitalCertificateCarrierState
                   const SizedBox(height: 20.0),
                   _bottomRow
                 ]
-              : [_topRow],
+              : widget.code != null && widget.code!.isNotEmpty
+                  ? [
+                      _topRow,
+                      _subtitle,
+                    ]
+                  : [
+                      _topRow,
+                    ],
         ));
   }
 

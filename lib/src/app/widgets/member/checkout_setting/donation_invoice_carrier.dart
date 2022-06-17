@@ -3,11 +3,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../../device/utils/my_plus_colors.dart';
+import '../../../../domain/entities/member/invoice.dart';
 import 'carrier_action_buttons.dart';
 import 'reorderable_card.dart';
 import 'default_indicator.dart';
-
-enum DonationType { genesis, jtf, other }
 
 /// 捐贈發票
 class DonationInvoiceCarrier extends StatefulWidget
@@ -16,56 +15,54 @@ class DonationInvoiceCarrier extends StatefulWidget
     Key? key,
     required this.isDefault,
     this.isExpand = false,
-    this.code = '',
+    this.npos,
     required this.handleCollpase,
     required this.handleExpand,
+    required this.handleSubmit,
   }) : super(key: key);
 
   @override
   bool isDefault;
 
-  String code;
+  List<NPO>? npos;
 
   bool isExpand;
 
   Function handleCollpase;
 
   Function handleExpand;
+
+  Function handleSubmit;
+
   @override
   State<DonationInvoiceCarrier> createState() => _DonationInvoiceCarrierState();
 }
 
 class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
-  bool isGenesisChecked = false;
-  bool isJtfChecked = false;
-  bool isOtherChecked = false;
+  NPO? _selectedNPO;
 
-  DonationType selectedType = DonationType.genesis;
+  NPO? _otherNPO;
 
-  Color getColor(Set<MaterialState> states) {
-    const Set<MaterialState> interactiveStates = <MaterialState>{
-      MaterialState.pressed,
-      MaterialState.hovered,
-      MaterialState.focused,
-    };
-    if (states.any(interactiveStates.contains)) {
-      return Colors.white;
-    }
-    return Theme.of(context).appBarTheme.backgroundColor!;
-  }
+  final TextEditingController _controller = TextEditingController();
 
-  void handleCheckedValues(
-    bool isGenesisCheckedValue,
-    bool isJtfCheckedValue,
-    bool isOtherCheckedValue,
-  ) {
-    isGenesisChecked = isGenesisCheckedValue;
-    isJtfChecked = isJtfCheckedValue;
-    isOtherChecked = isOtherCheckedValue;
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    /// 確保 NPO 為空陣列，才能加入其他機構選項
+    widget.npos ??= [];
+
+    /// 檢查是否有 id 為 -1 的機構，如果有在陣列中，
+    /// 表示已經加入過其他機構選項
+    if (widget.npos!.isNotEmpty && widget.npos?.last.npoId != '-1') {
+      /// 加入其他機構選項
+      widget.npos?.insert(widget.npos?.length ?? 0, NPO('-1', '其他機構', false));
+    }
+
     Text _searchButtonTitle = Text(
       '捐贈碼查詢',
       style: TextStyle(
@@ -84,7 +81,12 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
       style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
     );
 
-    void handleReset() {}
+    void handleReset() {
+      setState(() {
+        _otherNPO?.npoId = null;
+        _controller.text = '';
+      });
+    }
 
     Row _topRow = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -114,8 +116,18 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
           height: 36.0,
           width: 110.0,
           child: TextField(
+            controller: _controller,
+            onChanged: (text) {
+              setState(() {
+                _selectedNPO = widget.npos?.last;
+                _selectedNPO?.isEnabled = true;
+                _otherNPO = NPO(text, '', true);
+              });
+            },
             cursorColor: UdiColors.veryLightGrey2,
             decoration: InputDecoration(
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              labelText: _otherNPO?.npoId,
               contentPadding: const EdgeInsets.symmetric(horizontal: 18.0),
               hintText: '請輸入捐贈碼',
               hintStyle: _hintStyle,
@@ -134,8 +146,11 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
     ]);
 
     CarrierActionButtons _carrierActionButtons = CarrierActionButtons(
-      handleReset: handleReset,
-      handleSubmit: null,
+      handleReset: () => handleReset(),
+      handleSubmit: _selectedNPO == null ||
+              (_selectedNPO == _otherNPO && _otherNPO!.npoId!.isNotEmpty)
+          ? null
+          : () => widget.handleSubmit(_selectedNPO),
     );
 
     Row _bottomRow = Row(
@@ -151,82 +166,57 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
               _carrierActionButtons,
             ],
     );
+
+    List<Widget> children = [
+      _topRow,
+      _hintTitle,
+      const SizedBox(height: 10.0),
+      inputCodeRow,
+      const SizedBox(height: 20.0),
+      _bottomRow
+    ];
+    if (widget.isExpand) {
+      children.insertAll(
+        3,
+        _buildRadioListTile(
+          context,
+          widget.npos!,
+        ),
+      );
+    } else {
+      children = [
+        _topRow,
+      ];
+    }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: widget.isExpand
-            ? [
-                _topRow,
-                _hintTitle,
-                const SizedBox(height: 10.0),
-                _buildCheckboxOption(context, DonationType.genesis,
-                    title: '創世基金會', value: isGenesisChecked),
-                const SizedBox(height: 13.0),
-                _buildCheckboxOption(context, DonationType.jtf,
-                    title: '董氏基金會', value: isJtfChecked),
-                const SizedBox(height: 13.0),
-                _buildCheckboxOption(context, DonationType.other,
-                    title: '其他機構', value: isOtherChecked),
-                inputCodeRow,
-                const SizedBox(height: 20.0),
-                _bottomRow
-              ]
-            : [
-                _topRow,
-              ],
+        children: children,
       ),
     );
   }
 
-  SizedBox _buildCheckboxOption(BuildContext context, DonationType type,
-      {bool value = false, String title = ''}) {
-    TextStyle style = Theme.of(context)
-        .textTheme
-        .caption!
-        .copyWith(color: UdiColors.greyishBrown);
-
-    return SizedBox(
-      height: 24.0,
-      child: Row(children: [
-        _buildCheckbox(context, type, handleCheckedValues, value: value),
-        Text(
-          title,
-          style: style,
-        ),
-      ]),
-    );
-  }
-
-  Checkbox _buildCheckbox(BuildContext context, DonationType type,
-      Function(bool, bool, bool) handleCheckedValues,
-      {bool value = false}) {
-    Color selectedColor = value
-        ? Theme.of(context).appBarTheme.backgroundColor!
-        : UdiColors.brownGrey2;
-
-    return Checkbox(
-        visualDensity: VisualDensity.compact,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4.0),
-        ),
-        side: MaterialStateBorderSide.resolveWith(
-          (states) => BorderSide(
-            width: 1.0,
-            color: selectedColor,
-          ),
-        ),
-        fillColor: MaterialStateProperty.resolveWith(getColor),
-        value: value,
-        onChanged: (bool? value) {
-          setState(() {
-            handleCheckedValues(
-              type == DonationType.genesis,
-              type == DonationType.jtf,
-              type == DonationType.other,
-            );
-          });
-        });
+  List<RadioListTile> _buildRadioListTile(
+    BuildContext context,
+    List<NPO> npos,
+  ) {
+    return List.generate(
+        npos.length,
+        (index) => RadioListTile(
+              dense: true,
+              activeColor: Theme.of(context).appBarTheme.backgroundColor,
+              contentPadding: const EdgeInsets.only(right: 15.0),
+              visualDensity: VisualDensity.compact,
+              title: Text(
+                npos[index].title!,
+                style: Theme.of(context).textTheme.caption,
+                maxLines: 1,
+              ),
+              value: npos[index],
+              groupValue: _selectedNPO,
+              onChanged: (npo) => setState(() => _selectedNPO = npo),
+            ));
   }
 
   OutlineInputBorder _buildTextFieldBorder() {

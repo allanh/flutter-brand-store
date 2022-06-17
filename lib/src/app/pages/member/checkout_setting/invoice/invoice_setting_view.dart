@@ -4,7 +4,7 @@ import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
 import '../../../../../data/repositories/member/data_invoice_setting_repository.dart';
 import '../../../../widgets/member/checkout_setting/reorderable_card.dart';
-import '../../../../widgets/member/checkout_setting/citizen_digital_certification_carrier.dart';
+import '../../../../widgets/member/checkout_setting/citizen_digital_carrier.dart';
 import '../../../../widgets/member/checkout_setting/donation_invoice_carrier.dart';
 import '../../../../widgets/member/checkout_setting/member_account_carrier.dart';
 import '../../../../widgets/member/checkout_setting/mobile_carrier.dart';
@@ -53,6 +53,16 @@ class _InvoiceSettingPageState
   Widget get view {
     return ControlledWidgetBuilder<InvoiceSettingController>(
         builder: (context, controller) {
+      String? _membershipCarrier =
+          controller.invoices?.membershipCarrier?.carrierId.toString();
+      String? _mobileCarrier =
+          controller.invoices?.mobileCarrier?.carrierId?.toString();
+      String? _citizenDigitalCarrier =
+          controller.invoices?.citizenDigitalCarrier?.carrierId?.toString();
+      String? _valueAddedTaxId =
+          controller.invoices?.vatCarrier?.vatId?.toString();
+      String? _valueAddedTaxTitle = controller.invoices?.vatCarrier?.title;
+
       void handleCarrierExpand(InvoiceType type, bool isExpand) {
         setState(() {
           switch (type) {
@@ -88,6 +98,12 @@ class _InvoiceSettingPageState
 
       void handleSubmitValueAddedTaxCarrier(String code, String title) {}
 
+      void handleSubmitNPO(npo) {
+        controller.invoices?.donationNPO?.npos?.forEach((element) {
+          element.isEnabled = element.npoId == npo.npoId;
+        });
+      }
+
       List<ReorderableCard> _buildReorderableCards(
           List<InvoiceType> invoiceTypes) {
         return List.generate(invoiceTypes.length, (index) {
@@ -98,7 +114,9 @@ class _InvoiceSettingPageState
               return ReorderableCard(
                   key: ValueKey(index),
                   item: MemberAccountCarrier(
-                      isDefault: index == 0, id: '202021211345'),
+                    isDefault: index == 0,
+                    id: _membershipCarrier,
+                  ),
                   height: 120.0,
                   isSelected: index == 0);
 
@@ -109,21 +127,27 @@ class _InvoiceSettingPageState
                   item: MobileCarrier(
                     isDefault: index == 0,
                     isExpand: _isExpandedMobileCarrier,
+                    code: _mobileCarrier,
                     handleCollapse: () =>
                         handleCollapse(InvoiceType.mobileCarrier),
                     handleEapand: () => handleExpand(InvoiceType.mobileCarrier),
                     handleSubmit: (code) => handleSubmitMobileCarrier,
                   ),
-                  height: _isExpandedMobileCarrier ? 171.0 : 56.0,
+                  height: _isExpandedMobileCarrier
+                      ? 171.0
+                      : _mobileCarrier != null && _mobileCarrier.isNotEmpty
+                          ? 88.0
+                          : 56.0,
                   isSelected: index == 0);
 
             /// 個人-自然人憑證
             case InvoiceType.citizenDigitalCertificateCarrier:
               return ReorderableCard(
                   key: ValueKey(index),
-                  item: CitizenDigitalCertificateCarrier(
+                  item: CitizenDigitalCarrier(
                     isDefault: index == 0,
                     isExpand: _isExpandedCitizenDigitalCertificateCarrier,
+                    code: _citizenDigitalCarrier,
                     handleCollapse: () => handleCollapse(
                         InvoiceType.citizenDigitalCertificateCarrier),
                     handleExpand: () => handleExpand(
@@ -133,7 +157,10 @@ class _InvoiceSettingPageState
                   ),
                   height: _isExpandedCitizenDigitalCertificateCarrier
                       ? 190.0
-                      : 56.0,
+                      : _citizenDigitalCarrier != null &&
+                              _citizenDigitalCarrier.isNotEmpty
+                          ? 88.0
+                          : 56.0,
                   isSelected: index == 0);
 
             /// 公司-三聯式電子發票
@@ -143,6 +170,8 @@ class _InvoiceSettingPageState
                   item: ValueAddedTaxCarrier(
                     isDefault: index == 0,
                     isExpand: _isExpandedValueAddedTaxCarrier,
+                    code: _valueAddedTaxId,
+                    title: _valueAddedTaxTitle,
                     handleCollapse: () =>
                         handleCollapse(InvoiceType.valueAddedTaxCarrier),
                     handleExpand: () =>
@@ -150,22 +179,35 @@ class _InvoiceSettingPageState
                     handleSubmit: (code, title) =>
                         handleSubmitValueAddedTaxCarrier,
                   ),
-                  height: _isExpandedValueAddedTaxCarrier ? 305.0 : 56.0,
+                  height: _isExpandedValueAddedTaxCarrier
+                      ? 305.0
+                      : _valueAddedTaxId != null &&
+                              _valueAddedTaxId.isNotEmpty &&
+                              _valueAddedTaxTitle != null &&
+                              _valueAddedTaxTitle.isNotEmpty
+                          ? 88.0
+                          : 56.0,
                   isSelected: index == 0);
 
             /// 捐贈發票
             case InvoiceType.donationInvoice:
+              int npoLength =
+                  controller.invoices?.donationNPO?.npos?.length ?? 0;
               return ReorderableCard(
                   key: ValueKey(index),
                   item: DonationInvoiceCarrier(
                     isDefault: index == 0,
                     isExpand: _isExpandedDonationInvoice,
+                    npos: controller.invoices?.donationNPO?.npos,
                     handleCollpase: () =>
                         handleCollapse(InvoiceType.donationInvoice),
                     handleExpand: () =>
                         handleExpand(InvoiceType.donationInvoice),
+                    handleSubmit: handleSubmitNPO,
                   ),
-                  height: _isExpandedDonationInvoice ? 290.0 : 56.0,
+                  height: _isExpandedDonationInvoice
+                      ? (314.0 + 20.0 * npoLength)
+                      : 56.0,
                   isSelected: index == 0);
           }
         });

@@ -14,9 +14,9 @@ class DataInvoiceSettingRepository extends InvoiceSettingRepository {
   @override
   Future getInvoiceSetting() async {
     try {
-      final response = await HttpUtils.instance.get(Api.memberCenter);
+      final response = await HttpUtils.instance.get(Api.invoiceSetting);
       if (response.isSuccess) {
-        return InvoicesResponse.fromJson(response.data);
+        return Invoices.fromJson(response.data);
       }
       throw Exception('Failed to get invoice setting.');
     } catch (e) {

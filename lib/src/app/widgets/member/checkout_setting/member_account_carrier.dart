@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../device/utils/my_plus_colors.dart';
 import 'reorderable_card.dart';
 import 'default_indicator.dart';
 
@@ -18,7 +17,7 @@ class MemberAccountCarrier extends StatefulWidget
   @override
   bool isDefault;
 
-  String id = '';
+  String? id = '';
 
   @override
   State<MemberAccountCarrier> createState() => _MemberAccountCarrierState();

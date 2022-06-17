@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
+import '../../entities/member/invoice.dart';
 import '../../repositories/member/invoice_setting_repository.dart';
 
 class GetInvoiceSettingUseCase extends UseCase<GetInvoiceSettingUseCaseResponse,
@@ -15,15 +16,15 @@ class GetInvoiceSettingUseCase extends UseCase<GetInvoiceSettingUseCaseResponse,
     final controller = StreamController<GetInvoiceSettingUseCaseResponse>();
 
     try {
-      // get member history products
+      // get member invoice setting
       final invoices = await repo.getInvoiceSetting();
       // Adding it triggers the .onNext() in the 'Observer'
       // It is usually better to wrap the response inside a response object.
       controller.add(GetInvoiceSettingUseCaseResponse(invoices));
-      logger.finest('GetMemberHistoryProductsUseCase successful.');
+      logger.finest('GetInvoiceSettingUseCase successful.');
       controller.close();
     } catch (e) {
-      logger.severe('GetMemberHistoryProductsUseCase failure.');
+      logger.severe('GetInvoiceSettingUseCase failure.');
       // Trigger .onError
       controller.addError(e);
     }
@@ -32,8 +33,8 @@ class GetInvoiceSettingUseCase extends UseCase<GetInvoiceSettingUseCaseResponse,
 }
 
 class GetInvoiceSettingUseCaseResponse {
-  dynamic invoices;
-  GetInvoiceSettingUseCaseResponse(invoices);
+  final Invoices invoices;
+  GetInvoiceSettingUseCaseResponse(this.invoices);
 }
 
 class GetInvoiceSettingUseCaseParams {

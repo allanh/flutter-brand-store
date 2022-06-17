@@ -44,6 +44,7 @@ class Api {
   static const historyProducts = '/udi/v1/product_collections/recent_view/list';
   static const bougthProducts = '/udi/v1/member_center/order/purchase';
   static const favoriteProducts = '/udi/v1/product_collections/favorite/list';
+  static const invoiceSetting = '/udi/v1/member_center/setting/invoice/list';
 
   // Product
   static const getProduct = '/udi/v2/goods/info';

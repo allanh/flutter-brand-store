@@ -31,15 +31,16 @@ class _CarrierActionButtonsState extends State<CarrierActionButtons> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           OutlinedButton(
-              onPressed: () => widget.handleReset,
+              onPressed: () => widget.handleReset(),
               child: Text(
                 '清除資料',
                 style: _style,
               )),
           ElevatedButton(
             style: ElevatedButton.styleFrom(primary: _themeColor),
-            onPressed:
-                widget.handleSubmit != null ? () => widget.handleSubmit : null,
+            onPressed: widget.handleSubmit != null
+                ? () => widget.handleSubmit!()
+                : null,
             child: const Text('儲存'),
           )
         ],

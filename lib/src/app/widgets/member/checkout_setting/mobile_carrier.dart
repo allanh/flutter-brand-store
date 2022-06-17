@@ -22,7 +22,7 @@ class MobileCarrier extends StatefulWidget implements DefaultCarrierInterface {
   @override
   bool isDefault;
 
-  String code;
+  String? code;
 
   bool isExpand;
 
@@ -37,9 +37,22 @@ class MobileCarrier extends StatefulWidget implements DefaultCarrierInterface {
 }
 
 class _MobileCarrierState extends State<MobileCarrier> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    void handleReset() {}
+    void handleReset() {
+      setState(() {
+        _controller.text = '';
+        widget.code = null;
+      });
+    }
 
     Text _title = Text(
       '個人-手機條碼載具',
@@ -51,6 +64,11 @@ class _MobileCarrierState extends State<MobileCarrier> {
       style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
     );
 
+    Text _subtitle = Text(
+      widget.code ?? '',
+      style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
+    );
+
     TextStyle _hintStyle = Theme.of(context)
         .textTheme
         .caption!
@@ -59,9 +77,15 @@ class _MobileCarrierState extends State<MobileCarrier> {
     SizedBox _codeInputField = SizedBox(
       height: 36.0,
       child: TextField(
+        controller: _controller,
+        textInputAction: TextInputAction.send,
+        maxLength: 8,
         onChanged: (text) => setState(() => widget.code = text),
         cursorColor: UdiColors.veryLightGrey2,
         decoration: InputDecoration(
+          labelText: widget.code,
+          counterText: '',
+          floatingLabelBehavior: FloatingLabelBehavior.never,
           contentPadding: const EdgeInsets.symmetric(horizontal: 18.0),
           hintText: '請輸入手機條碼',
           hintStyle: _hintStyle,
@@ -73,9 +97,10 @@ class _MobileCarrierState extends State<MobileCarrier> {
     );
 
     CarrierActionButtons _carrierActionButtons = CarrierActionButtons(
-      handleReset: handleReset,
-      handleSubmit:
-          widget.code.isEmpty ? null : widget.handleSubmit(widget.code),
+      handleReset: () => handleReset(),
+      handleSubmit: widget.code != null && widget.code!.isNotEmpty
+          ? widget.handleSubmit(widget.code)
+          : null,
     );
 
     Row _bottomRow = Row(
@@ -121,9 +146,14 @@ class _MobileCarrierState extends State<MobileCarrier> {
                 const SizedBox(height: 20.0),
                 _bottomRow
               ]
-            : [
-                _topRow,
-              ],
+            : widget.code != null && widget.code!.isNotEmpty
+                ? [
+                    _topRow,
+                    _subtitle,
+                  ]
+                : [
+                    _topRow,
+                  ],
       ),
     );
   }

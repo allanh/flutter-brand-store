@@ -23,9 +23,9 @@ class ValueAddedTaxCarrier extends StatefulWidget
   @override
   bool isDefault;
 
-  String code;
+  String? code;
 
-  String title;
+  String? title;
 
   bool isExpand;
 
@@ -40,6 +40,15 @@ class ValueAddedTaxCarrier extends StatefulWidget
 }
 
 class _ValueAddedTaxCarrierState extends State<ValueAddedTaxCarrier> {
+  final TextEditingController _vatIdController = TextEditingController();
+  final TextEditingController _vatTitleController = TextEditingController();
+  @override
+  void dispose() {
+    _vatIdController.dispose();
+    _vatTitleController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     TextStyle _hintStyle = Theme.of(context)
@@ -47,12 +56,18 @@ class _ValueAddedTaxCarrierState extends State<ValueAddedTaxCarrier> {
         .caption!
         .copyWith(color: UdiColors.brownGrey2);
 
-    SizedBox _taxIdInputTile = SizedBox(
+    SizedBox _vatIdInputTile = SizedBox(
       height: 36.0,
       child: TextField(
+        controller: _vatIdController,
+        textInputAction: TextInputAction.send,
+        maxLength: 8,
         onChanged: (text) => setState(() => widget.code = text),
         cursorColor: UdiColors.veryLightGrey2,
         decoration: InputDecoration(
+          labelText: widget.code,
+          counterText: '',
+          floatingLabelBehavior: FloatingLabelBehavior.never,
           contentPadding: const EdgeInsets.symmetric(horizontal: 18.0),
           hintText: '請輸入統一編號',
           hintStyle: _hintStyle,
@@ -66,9 +81,14 @@ class _ValueAddedTaxCarrierState extends State<ValueAddedTaxCarrier> {
     SizedBox _titleInputTile = SizedBox(
       height: 36.0,
       child: TextField(
+        controller: _vatTitleController,
+        textInputAction: TextInputAction.send,
         onChanged: (text) => setState(() => widget.title = text),
         cursorColor: UdiColors.veryLightGrey2,
         decoration: InputDecoration(
+          labelText: widget.title,
+          counterText: '',
+          floatingLabelBehavior: FloatingLabelBehavior.never,
           contentPadding: const EdgeInsets.symmetric(horizontal: 18.0),
           hintText: '請輸入發票抬頭',
           hintStyle: _hintStyle,
@@ -89,6 +109,11 @@ class _ValueAddedTaxCarrierState extends State<ValueAddedTaxCarrier> {
       style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
     );
 
+    Text _subtitle = Text(
+      '${widget.code}, ${widget.title}',
+      style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
+    );
+
     Text _taxIdTitle = Text(
       '統一編號*',
       style: Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 14.0),
@@ -99,16 +124,26 @@ class _ValueAddedTaxCarrierState extends State<ValueAddedTaxCarrier> {
       style: Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 14.0),
     );
 
-    void handleReset() {}
+    void handleReset() {
+      setState(() {
+        _vatIdController.text = '';
+        _vatTitleController.text = '';
+        widget.title = null;
+        widget.code = null;
+      });
+    }
 
     CarrierActionButtons _carrierActionButtons = CarrierActionButtons(
-      handleReset: handleReset,
-      handleSubmit: widget.code.isEmpty || widget.title.isEmpty
-          ? null
-          : () => widget.handleSubmit(
+      handleReset: () => handleReset(),
+      handleSubmit: widget.code != null &&
+              widget.code!.isNotEmpty &&
+              widget.title != null &&
+              widget.title!.isNotEmpty
+          ? () => widget.handleSubmit(
                 widget.code,
                 widget.title,
-              ),
+              )
+          : null,
     );
 
     Row _topRow = Row(
@@ -153,7 +188,7 @@ class _ValueAddedTaxCarrierState extends State<ValueAddedTaxCarrier> {
                 const SizedBox(height: 12.0),
                 _taxIdTitle,
                 const SizedBox(height: 8.0),
-                _taxIdInputTile,
+                _vatIdInputTile,
                 const SizedBox(height: 15.0),
                 _companyTitle,
                 const SizedBox(height: 8.0),
@@ -161,7 +196,14 @@ class _ValueAddedTaxCarrierState extends State<ValueAddedTaxCarrier> {
                 const SizedBox(height: 20.0),
                 _bottomRow
               ]
-            : [_topRow],
+            : widget.code != null && widget.code!.isNotEmpty
+                ? [
+                    _topRow,
+                    _subtitle,
+                  ]
+                : [
+                    _topRow,
+                  ],
       ),
     );
   }

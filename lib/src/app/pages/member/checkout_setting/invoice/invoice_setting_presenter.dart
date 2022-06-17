@@ -40,6 +40,6 @@ class _GetInvoiceSettingUseCaseObserver
 
   @override
   void onNext(response) {
-    presenter.getInvoiceSettingOnNext(response);
+    presenter.getInvoiceSettingOnNext(response?.invoices);
   }
 }
