@@ -1,4 +1,5 @@
 import 'package:brandstores/src/app/utils/constants.dart';
+import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'category_main.dart';
@@ -186,11 +187,13 @@ class Product {
   int? freebieGiftLimitOn;
   @JsonKey(name: 'freebie_gift_limit')
   int? freebieGiftLimit;
+  @JsonKey(name: 'image_url')
+  String? imageUrl;
 
   // addon
   @JsonKey(name: 'addon_fixed_price')
   int? addonFixedPrice;
-  DateFormat _inputDateFormat = DateFormat(inputFormat);
+  final DateFormat _inputDateFormat = DateFormat(originalFullDateFormat);
 
   Product(
       {this.no,
@@ -288,15 +291,76 @@ class Product {
     return null;
   }
 
-  // 最小網路價
+  /// 最小網路價
   int? get minProposedPrice =>
       productInfo?.map((element) => element.proposedPrice).min;
 
-  // 是否為多價格
+  /// 是否為多價格
   bool get isRangePrice =>
       productInfo
           ?.any((element) => element.proposedPrice != minProposedPrice) ??
       false;
+
+  /// default specification text
+  String get defaultSpecText {
+    final buffer = StringBuffer();
+    buffer.write('請選擇　');
+
+    if (ShippedType.preorder == shippedType) {
+      buffer.write('出貨日期/');
+    }
+    if (specLv1Title?.isNotEmpty == true) {
+      buffer.write('$specLv1Title/');
+    }
+    if (specLv2Title?.isNotEmpty == true) {
+      buffer.write('$specLv2Title/');
+    }
+    buffer.write('數量');
+    return buffer.toString();
+  }
+
+  /**
+     * 請選擇 出貨日期/尺寸/顏色/數量
+     * 已選 M, 深黑色, 1 件
+    private fun getSelectedSpecText(specName1: String?, specName2: String?, count: Int? = 0): SpannableStringBuilder? =
+        SpannableStringBuilder(getString(R.string.product_chose_text)).append(" ")
+            .apply {
+                specName1?.takeIf { it.isNotEmpty() }?.let { append("$it, ") }
+                specName2?.takeIf { it.isNotEmpty() }?.let { append("$it, ") }
+                append(getString(R.string.product_quantity_format, count))
+                val countIndex = lastIndexOf(count.toString())
+                setSpan(ForegroundColorSpan(Color.RED), countIndex, countIndex + count.toString().length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            */
+
+  /// 規格：『訂製、預購、客約』出貨日期備註
+  String? get shippedNote {
+    switch (shippedType) {
+      case ShippedType.custom:
+        return '此商品於付款完成後 $shippedCustomDay 天開始陸續出貨';
+      case ShippedType.preorder:
+        // TODO: 改從購物車拿預計出貨日
+        return null;
+      //final date = shippedPreorderDate?.first.replaceAll('-', '/');
+      //return date != null ? '預計 $date 出貨' : null;
+      case ShippedType.contact:
+        return '因商品屬性，將有專人與您約定送貨日期';
+      default:
+        return null;
+    }
+  }
+
+  // 贈品是否已贈完
+  bool get freebieisEmpty => freebieGiftLimitOn == 1 && freebieGiftLimit == 0;
+
+  // 保存期限字串
+  String? get expiryString => (expiry != null)
+      ? (expiry == Expiry.ever ? '永久' : '$expireDate$expireDateType')
+      : null;
+
+  // 取得規格商品
+  ProductInfo? getProudctInfo(int productId) =>
+      productInfo?.firstWhereOrNull((info) => info.productId == productId);
 }
 
 @JsonSerializable()
@@ -380,9 +444,44 @@ class ProductInfo {
   factory ProductInfo.fromJson(Map<String, dynamic> json) =>
       _$ProductInfoFromJson(json);
   Map<String, dynamic> toJson() => _$ProductInfoToJson(this);
+
+  // App獨享價價差
+  int? get promotionPriceAppDiff =>
+      ((promotionPriceApp ?? 0) > 0) && proposedPrice != null
+          ? proposedPrice! - promotionPriceApp!
+          : null;
 }
 
-// 測試用
+/// 加入購物車
+@JsonSerializable()
+class AddToCartParams {
+  @JsonKey(name: 'goods_no')
+  String? no;
+  @JsonKey(name: 'product_id')
+  int? productId;
+  @JsonKey(name: 'qty')
+  int? quantity;
+  @JsonKey(name: 'addon_fixed_price')
+  int? addonFixedPrice;
+  @JsonKey(name: 'delivery_date')
+  String? deliveryDate;
+  @JsonKey(name: 'addon')
+  List<AddToCartParams>? addon;
+
+  AddToCartParams(
+      {this.no,
+      this.productId,
+      this.quantity,
+      this.addonFixedPrice,
+      this.deliveryDate,
+      this.addon});
+
+  factory AddToCartParams.fromJson(Map<String, dynamic> json) =>
+      _$AddToCartParamsFromJson(json);
+  Map<String, dynamic> toJson() => _$AddToCartParamsToJson(this);
+}
+
+/// 測試用
 extension MockProduct on Product {
   List<Event> get mockEvents => [
         Event(
@@ -390,12 +489,26 @@ extension MockProduct on Product {
             type: EventType.eventDiscount,
             ruleType: RuleType.noRules,
             ruleContent: RuleContent.productDiscount,
-            ruleInfos: [RuleInfo(discount: 1000)]),
+            ruleInfos: [
+              RuleInfos(ruleInfo: [RuleInfo(discount: 1000)])
+            ]),
         Event(
             eventOnline: false,
             type: EventType.eventDiscount,
             ruleType: RuleType.fillUp,
             ruleContent: RuleContent.productPercentOff,
-            ruleInfos: [RuleInfo(perUnit: 3, discount: 7)]),
+            ruleInfos: [
+              RuleInfos(ruleInfo: [RuleInfo(perUnit: 3, discount: 7)])
+            ]),
       ];
+
+  List<Product> get mockAddons =>
+      [this, this, this, this..addonFixedPrice = 999999];
+
+  // 廣告
+  String get mockAd =>
+      'https://storage.googleapis.com/udi_upload/202203223836db79199b4c2db32c099b4763c482';
+
+  // 鑑賞期
+  String? get orderHesitate => '7天';
 }

@@ -3,6 +3,7 @@ import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:go_router/go_router.dart';
 
 import '../pages/test_entry_page.dart';
+import '../utils/screen_config.dart';
 import './main_controller.dart';
 import '../../data/repositories/data_site_setting_repository.dart';
 import '../drawer/my_plus_drawer_view.dart';
@@ -125,6 +126,8 @@ class _MainPageState extends ViewState<MainPage, MainController> {
   Widget get view {
     return ControlledWidgetBuilder<MainController>(
       builder: (context, controller) {
+        SizeConfig().init(context);
+
         if (controller.siteSetting != null) {
           if (controller.siteSetting!.layout.sidebar.direction ==
               SidebarDirection.left) {

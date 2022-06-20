@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../domain/entities/product/image_info.dart';
+import '../../utils/screen_config.dart';
 
 class ImageSlider extends StatefulWidget {
   final List<MyPlusImageInfo> imageList;
@@ -23,25 +24,23 @@ class _ImageSliderState extends State<ImageSlider> {
 
   @override
   Widget build(BuildContext context) => widget.imageList.isNotEmpty
-      ? SizedBox(
-          height: 375,
-          child: Stack(alignment: AlignmentDirectional.bottomCenter, children: [
-            CarouselSlider(
-              options: CarouselOptions(
-                  height: 375.0,
-                  viewportFraction: 1.0,
-                  enableInfiniteScroll: false,
-                  //enlargeCenterPage: false,
-                  onPageChanged: (index, reason) {
-                    setState(() {
-                      _current = index;
-                    });
-                  }),
-              carouselController: _controller,
-              items: _items,
-            ),
-            if (imageList.length > 1) _indictor
-          ]))
+      ? Stack(alignment: AlignmentDirectional.bottomCenter, children: [
+          CarouselSlider(
+            options: CarouselOptions(
+                aspectRatio: 1,
+                viewportFraction: 1.0,
+                enableInfiniteScroll: false,
+                //enlargeCenterPage: false,
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    _current = index;
+                  });
+                }),
+            carouselController: _controller,
+            items: _items,
+          ),
+          if (imageList.length > 1) _indictor
+        ])
       : const Center(child: CircularProgressIndicator());
 
   /// 圖片或影片列表
@@ -49,7 +48,7 @@ class _ImageSliderState extends State<ImageSlider> {
         return Builder(
           builder: (BuildContext context) {
             return SizedBox(
-                width: MediaQuery.of(context).size.width,
+                width: SizeConfig.screenWidth,
                 child: CachedNetworkImage(
                   imageUrl: item.url!,
                   fit: BoxFit.fill,

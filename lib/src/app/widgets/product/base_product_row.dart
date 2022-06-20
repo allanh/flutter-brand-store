@@ -1,3 +1,4 @@
+import 'package:brandstores/src/app/utils/screen_config.dart';
 import 'package:flutter/material.dart';
 
 import '../../../device/utils/my_plus_colors.dart';
@@ -5,49 +6,51 @@ import '../../../device/utils/my_plus_colors.dart';
 /// 促銷活動
 class BaseProductRow extends StatelessWidget {
   const BaseProductRow(
-      {Key? key, required this.title, required this.view, this.onMoreTap})
+      {Key? key,
+      required this.title,
+      required this.view,
+      this.moreTapped,
+      this.marginTop})
       : super(key: key);
 
   final String title;
   final Widget view;
+  final double? marginTop;
 
   /// The callback that is called when the more icon is tapped.
-  final VoidCallback? onMoreTap;
+  final VoidCallback? moreTapped;
 
   @override
   Widget build(BuildContext context) => Container(
-      alignment: Alignment.topLeft,
-      margin: const EdgeInsets.only(top: 8),
-      padding: const EdgeInsets.only(left: 12),
-      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.only(top: marginTop ?? 0),
+      //padding: const EdgeInsets.only(left: 12),
+      width: SizeConfig.screenWidth,
       decoration: const BoxDecoration(color: Colors.white),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 標題
-          SizedBox(
-              width: 50,
-              height: 44,
-              child: Center(
-                  child: Text(title,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context)
-                          .textTheme
-                          .caption
-                          ?.copyWith(color: UdiColors.brownGrey)))),
+          Container(
+              width: 70,
+              padding: const EdgeInsets.only(left: 12, top: 12, bottom: 12),
+              child: Text(title,
+                  //textAlign: TextAlign.center,
+                  style: Theme.of(context)
+                      .textTheme
+                      .caption
+                      ?.copyWith(fontSize: 14.0, color: UdiColors.brownGrey))),
           // 內容
           Container(
-            alignment: Alignment.centerLeft,
-            width: MediaQuery.of(context).size.width -
-                ((onMoreTap != null) ? 130 : 90),
-            margin: const EdgeInsets.only(left: 12, right: 12),
+            width: SizeConfig.screenWidth - ((moreTapped != null) ? 110 : 90),
+            padding: const EdgeInsets.symmetric(vertical: 12),
             child: view,
           ),
           // 更多按鈕
-          if (onMoreTap != null)
+          if (moreTapped != null)
             GestureDetector(
                 child: SizedBox(
-                  width: 44,
+                  width: 40,
                   height: 44,
                   child: Image.asset(
                     'assets/images/icon_more.png',
@@ -55,7 +58,7 @@ class BaseProductRow extends StatelessWidget {
                     height: 20,
                   ),
                 ),
-                onTap: () => onMoreTap!()),
+                onTap: () => moreTapped!()),
         ],
       ));
 }

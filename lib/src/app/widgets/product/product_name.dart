@@ -1,10 +1,10 @@
-import 'package:brandstores/src/app/utils/constants.dart';
 import 'package:brandstores/src/domain/entities/product/promotion.dart';
 import 'package:flutter/material.dart';
 
 import '../../../device/utils/my_plus_colors.dart';
 import '../../../domain/entities/product/product.dart';
-import '../../../extension/int_extension.dart';
+import '../../../extension/num_extension.dart';
+import '../../utils/screen_config.dart';
 
 /// 單一圖標
 class ProductName extends StatelessWidget {
@@ -18,7 +18,7 @@ class ProductName extends StatelessWidget {
     return Container(
         alignment: Alignment.topLeft,
         padding: const EdgeInsets.only(top: 8, bottom: 8, left: 12, right: 12),
-        width: MediaQuery.of(context).size.width,
+        width: SizeConfig.screenWidth,
         decoration: const BoxDecoration(color: Colors.white),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,8 +77,8 @@ class ProductName extends StatelessWidget {
                       child: Text(
                         '${product?.promotionApp?.rate ?? ''}折',
                         textAlign: TextAlign.center,
-                        style:
-                            theme.textTheme.caption!.copyWith(fontSize: 12.0),
+                        style: theme.textTheme.caption!
+                            .copyWith(fontSize: 12.0, color: Colors.white),
                       ),
                     ),
                 ],

@@ -1,4 +1,3 @@
-import 'package:brandstores/src/app/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 import '../../../domain/entities/product/product.dart';
@@ -30,8 +29,9 @@ class PromotionTag extends StatelessWidget {
               child: Text(
                 tagText,
                 textAlign: TextAlign.center,
-                style: theme.textTheme.headline6!
-                    .copyWith(height: 1.142857, fontSize: 14),
+                maxLines: 2,
+                style: theme.textTheme.headline6!.copyWith(
+                    height: 1.142857, fontSize: 14, color: Colors.white),
               ),
             )));
   }

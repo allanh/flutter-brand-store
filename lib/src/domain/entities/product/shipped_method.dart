@@ -54,6 +54,21 @@ enum ShippingType {
   largeDelivery, // 大材配送常溫
 }
 
+extension ShippingTypeExtension on ShippingType {
+  String get name {
+    switch (this) {
+      case ShippingType.sevenPickUp:
+        return '7-11';
+      case ShippingType.familyPickUp:
+        return '全家';
+      case ShippingType.largeDelivery:
+        return '大材配送常溫';
+      default:
+        return '宅配';
+    }
+  }
+}
+
 /// 溫層
 enum CostType {
   @JsonValue('FREE')
@@ -107,4 +122,14 @@ class ShippedMethod {
   factory ShippedMethod.fromJson(Map<String, dynamic> json) =>
       _$ShippedMethodFromJson(json);
   Map<String, dynamic> toJson() => _$ShippedMethodToJson(this);
+
+  /// 本島或離島
+  String get mainOrOutlying {
+    if (mainIsEnabled == true && outlyingIsEnabled == true) {
+      return '本島/離島';
+    } else if (outlyingIsEnabled == true) {
+      return '離島';
+    }
+    return '本島';
+  }
 }

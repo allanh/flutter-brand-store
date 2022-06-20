@@ -1,3 +1,4 @@
+import 'package:brandstores/src/domain/entities/product/shipped_method.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'spec_sku.g.dart';
 
@@ -48,6 +49,14 @@ class SpecSku {
   @JsonKey(name: 'is_product')
   bool? isProduct;
 
+  // 已選規格
+  ShippedType? shippedType;
+  // (預購/客約) 商品出貨日期 EX: 2021-09-30, 2021-10-10
+  String? shippedPreorderDate;
+  // (訂製) 備貨天數 (日) EX: 14
+  String? shippedCustomDay;
+  String? quantity; //規格品可銷量
+
   SpecSku(
       {this.level,
       this.specName,
@@ -59,7 +68,11 @@ class SpecSku {
       this.spec2,
       this.specLv2Id,
       this.specLv2Name,
-      this.isProduct});
+      this.isProduct,
+      this.shippedType,
+      this.shippedPreorderDate,
+      this.shippedCustomDay,
+      this.quantity});
 
   factory SpecSku.fromJson(Map<String, dynamic> json) =>
       _$SpecSkuFromJson(json);

@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 extension StringExtension on String {
   /// convert a String to bool
   bool toBool() {
@@ -22,4 +24,12 @@ extension StringExtension on String {
       length >= 6 &&
       RegExp(".*[A-Za-z].*").hasMatch(this) &&
       RegExp(".*\\d.*").hasMatch(this);
+
+  /// 轉換時間格式
+  String convertDateFormat(String oldFormat, String newFormat) {
+    DateFormat newDateFormat = DateFormat(newFormat);
+    DateTime dateTime = DateFormat(oldFormat).parse(this);
+    String selectedDate = newDateFormat.format(dateTime);
+    return selectedDate;
+  }
 }
