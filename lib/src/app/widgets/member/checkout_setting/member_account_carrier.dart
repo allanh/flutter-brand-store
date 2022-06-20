@@ -6,9 +6,9 @@ import 'reorderable_card.dart';
 import 'default_indicator.dart';
 
 /// 會員載具
-class MemberAccountCarrier extends StatefulWidget
+class MembershipCarrier extends StatefulWidget
     implements DefaultCarrierInterface {
-  MemberAccountCarrier({
+  MembershipCarrier({
     Key? key,
     required this.isDefault,
     required this.id,
@@ -20,10 +20,10 @@ class MemberAccountCarrier extends StatefulWidget
   String? id = '';
 
   @override
-  State<MemberAccountCarrier> createState() => _MemberAccountCarrierState();
+  State<MembershipCarrier> createState() => _MembershipCarrierState();
 }
 
-class _MemberAccountCarrierState extends State<MemberAccountCarrier> {
+class _MembershipCarrierState extends State<MembershipCarrier> {
   @override
   Widget build(BuildContext context) {
     void handleAction() {}
@@ -54,35 +54,44 @@ class _MemberAccountCarrierState extends State<MemberAccountCarrier> {
       style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
     );
 
+    var _topRow = Padding(
+      padding: const EdgeInsets.only(top: 12.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [_carrierId, _actionButton],
+      ),
+    );
+    var _hintMessageRow = Expanded(
+      child: SizedBox(
+        height: 34.0,
+        child: _hintMessage,
+      ),
+    );
+    var _bottomRow = Padding(
+      padding: const EdgeInsets.only(bottom: 15.0),
+      child: Row(
+        mainAxisAlignment: widget.isDefault
+            ? MainAxisAlignment.spaceBetween
+            : MainAxisAlignment.end,
+        children: widget.isDefault ? [const DefaultIndicator()] : [],
+      ),
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 12.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [_carrierId, _actionButton],
-            ),
-          ),
-          const SizedBox(height: 12.0),
-          Expanded(
-            child: SizedBox(
-              height: 34.0,
-              child: _hintMessage,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 15.0),
-            child: Row(
-              mainAxisAlignment: widget.isDefault
-                  ? MainAxisAlignment.spaceBetween
-                  : MainAxisAlignment.end,
-              children: widget.isDefault ? [const DefaultIndicator()] : [],
-            ),
-          )
-        ],
+        children: widget.isDefault
+            ? [
+                _topRow,
+                const SizedBox(height: 12.0),
+                _hintMessageRow,
+                _bottomRow
+              ]
+            : [
+                _topRow,
+                const SizedBox(height: 12.0),
+                _hintMessageRow,
+              ],
       ),
     );
   }

@@ -233,3 +233,37 @@ class NPO {
   factory NPO.fromJson(Map<String, dynamic> json) => _$NPOFromJson(json);
   Map<String, dynamic> toJson() => _$NPOToJson(this);
 }
+
+enum CarrierType {
+  membershipCarrier,
+  mobileCarrier,
+  citizenDigitalCarrier,
+  valueAddedTaxCarrier,
+  donate,
+}
+
+class Carrier {
+  Carrier(
+    this.type,
+    this.carrierId,
+    this.isDefault,
+  );
+
+  /// 載具類型
+  CarrierType type;
+
+  /// 流水號
+  @JsonKey(name: 'main_id')
+  String? id;
+
+  /// 載具號碼
+  String? carrierId;
+
+  /// 是否是預設發票
+  @JsonKey(
+    name: 'is_default',
+    fromJson: JsonValueConverter.boolFromInt,
+    toJson: JsonValueConverter.boolToInt,
+  )
+  bool isDefault;
+}
