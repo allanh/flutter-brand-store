@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:brandstores/src/domain/repositories/member_center_repository.dart';
+import 'package:brandstores/src/domain/repositories/member/member_center_repository.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
 import '../entities/site_setting/site_setting.dart';
-import '../entities/member_center/member_center.dart';
+import '../entities/member/member_center.dart';
 import '../repositories/drawer_info_respository.dart';
 
 class GetDrawerInfoUseCase

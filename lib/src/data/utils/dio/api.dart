@@ -18,10 +18,10 @@ class Api {
 
   // Third Party
   static const thirdPartyLogin = '/udi/v3/auth/third_party_login';
-  static const thirdPartyAccountCheck = '/udi/v3/auth/third_party_account_check';
+  static const thirdPartyAccountCheck =
+      '/udi/v3/auth/third_party_account_check';
   static const thirdPartyRegister = '/udi/v3/auth/third_party_register';
   static const bundleMember = '/udi/v3/auth/bundle_member';
-
 
   static const memberData = '/udi/v1/member_center/update/data';
 
@@ -41,6 +41,10 @@ class Api {
   static const memberProfile = '/udi/v1/member_center/update/data';
   static const memberVerification = '/udi/v3/auth/send_verification';
   static const updateProfile = '/udi/v1/member_center/update/data';
+  static const historyProducts = '/udi/v1/product_collections/recent_view/list';
+  static const bougthProducts = '/udi/v1/member_center/order/purchase';
+  static const favoriteProducts = '/udi/v1/product_collections/favorite/list';
+  static const invoiceSetting = '/udi/v1/member_center/setting/invoice/list';
 
   // Product
   static const getProduct = '/udi/v2/goods/info';
