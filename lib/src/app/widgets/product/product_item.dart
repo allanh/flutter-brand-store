@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../device/utils/my_plus_colors.dart';
 import '../../../domain/entities/product/product.dart';
 import '../../../extension/num_extension.dart';
-import '../member_center/horizontal_product_list_card.dart';
+import '../member/center/horizontal_product_list_card.dart';
 
 class ProductItem extends StatelessWidget {
   final Product product;
