@@ -73,7 +73,7 @@ class InvoicesInfo {
 
     /// 因為會員載具沒有 id，只有 memberId
     /// 上面的邏輯不會將會員載具加入
-    /// 因此，在這邊手凍僵會員載具加入陣列
+    /// 因此，在這邊手動將會員載具加入陣列
     list.insert(0, membershipCarrier);
 
     return list;
