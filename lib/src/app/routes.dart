@@ -105,7 +105,7 @@ class MyPlusRouter {
         path: '/register',
         pageBuilder: (context, state) => MaterialPage<void>(
           key: state.pageKey,
-          child: const RegisterPage(),
+          child: RegisterPage(),
         ),
       ),
 

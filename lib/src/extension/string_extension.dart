@@ -25,6 +25,11 @@ extension StringExtension on String {
       RegExp(".*[A-Za-z].*").hasMatch(this) &&
       RegExp(".*\\d.*").hasMatch(this);
 
+  bool isValidName() =>
+      isNotEmpty && length > 1 &&
+          RegExp(r'^(?:[\u4e00-\u9fa5]+)(?:·[\u4e00-\u9fa5]+)*$|^[a-zA-Z0-9]+\s?[\.·\-()a-zA-Z]*[a-zA-Z]+$')
+              .hasMatch(this);
+
   /// 轉換時間格式
   String convertDateFormat(String oldFormat, String newFormat) {
     DateFormat newDateFormat = DateFormat(newFormat);

@@ -9,8 +9,8 @@ class PasswordField extends StatefulWidget {
     this.onFocusChange,
     this.hintText = '請輸入密碼',
     this.errorMessage,
-    this.paddingStart = 16,
-    this.paddingEnd = 16,
+    this.paddingStart = 0,
+    this.paddingEnd = 0,
   }) : super(key: key);
   final ValueChanged<bool>? onFocusChange;
   final Function(String)? onValueChange;
@@ -27,7 +27,6 @@ class _PasswordFieldState extends State<PasswordField> {
   final textController = TextEditingController();
 
   bool passwordVisibility = false;
-  VoidCallback? suffixIconPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -36,20 +35,38 @@ class _PasswordFieldState extends State<PasswordField> {
         Focus(
           onFocusChange: widget.onFocusChange,
           child: TextFormField(
+              controller: textController,
               onChanged: widget.onValueChange,
               keyboardType: TextInputType.text,
-              controller: textController,
               obscureText: !passwordVisibility,
-              decoration: _inputDecoration(
-                  hintText: widget.hintText,
-                  showErrorBolder: widget.errorMessage != null,
-                  prefixIcon: Icons.lock,
-                  suffixIcon: IconButton(
-                      icon: Icon(
-                        passwordVisibility ? Icons.visibility : Icons.visibility_off,
-                        color: UdiColors.normalIcon,
-                      ),
-                      onPressed: () => setState(() => passwordVisibility = !passwordVisibility)))),
+              decoration: InputDecoration(
+                hintText: widget.hintText,
+                prefixIcon: const Padding(
+                  padding: EdgeInsets.only(right: 12),
+                  child: Icon(Icons.lock, color: UdiColors.normalIcon, size: 20),
+                ),
+                prefixIconConstraints: const BoxConstraints(minWidth: 20, minHeight: 20),
+                suffixIconConstraints: const BoxConstraints(minWidth: 20, minHeight: 20, maxWidth: 20),
+                suffixIcon: IconButton(
+                  padding: EdgeInsets.zero,
+                  icon: Icon(
+                    passwordVisibility ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                    color: UdiColors.normalIcon,
+                    size: 20,
+                  ),
+                  onPressed: () => setState(() => passwordVisibility = !passwordVisibility),
+                ),
+
+                isDense: true,
+                contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 0),
+                enabledBorder: _border(UdiColors.defaultBorder),
+                focusedBorder: _border(UdiColors.focusedBorder),
+                // 因錯誤訊息前需有圖示icon，故另外處理錯誤訊息，此處僅單純的變更輸入框線顏色
+                errorText: widget.errorMessage != null ? '' : null,
+                errorBorder: _border(UdiColors.danger),
+                focusedErrorBorder: _border(UdiColors.danger),
+                errorStyle: const TextStyle(height: 0, color: Colors.transparent),
+              )),
         ),
         const SizedBox(height: 4),
         ErrorText(
@@ -60,25 +77,6 @@ class _PasswordFieldState extends State<PasswordField> {
       ],
     );
   }
-
-  // 輸入框底線 (因錯誤訊息前需有圖示icon，故另外處理錯誤訊息，此處僅單純的變更輸入框線顏色)
-  InputDecoration _inputDecoration({
-    String? hintText,
-    bool showErrorBolder = false,
-    IconData? prefixIcon,
-    Widget? suffixIcon,
-  }) =>
-      InputDecoration(
-          prefixIcon: prefixIcon == null ? null : Icon(prefixIcon, color: UdiColors.normalIcon),
-          hintText: hintText,
-          isDense: true,
-          contentPadding: const EdgeInsets.symmetric(vertical: 16),
-          errorText: showErrorBolder ? '' : null,
-          errorBorder: _border(UdiColors.danger),
-          focusedBorder: _border(UdiColors.focusedBorder),
-          border: _border(UdiColors.defaultBorder),
-          errorStyle: const TextStyle(height: 0, color: Colors.transparent),
-          suffixIcon: suffixIcon);
 
   UnderlineInputBorder _border(Color color) =>
       UnderlineInputBorder(borderSide: BorderSide(color: color));

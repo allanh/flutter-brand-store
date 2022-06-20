@@ -1,10 +1,12 @@
 import 'package:brandstores/login_state.dart';
 import 'package:brandstores/src/app/pages/static_view.dart';
-import 'package:brandstores/src/app/widgets/udi_style/udi_button.dart';
-import 'package:brandstores/src/app/widgets/udi_style/udi_tab_bar.dart';
+import 'package:brandstores/src/app/widgets/udi_style/address_field.dart';
 import 'package:brandstores/src/app/widgets/udi_style/email_field.dart';
 import 'package:brandstores/src/app/widgets/udi_style/error_text.dart';
+import 'package:brandstores/src/app/widgets/udi_style/mobile_field.dart';
 import 'package:brandstores/src/app/widgets/udi_style/password_field.dart';
+import 'package:brandstores/src/app/widgets/udi_style/udi_button.dart';
+import 'package:brandstores/src/app/widgets/udi_style/udi_tab_bar.dart';
 import 'package:brandstores/src/data/utils/dio/api.dart';
 import 'package:brandstores/src/data/utils/dio/dio_utils.dart';
 import 'package:brandstores/src/data/utils/storage/my_key.dart';
@@ -17,6 +19,7 @@ import 'package:provider/provider.dart';
 
 import '../utils/constants.dart';
 import '../widgets/page_indicator.dart';
+import '../widgets/udi_style/udi_field.dart';
 
 class TestPage extends StatefulWidget {
   const TestPage({Key? key}) : super(key: key);
@@ -28,6 +31,7 @@ class TestPage extends StatefulWidget {
 class _TestPageState extends State<TestPage> {
   final _storage = SecureStorage();
   String passwordFieldValue = '';
+  final String longText = '這只是一個加了三角型圖案的紅色文字，這只是一個加了三角型圖案的紅色文字，這只是一個加了三角型圖案的紅色文字';
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -43,6 +47,13 @@ class _TestPageState extends State<TestPage> {
               createBtn('登入', () => doLogin()),
               createBtn('會員資料', () => getMemberData()),
               createBtn('登出', () => doLogout()),
+              createBtn('print storage', () =>
+                  _storage.readAll().then((value) {
+                    value.forEach((key, value) {
+                      debugPrint('storage => $key: $value');
+                    });
+                  })
+                  ),
             ],
           ),
           const SizedBox(height: 50),
@@ -62,6 +73,7 @@ class _TestPageState extends State<TestPage> {
                 "mobileCode": "886",
                 "mobile": "0999999999",
               }),
+              pushBtn('註冊頁', registerRouteName),
             ],
           ),
           const SizedBox(height: 50),
@@ -81,12 +93,9 @@ class _TestPageState extends State<TestPage> {
               // 其它
               staticPage('手機門號停用', pageType: StaticPageType.mobileStop),
               staticPage('電子信箱停用', pageType: StaticPageType.emailStop),
-              staticPage('密碼設定成功',
-                  pageType: StaticPageType.resetPasswordSuccess),
-              staticPage('手機註冊成功',
-                  pageType: StaticPageType.mobileRegisterSuccess),
-              staticPage('Email註冊成功',
-                  pageType: StaticPageType.emailRegisterSuccess),
+              staticPage('密碼設定成功', pageType: StaticPageType.resetPasswordSuccess),
+              staticPage('手機註冊成功', pageType: StaticPageType.mobileRegisterSuccess),
+              staticPage('Email註冊成功', pageType: StaticPageType.emailRegisterSuccess),
             ],
           ),
           const SizedBox(height: 50),
@@ -115,45 +124,49 @@ class _TestPageState extends State<TestPage> {
           ),
           const SizedBox(height: 30),
           const Text('ErrorText: '),
-          const ErrorText(
-              '訊息過長會自動換行，這只是一個加了三角型圖案的紅色文字，這只是一個加了三角型圖案的紅色文字，這只是一個加了三角型圖案的紅色文字'),
-          const ErrorText(
-              '限制一行，這只是一個加了三角型圖案的紅色文字，這只是一個加了三角型圖案的紅色文字，這只是一個加了三角型圖案的紅色文字',
-              maxLines: 1),
-          const ErrorText(
-            '限制二行，這只是一個加了三角型圖案的紅色文字，這只是一個加了三角型圖案的紅色文字，這只是一個加了三角型圖案的紅色文字',
-            maxLines: 2,
-          ),
-          const ErrorText(
-              '一行字尾漸淡，這只是一個加了三角型圖案的紅色文字，這只是一個加了三角型圖案的紅色文字，這只是一個加了三角型圖案的紅色文字',
-              maxLines: 1,
-              overflow: TextOverflow.fade),
-          const ErrorText(
-              '多行字尾漸淡，這只是一個加了三角型圖案的紅色文字，這只是一個加了三角型圖案的紅色文字，這只是一個加了三角型圖案的紅色文字',
-              maxLines: 2,
-              overflow: TextOverflow.fade),
+          ErrorText('訊息過長會自動換行，$longText'),
+          ErrorText('限制一行，$longText', maxLines: 1),
+          ErrorText('限制二行，$longText', maxLines: 2),
+          ErrorText('一行字尾漸淡，$longText', maxLines: 1, overflow: TextOverflow.fade),
+          ErrorText('多行字尾漸淡，$longText', maxLines: 2, overflow: TextOverflow.fade),
           const SizedBox(height: 30),
-          const Text('EmailField: '),
-          EmailField(
-            onFocusChange: (isFocus) =>
-                debugPrint('EmailField isFocus：$isFocus'),
-            onValueChange: (email) =>
-                debugPrint('EmailField input value：$email'),
+          const Text('UdiField: '),
+          const UdiField(hintText: '預設樣式'),
+          const UdiField(hintText: 'outline樣式', fieldType: FieldType.outline),
+          UdiField(
+            hintText: '有圖標時',
+            startIcon: Icons.email,
+            onValueChange: (value) {},
+            errorMessage: '有錯誤時',
           ),
+          UdiField(
+            hintText: 'outline有圖標時',
+            startIcon: Icons.email,
+            onValueChange: (value) {},
+            errorMessage: 'outline錯誤時',
+            fieldType: FieldType.outline,
+          ),
+          const SizedBox(height: 30),
+          const Text('MobileField'),
+          const MobileField(),
+          const SizedBox(height: 30),
+          const Text('EmailField(這個之後會移除，改用UdiField)'),
+          const EmailField(),
           const SizedBox(height: 30),
           const Text('PasswordField: '),
           PasswordField(
-            onFocusChange: (isFocus) =>
-                debugPrint('PasswordField isFocus：$isFocus'),
-            onValueChange: (password) => setState(() {
-              debugPrint('PasswordField input value：$password');
-              passwordFieldValue = password;
-            }),
-            errorMessage: passwordFieldValue.isNotEmpty &&
-                    !passwordFieldValue.isValidPwd()
-                ? '請輸入6-20碼英數字!!! (如果想要調整訊息前後的空白，可以使用paddingStart和paddingEnd)'
-                : null,
+              onFocusChange: (isFocus) => setState(() {}),
+              onValueChange: (password) => setState(() => passwordFieldValue = password),
+              errorMessage: passwordFieldValue.isNotEmpty && !passwordFieldValue.isValidPwd() ? '請輸入6-20碼英數字' : null),
+          const SizedBox(height: 30),
+          const Text('AddressField'),
+          AddressField(
+            defaultZip: '105',
+            defaultAddress: '南京東路五段92號3樓',
+            onValueChange: (zip, city, area, address) => debugPrint('address: $zip $city $area $address'),
           ),
+          const SizedBox(height: 30),
+          const AddressField(fieldType: FieldType.outline, errorMessage: "請輸入有效地址"),
           const SizedBox(height: 30),
           const Text('UdiButton: '),
           const UdiButton(text: '不能點擊', onPressed: null),
@@ -163,9 +176,7 @@ class _TestPageState extends State<TestPage> {
             onPressed: () {},
             buttonType: ButtonType.secondaryButton,
           ),
-          SizedBox(
-              width: double.infinity,
-              child: UdiButton(text: '滿版按鈕', onPressed: () {})),
+          SizedBox(width: double.infinity, child: UdiButton(text: '滿版按鈕', onPressed: () {})),
           const SizedBox(height: 30),
           const Text('UdiTabBar: Basic Tabs'),
           UdiTabBar(
@@ -176,8 +187,7 @@ class _TestPageState extends State<TestPage> {
         ]),
       ));
 
-  Widget staticPage(String buttonName,
-      {StaticPageType pageType = StaticPageType.error}) {
+  Widget staticPage(String buttonName, {StaticPageType pageType = StaticPageType.error}) {
     return pushBtn(buttonName, staticRouteName, extra: pageType);
   }
 
@@ -200,10 +210,7 @@ class _TestPageState extends State<TestPage> {
   }
 
   Widget openPageBtn(String name, Widget page) {
-    return OutlinedButton(
-        child: Text(name),
-        onPressed: () => Navigator.push(
-            context, MaterialPageRoute(builder: (context) => page)));
+    return OutlinedButton(child: Text(name), onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => page)));
   }
 
   Widget createBtn(String name, VoidCallback fun) {
@@ -211,11 +218,7 @@ class _TestPageState extends State<TestPage> {
   }
 
   void doLogin() async {
-    final res = await HttpUtils.instance.post(Api.login, params: {
-      "mobile_code": "886",
-      "mobile": "0955555555",
-      "pwd": "Aa123456"
-    });
+    final res = await HttpUtils.instance.post(Api.login, params: {"mobile_code": "886", "mobile": "0955555555", "pwd": "Aa123456"});
     if (res.isSuccess) {
       var token = res.data["access_token"] as String?;
       if (token != null && token.isNotEmpty) {
@@ -235,5 +238,10 @@ class _TestPageState extends State<TestPage> {
   void doLogout() {
     _storage.delete(MyKey.auth);
     Provider.of<LoginState>(context, listen: false).loggedIn = false;
+  }
+
+  void printStorageData(){
+    debugPrint('storage: ${_storage.readAll()}');
+
   }
 }

@@ -31,6 +31,7 @@ class _UdiTabBarState extends State<UdiTabBar> with SingleTickerProviderStateMix
     return TabBar(
       controller: _tabController,
       labelColor: UdiColors.secondaryText,
+      labelStyle: const TextStyle(fontSize: 18),
       unselectedLabelColor: UdiColors.secondaryText,
       indicator: const BoxDecoration(
         border: Border(bottom: BorderSide(color: UdiColors.secondaryText, width: 2)),

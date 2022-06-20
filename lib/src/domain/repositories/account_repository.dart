@@ -1,5 +1,3 @@
-import 'package:brandstores/src/domain/entities/account/account_body.dart';
-
 import '../../data/utils/dio/base_res.dart';
 import '../entities/enum/verify_type.dart';
 
@@ -18,5 +16,28 @@ abstract class AccountRepository {
 
   Future<bool> accountIsExist(String mobileCode, String mobile, String email);
 
-  Future<BaseResponse> register(AccountBody accountBody);
+  Future<BaseResponse> registerMobile({
+    required String name,
+    required String mobileCode,
+    required String mobile,
+    required String pwd,
+    String? gender,
+    DateTime? birth,
+    String? zip,
+    String? cityNo,
+    String? areaNo,
+    String? address,
+  });
+
+  Future<BaseResponse> registerEmail({
+    required String name,
+    required String email,
+    required String pwd,
+    String? gender,
+    DateTime? birth,
+    String? zip,
+    String? cityNo,
+    String? areaNo,
+    String? address,
+  });
 }
