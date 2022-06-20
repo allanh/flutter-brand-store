@@ -8,12 +8,13 @@ import 'invoice_setting_presenter.dart';
 class InvoiceSettingController extends Controller {
   InvoiceSettingController(
       DataInvoiceSettingRepository dataInvoiceSettingRepository)
-      : presenter = InvoiceSettingPresenter(dataInvoiceSettingRepository);
+      : invoiceInfoPresenter =
+            InvoiceSettingPresenter(dataInvoiceSettingRepository);
 
-  final InvoiceSettingPresenter presenter;
+  final InvoiceSettingPresenter invoiceInfoPresenter;
 
-  Invoices? _invoices;
-  Invoices? get invoices => _invoices;
+  InvoicesInfo? _invoiceInfos;
+  InvoicesInfo? get invoiceInfos => _invoiceInfos;
 
   @override
   void onInitState() {
@@ -22,16 +23,16 @@ class InvoiceSettingController extends Controller {
 
   @override
   void initListeners() {
-    presenter.getInvoiceSettingOnNext = (Invoices invoices) {
-      _invoices = invoices;
+    invoiceInfoPresenter.getInvoiceSettingOnNext = (InvoicesInfo invoices) {
+      _invoiceInfos = invoices;
       refreshUI();
     };
 
-    presenter.getInvoiceSettingOnComplete = () {
+    invoiceInfoPresenter.getInvoiceSettingOnComplete = () {
       debugPrint('Member invoice retrieved');
     };
 
-    presenter.getInvoiceSettingOnError = (e) {
+    invoiceInfoPresenter.getInvoiceSettingOnError = (e) {
       debugPrint('Could not retrieve member invoice.');
     };
   }
@@ -48,9 +49,9 @@ class InvoiceSettingController extends Controller {
   @override
   void onDisposed() {
     // don't forget to dispose of the presenter
-    presenter.dispose();
+    invoiceInfoPresenter.dispose();
     super.onDisposed();
   }
 
-  void getInvoiceSetting() => presenter.getInvoiceSetting();
+  void getInvoiceSetting() => invoiceInfoPresenter.getInvoiceSetting();
 }

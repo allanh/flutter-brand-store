@@ -255,7 +255,7 @@ class MyPlusRouter {
         name: checkoutSettingRouteName,
         path: '/checkout-setting',
         pageBuilder: (context, state) => MaterialPage<void>(
-            key: state.pageKey, child: const CheckoutSettingPage()),
+            key: state.pageKey, child: CheckoutSettingPage()),
       ),
 
       /// 發票設定

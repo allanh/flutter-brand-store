@@ -33,7 +33,7 @@ class GetInvoiceSettingUseCase extends UseCase<GetInvoiceSettingUseCaseResponse,
 }
 
 class GetInvoiceSettingUseCaseResponse {
-  final Invoices invoices;
+  final InvoicesInfo invoices;
   GetInvoiceSettingUseCaseResponse(this.invoices);
 }
 

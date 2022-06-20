@@ -18,7 +18,7 @@ class InvoicesResponse {
   final String? message;
 
   @JsonKey(name: 'data')
-  final Invoices invoices;
+  final InvoicesInfo invoices;
 
   factory InvoicesResponse.fromJson(Map<String, dynamic> json) =>
       _$InvoicesResponseFromJson(json);
@@ -26,55 +26,79 @@ class InvoicesResponse {
 }
 
 @JsonSerializable()
-class Invoices {
-  Invoices(
+class InvoicesInfo {
+  InvoicesInfo(
     this.membershipCarrier,
     this.donationNPO,
+    this.mobileCarrier,
+    this.vatCarrier,
+    this.citizenDigitalCarrier,
   );
 
   /// 會員載具
   @JsonKey(name: 'personal_member')
-  MembershipCarrier? membershipCarrier;
+  late MembershipCarrier? membershipCarrier;
 
   /// 愛心捐贈
   @JsonKey(name: 'donation')
-  DonationNPO? donationNPO;
+  late DonationNPO? donationNPO;
 
   /// 手機條碼載具
   @JsonKey(name: 'personal_mobile')
-  MobileCarrier? mobileCarrier;
+  late MobileCarrier? mobileCarrier;
 
   /// 公司-三聯式電子發票
   @JsonKey(name: 'company')
-  ValueAddedTaxCarrier? vatCarrier;
+  late ValueAddedTaxCarrier? vatCarrier;
 
   /// 個人-自然人憑證
   @JsonKey(name: 'personal_citizen')
-  CitizenDigitalCarrier? citizenDigitalCarrier;
+  late CitizenDigitalCarrier? citizenDigitalCarrier;
 
-  factory Invoices.fromJson(Map<String, dynamic> json) =>
-      _$InvoicesFromJson(json);
-  Map<String, dynamic> toJson() => _$InvoicesToJson(this);
+  List<dynamic> get carriers => <dynamic>[
+        membershipCarrier,
+        mobileCarrier,
+        citizenDigitalCarrier,
+        vatCarrier,
+        donationNPO,
+      ];
+
+  List<dynamic> validCarriers() => carriers.where((carrier) {
+        return carrier != null &&
+            (carrier as Carrier).id != null &&
+            carrier.id!.isNotEmpty;
+      }).toList();
+
+  factory InvoicesInfo.fromJson(Map<String, dynamic> json) =>
+      _$InvoicesInfoFromJson(json);
+  Map<String, dynamic> toJson() => _$InvoicesInfoToJson(this);
 }
 
 /// 個人-自然人憑證
 @JsonSerializable()
-class CitizenDigitalCarrier {
+class CitizenDigitalCarrier implements Carrier {
   CitizenDigitalCarrier(
+    this.type,
     this.id,
     this.carrierId,
     this.isDefault,
   );
 
+  @override
+  CarrierType? type = CarrierType.citizenDigitalCarrier;
+
   /// 流水號
+  @override
   @JsonKey(name: 'main_id')
   String? id;
 
   /// 載具號碼(自然人憑證)
   @JsonKey(name: 'carrier_no_person')
+  @override
   String? carrierId;
 
   /// 是否是預設發票
+  @override
   @JsonKey(
     name: 'is_default',
     fromJson: JsonValueConverter.boolFromInt,
@@ -90,27 +114,34 @@ class CitizenDigitalCarrier {
 @JsonSerializable()
 
 /// 公司-三聯式電子發票
-class ValueAddedTaxCarrier {
+class ValueAddedTaxCarrier implements Carrier {
   ValueAddedTaxCarrier(
+    this.type,
     this.id,
-    this.vatId,
+    this.carrierId,
     this.title,
     this.isDefault,
   );
 
+  @override
+  CarrierType? type = CarrierType.valueAddedTaxCarrier;
+
   /// 流水號
+  @override
   @JsonKey(name: 'main_id')
   String? id;
 
   /// 統一編號
+  @override
   @JsonKey(name: 'vat_no')
-  String? vatId;
+  String? carrierId;
 
   /// 發票抬頭
   @JsonKey(name: 'vat_title')
   String? title;
 
   /// 是否是預設發票
+  @override
   @JsonKey(
     name: 'is_default',
     fromJson: JsonValueConverter.boolFromInt,
@@ -126,21 +157,28 @@ class ValueAddedTaxCarrier {
 @JsonSerializable()
 
 /// 手機條碼載具
-class MobileCarrier {
+class MobileCarrier implements Carrier {
   MobileCarrier(
+    this.type,
     this.id,
     this.carrierId,
     this.isDefault,
   );
 
+  @override
+  CarrierType? type = CarrierType.mobileCarrier;
+
   /// 流水號
+  @override
   @JsonKey(name: 'main_id')
   String? id;
 
+  @override
   @JsonKey(name: 'carrier_no')
   String? carrierId;
 
   /// 是否是預設發票
+  @override
   @JsonKey(
     name: 'is_default',
     fromJson: JsonValueConverter.boolFromInt,
@@ -156,17 +194,30 @@ class MobileCarrier {
 @JsonSerializable()
 
 /// 會員載具
-class MembershipCarrier {
+class MembershipCarrier implements Carrier {
   MembershipCarrier(
+    this.type,
+    this.id,
     this.carrierId,
     this.isDefault,
   );
 
+  @override
+  CarrierType? type = CarrierType.membershipCarrier;
+
+  /// 流水號
+  @override
+  String? id;
+
   /// 會員id
   @JsonKey(name: 'member_id')
-  final int? carrierId;
+  int? memberId;
+
+  @override
+  String? carrierId;
 
   /// 是否是預設發票
+  @override
   @JsonKey(
     name: 'is_default',
     fromJson: JsonValueConverter.boolFromInt,
@@ -182,16 +233,30 @@ class MembershipCarrier {
 @JsonSerializable()
 
 /// 愛心捐贈
-class DonationNPO {
+class DonationNPO implements Carrier {
   DonationNPO(
+    this.type,
+    this.id,
+    this.carrierId,
     this.npos,
     this.isDefault,
   );
+
+  @override
+  CarrierType? type = CarrierType.donate;
+
+  /// 流水號
+  @override
+  String? id;
+
+  @override
+  String? carrierId;
 
   @JsonKey(name: 'donation_npoban')
   List<NPO>? npos;
 
   /// 是否是預設發票
+  @override
   @JsonKey(
     name: 'is_default',
     fromJson: JsonValueConverter.boolFromInt,
@@ -242,28 +307,43 @@ enum CarrierType {
   donate,
 }
 
-class Carrier {
-  Carrier(
-    this.type,
-    this.carrierId,
-    this.isDefault,
-  );
-
+abstract class Carrier {
   /// 載具類型
-  CarrierType type;
+  CarrierType? type;
 
   /// 流水號
-  @JsonKey(name: 'main_id')
-  String? id;
+  String? id = '';
 
   /// 載具號碼
   String? carrierId;
 
   /// 是否是預設發票
-  @JsonKey(
-    name: 'is_default',
-    fromJson: JsonValueConverter.boolFromInt,
-    toJson: JsonValueConverter.boolToInt,
-  )
-  bool isDefault;
+  late bool isDefault;
 }
+
+// class Carrier {
+//   Carrier(
+//     this.type,
+//     this.id,
+//     this.carrierId,
+//     this.isDefault,
+//   );
+
+//   /// 載具類型
+//   CarrierType? type;
+
+//   /// 流水號
+//   @JsonKey(name: 'main_id')
+//   String? id;
+
+//   /// 載具號碼
+//   String? carrierId;
+
+//   /// 是否是預設發票
+//   @JsonKey(
+//     name: 'is_default',
+//     fromJson: JsonValueConverter.boolFromInt,
+//     toJson: JsonValueConverter.boolToInt,
+//   )
+//   bool isDefault;
+// }

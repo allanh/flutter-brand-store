@@ -16,7 +16,7 @@ class DataInvoiceSettingRepository extends InvoiceSettingRepository {
     try {
       final response = await HttpUtils.instance.get(Api.invoiceSetting);
       if (response.isSuccess) {
-        return Invoices.fromJson(response.data);
+        return InvoicesInfo.fromJson(response.data);
       }
       throw Exception('Failed to get invoice setting.');
     } catch (e) {

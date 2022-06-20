@@ -6,7 +6,7 @@ import '../../../../../data/repositories/member/data_invoice_setting_repository.
 import '../../../../widgets/member/checkout_setting/reorderable_card.dart';
 import '../../../../widgets/member/checkout_setting/citizen_digital_carrier.dart';
 import '../../../../widgets/member/checkout_setting/donation_invoice_carrier.dart';
-import '../../../../widgets/member/checkout_setting/member_account_carrier.dart';
+import '../../../../widgets/member/checkout_setting/membership_carrier.dart';
 import '../../../../widgets/member/checkout_setting/mobile_carrier.dart';
 import '../../../../widgets/member/checkout_setting/value_added_tax_carrier.dart';
 import 'invoice_setting_controller.dart';
@@ -54,14 +54,14 @@ class _InvoiceSettingPageState
     return ControlledWidgetBuilder<InvoiceSettingController>(
         builder: (context, controller) {
       String? _membershipCarrier =
-          controller.invoices?.membershipCarrier?.carrierId.toString();
+          controller.invoiceInfos?.membershipCarrier?.memberId.toString();
       String? _mobileCarrier =
-          controller.invoices?.mobileCarrier?.carrierId?.toString();
+          controller.invoiceInfos?.mobileCarrier?.carrierId?.toString();
       String? _citizenDigitalCarrier =
-          controller.invoices?.citizenDigitalCarrier?.carrierId?.toString();
+          controller.invoiceInfos?.citizenDigitalCarrier?.carrierId?.toString();
       String? _valueAddedTaxId =
-          controller.invoices?.vatCarrier?.vatId?.toString();
-      String? _valueAddedTaxTitle = controller.invoices?.vatCarrier?.title;
+          controller.invoiceInfos?.vatCarrier?.carrierId?.toString();
+      String? _valueAddedTaxTitle = controller.invoiceInfos?.vatCarrier?.title;
 
       void handleCarrierExpand(InvoiceType type, bool isExpand) {
         setState(() {
@@ -92,34 +92,34 @@ class _InvoiceSettingPageState
         handleCarrierExpand(type, true);
       }
 
-      if (controller.invoices?.mobileCarrier?.isDefault ?? false) {
+      if (controller.invoiceInfos?.mobileCarrier?.isDefault ?? false) {
         invoiceTypes
             .removeWhere((element) => element == InvoiceType.mobileCarrier);
         invoiceTypes.insert(0, InvoiceType.mobileCarrier);
-      } else if (controller.invoices?.citizenDigitalCarrier?.isDefault ??
+      } else if (controller.invoiceInfos?.citizenDigitalCarrier?.isDefault ??
           false) {
         invoiceTypes.removeWhere(
             (element) => element == InvoiceType.citizenDigitalCarrier);
         invoiceTypes.insert(0, InvoiceType.citizenDigitalCarrier);
-      } else if (controller.invoices?.vatCarrier?.isDefault ?? false) {
+      } else if (controller.invoiceInfos?.vatCarrier?.isDefault ?? false) {
         invoiceTypes.removeWhere(
             (element) => element == InvoiceType.valueAddedTaxCarrier);
         invoiceTypes.insert(0, InvoiceType.valueAddedTaxCarrier);
-      } else if (controller.invoices?.donationNPO?.isDefault ?? false) {
+      } else if (controller.invoiceInfos?.donationNPO?.isDefault ?? false) {
         invoiceTypes.removeWhere((element) => element == InvoiceType.donate);
         invoiceTypes.insert(0, InvoiceType.donate);
       }
 
       void handleDefaultCarrier(InvoiceType type) {
-        controller.invoices?.membershipCarrier?.isDefault =
+        controller.invoiceInfos?.membershipCarrier?.isDefault =
             type == InvoiceType.membershipCarrier;
-        controller.invoices?.mobileCarrier?.isDefault =
+        controller.invoiceInfos?.mobileCarrier?.isDefault =
             type == InvoiceType.mobileCarrier;
-        controller.invoices?.citizenDigitalCarrier?.isDefault =
+        controller.invoiceInfos?.citizenDigitalCarrier?.isDefault =
             type == InvoiceType.citizenDigitalCarrier;
-        controller.invoices?.vatCarrier?.isDefault =
+        controller.invoiceInfos?.vatCarrier?.isDefault =
             type == InvoiceType.valueAddedTaxCarrier;
-        controller.invoices?.donationNPO?.isDefault =
+        controller.invoiceInfos?.donationNPO?.isDefault =
             type == InvoiceType.donate;
       }
 
@@ -130,7 +130,7 @@ class _InvoiceSettingPageState
       void handleSubmitValueAddedTaxCarrier(String code, String title) {}
 
       void handleSubmitNPO(npo) {
-        controller.invoices?.donationNPO?.npos?.forEach((element) {
+        controller.invoiceInfos?.donationNPO?.npos?.forEach((element) {
           element.isEnabled = element.npoId == npo.npoId;
         });
       }
@@ -223,13 +223,13 @@ class _InvoiceSettingPageState
             /// 捐贈發票
             case InvoiceType.donate:
               int npoLength =
-                  controller.invoices?.donationNPO?.npos?.length ?? 0;
+                  controller.invoiceInfos?.donationNPO?.npos?.length ?? 0;
               return ReorderableCard(
                   key: ValueKey(index),
                   item: DonationInvoiceCarrier(
                     isDefault: index == 0,
                     isExpand: _isExpandedDonationInvoice,
-                    npos: controller.invoices?.donationNPO?.npos,
+                    npos: controller.invoiceInfos?.donationNPO?.npos,
                     handleCollpase: () => handleCollapse(InvoiceType.donate),
                     handleExpand: () => handleExpand(InvoiceType.donate),
                     handleSubmit: handleSubmitNPO,
