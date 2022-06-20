@@ -63,11 +63,21 @@ class InvoicesInfo {
         donationNPO,
       ];
 
-  List<dynamic> validCarriers() => carriers.where((carrier) {
-        return carrier != null &&
-            (carrier as Carrier).id != null &&
-            carrier.id!.isNotEmpty;
-      }).toList();
+  List<dynamic> validCarriers() {
+    /// 如果有 id 則視為有效的載具
+    List<dynamic> list = carriers.where((carrier) {
+      return carrier != null &&
+          (carrier as Carrier).id != null &&
+          carrier.id!.isNotEmpty;
+    }).toList();
+
+    /// 因為會員載具沒有 id，只有 memberId
+    /// 上面的邏輯不會將會員載具加入
+    /// 因此，在這邊手凍僵會員載具加入陣列
+    list.insert(0, membershipCarrier);
+
+    return list;
+  }
 
   factory InvoicesInfo.fromJson(Map<String, dynamic> json) =>
       _$InvoicesInfoFromJson(json);

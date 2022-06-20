@@ -47,7 +47,7 @@ class _CheckoutSettingPageState
     return ControlledWidgetBuilder<CheckoutSettingController>(
       builder: ((context, controller) {
         int invoicesBadge =
-            controller.invoiceInfos?.validCarriers().length ?? 0 + 1;
+            controller.invoiceInfos?.validCarriers().length ?? 0;
         return Scaffold(
           appBar: AppBar(
             title: const Text('結帳設定'),
