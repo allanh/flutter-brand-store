@@ -23,7 +23,7 @@ class StaticPage extends StatelessWidget {
         //TODO: 為了測時方便，暫時加上AppBar，之後要拿掉(即不能Back)
         appBar: AppBar(title: Text(pageType.name)),
         body: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
+          padding: pageType.padding,
           child: _body(context),
         ));
   }
@@ -77,17 +77,18 @@ class StaticPage extends StatelessWidget {
         Visibility(
             visible: pageType == StaticPageType.mobileRegisterSuccess,
             child: UdiButton(
-                text: '來去逛逛',
-                buttonType: ButtonType.secondaryButton,
-                onPressed: () => context.goNamed(rootRouteName))),
+              text: '來去逛逛',
+              buttonType: ButtonType.secondaryButton,
+              onPressed: () => context.goNamed(rootRouteName),
+            )),
         // 電子信箱註冊成功: 登入頁
         Visibility(
-            visible: pageType == StaticPageType.emailRegisterSuccess ||
-                pageType == StaticPageType.resetPasswordSuccess,
+            visible: pageType == StaticPageType.emailRegisterSuccess || pageType == StaticPageType.resetPasswordSuccess,
             child: UdiButton(
-                text: '重新登入',
-                buttonType: ButtonType.secondaryButton,
-                onPressed: () => context.goNamed(loginRouteName))),
+              text: '重新登入',
+              buttonType: ButtonType.secondaryButton,
+              onPressed: () => context.goNamed(loginRouteName),
+            )),
         // 帳號停用: 登入頁
         Visibility(
             visible: pageType == StaticPageType.mobileStop || pageType == StaticPageType.emailStop,
@@ -117,6 +118,25 @@ enum StaticPageType {
 }
 
 extension _StaticPageTypeExtension on StaticPageType {
+  EdgeInsets get padding {
+    switch (this) {
+      case StaticPageType.maintenance:
+      case StaticPageType.noConnection:
+      case StaticPageType.error500:
+      case StaticPageType.apiError:
+      case StaticPageType.shopClosed:
+        return const EdgeInsets.all(24);
+      case StaticPageType.mobileRegisterSuccess:
+      case StaticPageType.emailRegisterSuccess:
+      case StaticPageType.resetPasswordSuccess:
+      case StaticPageType.mobileStop:
+      case StaticPageType.emailStop:
+      case StaticPageType.error:
+      default:
+        return const EdgeInsets.only(top: 120);
+    }
+  }
+
   String get icon {
     switch (this) {
       case StaticPageType.maintenance:
@@ -161,7 +181,7 @@ extension _StaticPageTypeExtension on StaticPageType {
   String get content {
     switch (this) {
       case StaticPageType.maintenance:
-        return '預定維護時間：\n2019/11/1 00:00 ~ 2019/11/2 12:00\n如有任何問題歡迎聯繫我們，\n客服人員將誠摯為您服務!';
+        return '如有任何問題歡迎聯繫我們，\n客服人員將誠摯為您服務!';
       case StaticPageType.noConnection:
         return '網路連線異常，請確認網路連線狀態。';
       case StaticPageType.error500:
@@ -169,9 +189,8 @@ extension _StaticPageTypeExtension on StaticPageType {
       case StaticPageType.apiError:
         return '您可以前往首頁或返回上一頁。';
       case StaticPageType.shopClosed:
-        return '預定暫停時間：\n2019/11/1  00:00 ~ 2019/11/2  12:00';
+        return '';
       case StaticPageType.mobileStop:
-        return '帳號登入異常，請聯絡客服人員。';
       case StaticPageType.emailStop:
         return '帳號登入異常，請聯絡客服人員。';
       case StaticPageType.mobileRegisterSuccess:

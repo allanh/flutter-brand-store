@@ -9,41 +9,61 @@ import 'reset_password_presenter.dart';
 
 class ResetPasswordController extends Controller {
   final ResetPasswordPresenter presenter;
+  final VerifyMethod verifyMethod;
 
-  String inputPassword = '';
-  String inputPasswordConfirm = '';
-  bool isEnableButton = false;
+  String oldPassword = '';
+  String newPassword = '';
+  String confirmPassword = '';
   String? errorMessage;
+  String? oldPasswordError;
 
-  ResetPasswordController(repo)
+  ResetPasswordController(repo, this.verifyMethod)
       : presenter = ResetPasswordPresenter(repo),
         super();
 
+  void onOldPasswordChange(String password) {
+    oldPassword = password;
+    oldPasswordError = null;
+    checkButtonStatus();
+  }
+
   void onPasswordChange(String password) {
-    inputPassword = password;
+    newPassword = password;
     checkButtonStatus();
   }
 
   void onPasswordConfirmChange(String password) {
-    inputPasswordConfirm = password;
+    confirmPassword = password;
     checkButtonStatus();
   }
 
   void checkButtonStatus() {
-    isEnableButton = inputPassword.isNotEmpty && inputPassword == inputPasswordConfirm;
-    if (isEnableButton || inputPasswordConfirm.isEmpty || inputPassword.isEmpty) {
-      errorMessage = null;
-    } else if (inputPassword != inputPasswordConfirm) {
+    if (confirmPassword.isNotEmpty && newPassword.isNotEmpty && newPassword != confirmPassword) {
       errorMessage = '密碼不一致';
+    } else {
+      errorMessage = null;
     }
   }
 
-  void modifyPassword(
-      VerifyMethod verifyMethod, String? mobileCode, String? mobile, String? email) {
-    if (verifyMethod == VerifyMethod.email) {
-      presenter.resetEmailPassword(email ?? '', inputPassword);
+  bool get isEnableButton {
+    if (verifyMethod == VerifyMethod.password) {
+      return oldPassword.isNotEmpty && newPassword.isNotEmpty && newPassword == confirmPassword;
     } else {
-      presenter.resetMobilePassword(mobileCode ?? '', mobile ?? '', inputPassword);
+      return newPassword.isNotEmpty && newPassword == confirmPassword;
+    }
+  }
+
+  void modifyPassword(String? mobileCode, String? mobile, String? email) {
+    switch (verifyMethod) {
+      case VerifyMethod.email:
+        presenter.resetEmailPassword(email ?? '', newPassword);
+        break;
+      case VerifyMethod.mobile:
+        presenter.resetMobilePassword(mobileCode ?? '', mobile ?? '', newPassword);
+        break;
+      case VerifyMethod.password:
+        presenter.resetPassword(oldPassword, newPassword);
+        break;
     }
   }
 
@@ -53,7 +73,11 @@ class ResetPasswordController extends Controller {
       if (response.isSuccess) {
         onSuccess();
       } else {
-        errorMessage = response.errorMessage;
+        if (verifyMethod == VerifyMethod.password) {
+          oldPasswordError = response.errorMessage;
+        } else {
+          errorMessage = response.errorMessage;
+        }
         refreshUI();
       }
     };
@@ -66,7 +90,12 @@ class ResetPasswordController extends Controller {
 
   void onSuccess() {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      getContext().goNamed(loginRouteName);
+      ScaffoldMessenger.of(getContext()).showSnackBar(const SnackBar(content: Text('密碼修改成功')));
+      if (verifyMethod == VerifyMethod.password) {
+        getContext().pop();
+      } else {
+        getContext().goNamed(loginRouteName);
+      }
     });
   }
 

@@ -87,12 +87,13 @@ class MyPlusRouter {
         path: '/reset-password',
         pageBuilder: (context, state) {
           String email = state.queryParams['email'] ?? '';
+          String mobile = state.queryParams['mobile'] ?? '';
           return MaterialPage<void>(
             key: state.pageKey,
             child: ResetPasswordPage(
-              email.isEmpty ? VerifyMethod.mobile : VerifyMethod.email,
+              email.isEmpty ? (mobile.isEmpty ? VerifyMethod.password : VerifyMethod.mobile) : VerifyMethod.email,
               mobileCode: state.queryParams['mobileCode'] ?? '',
-              mobile: state.queryParams['mobile'] ?? '',
+              mobile: mobile,
               email: email,
             ),
           );
@@ -274,8 +275,9 @@ class MyPlusRouter {
           return MaterialPage<void>(
             key: state.pageKey,
             child: StaticPage(
-              pageType: state.extra! as StaticPageType,
-              // pageType: state.queryParams['pageType']?.toStaticPageType ?? StaticPageType.error,
+              pageType: (state.extra ?? StaticPageType.error) as StaticPageType,
+              title: state.queryParams['title'],
+              message: state.queryParams['message'],
             ),
           );
         },

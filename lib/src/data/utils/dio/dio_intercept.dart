@@ -25,6 +25,7 @@ class AuthInterceptor extends Interceptor {
     switch (path) {
       case Api.memberData:
       case Api.memberCenter:
+      case Api.setPassword:
       case Api.modules:
       case Api.getProduct:
       case Api.bougthProducts:
@@ -32,8 +33,26 @@ class AuthInterceptor extends Interceptor {
       case Api.favoriteProducts:
       case Api.invoiceSetting:
         return true;
+      case Api.login:
+      case Api.sendVerification:
+      case Api.verifyMobileCode:
+      case Api.resetPassword:
+      case Api.accountCheck:
+      case Api.register:
+      case Api.exchangeBundle:
+      case Api.thirdPartyLogin:
+      case Api.thirdPartyAccountCheck:
+      case Api.thirdPartyRegister:
+      case Api.bundleMember:
+      case Api.faq:
+      case Api.bulletin:
+      case Api.privacy:
+      case Api.terms:
+      case Api.about:
+      case Api.siteSetting:
+        return false;
     }
-    return false;
+    return true;
   }
 }
 

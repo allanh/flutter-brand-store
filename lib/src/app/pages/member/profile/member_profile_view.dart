@@ -23,6 +23,8 @@ import 'package:brandstores/src/app/widgets/member/profile/binding_tile.dart';
 import 'package:brandstores/src/app/widgets/member/profile/mobile_tile.dart';
 import 'package:brandstores/src/app/widgets/member/profile/email_tile.dart';
 
+import '../../../utils/constants.dart';
+
 class MemberProfilePage extends View {
   MemberProfilePage({Key? key}) : super(key: key);
 
@@ -323,6 +325,7 @@ class _MemberProfilePageState
                 isSettingPassword: profile?.isSettingPassword ?? false,
                 handleTap: (message) {
                   debugPrint(message);
+                  context.pushNamed(resetPasswordRouteName);
                 }),
 
             /// 儲存按鈕

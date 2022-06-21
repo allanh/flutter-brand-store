@@ -63,6 +63,15 @@ class DataAccountRepository extends AccountRepository {
   }
 
   @override
+  Future<BaseResponse> setPassword(String oldPassword, String password) async {
+    final response = await HttpUtils.instance.post(Api.setPassword, params: {
+      "old_pwd": oldPassword,
+      "new_pwd": password
+    });
+    return response;
+  }
+
+  @override
   Future<bool> accountIsExist(String mobileCode, String mobile, String email) async {
     final response = await HttpUtils.instance.post(Api.accountCheck,
         params: {"mobile_code": mobileCode, "mobile": mobile, "email": email});

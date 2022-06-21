@@ -19,7 +19,7 @@ class DataMemberProfileRepository extends MemberProfileRepository {
   @override
   Future<MemberProfile> getMemberProfile() async {
     try {
-      final response = await HttpUtils.instance.get(Api.memberProfile);
+      final response = await HttpUtils.instance.get(Api.memberData);
       if (response.isSuccess) {
         return MemberProfile.fromJson(response.data);
       }
@@ -37,7 +37,7 @@ class DataMemberProfileRepository extends MemberProfileRepository {
     try {
       debugPrint('Country code: $countryCode\nMobile: $mobile');
       final response =
-          await HttpUtils.instance.post(Api.memberVerification, params: {
+          await HttpUtils.instance.post(Api.sendVerification, params: {
         'mobile_code': countryCode,
         'mobile': mobile,
         "email": "",
@@ -78,7 +78,7 @@ class DataMemberProfileRepository extends MemberProfileRepository {
   Future<BaseResponse> updateProfile(MemberProfile? profile) async {
     try {
       final response =
-          await HttpUtils.instance.post(Api.updateProfile, params: {
+          await HttpUtils.instance.post(Api.memberData, params: {
         "name": profile?.name,
         "area_code": profile?.areaCode,
         "tel": profile?.phone,

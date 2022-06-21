@@ -1,15 +1,9 @@
 enum VerifyMethod {
   email,
-  mobile
+  mobile,
+  password // for 會員中心-修改密碼
 }
 
 extension VerifyMothodExtension on VerifyMethod {
-  String get value {
-    switch (this) {
-      case VerifyMethod.email:
-        return "EMAIL";
-      case VerifyMethod.mobile:
-        return "MOBILE";
-    }
-  }
+  String get value => name.toUpperCase();
 }
