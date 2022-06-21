@@ -124,4 +124,14 @@ class ProductController extends Controller {
           _product?.imageList?.map((e) => e.url!).toList() ?? []
     });
   }
+
+  void handlefavoriteTapped() {
+    getContext().pop();
+  }
+
+  void handleAddToCartTapped() {
+    getContext().pop();
+  }
+
+  void handleBuyNowTapped() {}
 }

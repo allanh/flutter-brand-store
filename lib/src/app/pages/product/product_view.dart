@@ -1,3 +1,4 @@
+import 'package:brandstores/src/app/utils/constants.dart';
 import 'package:brandstores/src/app/utils/screen_config.dart';
 import 'package:brandstores/src/app/widgets/product/event_countdown_row_widget.dart';
 import 'package:brandstores/src/app/widgets/product/product_addon_row_widget.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:go_router/go_router.dart';
 import '../../widgets/product/base_product_row_widget.dart';
 import '../../widgets/product/image_slider_widget.dart';
 import '../../widgets/product/product_bottom_bar_widget.dart';
@@ -45,7 +47,6 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
       : super(ProductController(DataProductRepository(), goodsNo, productId));
   final CarouselController carouselController = CarouselController();
   double get ratio => SizeConfig.screenRatio;
-  double get _statusBarHeight => MediaQuery.of(context).padding.top;
 
   // ScrollController
   final ScrollController _scrollController =
@@ -159,7 +160,7 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
       width: MediaQuery.of(context).size.width,
       color: UdiColors.white2,
       padding: EdgeInsets.only(
-          top: _statusBarHeight + kToolbarHeight,
+          top: SizeConfig.statusBarHeight + kToolbarHeight,
           bottom: 50 * SizeConfig.screenRatio),
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints viewportConstraints) {
@@ -201,15 +202,15 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                   ProductNameWidget(product: controller.product),
 
                   // 促銷活動
-                  //if (product.eventList?.isNotEmpty == true)
-                  BaseProductRowWidget(
-                      title: '活　動',
-                      marginTop: 8,
-                      view: ProductEventsRowWidget(
-                        eventList: product.mockEvents,
-                        //eventList: product.eventList!,
-                      ),
-                      moreTapped: () => debugPrint('tap event')),
+                  if (product.eventList?.isNotEmpty == true)
+                    BaseProductRowWidget(
+                        title: '活　動',
+                        marginTop: 8,
+                        view: ProductEventsRowWidget(
+                          //eventList: product.mockEvents,
+                          eventList: product.eventList!,
+                        ),
+                        moreTapped: () => debugPrint('tap event')),
 
                   // 獨享價
                   if ((product.product?.promotionPriceAppDiff ?? 0) > 0)
@@ -229,7 +230,12 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                         view: ProductSpecRowWidget(
                           product: product,
                         ),
-                        moreTapped: () => debugPrint('tap spac')),
+                        moreTapped: () => context.pushNamed(specName, params: {
+                              QueryKey.goodsNo: product.no!
+                            }, extra: {
+                              QueryKey.product: product,
+                              QueryKey.productController: controller
+                            })),
 
                   // 加購品
                   if (product.addonInfo?.isNotEmpty == true)

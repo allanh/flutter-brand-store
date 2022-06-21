@@ -29,11 +29,16 @@ import 'pages/member/account_change/account_change_view.dart';
 import 'pages/member/products/member_products_view.dart';
 import 'pages/member/checkout_setting/invoice/invoice_setting_view.dart';
 import 'pages/member/checkout_setting/checkout_setting_view.dart';
+<<<<<<< HEAD
 import 'pages/member/checkout_setting/shipping/shipping_infos_view.dart';
 
 import 'widgets/product/full_screen_image_slider_widget.dart';
 
 import 'widgets/product/dialog/full_screen_image_slider_widget.dart';
+=======
+import 'widgets/product/dialog/full_screen_image_slider_widget.dart';
+import 'widgets/product/image_slider_widget.dart';
+>>>>>>> 57a4f15 (feat(product): base dialog widget)
 
 class MyPlusRouter {
   final LoginState loginState;

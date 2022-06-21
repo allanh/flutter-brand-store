@@ -22,16 +22,11 @@ class ProductEventsRowWidget extends StatelessWidget {
         height: 20,
         // 自動縮小
         child: FittedBox(
-            fit: BoxFit.fitWidth,
+            fit: BoxFit.contain,
+            alignment: Alignment.centerLeft,
             child: Row(
               children: list.take(2).toList(),
-            ))
-        /*
-        Row(
-          children: list.take(2).toList(),
-        )
-        */
-        );
+            )));
   }
 }
 

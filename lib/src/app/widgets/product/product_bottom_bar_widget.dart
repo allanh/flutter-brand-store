@@ -5,9 +5,15 @@ import '../../../domain/entities/product/product.dart';
 import '../../utils/screen_config.dart';
 import '../udi_style/udi_button.dart';
 
+enum ProductBottomTarType { normal, spec, freebie, addon, close }
+
 /// 底部按鈕列
 class ProductBottomBarWidget extends StatelessWidget {
+  // 商品資料
   final Product product;
+
+  /// 底部按鈕類型
+  final ProductBottomTarType type;
 
   /// The callback that is called when the favorite icon is tapped.
   final VoidCallback? favoriteTapped;
@@ -21,6 +27,7 @@ class ProductBottomBarWidget extends StatelessWidget {
   const ProductBottomBarWidget(
       {Key? key,
       required this.product,
+      this.type = ProductBottomTarType.normal,
       this.favoriteTapped,
       this.addToCartTapped,
       this.buyNowTapped})
@@ -55,7 +62,7 @@ class ProductBottomBarWidget extends StatelessWidget {
           // 加入購物車按鈕
           if (_enabled && addToCartTapped != null)
             Expanded(
-              flex: 162,
+              flex: type == ProductBottomTarType.spec ? 324 : 162,
               child: SizedBox(
                   height: barHeight,
                   child: UdiButton(
@@ -88,9 +95,11 @@ class ProductBottomBarWidget extends StatelessWidget {
                   height: barHeight,
                   decoration: const BoxDecoration(color: UdiColors.white2),
                   child: Text(
-                    ProductStatus.comingSoon == product.status
-                        ? '即將開賣，敬請期待'
-                        : '搶購一空',
+                    ProductBottomTarType.spec == type
+                        ? '加入購物車'
+                        : ProductStatus.comingSoon == product.status
+                            ? '即將開賣，敬請期待'
+                            : '搶購一空',
                     style: Theme.of(context)
                         .textTheme
                         .caption

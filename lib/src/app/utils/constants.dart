@@ -11,7 +11,7 @@ const String resetPasswordRouteName = 'reset-password'; // 驗證簡訊驗證碼
 
 const String mainRouteName = 'main'; // 主頁
 const String productRouteName = 'product'; // 商品頁
-const String productImageRouteName = 'product-imaege'; // 商品頁->圖片
+const String specName = 'spec'; // 規格頁
 
 const String favoriteRouteName = 'favorite'; // 收藏頁
 const String memberRouteName = 'member'; // 會員頁
@@ -45,6 +45,8 @@ const String shippingInfosRouteName = 'shipping-infos'; // 常用收件地址
 const String shippingInfoDetailRouteName = 'shipping-info-detail'; // 新增常用收件地址
 
 // DeepLink
+const String productImageRouteName = 'product-imaege'; // 商品頁->圖片
+const String productSpecRouteName = 'product-spec'; // 商品頁->規格
 const String profileMoreInfoRouteName = 'profile-moreInfo';
 const String profilePaymentRouteName = 'profile-payment';
 const String profilePersonalRouteName = 'profile-personal';
@@ -62,4 +64,6 @@ class QueryKey {
   static const String productId = 'product_id';
   static const String index = 'index';
   static const String imagePaths = 'imagePaths';
+  static const String product = 'product';
+  static const String productController = 'productController';
 }

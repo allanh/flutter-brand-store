@@ -2,9 +2,14 @@ import 'package:flutter/widgets.dart';
 
 class SizeConfig {
   static MediaQueryData _mediaQueryData = const MediaQueryData();
+  // 螢幕寬度
   static double screenWidth = 0;
+  // 螢幕高度
   static double screenHeight = 0;
+  // 與 zeplin 相符的縮放比例
   static double screenRatio = 0;
+  // 狀態列高度
+  static double statusBarHeight = 0;
   static double blockSizeHorizontal = 0;
   static double blockSizeVertical = 0;
   static double _safeAreaHorizontal = 0;
@@ -17,6 +22,7 @@ class SizeConfig {
     screenWidth = _mediaQueryData.size.width;
     screenHeight = _mediaQueryData.size.height;
     screenRatio = _mediaQueryData.size.width / 375;
+    statusBarHeight = _mediaQueryData.padding.top;
     blockSizeHorizontal = screenWidth / 100;
     blockSizeVertical = screenHeight / 100;
     _safeAreaHorizontal =
