@@ -38,6 +38,7 @@ const String mobileAccountChangeRouteName = 'mobile-acount-change'; // 會員手
 const String emailAccountChangeRouteName = 'email-account-change'; // 會員信箱帳號變更
 const String checkoutSettingRouteName = 'checkout-setting'; // 結帳設定
 const String invoiceSettingRouteName = 'invoice-setting'; // 發票設定
+const String donationCodeWebRouteName = 'donation-code-web'; // 捐贈碼查詢
 
 // DeepLink
 const String profileMoreInfoRouteName = 'profile-moreInfo';

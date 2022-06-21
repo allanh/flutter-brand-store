@@ -1,8 +1,10 @@
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../../data/repositories/member/data_invoice_setting_repository.dart';
+import '../../../../utils/constants.dart';
 import '../../../../widgets/member/checkout_setting/reorderable_card.dart';
 import '../../../../widgets/member/checkout_setting/citizen_digital_carrier.dart';
 import '../../../../widgets/member/checkout_setting/donation_invoice_carrier.dart';
@@ -129,10 +131,13 @@ class _InvoiceSettingPageState
 
       void handleSubmitValueAddedTaxCarrier(String code, String title) {}
 
-      void handleSubmitNPO(npo) {
-        controller.invoiceInfos?.donationNPO?.npos?.forEach((element) {
-          element.isEnabled = element.npoId == npo.npoId;
-        });
+      void handleSubmitDonationCode(String code) {
+        debugPrint(code);
+        controller.submitDonationCode(code);
+      }
+
+      void handleOpenDonationCodeWeb() {
+        context.pushNamed(donationCodeWebRouteName);
       }
 
       List<ReorderableCard> _buildReorderableCards(
@@ -224,6 +229,15 @@ class _InvoiceSettingPageState
             case InvoiceType.donate:
               int npoLength =
                   controller.invoiceInfos?.donationNPO?.npos?.length ?? 0;
+              bool hasDefault = false;
+              if (controller.invoiceInfos?.donationNPO?.npos != null) {
+                hasDefault = controller.invoiceInfos?.donationNPO?.npos!
+                        .where((npo) => npo.isEnabled)
+                        .toList()
+                        .isNotEmpty ??
+                    hasDefault;
+              }
+
               return ReorderableCard(
                   key: ValueKey(index),
                   item: DonationInvoiceCarrier(
@@ -232,11 +246,15 @@ class _InvoiceSettingPageState
                     npos: controller.invoiceInfos?.donationNPO?.npos,
                     handleCollpase: () => handleCollapse(InvoiceType.donate),
                     handleExpand: () => handleExpand(InvoiceType.donate),
-                    handleSubmit: handleSubmitNPO,
+                    handleSubmit: handleSubmitDonationCode,
+                    handleOpenDonationCodeWeb: () =>
+                        handleOpenDonationCodeWeb(),
                   ),
                   height: _isExpandedDonationInvoice
-                      ? (314.0 + 20.0 * npoLength)
-                      : 56.0,
+                      ? (230.0 + 20.0 * npoLength)
+                      : hasDefault
+                          ? 88.0
+                          : 56.0,
                   isSelected: index == 0);
           }
         });

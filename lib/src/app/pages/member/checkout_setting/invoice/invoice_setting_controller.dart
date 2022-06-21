@@ -35,6 +35,18 @@ class InvoiceSettingController extends Controller {
     invoiceInfoPresenter.getInvoiceSettingOnError = (e) {
       debugPrint('Could not retrieve member invoice.');
     };
+
+    invoiceInfoPresenter.submitDonationCodeOnNext = () {
+      refreshUI();
+    };
+
+    invoiceInfoPresenter.submitDonationCodeOnComplete = () {
+      debugPrint('Submit donation code completed.');
+    };
+
+    invoiceInfoPresenter.submitDonationCodeOnError = (e) {
+      debugPrint('Could not submit donation code cause: $e');
+    };
   }
 
   @override
@@ -54,4 +66,8 @@ class InvoiceSettingController extends Controller {
   }
 
   void getInvoiceSetting() => invoiceInfoPresenter.getInvoiceSetting();
+
+  /// 常用發票新增愛心捐贈
+  void submitDonationCode(code) =>
+      invoiceInfoPresenter.submitDonationCode(code);
 }

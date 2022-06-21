@@ -32,6 +32,7 @@ class AuthInterceptor extends Interceptor {
       case Api.favoriteProducts:
       case Api.invoiceSetting:
       case Api.shippingInfo:
+      case Api.addCarrier:
         return true;
     }
     return false;

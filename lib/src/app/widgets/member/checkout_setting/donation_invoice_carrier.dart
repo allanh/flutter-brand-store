@@ -19,6 +19,7 @@ class DonationInvoiceCarrier extends StatefulWidget
     required this.handleCollpase,
     required this.handleExpand,
     required this.handleSubmit,
+    required this.handleOpenDonationCodeWeb,
   }) : super(key: key);
 
   @override
@@ -34,6 +35,8 @@ class DonationInvoiceCarrier extends StatefulWidget
 
   Function handleSubmit;
 
+  Function handleOpenDonationCodeWeb;
+
   @override
   State<DonationInvoiceCarrier> createState() => _DonationInvoiceCarrierState();
 }
@@ -41,9 +44,20 @@ class DonationInvoiceCarrier extends StatefulWidget
 class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
   NPO? _selectedNPO;
 
-  NPO? _otherNPO;
+  String? _selectedId;
 
   final TextEditingController _controller = TextEditingController();
+
+  void handleSelectionChange(String id) {
+    setState(() {
+      handleEnabledStatusChange(id);
+      _selectedId = id;
+    });
+  }
+
+  void handleEnabledStatusChange(String id) {
+    widget.npos?.forEach((npo) => npo.isEnabled = npo.npoId == id);
+  }
 
   @override
   void dispose() {
@@ -58,9 +72,20 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
 
     /// 檢查是否有 id 為 -1 的機構，如果有在陣列中，
     /// 表示已經加入過其他機構選項
-    if (widget.npos!.isNotEmpty && widget.npos?.last.npoId != '-1') {
+    if (widget.npos!.isNotEmpty &&
+        widget.npos?.last.npoId != '-1' &&
+        widget.npos?.last.type != NPOType.other) {
       /// 加入其他機構選項
-      widget.npos?.insert(widget.npos?.length ?? 0, NPO('-1', '其他機構', false));
+      widget.npos?.insert(
+          widget.npos?.length ?? 0, NPO(NPOType.other, '-1', '其他機構', false));
+    }
+
+    /// 檢查是否有預設的愛心碼
+    final List<NPO>? defaultNPO =
+        widget.npos?.where((npo) => npo.isEnabled).toList();
+    if (defaultNPO != null && defaultNPO.isNotEmpty && _selectedId == null) {
+      _selectedNPO = defaultNPO.first;
+      _selectedId = defaultNPO.first.npoId;
     }
 
     Text _searchButtonTitle = Text(
@@ -76,6 +101,11 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
       style: Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 14.0),
     );
 
+    Text _subtitle = Text(
+      '${_selectedNPO?.title}, ${_selectedNPO?.npoId}',
+      style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
+    );
+
     Text _hintTitle = Text(
       '請選擇欲捐贈的機構',
       style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
@@ -83,8 +113,27 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
 
     void handleReset() {
       setState(() {
-        _otherNPO?.npoId = null;
+        _selectedId = '';
         _controller.text = '';
+        handleEnabledStatusChange('');
+      });
+    }
+
+    bool handleEnableSubmit() {
+      /// 如果選擇其他機構但是沒有輸入捐贈碼
+      /// 必須將儲存按鈕反灰
+      bool disable =
+          _selectedNPO?.isEnabled == false && _controller.text.isEmpty;
+
+      return disable;
+    }
+
+    void handleDonationChange(donation) {
+      debugPrint(donation);
+      setState(() {
+        _selectedId = donation;
+        widget.npos?.last.npoId = _selectedId;
+        handleEnabledStatusChange(donation);
       });
     }
 
@@ -117,17 +166,10 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
           width: 110.0,
           child: TextField(
             controller: _controller,
-            onChanged: (text) {
-              setState(() {
-                _selectedNPO = widget.npos?.last;
-                _selectedNPO?.isEnabled = true;
-                _otherNPO = NPO(text, '', true);
-              });
-            },
+            onChanged: (text) => handleDonationChange(text),
             cursorColor: UdiColors.veryLightGrey2,
             decoration: InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.never,
-              labelText: _otherNPO?.npoId,
               contentPadding: const EdgeInsets.symmetric(horizontal: 18.0),
               hintText: '請輸入捐贈碼',
               hintStyle: _hintStyle,
@@ -141,16 +183,17 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
       const SizedBox(width: 12.0),
       InkWell(
         child: _searchButtonTitle,
-        onTap: () {},
+        onTap: () => widget.handleOpenDonationCodeWeb(),
       ),
     ]);
 
     CarrierActionButtons _carrierActionButtons = CarrierActionButtons(
       handleReset: () => handleReset(),
-      handleSubmit: _selectedNPO == null ||
-              (_selectedNPO == _otherNPO && _otherNPO!.npoId!.isNotEmpty)
-          ? null
-          : () => widget.handleSubmit(_selectedNPO),
+      handleSubmit:
+
+          /// 如果選擇其他機構但是沒有輸入捐贈碼
+          /// 必須將儲存按鈕反灰
+          handleEnableSubmit() ? null : () => widget.handleSubmit(_selectedId),
     );
 
     Row _bottomRow = Row(
@@ -184,9 +227,15 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
         ),
       );
     } else {
-      children = [
-        _topRow,
-      ];
+      children =
+          _selectedId == null || (_selectedId != null && _selectedId!.isEmpty)
+              ? [
+                  _topRow,
+                ]
+              : [
+                  _topRow,
+                  _subtitle,
+                ];
     }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -213,9 +262,9 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
                 style: Theme.of(context).textTheme.caption,
                 maxLines: 1,
               ),
-              value: npos[index],
-              groupValue: _selectedNPO,
-              onChanged: (npo) => setState(() => _selectedNPO = npo),
+              groupValue: _selectedId,
+              value: npos[index].npoId,
+              onChanged: (npo) => handleSelectionChange(npo),
             ));
   }
 

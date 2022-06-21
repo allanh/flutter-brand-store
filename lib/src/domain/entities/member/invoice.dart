@@ -279,18 +279,26 @@ class DonationNPO implements Carrier {
   Map<String, dynamic> toJson() => _$DonationNPOToJson(this);
 }
 
+enum NPOType {
+  normal,
+  other,
+}
+
 @JsonSerializable()
 
 /// 非營利機構(NonprofitOrganization)
 class NPO {
   NPO(
+    this.type,
     this.npoId,
     this.title,
     this.isEnabled,
   );
 
+  NPOType? type = NPOType.normal;
+
   /// 愛心碼
-  @JsonKey(name: 'npoban')
+  @JsonKey(name: 'npoban_no')
   String? npoId;
 
   /// 發票抬頭

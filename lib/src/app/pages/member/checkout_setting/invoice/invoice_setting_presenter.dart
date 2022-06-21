@@ -3,7 +3,8 @@ import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
 class InvoiceSettingPresenter extends Presenter {
   InvoiceSettingPresenter(repo)
-      : getInvoiceSettingUseCase = GetInvoiceSettingUseCase(repo);
+      : getInvoiceSettingUseCase = GetInvoiceSettingUseCase(repo),
+        submitDonationCodeUseCase = SubmitDonationCodeUseCase(repo);
 
   late Function getInvoiceSettingOnNext;
   late Function getInvoiceSettingOnComplete;
@@ -12,13 +13,29 @@ class InvoiceSettingPresenter extends Presenter {
   final GetInvoiceSettingUseCase getInvoiceSettingUseCase;
 
   void getInvoiceSetting() {
-    getInvoiceSettingUseCase.execute(_GetInvoiceSettingUseCaseObserver(this),
-        GetInvoiceSettingUseCaseParams());
+    getInvoiceSettingUseCase.execute(
+      _GetInvoiceSettingUseCaseObserver(this),
+      GetInvoiceSettingUseCaseParams(),
+    );
+  }
+
+  late Function submitDonationCodeOnNext;
+  late Function submitDonationCodeOnComplete;
+  late Function submitDonationCodeOnError;
+
+  final SubmitDonationCodeUseCase submitDonationCodeUseCase;
+
+  void submitDonationCode(code) {
+    submitDonationCodeUseCase.execute(
+      _SubmitDonationCodeCaseObserver(this),
+      SubmitDonationCodeUseCaseParams(code),
+    );
   }
 
   @override
   void dispose() {
     getInvoiceSettingUseCase.dispose();
+    submitDonationCodeUseCase.dispose();
   }
 }
 
@@ -41,5 +58,26 @@ class _GetInvoiceSettingUseCaseObserver
   @override
   void onNext(response) {
     presenter.getInvoiceSettingOnNext(response?.invoices);
+  }
+}
+
+class _SubmitDonationCodeCaseObserver
+    extends Observer<SubmitDonationCodeUseCaseResponse> {
+  final InvoiceSettingPresenter presenter;
+  _SubmitDonationCodeCaseObserver(this.presenter);
+
+  @override
+  void onComplete() {
+    presenter.submitDonationCodeOnComplete();
+  }
+
+  @override
+  void onError(e) {
+    presenter.submitDonationCodeOnError(e);
+  }
+
+  @override
+  void onNext(response) {
+    presenter.submitDonationCodeOnNext(response);
   }
 }

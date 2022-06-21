@@ -1,6 +1,7 @@
 import 'package:brandstores/src/domain/entities/enum/verify_type.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../login_state.dart';
 import '../app/main/main_view.dart';
@@ -264,6 +265,23 @@ class MyPlusRouter {
         path: '/invoice-setting',
         pageBuilder: (context, state) =>
             MaterialPage<void>(key: state.pageKey, child: InvoiceSettingPage()),
+      ),
+
+      GoRoute(
+        name: donationCodeWebRouteName,
+        path: '/donation-code-web',
+        pageBuilder: (context, state) => MaterialPage<void>(
+          key: state.pageKey,
+          child: Scaffold(
+            appBar: AppBar(
+              title: const Text('捐贈碼查詢'),
+            ),
+            body: const WebView(
+              initialUrl: 'https://www.einvoice.nat.gov.tw/APCONSUMER/BTC603W/',
+              javascriptMode: JavascriptMode.unrestricted,
+            ),
+          ),
+        ),
       ),
 
       // TODO(error): 靜態頁待實作
