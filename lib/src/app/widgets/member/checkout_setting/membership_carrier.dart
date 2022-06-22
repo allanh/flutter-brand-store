@@ -12,12 +12,15 @@ class MembershipCarrierInfo extends StatefulWidget
     Key? key,
     required this.isDefault,
     required this.id,
+    required this.handleMembershipCarrierRegister,
   }) : super(key: key);
 
   @override
   bool isDefault;
 
   String? id = '';
+
+  Function handleMembershipCarrierRegister;
 
   @override
   State<MembershipCarrierInfo> createState() => _MembershipCarrierInfoState();
@@ -26,8 +29,6 @@ class MembershipCarrierInfo extends StatefulWidget
 class _MembershipCarrierInfoState extends State<MembershipCarrierInfo> {
   @override
   Widget build(BuildContext context) {
-    void handleAction() {}
-
     Color _themeColor = Theme.of(context).appBarTheme.backgroundColor!;
 
     Text _actionTitle = Text(
@@ -39,7 +40,7 @@ class _MembershipCarrierInfoState extends State<MembershipCarrierInfo> {
       height: 24.0,
       width: 88.0,
       child: OutlinedButton(
-        onPressed: handleAction,
+        onPressed: () => widget.handleMembershipCarrierRegister(),
         child: _actionTitle,
       ),
     );

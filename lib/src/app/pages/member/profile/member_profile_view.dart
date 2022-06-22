@@ -1,6 +1,5 @@
 import 'package:brandstores/src/app/pages/member/profile/member_profile_controller.dart';
 import 'package:brandstores/src/app/utils/constants.dart';
-import 'package:brandstores/src/app/widgets/member/account_change/result_description_view.dart';
 import 'package:brandstores/src/data/repositories/member/data_member_profile_repository.dart';
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +21,9 @@ import 'package:brandstores/src/app/widgets/member/profile/binding_hint_tile.dar
 import 'package:brandstores/src/app/widgets/member/profile/binding_tile.dart';
 import 'package:brandstores/src/app/widgets/member/profile/mobile_tile.dart';
 import 'package:brandstores/src/app/widgets/member/profile/email_tile.dart';
+
+import '../../../widgets/member/profile/binding_completed_view.dart';
+import '../../../widgets/member/profile/binding_dialog.dart';
 
 class MemberProfilePage extends View {
   MemberProfilePage({Key? key}) : super(key: key);
@@ -140,88 +142,16 @@ class _MemberProfilePageState
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Scaffold(
-                    appBar: AppBar(
-                      title: const Text('綁定帳號'),
-                      automaticallyImplyLeading: false,
-                      actions: [
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ],
-                    ),
-                    body: ResultDescriptionView(
-                      context: context,
-                      image: 'assets/images/icon_completed_stroke.png',
-                      description: '已完成綁定！\n下次登入時可使用$name帳號快速登入！',
-                      completedButton: Padding(
-                        padding: const EdgeInsets.only(
-                            top: 24.0, left: 24.0, right: 24.0),
-                        child: SizedBox(
-                            height: 36.0,
-                            width:
-                                MediaQuery.of(context).size.width - 24.0 - 24.0,
-                            child: ElevatedButton(
-                              child: const Text('確定'),
-                              style: ElevatedButton.styleFrom(
-                                  primary: Theme.of(context)
-                                      .appBarTheme
-                                      .backgroundColor),
-                              onPressed: () => Navigator.pop(context),
-                            )),
-                      ),
-                    ),
-                  ),
+                  builder: (context) => BindingCompletedView(social: name),
                   fullscreenDialog: true,
                 ),
               );
             } else {
               showDialog<String>(
                 context: context,
-                builder: (BuildContext context) => AlertDialog(
-                  actionsAlignment: MainAxisAlignment.spaceBetween,
-                  contentPadding:
-                      const EdgeInsets.fromLTRB(24.0, 66.0, 24.0, 36.0),
-                  actionsPadding: const EdgeInsets.symmetric(
-                    horizontal: 24.0,
-                    vertical: 16.0,
-                  ),
-                  content: Text('確定要解除綁定？',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          ?.copyWith(color: UdiColors.greyishBrown)),
-                  actions: <Widget>[
-                    SizedBox(
-                      width: 117.0,
-                      height: 36.0,
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.pop(context, '取消'),
-                        child: const Text('取消'),
-                        style: OutlinedButton.styleFrom(
-                            primary:
-                                Theme.of(context).appBarTheme.backgroundColor),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 117.0,
-                      height: 36.0,
-                      child: ElevatedButton(
-                          onPressed: () {
-                            controller.handleUnbinding(name);
-                            Navigator.pop(context, '確定');
-                          },
-                          child: const Text('確定'),
-                          style: ElevatedButton.styleFrom(
-                            primary:
-                                Theme.of(context).appBarTheme.backgroundColor,
-                          )),
-                    ),
-                  ],
+                builder: (BuildContext context) => BindingDialog(
+                  controller: controller,
+                  name: name,
                 ),
               );
             }

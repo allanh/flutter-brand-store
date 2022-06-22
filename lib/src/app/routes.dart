@@ -267,6 +267,7 @@ class MyPlusRouter {
             MaterialPage<void>(key: state.pageKey, child: InvoiceSettingPage()),
       ),
 
+      /// 捐贈碼查詢網頁
       GoRoute(
         name: donationCodeWebRouteName,
         path: '/donation-code-web',
@@ -278,6 +279,24 @@ class MyPlusRouter {
             ),
             body: const WebView(
               initialUrl: 'https://www.einvoice.nat.gov.tw/APCONSUMER/BTC603W/',
+              javascriptMode: JavascriptMode.unrestricted,
+            ),
+          ),
+        ),
+      ),
+
+      /// 載具歸戶網頁
+      GoRoute(
+        name: carrierRegisterWebRouteName,
+        path: '/carrier-register-web',
+        pageBuilder: (context, state) => MaterialPage<void>(
+          key: state.pageKey,
+          child: Scaffold(
+            appBar: AppBar(
+              title: const Text('財政部電子發票整合服務平台'),
+            ),
+            body: const WebView(
+              initialUrl: 'https://www.einvoice.nat.gov.tw/',
               javascriptMode: JavascriptMode.unrestricted,
             ),
           ),

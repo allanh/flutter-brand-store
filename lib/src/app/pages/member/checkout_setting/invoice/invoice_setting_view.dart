@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../../data/repositories/member/data_invoice_setting_repository.dart';
 import '../../../../utils/constants.dart';
+import '../../../../widgets/member/checkout_setting/carrier_register_dialog.dart';
 import '../../../../widgets/member/checkout_setting/reorderable_card.dart';
 import '../../../../widgets/member/checkout_setting/citizen_digital_carrier.dart';
 import '../../../../widgets/member/checkout_setting/donation_invoice_carrier.dart';
@@ -60,6 +61,7 @@ class _InvoiceSettingPageState
           controller.invoiceInfos?.vatCarrier?.carrierId?.toString();
       String? _valueAddedTaxTitle = controller.invoiceInfos?.vatCarrier?.title;
 
+      /// 控制卡片
       void handleCarrierExpand(CarrierType type, bool isExpand) {
         setState(() {
           switch (type) {
@@ -81,14 +83,17 @@ class _InvoiceSettingPageState
         });
       }
 
+      /// 收合卡片
       void handleCollapse(CarrierType type) {
         handleCarrierExpand(type, false);
       }
 
+      /// 展開卡片
       void handleExpand(CarrierType type) {
         handleCarrierExpand(type, true);
       }
 
+      /// 調整卡片類別陣列排序
       if (controller.invoiceInfos?.mobileCarrier?.isDefault ?? false) {
         invoiceTypes
             .removeWhere((element) => element == CarrierType.mobileCarrier);
@@ -107,6 +112,7 @@ class _InvoiceSettingPageState
         invoiceTypes.insert(0, CarrierType.donate);
       }
 
+      /// 控制預設卡片
       void handleDefaultCarrier(CarrierType type) {
         /// 改變所有載具被選擇的狀態
         controller.invoiceInfos?.membershipCarrier?.isDefault =
@@ -147,24 +153,30 @@ class _InvoiceSettingPageState
         }
       }
 
+      /// 儲存手機載具
       void handleSubmitMobileCarrier(String carrier) {
         debugPrint(carrier);
         controller.submitMobileCarrier(carrier);
       }
 
+      /// 儲存自然人憑證載具
       void handleSubmitCitizenDigitalCertificateCarrier(String code) {}
 
+      /// 儲存公司統編載具
       void handleSubmitValueAddedTaxCarrier(String code, String title) {}
 
+      /// 儲存愛心捐贈碼
       void handleSubmitDonationCode(String code) {
         debugPrint(code);
         controller.submitDonationCode(code);
       }
 
+      /// 開啟愛心捐贈碼查詢網頁
       void handleOpenDonationCodeWeb() {
         context.pushNamed(donationCodeWebRouteName);
       }
 
+      /// 控制捐贈碼輸入
       void handleCarrierChange(String text) {
         setState(() {
           _isValidMobileCarrier = controller.isValidMobileCarrier(text);
@@ -173,12 +185,22 @@ class _InvoiceSettingPageState
         });
       }
 
+      /// 發票歸戶
+      void handleMembershipCarrierRegister() {
+        showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => const CarrierRegisterDialog(),
+        );
+      }
+
+      /// 計算手機載具卡片高度
       double mobileCarrierCardHeight = _isExpandedMobileCarrier
           ? 171.0 + (_isValidMobileCarrier ? 0.0 : 30.0)
           : _mobileCarrier != null && _mobileCarrier!.isNotEmpty
               ? 88.0
               : 56.0;
 
+      /// 建立卡片
       List<ReorderableCard> _buildReorderableCards(
           List<CarrierType> invoiceTypes) {
         return List.generate(invoiceTypes.length, (index) {
@@ -189,9 +211,10 @@ class _InvoiceSettingPageState
               return ReorderableCard(
                   key: ValueKey(index),
                   item: MembershipCarrierInfo(
-                    isDefault: index == 0,
-                    id: _membershipCarrier,
-                  ),
+                      isDefault: index == 0,
+                      id: _membershipCarrier,
+                      handleMembershipCarrierRegister: () =>
+                          handleMembershipCarrierRegister()),
                   height: index == 0 ? 120.0 : 90.0,
                   isSelected: index == 0);
 
