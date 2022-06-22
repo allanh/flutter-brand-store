@@ -8,8 +8,8 @@ import 'reorderable_card.dart';
 import 'default_indicator.dart';
 
 /// 個人-手機條碼載具
-class MobileCarrier extends StatefulWidget implements DefaultCarrierInterface {
-  MobileCarrier({
+class MobileCarrierInfo extends StatefulWidget implements DefaultCarrierInterface {
+  MobileCarrierInfo({
     Key? key,
     required this.isDefault,
     this.isExpand = false,
@@ -17,6 +17,7 @@ class MobileCarrier extends StatefulWidget implements DefaultCarrierInterface {
     required this.handleCollapse,
     required this.handleEapand,
     required this.handleSubmit,
+    required this.handleCarrierChange,
   }) : super(key: key);
 
   @override
@@ -32,11 +33,13 @@ class MobileCarrier extends StatefulWidget implements DefaultCarrierInterface {
 
   Function handleSubmit;
 
+  Function handleCarrierChange;
+
   @override
-  State<MobileCarrier> createState() => _MobileCarrierState();
+  State<MobileCarrierInfo> createState() => _MobileCarrierInfoState();
 }
 
-class _MobileCarrierState extends State<MobileCarrier> {
+class _MobileCarrierInfoState extends State<MobileCarrierInfo> {
   final TextEditingController _controller = TextEditingController();
 
   @override
@@ -53,6 +56,10 @@ class _MobileCarrierState extends State<MobileCarrier> {
         widget.code = null;
       });
     }
+
+    bool isValid = _controller.text.startsWith('/') || _controller.text.isEmpty;
+
+    double height = 36.0 + (isValid ? 0 : 30.0);
 
     Text _title = Text(
       '個人-手機條碼載具',
@@ -75,12 +82,12 @@ class _MobileCarrierState extends State<MobileCarrier> {
         .copyWith(color: UdiColors.brownGrey2);
 
     SizedBox _codeInputField = SizedBox(
-      height: 36.0,
+      height: height,
       child: TextField(
         controller: _controller,
         textInputAction: TextInputAction.send,
         maxLength: 8,
-        onChanged: (text) => setState(() => widget.code = text),
+        onChanged: (text) => widget.handleCarrierChange(text),
         cursorColor: UdiColors.veryLightGrey2,
         decoration: InputDecoration(
           labelText: widget.code,
@@ -89,9 +96,17 @@ class _MobileCarrierState extends State<MobileCarrier> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 18.0),
           hintText: '請輸入手機條碼',
           hintStyle: _hintStyle,
-          border: _buildTextFieldBorder(),
-          enabledBorder: _buildTextFieldBorder(),
-          focusedBorder: _buildTextFieldBorder(),
+          errorText: isValid ? null : '請輸入有效手機條碼!',
+          errorStyle: Theme.of(context).textTheme.caption?.copyWith(
+                color: UdiColors.strawberry,
+                fontSize: 12.0,
+              ),
+          errorBorder: _buildTextFieldBorder(color: UdiColors.strawberry),
+          focusedErrorBorder:
+              _buildTextFieldBorder(color: UdiColors.strawberry),
+          border: _buildTextFieldBorder(color: UdiColors.veryLightGrey2),
+          enabledBorder: _buildTextFieldBorder(color: UdiColors.veryLightGrey2),
+          focusedBorder: _buildTextFieldBorder(color: UdiColors.veryLightGrey2),
         ),
       ),
     );
@@ -99,7 +114,7 @@ class _MobileCarrierState extends State<MobileCarrier> {
     CarrierActionButtons _carrierActionButtons = CarrierActionButtons(
       handleReset: () => handleReset(),
       handleSubmit: widget.code != null && widget.code!.isNotEmpty
-          ? widget.handleSubmit(widget.code)
+          ? () => widget.handleSubmit(widget.code)
           : null,
     );
 
@@ -158,9 +173,9 @@ class _MobileCarrierState extends State<MobileCarrier> {
     );
   }
 
-  OutlineInputBorder _buildTextFieldBorder() {
+  OutlineInputBorder _buildTextFieldBorder({required Color color}) {
     return OutlineInputBorder(
-      borderSide: const BorderSide(color: UdiColors.veryLightGrey2, width: 1.0),
+      borderSide: BorderSide(color: color, width: 1.0),
       borderRadius: BorderRadius.circular(4.0),
     );
   }

@@ -47,6 +47,7 @@ class Api {
   static const invoiceSetting = '/udi/v1/member_center/setting/invoice/list';
   static const shippingInfo = '/udi/v1/member_center/setting/address/list';
   static const addCarrier = '/udi/v1/member_center/setting/invoice/add';
+  static const updateCarrier = '/udi/v1/member_center/setting/invoice/update';
 
   // Product
   static const getProduct = '/udi/v2/goods/info';

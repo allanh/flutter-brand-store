@@ -78,3 +78,92 @@ class SubmitDonationCodeUseCaseParams {
   String code;
   SubmitDonationCodeUseCaseParams(this.code);
 }
+
+class SubmitMobileCarrierUseCase extends UseCase<
+    SubmitMobileCarrierUseCaseResponse, SubmitMobileCarrierUseCaseParams> {
+  final InvoiceSettingRepository repo;
+  SubmitMobileCarrierUseCase(this.repo);
+
+  @override
+  Future<Stream<SubmitMobileCarrierUseCaseResponse?>> buildUseCaseStream(
+      SubmitMobileCarrierUseCaseParams? params) async {
+    final controller = StreamController<SubmitMobileCarrierUseCaseResponse>();
+
+    try {
+      // Submit mobile carrier.
+      final response =
+          await repo.submitMobileCarrier(params?.id, params!.carrier);
+      // Adding it triggers the .onNext() in the 'Observer'
+      // It is usually better to wrap the response inside a response object.
+      controller.add(SubmitMobileCarrierUseCaseResponse(response));
+      logger.finest('SubmitMobileCarrierUseCaseResponse successful.');
+      controller.close();
+    } catch (e) {
+      logger.severe('SubmitMobileCarrierUseCaseResponse failure.');
+      // Trigger .onError
+      controller.addError(e);
+    }
+    return controller.stream;
+  }
+}
+
+class SubmitMobileCarrierUseCaseResponse {
+  final bool result;
+  SubmitMobileCarrierUseCaseResponse(this.result);
+}
+
+class SubmitMobileCarrierUseCaseParams {
+  String? id;
+  String carrier;
+  SubmitMobileCarrierUseCaseParams(this.id, this.carrier);
+}
+
+class ChangeDefaultCarrierUseCase extends UseCase<
+    ChangeDefaultCarrierUseCaseResponse, ChangeDefaultCarrierUseCaseParams> {
+  final InvoiceSettingRepository repo;
+  ChangeDefaultCarrierUseCase(this.repo);
+
+  @override
+  Future<Stream<ChangeDefaultCarrierUseCaseResponse?>> buildUseCaseStream(
+      ChangeDefaultCarrierUseCaseParams? params) async {
+    final controller = StreamController<ChangeDefaultCarrierUseCaseResponse>();
+
+    try {
+      // Change default carrier.
+      final response = await repo.changeDefaultCarrier(
+        params!.type,
+        params.id,
+        params.carrierId,
+        params.title,
+      );
+      // Adding it triggers the .onNext() in the 'Observer'
+      // It is usually better to wrap the response inside a response object.
+      controller.add(ChangeDefaultCarrierUseCaseResponse(response));
+      logger.finest('ChangeDefaultCarrierUseCaseResponse successful.');
+      controller.close();
+    } catch (e) {
+      logger.severe('ChangeDefaultCarrierUseCaseResponse failure.');
+      // Trigger .onError
+      controller.addError(e);
+    }
+    return controller.stream;
+  }
+}
+
+class ChangeDefaultCarrierUseCaseResponse {
+  final bool result;
+  ChangeDefaultCarrierUseCaseResponse(this.result);
+}
+
+class ChangeDefaultCarrierUseCaseParams {
+  CarrierType type;
+  String? id;
+  String? carrierId;
+  String? title;
+  ChangeDefaultCarrierUseCaseParams(
+    this.type,
+    this.id,
+    this.carrierId,
+    this.title,
+  );
+}

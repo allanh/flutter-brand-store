@@ -47,6 +47,30 @@ class InvoiceSettingController extends Controller {
     invoiceInfoPresenter.submitDonationCodeOnError = (e) {
       debugPrint('Could not submit donation code cause: $e');
     };
+
+    invoiceInfoPresenter.submitMobileCarrierOnNext = (bool isSuccess) {
+      if (isSuccess) refreshUI();
+    };
+
+    invoiceInfoPresenter.submitMobileCarrierOnComplete = () {
+      debugPrint('Submit donation code completed.');
+    };
+
+    invoiceInfoPresenter.submitMobileCarrierOnError = (e) {
+      debugPrint('Could not submit donation code cause: $e');
+    };
+
+    invoiceInfoPresenter.changeDefaultCarrierOnNext = (bool isSuccess) {
+      if (isSuccess) refreshUI();
+    };
+
+    invoiceInfoPresenter.changeDefaultCarrierOnComplete = () {
+      debugPrint('Submit donation code completed.');
+    };
+
+    invoiceInfoPresenter.changeDefaultCarrierOnError = (e) {
+      debugPrint('Could not submit donation code cause: $e');
+    };
   }
 
   @override
@@ -70,4 +94,62 @@ class InvoiceSettingController extends Controller {
   /// 常用發票新增愛心捐贈
   void submitDonationCode(code) =>
       invoiceInfoPresenter.submitDonationCode(code);
+
+  bool isValidMobileCarrier(String carrier) =>
+      carrier.startsWith('/') || carrier.isEmpty;
+
+  void submitMobileCarrier(carrier) => invoiceInfoPresenter.submitMobileCarrier(
+        _invoiceInfos?.mobileCarrier?.id,
+        carrier,
+      );
+
+  bool hasMobileCarrier() =>
+      _invoiceInfos?.mobileCarrier?.id != null &&
+      _invoiceInfos?.mobileCarrier?.carrierId != null;
+
+  void handleMobileCarrierDefault() =>
+      invoiceInfoPresenter.handleCarrierDefaultChange(
+        CarrierType.mobileCarrier,
+        id: _invoiceInfos?.mobileCarrier?.id,
+        carrierId: _invoiceInfos?.mobileCarrier?.carrierId,
+      );
+
+  void handleMembershipCarrierDefault() => invoiceInfoPresenter
+      .handleCarrierDefaultChange(CarrierType.membershipCarrier);
+
+  bool hasCitizenDigitalCarrier() =>
+      _invoiceInfos?.citizenDigitalCarrier?.id != null &&
+      _invoiceInfos?.citizenDigitalCarrier?.carrierId != null;
+
+  void handleCitizenDigitalCarrierDefault() =>
+      invoiceInfoPresenter.handleCarrierDefaultChange(
+        CarrierType.citizenDigitalCarrier,
+        id: _invoiceInfos?.citizenDigitalCarrier?.id,
+        carrierId: _invoiceInfos?.citizenDigitalCarrier?.carrierId,
+      );
+
+  bool hasValueAddedTaxCarrier() =>
+      _invoiceInfos?.vatCarrier?.id != null &&
+      _invoiceInfos?.vatCarrier?.carrierId != null &&
+      _invoiceInfos?.vatCarrier?.title != null;
+
+  void handleValueAddedTaxCarrierDefault() =>
+      invoiceInfoPresenter.handleCarrierDefaultChange(
+        CarrierType.valueAddedTaxCarrier,
+        id: _invoiceInfos?.vatCarrier?.id,
+        carrierId: _invoiceInfos?.vatCarrier?.carrierId,
+        title: _invoiceInfos?.vatCarrier?.title,
+      );
+
+  bool hasDonationCode() =>
+      _invoiceInfos?.donationNPO?.npoId != null &&
+      _invoiceInfos?.donationNPO?.title != null;
+
+  void handleDonationCodeDefault() =>
+      invoiceInfoPresenter.handleCarrierDefaultChange(
+        CarrierType.donate,
+        id: _invoiceInfos?.donationNPO?.id,
+        carrierId: _invoiceInfos?.donationNPO?.npoId,
+        title: _invoiceInfos?.donationNPO?.title,
+      );
 }

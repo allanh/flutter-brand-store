@@ -257,10 +257,15 @@ class DonationNPO implements Carrier {
 
   /// 流水號
   @override
+  @JsonKey(name: 'main_id')
   String? id;
 
   @override
   String? carrierId;
+
+  String? get npoId => npos?.where((npo) => npo.isEnabled).first.npoId;
+
+  String? get title => npos?.where((npo) => npo.isEnabled).first.title;
 
   @JsonKey(name: 'donation_npoban')
   List<NPO>? npos;
@@ -323,6 +328,23 @@ enum CarrierType {
   citizenDigitalCarrier,
   valueAddedTaxCarrier,
   donate,
+}
+
+extension CarrierTypeExtension on CarrierType {
+  String get value {
+    switch (this) {
+      case CarrierType.membershipCarrier:
+        return 'member';
+      case CarrierType.mobileCarrier:
+        return 'mobile';
+      case CarrierType.citizenDigitalCarrier:
+        return 'citizen';
+      case CarrierType.valueAddedTaxCarrier:
+        return 'company';
+      case CarrierType.donate:
+        return 'donation';
+    }
+  }
 }
 
 abstract class Carrier {

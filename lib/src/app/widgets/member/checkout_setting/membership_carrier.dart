@@ -6,9 +6,9 @@ import 'reorderable_card.dart';
 import 'default_indicator.dart';
 
 /// 會員載具
-class MembershipCarrier extends StatefulWidget
+class MembershipCarrierInfo extends StatefulWidget
     implements DefaultCarrierInterface {
-  MembershipCarrier({
+  MembershipCarrierInfo({
     Key? key,
     required this.isDefault,
     required this.id,
@@ -20,10 +20,10 @@ class MembershipCarrier extends StatefulWidget
   String? id = '';
 
   @override
-  State<MembershipCarrier> createState() => _MembershipCarrierState();
+  State<MembershipCarrierInfo> createState() => _MembershipCarrierInfoState();
 }
 
-class _MembershipCarrierState extends State<MembershipCarrier> {
+class _MembershipCarrierInfoState extends State<MembershipCarrierInfo> {
   @override
   Widget build(BuildContext context) {
     void handleAction() {}

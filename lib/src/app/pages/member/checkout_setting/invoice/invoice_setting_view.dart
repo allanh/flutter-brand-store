@@ -1,4 +1,5 @@
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
+import 'package:brandstores/src/domain/entities/member/invoice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:go_router/go_router.dart';
@@ -12,14 +13,6 @@ import '../../../../widgets/member/checkout_setting/membership_carrier.dart';
 import '../../../../widgets/member/checkout_setting/mobile_carrier.dart';
 import '../../../../widgets/member/checkout_setting/value_added_tax_carrier.dart';
 import 'invoice_setting_controller.dart';
-
-enum InvoiceType {
-  membershipCarrier,
-  mobileCarrier,
-  citizenDigitalCarrier,
-  valueAddedTaxCarrier,
-  donate,
-}
 
 class InvoiceSettingPage extends View {
   InvoiceSettingPage({
@@ -43,12 +36,14 @@ class _InvoiceSettingPageState
   bool _isExpandedValueAddedTaxCarrier = false;
   bool _isExpandedDonationInvoice = false;
 
-  List<InvoiceType> invoiceTypes = [
-    InvoiceType.membershipCarrier,
-    InvoiceType.mobileCarrier,
-    InvoiceType.citizenDigitalCarrier,
-    InvoiceType.valueAddedTaxCarrier,
-    InvoiceType.donate,
+  bool _isValidMobileCarrier = true;
+
+  List<CarrierType> invoiceTypes = [
+    CarrierType.membershipCarrier,
+    CarrierType.mobileCarrier,
+    CarrierType.citizenDigitalCarrier,
+    CarrierType.valueAddedTaxCarrier,
+    CarrierType.donate,
   ];
 
   @override
@@ -65,67 +60,97 @@ class _InvoiceSettingPageState
           controller.invoiceInfos?.vatCarrier?.carrierId?.toString();
       String? _valueAddedTaxTitle = controller.invoiceInfos?.vatCarrier?.title;
 
-      void handleCarrierExpand(InvoiceType type, bool isExpand) {
+      void handleCarrierExpand(CarrierType type, bool isExpand) {
         setState(() {
           switch (type) {
-            case InvoiceType.membershipCarrier:
+            case CarrierType.membershipCarrier:
               break;
-            case InvoiceType.mobileCarrier:
+            case CarrierType.mobileCarrier:
               _isExpandedMobileCarrier = isExpand;
               break;
-            case InvoiceType.citizenDigitalCarrier:
+            case CarrierType.citizenDigitalCarrier:
               _isExpandedCitizenDigitalCertificateCarrier = isExpand;
               break;
-            case InvoiceType.valueAddedTaxCarrier:
+            case CarrierType.valueAddedTaxCarrier:
               _isExpandedValueAddedTaxCarrier = isExpand;
               break;
-            case InvoiceType.donate:
+            case CarrierType.donate:
               _isExpandedDonationInvoice = isExpand;
               break;
           }
         });
       }
 
-      void handleCollapse(InvoiceType type) {
+      void handleCollapse(CarrierType type) {
         handleCarrierExpand(type, false);
       }
 
-      void handleExpand(InvoiceType type) {
+      void handleExpand(CarrierType type) {
         handleCarrierExpand(type, true);
       }
 
       if (controller.invoiceInfos?.mobileCarrier?.isDefault ?? false) {
         invoiceTypes
-            .removeWhere((element) => element == InvoiceType.mobileCarrier);
-        invoiceTypes.insert(0, InvoiceType.mobileCarrier);
+            .removeWhere((element) => element == CarrierType.mobileCarrier);
+        invoiceTypes.insert(0, CarrierType.mobileCarrier);
       } else if (controller.invoiceInfos?.citizenDigitalCarrier?.isDefault ??
           false) {
         invoiceTypes.removeWhere(
-            (element) => element == InvoiceType.citizenDigitalCarrier);
-        invoiceTypes.insert(0, InvoiceType.citizenDigitalCarrier);
+            (element) => element == CarrierType.citizenDigitalCarrier);
+        invoiceTypes.insert(0, CarrierType.citizenDigitalCarrier);
       } else if (controller.invoiceInfos?.vatCarrier?.isDefault ?? false) {
         invoiceTypes.removeWhere(
-            (element) => element == InvoiceType.valueAddedTaxCarrier);
-        invoiceTypes.insert(0, InvoiceType.valueAddedTaxCarrier);
+            (element) => element == CarrierType.valueAddedTaxCarrier);
+        invoiceTypes.insert(0, CarrierType.valueAddedTaxCarrier);
       } else if (controller.invoiceInfos?.donationNPO?.isDefault ?? false) {
-        invoiceTypes.removeWhere((element) => element == InvoiceType.donate);
-        invoiceTypes.insert(0, InvoiceType.donate);
+        invoiceTypes.removeWhere((element) => element == CarrierType.donate);
+        invoiceTypes.insert(0, CarrierType.donate);
       }
 
-      void handleDefaultCarrier(InvoiceType type) {
+      void handleDefaultCarrier(CarrierType type) {
+        /// 改變所有載具被選擇的狀態
         controller.invoiceInfos?.membershipCarrier?.isDefault =
-            type == InvoiceType.membershipCarrier;
+            type == CarrierType.membershipCarrier;
         controller.invoiceInfos?.mobileCarrier?.isDefault =
-            type == InvoiceType.mobileCarrier;
+            type == CarrierType.mobileCarrier;
         controller.invoiceInfos?.citizenDigitalCarrier?.isDefault =
-            type == InvoiceType.citizenDigitalCarrier;
+            type == CarrierType.citizenDigitalCarrier;
         controller.invoiceInfos?.vatCarrier?.isDefault =
-            type == InvoiceType.valueAddedTaxCarrier;
+            type == CarrierType.valueAddedTaxCarrier;
         controller.invoiceInfos?.donationNPO?.isDefault =
-            type == InvoiceType.donate;
+            type == CarrierType.donate;
+
+        switch (type) {
+          case CarrierType.membershipCarrier:
+            controller.handleMembershipCarrierDefault();
+            break;
+          case CarrierType.mobileCarrier:
+            if (controller.hasMobileCarrier()) {
+              controller.handleMobileCarrierDefault();
+            }
+            break;
+          case CarrierType.citizenDigitalCarrier:
+            if (controller.hasCitizenDigitalCarrier()) {
+              controller.handleCitizenDigitalCarrierDefault();
+            }
+            break;
+          case CarrierType.valueAddedTaxCarrier:
+            if (controller.hasValueAddedTaxCarrier()) {
+              controller.handleValueAddedTaxCarrierDefault();
+            }
+            break;
+          case CarrierType.donate:
+            if (controller.hasDonationCode()) {
+              controller.handleDonationCodeDefault();
+            }
+            break;
+        }
       }
 
-      void handleSubmitMobileCarrier(String code) {}
+      void handleSubmitMobileCarrier(String carrier) {
+        debugPrint(carrier);
+        controller.submitMobileCarrier(carrier);
+      }
 
       void handleSubmitCitizenDigitalCertificateCarrier(String code) {}
 
@@ -140,16 +165,30 @@ class _InvoiceSettingPageState
         context.pushNamed(donationCodeWebRouteName);
       }
 
+      void handleCarrierChange(String text) {
+        setState(() {
+          _isValidMobileCarrier = controller.isValidMobileCarrier(text);
+          _mobileCarrier = text;
+          controller.invoiceInfos?.mobileCarrier?.carrierId = _mobileCarrier;
+        });
+      }
+
+      double mobileCarrierCardHeight = _isExpandedMobileCarrier
+          ? 171.0 + (_isValidMobileCarrier ? 0.0 : 30.0)
+          : _mobileCarrier != null && _mobileCarrier!.isNotEmpty
+              ? 88.0
+              : 56.0;
+
       List<ReorderableCard> _buildReorderableCards(
-          List<InvoiceType> invoiceTypes) {
+          List<CarrierType> invoiceTypes) {
         return List.generate(invoiceTypes.length, (index) {
           switch (invoiceTypes[index]) {
 
             /// 會員載具
-            case InvoiceType.membershipCarrier:
+            case CarrierType.membershipCarrier:
               return ReorderableCard(
                   key: ValueKey(index),
-                  item: MembershipCarrier(
+                  item: MembershipCarrierInfo(
                     isDefault: index == 0,
                     id: _membershipCarrier,
                   ),
@@ -157,37 +196,34 @@ class _InvoiceSettingPageState
                   isSelected: index == 0);
 
             /// 個人-手機條碼載具
-            case InvoiceType.mobileCarrier:
+            case CarrierType.mobileCarrier:
               return ReorderableCard(
                   key: ValueKey(index),
-                  item: MobileCarrier(
+                  item: MobileCarrierInfo(
                     isDefault: index == 0,
                     isExpand: _isExpandedMobileCarrier,
                     code: _mobileCarrier,
                     handleCollapse: () =>
-                        handleCollapse(InvoiceType.mobileCarrier),
-                    handleEapand: () => handleExpand(InvoiceType.mobileCarrier),
-                    handleSubmit: (code) => handleSubmitMobileCarrier,
+                        handleCollapse(CarrierType.mobileCarrier),
+                    handleEapand: () => handleExpand(CarrierType.mobileCarrier),
+                    handleSubmit: (code) => handleSubmitMobileCarrier(code),
+                    handleCarrierChange: (text) => handleCarrierChange(text),
                   ),
-                  height: _isExpandedMobileCarrier
-                      ? 171.0
-                      : _mobileCarrier != null && _mobileCarrier.isNotEmpty
-                          ? 88.0
-                          : 56.0,
+                  height: mobileCarrierCardHeight,
                   isSelected: index == 0);
 
             /// 個人-自然人憑證
-            case InvoiceType.citizenDigitalCarrier:
+            case CarrierType.citizenDigitalCarrier:
               return ReorderableCard(
                   key: ValueKey(index),
-                  item: CitizenDigitalCarrier(
+                  item: CitizenDigitalCarrierInfo(
                     isDefault: index == 0,
                     isExpand: _isExpandedCitizenDigitalCertificateCarrier,
                     code: _citizenDigitalCarrier,
                     handleCollapse: () =>
-                        handleCollapse(InvoiceType.citizenDigitalCarrier),
+                        handleCollapse(CarrierType.citizenDigitalCarrier),
                     handleExpand: () =>
-                        handleExpand(InvoiceType.citizenDigitalCarrier),
+                        handleExpand(CarrierType.citizenDigitalCarrier),
                     handleSubmit: (code) =>
                         handleSubmitCitizenDigitalCertificateCarrier,
                   ),
@@ -200,18 +236,18 @@ class _InvoiceSettingPageState
                   isSelected: index == 0);
 
             /// 公司-三聯式電子發票
-            case InvoiceType.valueAddedTaxCarrier:
+            case CarrierType.valueAddedTaxCarrier:
               return ReorderableCard(
                   key: ValueKey(index),
-                  item: ValueAddedTaxCarrier(
+                  item: ValueAddedTaxCarrierInfo(
                     isDefault: index == 0,
                     isExpand: _isExpandedValueAddedTaxCarrier,
                     code: _valueAddedTaxId,
                     title: _valueAddedTaxTitle,
                     handleCollapse: () =>
-                        handleCollapse(InvoiceType.valueAddedTaxCarrier),
+                        handleCollapse(CarrierType.valueAddedTaxCarrier),
                     handleExpand: () =>
-                        handleExpand(InvoiceType.valueAddedTaxCarrier),
+                        handleExpand(CarrierType.valueAddedTaxCarrier),
                     handleSubmit: (code, title) =>
                         handleSubmitValueAddedTaxCarrier,
                   ),
@@ -226,7 +262,7 @@ class _InvoiceSettingPageState
                   isSelected: index == 0);
 
             /// 捐贈發票
-            case InvoiceType.donate:
+            case CarrierType.donate:
               int npoLength =
                   controller.invoiceInfos?.donationNPO?.npos?.length ?? 0;
               bool hasDefault = false;
@@ -244,8 +280,8 @@ class _InvoiceSettingPageState
                     isDefault: index == 0,
                     isExpand: _isExpandedDonationInvoice,
                     npos: controller.invoiceInfos?.donationNPO?.npos,
-                    handleCollpase: () => handleCollapse(InvoiceType.donate),
-                    handleExpand: () => handleExpand(InvoiceType.donate),
+                    handleCollpase: () => handleCollapse(CarrierType.donate),
+                    handleExpand: () => handleExpand(CarrierType.donate),
                     handleSubmit: handleSubmitDonationCode,
                     handleOpenDonationCodeWeb: () =>
                         handleOpenDonationCodeWeb(),
@@ -270,7 +306,7 @@ class _InvoiceSettingPageState
         }
 
         /// 取出被拖移的載具
-        InvoiceType _type = invoiceTypes.removeAt(oldIndex);
+        CarrierType _type = invoiceTypes.removeAt(oldIndex);
 
         /// 根據新的位置插入被拖移的載具
         invoiceTypes.insert(newIndex, _type);

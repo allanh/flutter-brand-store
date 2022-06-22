@@ -33,6 +33,7 @@ class AuthInterceptor extends Interceptor {
       case Api.invoiceSetting:
       case Api.shippingInfo:
       case Api.addCarrier:
+      case Api.updateCarrier:
         return true;
     }
     return false;

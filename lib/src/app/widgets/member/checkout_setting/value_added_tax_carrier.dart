@@ -8,9 +8,9 @@ import 'reorderable_card.dart';
 import 'default_indicator.dart';
 
 /// 公司-三聯式電子發票
-class ValueAddedTaxCarrier extends StatefulWidget
+class ValueAddedTaxCarrierInfo extends StatefulWidget
     implements DefaultCarrierInterface {
-  ValueAddedTaxCarrier({
+  ValueAddedTaxCarrierInfo({
     Key? key,
     required this.isDefault,
     this.isExpand = false,
@@ -36,10 +36,10 @@ class ValueAddedTaxCarrier extends StatefulWidget
   Function handleSubmit;
 
   @override
-  State<ValueAddedTaxCarrier> createState() => _ValueAddedTaxCarrierState();
+  State<ValueAddedTaxCarrierInfo> createState() => _ValueAddedTaxCarrierInfoState();
 }
 
-class _ValueAddedTaxCarrierState extends State<ValueAddedTaxCarrier> {
+class _ValueAddedTaxCarrierInfoState extends State<ValueAddedTaxCarrierInfo> {
   final TextEditingController _vatIdController = TextEditingController();
   final TextEditingController _vatTitleController = TextEditingController();
   @override

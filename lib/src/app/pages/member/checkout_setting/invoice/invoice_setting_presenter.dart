@@ -4,7 +4,9 @@ import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 class InvoiceSettingPresenter extends Presenter {
   InvoiceSettingPresenter(repo)
       : getInvoiceSettingUseCase = GetInvoiceSettingUseCase(repo),
-        submitDonationCodeUseCase = SubmitDonationCodeUseCase(repo);
+        submitDonationCodeUseCase = SubmitDonationCodeUseCase(repo),
+        submitMobileCarrierUseCase = SubmitMobileCarrierUseCase(repo),
+        changeDefaultCarrierUseCase = ChangeDefaultCarrierUseCase(repo);
 
   late Function getInvoiceSettingOnNext;
   late Function getInvoiceSettingOnComplete;
@@ -27,8 +29,40 @@ class InvoiceSettingPresenter extends Presenter {
 
   void submitDonationCode(code) {
     submitDonationCodeUseCase.execute(
-      _SubmitDonationCodeCaseObserver(this),
+      _SubmitDonationCodeUseCaseObserver(this),
       SubmitDonationCodeUseCaseParams(code),
+    );
+  }
+
+  late Function submitMobileCarrierOnNext;
+  late Function submitMobileCarrierOnComplete;
+  late Function submitMobileCarrierOnError;
+
+  final SubmitMobileCarrierUseCase submitMobileCarrierUseCase;
+
+  void submitMobileCarrier(id, carrier) {
+    submitMobileCarrierUseCase.execute(
+      _SubmitMobileCarrierUseCaseObserver(this),
+      SubmitMobileCarrierUseCaseParams(id, carrier),
+    );
+  }
+
+  late Function changeDefaultCarrierOnNext;
+  late Function changeDefaultCarrierOnComplete;
+  late Function changeDefaultCarrierOnError;
+
+  final ChangeDefaultCarrierUseCase changeDefaultCarrierUseCase;
+
+  void handleCarrierDefaultChange(type,
+      {String? id = '', String? carrierId = '', String? title}) {
+    changeDefaultCarrierUseCase.execute(
+      _ChangeDefaultCarrierUseCaseObserver(this),
+      ChangeDefaultCarrierUseCaseParams(
+        type,
+        id,
+        carrierId,
+        title,
+      ),
     );
   }
 
@@ -36,6 +70,7 @@ class InvoiceSettingPresenter extends Presenter {
   void dispose() {
     getInvoiceSettingUseCase.dispose();
     submitDonationCodeUseCase.dispose();
+    changeDefaultCarrierUseCase.dispose();
   }
 }
 
@@ -61,10 +96,10 @@ class _GetInvoiceSettingUseCaseObserver
   }
 }
 
-class _SubmitDonationCodeCaseObserver
+class _SubmitDonationCodeUseCaseObserver
     extends Observer<SubmitDonationCodeUseCaseResponse> {
   final InvoiceSettingPresenter presenter;
-  _SubmitDonationCodeCaseObserver(this.presenter);
+  _SubmitDonationCodeUseCaseObserver(this.presenter);
 
   @override
   void onComplete() {
@@ -79,5 +114,47 @@ class _SubmitDonationCodeCaseObserver
   @override
   void onNext(response) {
     presenter.submitDonationCodeOnNext(response);
+  }
+}
+
+class _SubmitMobileCarrierUseCaseObserver
+    extends Observer<SubmitMobileCarrierUseCaseResponse> {
+  final InvoiceSettingPresenter presenter;
+  _SubmitMobileCarrierUseCaseObserver(this.presenter);
+
+  @override
+  void onComplete() {
+    presenter.submitMobileCarrierOnComplete();
+  }
+
+  @override
+  void onError(e) {
+    presenter.submitMobileCarrierOnError(e);
+  }
+
+  @override
+  void onNext(response) {
+    presenter.submitMobileCarrierOnNext(response?.result);
+  }
+}
+
+class _ChangeDefaultCarrierUseCaseObserver
+    extends Observer<ChangeDefaultCarrierUseCaseResponse> {
+  final InvoiceSettingPresenter presenter;
+  _ChangeDefaultCarrierUseCaseObserver(this.presenter);
+
+  @override
+  void onComplete() {
+    presenter.changeDefaultCarrierOnComplete();
+  }
+
+  @override
+  void onError(e) {
+    presenter.changeDefaultCarrierOnError(e);
+  }
+
+  @override
+  void onNext(response) {
+    presenter.changeDefaultCarrierOnNext(response?.result);
   }
 }

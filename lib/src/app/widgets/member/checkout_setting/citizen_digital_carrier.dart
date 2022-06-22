@@ -8,9 +8,9 @@ import 'reorderable_card.dart';
 import 'default_indicator.dart';
 
 /// 個人-自然人憑證
-class CitizenDigitalCarrier extends StatefulWidget
+class CitizenDigitalCarrierInfo extends StatefulWidget
     implements DefaultCarrierInterface {
-  CitizenDigitalCarrier({
+  CitizenDigitalCarrierInfo({
     Key? key,
     required this.isDefault,
     this.isExpand = false,
@@ -33,10 +33,10 @@ class CitizenDigitalCarrier extends StatefulWidget
   Function handleSubmit;
 
   @override
-  State<CitizenDigitalCarrier> createState() => _CitizenDigitalCarrierState();
+  State<CitizenDigitalCarrierInfo> createState() => _CitizenDigitalCarrierInfoState();
 }
 
-class _CitizenDigitalCarrierState extends State<CitizenDigitalCarrier> {
+class _CitizenDigitalCarrierInfoState extends State<CitizenDigitalCarrierInfo> {
   final TextEditingController _controller = TextEditingController();
 
   @override
