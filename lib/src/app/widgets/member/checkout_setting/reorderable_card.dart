@@ -9,6 +9,15 @@ abstract class DefaultCarrierInterface {
 }
 
 class ReorderableCard extends StatefulWidget {
+  ReorderableCard({
+    Key? key,
+    required this.item,
+    required this.height,
+    required this.isSelected,
+    this.isEditing = false,
+    this.isDragging = false,
+  }) : super(key: key);
+
   late double height;
 
   late bool isSelected;
@@ -17,13 +26,7 @@ class ReorderableCard extends StatefulWidget {
 
   bool? isEditing;
 
-  ReorderableCard({
-    Key? key,
-    required this.item,
-    required this.height,
-    required this.isSelected,
-    this.isEditing = false,
-  }) : super(key: key);
+  bool? isDragging;
 
   @override
   State<ReorderableCard> createState() => _ReorderableCardState();
@@ -31,7 +34,7 @@ class ReorderableCard extends StatefulWidget {
 
 class _ReorderableCardState extends State<ReorderableCard> {
   final Radius _radiusValue = const Radius.circular(4.0);
-
+  final double _sortIndicatorHeight = 30.0;
   @override
   Widget build(BuildContext context) {
     Color _selectedColor = widget.isSelected
@@ -60,9 +63,36 @@ class _ReorderableCardState extends State<ReorderableCard> {
       ),
     );
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
-      child: SizedBox(
+    Widget sortIndicator = SizedBox(
+      height: _sortIndicatorHeight,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+        child: Row(
+          children: [
+            Expanded(
+              child: Container(
+                color: UdiColors.brownGrey2,
+                height: 1,
+              ),
+            ),
+            const SizedBox(
+              width: 30.0,
+              child: Image(
+                image: AssetImage('assets/images/icon_other_filter_sort.png'),
+              ),
+            ),
+            Expanded(
+                child: Container(
+              color: UdiColors.brownGrey2,
+              height: 1,
+            )),
+          ],
+        ),
+      ),
+    );
+
+    List<Widget> children = [
+      SizedBox(
         height: widget.height,
         child: Card(
           elevation: 3.0,
@@ -71,6 +101,22 @@ class _ReorderableCardState extends State<ReorderableCard> {
             Expanded(child: widget.item),
             _dragIndicator,
           ]),
+        ),
+      ),
+    ];
+
+    if (widget.isSelected && widget.isDragging == false) {
+      children.insert(1, sortIndicator);
+    }
+    double height = widget.isSelected && widget.isDragging == false
+        ? widget.height + _sortIndicatorHeight
+        : widget.height;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: SizedBox(
+        height: height,
+        child: Column(
+          children: children,
         ),
       ),
     );

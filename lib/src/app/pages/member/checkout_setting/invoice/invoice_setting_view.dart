@@ -361,6 +361,7 @@ class _InvoiceSettingPageState
                       isSelected: true,
                       height: _carrierCards[index].height,
                       item: _carrierCards[index].item,
+                      isDragging: true,
                     ),
                   ),
                 );
