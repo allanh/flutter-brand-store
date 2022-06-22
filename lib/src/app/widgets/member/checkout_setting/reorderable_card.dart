@@ -112,7 +112,9 @@ class _ReorderableCardState extends State<ReorderableCard> {
         ? widget.height + _sortIndicatorHeight
         : widget.height;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      padding: widget.isSelected
+          ? EdgeInsets.zero
+          : const EdgeInsets.symmetric(vertical: 5.0),
       child: SizedBox(
         height: height,
         child: Column(
