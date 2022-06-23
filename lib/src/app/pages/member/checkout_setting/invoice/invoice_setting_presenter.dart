@@ -6,7 +6,9 @@ class InvoiceSettingPresenter extends Presenter {
       : getInvoiceSettingUseCase = GetInvoiceSettingUseCase(repo),
         submitDonationCodeUseCase = SubmitDonationCodeUseCase(repo),
         submitMobileCarrierUseCase = SubmitMobileCarrierUseCase(repo),
-        changeDefaultCarrierUseCase = ChangeDefaultCarrierUseCase(repo);
+        changeDefaultCarrierUseCase = ChangeDefaultCarrierUseCase(repo),
+        submitCitizenDigitalCarrierUseCase =
+            SubmitCitizenDigitalCarrierUseCase(repo);
 
   late Function getInvoiceSettingOnNext;
   late Function getInvoiceSettingOnComplete;
@@ -44,6 +46,19 @@ class InvoiceSettingPresenter extends Presenter {
     submitMobileCarrierUseCase.execute(
       _SubmitMobileCarrierUseCaseObserver(this),
       SubmitMobileCarrierUseCaseParams(id, carrier),
+    );
+  }
+
+  late Function submitCitizenDigitalCarrierOnNext;
+  late Function submitCitizenDigitalCarrierOnComplete;
+  late Function submitCitizenDigitalCarrierOnError;
+
+  final SubmitCitizenDigitalCarrierUseCase submitCitizenDigitalCarrierUseCase;
+
+  void submitCitizenDigitalCarrier(id, carrier) {
+    submitCitizenDigitalCarrierUseCase.execute(
+      _SubmitCitizenDigitalCarrierUseCaseObserver(this),
+      SubmitCitizenDigitalCarrierUseCaseParams(id, carrier),
     );
   }
 
@@ -135,6 +150,27 @@ class _SubmitMobileCarrierUseCaseObserver
   @override
   void onNext(response) {
     presenter.submitMobileCarrierOnNext(response?.result);
+  }
+}
+
+class _SubmitCitizenDigitalCarrierUseCaseObserver
+    extends Observer<SubmitCitizenDigitalCarrierUseCaseResponse> {
+  final InvoiceSettingPresenter presenter;
+  _SubmitCitizenDigitalCarrierUseCaseObserver(this.presenter);
+
+  @override
+  void onComplete() {
+    presenter.submitCitizenDigitalCarrierOnComplete();
+  }
+
+  @override
+  void onError(e) {
+    presenter.submitCitizenDigitalCarrierOnError(e);
+  }
+
+  @override
+  void onNext(response) {
+    presenter.submitCitizenDigitalCarrierOnNext(response?.result);
   }
 }
 

@@ -118,6 +118,48 @@ class SubmitMobileCarrierUseCaseParams {
   SubmitMobileCarrierUseCaseParams(this.id, this.carrier);
 }
 
+class SubmitCitizenDigitalCarrierUseCase extends UseCase<
+    SubmitCitizenDigitalCarrierUseCaseResponse,
+    SubmitCitizenDigitalCarrierUseCaseParams> {
+  final InvoiceSettingRepository repo;
+  SubmitCitizenDigitalCarrierUseCase(this.repo);
+
+  @override
+  Future<Stream<SubmitCitizenDigitalCarrierUseCaseResponse?>>
+      buildUseCaseStream(
+          SubmitCitizenDigitalCarrierUseCaseParams? params) async {
+    final controller =
+        StreamController<SubmitCitizenDigitalCarrierUseCaseResponse>();
+
+    try {
+      // Submit citizen digital carrier.
+      final response =
+          await repo.submitCitizenDigitalCarrier(params?.id, params!.carrier);
+      // Adding it triggers the .onNext() in the 'Observer'
+      // It is usually better to wrap the response inside a response object.
+      controller.add(SubmitCitizenDigitalCarrierUseCaseResponse(response));
+      logger.finest('SubmitCitizenDigitalCarrierUseCaseResponse successful.');
+      controller.close();
+    } catch (e) {
+      logger.severe('SubmitCitizenDigitalCarrierUseCaseResponse failure.');
+      // Trigger .onError
+      controller.addError(e);
+    }
+    return controller.stream;
+  }
+}
+
+class SubmitCitizenDigitalCarrierUseCaseParams {
+  String? id;
+  String carrier;
+  SubmitCitizenDigitalCarrierUseCaseParams(this.id, this.carrier);
+}
+
+class SubmitCitizenDigitalCarrierUseCaseResponse {
+  final bool result;
+  SubmitCitizenDigitalCarrierUseCaseResponse(this.result);
+}
+
 class ChangeDefaultCarrierUseCase extends UseCase<
     ChangeDefaultCarrierUseCaseResponse, ChangeDefaultCarrierUseCaseParams> {
   final InvoiceSettingRepository repo;

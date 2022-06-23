@@ -15,9 +15,11 @@ class CitizenDigitalCarrierInfo extends StatefulWidget
     required this.isDefault,
     this.isExpand = false,
     this.code = '',
+    required this.isValid,
     required this.handleCollapse,
     required this.handleExpand,
     required this.handleSubmit,
+    required this.handleCarrierChange,
   }) : super(key: key);
   @override
   bool isDefault;
@@ -26,11 +28,15 @@ class CitizenDigitalCarrierInfo extends StatefulWidget
 
   bool isExpand;
 
+  bool isValid;
+
   Function handleCollapse;
 
   Function handleExpand;
 
   Function handleSubmit;
+
+  Function handleCarrierChange;
 
   @override
   State<CitizenDigitalCarrierInfo> createState() =>
@@ -59,12 +65,12 @@ class _CitizenDigitalCarrierInfoState extends State<CitizenDigitalCarrierInfo> {
         .copyWith(color: UdiColors.brownGrey2);
 
     SizedBox _certificateCodeInputTile = SizedBox(
-      height: 36.0,
+      height: widget.isValid ? 36.0 : 66.0,
       child: TextField(
         controller: _controller,
         textInputAction: TextInputAction.send,
         maxLength: 16,
-        onChanged: (text) => setState(() => widget.code = text),
+        onChanged: (text) => widget.handleCarrierChange(text),
         cursorColor: UdiColors.veryLightGrey2,
         decoration: InputDecoration(
           labelText: widget.code,
@@ -73,9 +79,17 @@ class _CitizenDigitalCarrierInfoState extends State<CitizenDigitalCarrierInfo> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 18.0),
           hintText: '請輸入自然人憑證',
           hintStyle: _hintStyle,
-          border: _buildTextFieldBorder(),
-          enabledBorder: _buildTextFieldBorder(),
-          focusedBorder: _buildTextFieldBorder(),
+          errorText: widget.isValid ? null : '請輸入有效憑證條碼!',
+          errorStyle: Theme.of(context).textTheme.caption?.copyWith(
+                color: UdiColors.strawberry,
+                fontSize: 12.0,
+              ),
+          errorBorder: _buildTextFieldBorder(color: UdiColors.strawberry),
+          focusedErrorBorder:
+              _buildTextFieldBorder(color: UdiColors.strawberry),
+          border: _buildTextFieldBorder(color: UdiColors.veryLightGrey2),
+          enabledBorder: _buildTextFieldBorder(color: UdiColors.veryLightGrey2),
+          focusedBorder: _buildTextFieldBorder(color: UdiColors.veryLightGrey2),
         ),
       ),
     );
@@ -154,9 +168,9 @@ class _CitizenDigitalCarrierInfoState extends State<CitizenDigitalCarrierInfo> {
         ));
   }
 
-  OutlineInputBorder _buildTextFieldBorder() {
+  OutlineInputBorder _buildTextFieldBorder({required Color color}) {
     return OutlineInputBorder(
-      borderSide: const BorderSide(color: UdiColors.veryLightGrey2, width: 1.0),
+      borderSide: BorderSide(color: color, width: 1.0),
       borderRadius: BorderRadius.circular(4.0),
     );
   }

@@ -70,6 +70,28 @@ class DataInvoiceSettingRepository extends InvoiceSettingRepository {
   }
 
   @override
+  Future submitCitizenDigitalCarrier(id, carrierId) async {
+    dynamic params = {
+      "invoice_type": "citizen",
+      "carrier_no_person": carrierId,
+      "is_default": 0
+    };
+    if (id != null) {
+      params["main_id"] = id;
+    }
+
+    /// 有流水號(id)則呼叫更新載具的 API，反之，呼叫新增載具的 API
+    String path = id == null ? Api.addCarrier : Api.updateCarrier;
+    try {
+      final response = await HttpUtils.instance.post(path, params: params);
+      return response.isSuccess;
+    } catch (e) {
+      debugPrint(e.toString());
+      throw Exception('Failed to add carrier.');
+    }
+  }
+
+  @override
   Future changeDefaultCarrier(type, id, carrierId, title) async {
     dynamic params = {"invoice_type": type.value, "is_default": 1};
     if (id != null) {

@@ -7,5 +7,7 @@ abstract class InvoiceSettingRepository {
 
   Future<dynamic> submitMobileCarrier(id, carrier);
 
+  Future<dynamic> submitCitizenDigitalCarrier(id, carrierId);
+
   Future<dynamic> changeDefaultCarrier(CarrierType type, id, carrierId, title);
 }

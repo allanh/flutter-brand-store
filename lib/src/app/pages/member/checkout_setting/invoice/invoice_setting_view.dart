@@ -151,14 +151,40 @@ class _InvoiceSettingPageState
         }
       }
 
+      /// 發票歸戶
+      void handleMembershipCarrierRegister() {
+        showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => const CarrierRegisterDialog(),
+        );
+      }
+
       /// 儲存手機載具
       void handleSubmitMobileCarrier(String carrier) {
-        debugPrint(carrier);
         controller.submitMobileCarrier(carrier);
       }
 
+      /// 控制手機載具輸入
+      void handleMobileCarrierChange(String text) {
+        setState(() {
+          _mobileCarrier = text;
+          controller.invoiceInfos?.mobileCarrier?.carrierId = _mobileCarrier;
+        });
+      }
+
       /// 儲存自然人憑證載具
-      void handleSubmitCitizenDigitalCertificateCarrier(String code) {}
+      void handleSubmitCitizenDigitalCertificateCarrier(String code) {
+        controller.submitCitizenDigitalCarrier(code);
+      }
+
+      /// 控制自然人憑證輸入
+      void handleCitizenDigitalCarrierChange(String text) {
+        setState(() {
+          _citizenDigitalCarrier = text;
+          controller.invoiceInfos?.citizenDigitalCarrier?.carrierId =
+              _citizenDigitalCarrier;
+        });
+      }
 
       /// 儲存公司統編載具
       void handleSubmitValueAddedTaxCarrier(String code, String title) {}
@@ -172,22 +198,6 @@ class _InvoiceSettingPageState
       /// 開啟愛心捐贈碼查詢網頁
       void handleOpenDonationCodeWeb() {
         context.pushNamed(donationCodeWebRouteName);
-      }
-
-      /// 控制捐贈碼輸入
-      void handleCarrierChange(String text) {
-        setState(() {
-          _mobileCarrier = text;
-          controller.invoiceInfos?.mobileCarrier?.carrierId = _mobileCarrier;
-        });
-      }
-
-      /// 發票歸戶
-      void handleMembershipCarrierRegister() {
-        showDialog<String>(
-          context: context,
-          builder: (BuildContext context) => const CarrierRegisterDialog(),
-        );
       }
 
       /// 建立卡片
@@ -222,7 +232,8 @@ class _InvoiceSettingPageState
                         handleCollapse(CarrierType.mobileCarrier),
                     handleEapand: () => handleExpand(CarrierType.mobileCarrier),
                     handleSubmit: (code) => handleSubmitMobileCarrier(code),
-                    handleCarrierChange: (text) => handleCarrierChange(text),
+                    handleCarrierChange: (text) =>
+                        handleMobileCarrierChange(text),
                   ),
                   height: controller
                       .mobileCarrierCardHeight(_isExpandedMobileCarrier),
@@ -235,20 +246,20 @@ class _InvoiceSettingPageState
                   item: CitizenDigitalCarrierInfo(
                     isDefault: index == 0,
                     isExpand: _isExpandedCitizenDigitalCertificateCarrier,
+                    isValid: controller.isValidCitizenDigitalCarrier(
+                        _citizenDigitalCarrier ?? ''),
                     code: _citizenDigitalCarrier,
                     handleCollapse: () =>
                         handleCollapse(CarrierType.citizenDigitalCarrier),
                     handleExpand: () =>
                         handleExpand(CarrierType.citizenDigitalCarrier),
                     handleSubmit: (code) =>
-                        handleSubmitCitizenDigitalCertificateCarrier,
+                        handleSubmitCitizenDigitalCertificateCarrier(code),
+                    handleCarrierChange: (text) =>
+                        handleCitizenDigitalCarrierChange(text),
                   ),
-                  height: _isExpandedCitizenDigitalCertificateCarrier
-                      ? 190.0
-                      : _citizenDigitalCarrier != null &&
-                              _citizenDigitalCarrier.isNotEmpty
-                          ? 88.0
-                          : 56.0,
+                  height: controller.citizenDigitalCarrierCardHeight(
+                      _isExpandedCitizenDigitalCertificateCarrier),
                   isSelected: index == 0);
 
             /// 公司-三聯式電子發票
