@@ -12,6 +12,7 @@ import 'tag.dart';
 import 'event.dart';
 import '../status.dart';
 import '../../../extension/iterable_extension.dart';
+import 'package:brandstores/src/extension/string_extension.dart';
 part 'product.g.dart';
 
 /// 商品狀態
@@ -272,6 +273,10 @@ class Product {
   List<MyPlusImageInfo>? get imageList =>
       mediaList?.where((element) => element.type == ImageType.image).toList();
 
+  /// 折數
+  double? get discountRate =>
+      (promotionApp?.type == PromotionType.rate) ? promotionApp?.rate : null;
+
   /// 倒數時間
   Duration? get countdownDuration {
     if (productInfo?.isEmpty == true) return null;
@@ -303,11 +308,11 @@ class Product {
       false;
 
   /// default specification text
-  String get defaultSpecText {
+  String getDefaultSpecText(String? preorderDate) {
     final buffer = StringBuffer();
-    buffer.write('請選擇　');
+    buffer.write('請選擇 ');
 
-    if (ShippedType.preorder == shippedType) {
+    if (ShippedType.preorder == shippedType && preorderDate == null) {
       buffer.write('出貨日期/');
     }
     if (specLv1Title?.isNotEmpty == true) {
@@ -323,7 +328,8 @@ class Product {
   /**
      * 請選擇 出貨日期/尺寸/顏色/數量
      * 已選 M, 深黑色, 1 件
-    private fun getSelectedSpecText(specName1: String?, specName2: String?, count: Int? = 0): SpannableStringBuilder? =
+     ** /
+    getSelectedSpecText(specName1: String?, specName2: String?, count: Int? = 0): SpannableStringBuilder? =
         SpannableStringBuilder(getString(R.string.product_chose_text)).append(" ")
             .apply {
                 specName1?.takeIf { it.isNotEmpty() }?.let { append("$it, ") }
@@ -335,15 +341,14 @@ class Product {
             */
 
   /// 規格：『訂製、預購、客約』出貨日期備註
-  String? get shippedNote {
+  String? getShippedNote(String? preorderDate) {
     switch (shippedType) {
       case ShippedType.custom:
         return '此商品於付款完成後 $shippedCustomDay 天開始陸續出貨';
       case ShippedType.preorder:
-        // TODO: 改從購物車拿預計出貨日
-        return null;
-      //final date = shippedPreorderDate?.first.replaceAll('-', '/');
-      //return date != null ? '預計 $date 出貨' : null;
+        return preorderDate?.isNotEmpty == true
+            ? '預計 ${preorderDate?.convertDateFormat(serverDateFormat, shortDateFormat)} 出貨'
+            : null;
       case ShippedType.contact:
         return '因商品屬性，將有專人與您約定送貨日期';
       default:
@@ -360,8 +365,21 @@ class Product {
       : null;
 
   // 取得規格商品
-  ProductInfo? getProudctInfo(int productId) =>
-      productInfo?.firstWhereOrNull((info) => info.productId == productId);
+  ProductInfo? getProudctInfo(int? productId) => productId != null
+      ? productInfo?.firstWhereOrNull((info) => info.productId == productId)
+      : null;
+
+  // 取得第一個可銷售的商品
+  ProductInfo? getFirstAvaliabedProudctInfo() =>
+      productInfo?.firstWhereOrNull((info) => (info.quantity ?? 0) > 0);
+
+  // 取得已選規格的參數, 若無 productId 會取 productInfo 第一個可銷售的商品
+  AddToCartParams getAddToCartParams(int? productId) => AddToCartParams(
+      no: no,
+      productId: productId,
+      selectedProductInfo:
+          getProudctInfo(productId ?? productInfo?.first.productId) ??
+              getFirstAvaliabedProudctInfo());
 }
 
 @JsonSerializable()
@@ -462,20 +480,25 @@ class AddToCartParams {
   int? productId;
   @JsonKey(name: 'qty')
   int? quantity;
-  @JsonKey(name: 'addon_fixed_price')
-  int? addonFixedPrice;
   @JsonKey(name: 'delivery_date')
   String? deliveryDate;
   @JsonKey(name: 'addon')
   List<AddToCartParams>? addon;
 
-  AddToCartParams(
-      {this.no,
-      this.productId,
-      this.quantity,
-      this.addonFixedPrice,
-      this.deliveryDate,
-      this.addon});
+  // 加購品價格
+  int? addonPrice;
+  // productId 對應的 ProductInfo
+  ProductInfo? selectedProductInfo;
+
+  AddToCartParams({
+    this.no,
+    this.productId,
+    this.quantity,
+    this.deliveryDate,
+    this.addon,
+    this.addonPrice,
+    this.selectedProductInfo,
+  });
 
   factory AddToCartParams.fromJson(Map<String, dynamic> json) =>
       _$AddToCartParamsFromJson(json);

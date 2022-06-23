@@ -36,7 +36,7 @@ class ProductRecommendWidget extends StatelessWidget {
                       right: index == (recomList.length - 1) ? 12 : 0),
                   child: ProductItemWidget(
                     product: recomList[index],
-                    onTapItem: (link) => {
+                    onItemTapped: (link) => {
                       if (onTapItem != null)
                         {onTapItem!(Link(LinkType.product, null))}
                     },

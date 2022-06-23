@@ -9,10 +9,10 @@ import '../member/center/horizontal_product_list_card.dart';
 class ProductItemWidget extends StatelessWidget {
   final Product product;
   final int? productId;
-  final ValueChanged<Product>? onTapItem;
+  final ValueChanged<Product>? onItemTapped;
 
   const ProductItemWidget(
-      {Key? key, required this.product, this.productId, this.onTapItem})
+      {Key? key, required this.product, this.productId, this.onItemTapped})
       : super(key: key);
 
 // 價格
@@ -33,7 +33,7 @@ class ProductItemWidget extends StatelessWidget {
         height: 236,
         child: InkWell(
             onTap: () => {
-                  if (onTapItem != null) {onTapItem!(product)}
+                  if (onItemTapped != null) {onItemTapped!(product)}
                 },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

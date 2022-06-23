@@ -28,42 +28,38 @@ class ProductAddonRowWidget extends StatelessWidget {
         .caption
         ?.copyWith(fontSize: 14.0, color: UdiColors.strawberry);
 
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        final ratio = SizeConfig.screenRatio;
-        return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          // 提示文字
-          DefaultTextStyle(
-              style: Theme.of(context).textTheme.caption?.copyWith(
-                      fontSize: 14.0, color: UdiColors.greyishBrown) ??
-                  const TextStyle(),
-              child: SizedBox(
-                  height: 24 * ratio,
-                  child: selectedAddons.isNotEmpty
-                      ? Text.rich(TextSpan(children: [
-                          const TextSpan(text: "已選購 "),
-                          TextSpan(
-                              text: selectedAddons.length.toString(),
-                              style: _strawberryStyle),
-                          const TextSpan(text: " 件，共 "),
-                          TextSpan(
-                              text: selectedAddons
-                                  .sumBy((e) => e.addonFixedPrice ?? 0)
-                                  .toDollarString(),
-                              style: _strawberryStyle),
-                        ]))
-                      : const Text('一起買，更優惠'))),
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      // 提示文字
+      DefaultTextStyle(
+          style: Theme.of(context)
+                  .textTheme
+                  .caption
+                  ?.copyWith(fontSize: 14.0, color: UdiColors.greyishBrown) ??
+              const TextStyle(),
+          child: SizedBox(
+              height: 24 * SizeConfig.screenRatio,
+              child: selectedAddons.isNotEmpty
+                  ? Text.rich(TextSpan(children: [
+                      const TextSpan(text: "已選購 "),
+                      TextSpan(
+                          text: selectedAddons.length.toString(),
+                          style: _strawberryStyle),
+                      const TextSpan(text: " 件，共 "),
+                      TextSpan(
+                          text: selectedAddons
+                              .sumBy((e) => e.addonPrice ?? 0)
+                              .toDollarString(),
+                          style: _strawberryStyle),
+                    ]))
+                  : const Text('一起買，更優惠'))),
 
-          SizedBox(height: 8 * ratio),
-          // 加購品列表
-
-          SizedBox(
-            height: 81 * ratio,
-            child: _buildGrid(ratio),
-          )
-        ]);
-      },
-    );
+      SizedBox(height: 8 * SizeConfig.screenRatio),
+      // 加購品列表
+      SizedBox(
+        height: 81 * SizeConfig.screenRatio,
+        child: _buildGrid(SizeConfig.screenRatio),
+      )
+    ]);
   }
 
   GridView _buildGrid(double ratio) {

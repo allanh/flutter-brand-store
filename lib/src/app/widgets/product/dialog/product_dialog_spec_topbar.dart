@@ -10,24 +10,24 @@ import '../../../../domain/entities/product/product.dart';
 
 /// 選規 Dialog 的標題列
 class ProductDialogSpecTopBarWidget extends StatelessWidget {
-  final ProductInfo info; // 已選的規格
+  final AddToCartParams selectedParams; // 已選的規格
   final SpecType? specType; // 規格類型
   final double? promotionRate; // 折數
-  final String? preorderDate; // 出貨日期
-  final double? quantity; // 數量
+  final AddToCartParams? selectedSpec;
 
-  const ProductDialogSpecTopBarWidget(
-      {Key? key,
-      required this.info,
-      this.specType = SpecType.none,
-      this.promotionRate,
-      this.preorderDate,
-      this.quantity})
-      : super(key: key);
+  ProductInfo? get _info => selectedParams.selectedProductInfo;
+
+  const ProductDialogSpecTopBarWidget({
+    Key? key,
+    required this.selectedParams,
+    this.specType = SpecType.none,
+    this.promotionRate,
+    this.selectedSpec,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final _theme = Theme.of(context);
 
     return SizedBox(
         height: 125,
@@ -54,9 +54,9 @@ class ProductDialogSpecTopBarWidget extends StatelessWidget {
                           vertical: 3,
                         ),
                         child: Text(
-                          info.marketPrice?.toDollarString() ?? '',
+                          _info?.marketPrice?.toDollarString() ?? '',
                           textAlign: TextAlign.left,
-                          style: theme.textTheme.caption!.copyWith(
+                          style: _theme.textTheme.caption!.copyWith(
                             height: 1.7142857, // 24pt
                             color: UdiColors.brownGrey,
                             decoration: TextDecoration.lineThrough,
@@ -64,7 +64,8 @@ class ProductDialogSpecTopBarWidget extends StatelessWidget {
                         )),
 
                     // 已選規格字串
-                    if (SpecType.none != specType || quantity != null)
+                    if (SpecType.none != specType ||
+                        selectedSpec?.quantity != null)
                       _buildSelectedSpec(context),
                   ],
                 )),
@@ -95,9 +96,9 @@ class ProductDialogSpecTopBarWidget extends StatelessWidget {
           width: 100,
           child: AspectRatio(
               aspectRatio: 1,
-              child: info.imageUrl?.isNotEmpty == true
+              child: _info?.imageUrl?.isNotEmpty == true
                   ? CachedNetworkImage(
-                      imageUrl: info.imageUrl!,
+                      imageUrl: _info!.imageUrl!,
                       fit: BoxFit.fill,
                       alignment: Alignment.topCenter,
                       errorWidget: (context, url, error) =>
@@ -108,9 +109,9 @@ class ProductDialogSpecTopBarWidget extends StatelessWidget {
   /// 價格
   Widget _buildPrice(BuildContext context) => Row(
         children: [
-          if (info.proposedPrice != null)
+          if (_info?.proposedPrice != null)
             // 網路價
-            Text(info.proposedPrice?.toDollarString() ?? '',
+            Text(_info?.proposedPrice?.toDollarString() ?? '',
                 textAlign: TextAlign.left,
                 style: Theme.of(context).textTheme.headline6!.copyWith(
                     height: 1.388888, // 25pt
@@ -157,24 +158,24 @@ class ProductDialogSpecTopBarWidget extends StatelessWidget {
                       style: Theme.of(context).textTheme.caption?.copyWith(
                           fontSize: 14.0, color: UdiColors.brownGrey)),
                   // 出貨日期
-                  if (preorderDate?.isNotEmpty == true)
-                    TextSpan(text: '$preorderDate, '),
+                  if (selectedSpec?.deliveryDate?.isNotEmpty == true)
+                    TextSpan(text: '${selectedSpec?.deliveryDate}, '),
 
                   // 規格1
-                  if (info.specLv1Name?.isNotEmpty == true)
-                    TextSpan(text: info.specLv1Name!),
+                  if (_info?.specLv1Name?.isNotEmpty == true)
+                    TextSpan(text: _info?.specLv1Name!),
 
                   // 規格2
-                  if (info.specLv2Name?.isNotEmpty == true)
-                    TextSpan(text: ', ${info.specLv2Name!}'),
+                  if (_info?.specLv2Name?.isNotEmpty == true)
+                    TextSpan(text: ', ${_info?.specLv2Name!}'),
 
                   // 數量
-                  if (quantity != null && (quantity ?? 0) > 0)
+                  if (selectedSpec?.quantity != null)
                     TextSpan(
-                        text: ', $quantity',
+                        text: ', ${selectedSpec?.quantity}',
                         style: Theme.of(context).textTheme.caption?.copyWith(
                             fontSize: 14.0, color: UdiColors.strawberry)),
-                  if (quantity != null && (quantity ?? 0) > 0)
+                  if (selectedSpec?.quantity != null)
                     const TextSpan(text: " 件"),
                 ]),
                 maxLines: 2,

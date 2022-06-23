@@ -15,11 +15,11 @@ enum SpecType {
 /// 前台顯⽰
 enum SpecDisplay {
   @JsonValue('TEXT')
-  text, // 無規
+  text, // 文字
   @JsonValue('PICTURE')
-  picture, // 單規
+  picture, // 圖片
   @JsonValue('TEXT_PICTURE')
-  textPicture, // 雙規
+  textPicture, // 文字+圖片
 }
 
 @JsonSerializable()
@@ -49,30 +49,19 @@ class SpecSku {
   @JsonKey(name: 'is_product')
   bool? isProduct;
 
-  // 已選規格
-  ShippedType? shippedType;
-  // (預購/客約) 商品出貨日期 EX: 2021-09-30, 2021-10-10
-  String? shippedPreorderDate;
-  // (訂製) 備貨天數 (日) EX: 14
-  String? shippedCustomDay;
-  String? quantity; //規格品可銷量
-
-  SpecSku(
-      {this.level,
-      this.specName,
-      this.imageUrl,
-      this.specLv1Id,
-      this.specLv1Name,
-      this.specImageUrl,
-      this.sku,
-      this.spec2,
-      this.specLv2Id,
-      this.specLv2Name,
-      this.isProduct,
-      this.shippedType,
-      this.shippedPreorderDate,
-      this.shippedCustomDay,
-      this.quantity});
+  SpecSku({
+    this.level,
+    this.specName,
+    this.imageUrl,
+    this.specLv1Id,
+    this.specLv1Name,
+    this.specImageUrl,
+    this.sku,
+    this.spec2,
+    this.specLv2Id,
+    this.specLv2Name,
+    this.isProduct,
+  });
 
   factory SpecSku.fromJson(Map<String, dynamic> json) =>
       _$SpecSkuFromJson(json);

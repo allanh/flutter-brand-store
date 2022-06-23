@@ -143,9 +143,11 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                         // 底部按鈕列
                         ProductBottomBarWidget(
                           product: controller.product!,
-                          favoriteTapped: () {},
-                          addToCartTapped: () {},
-                          buyNowTapped: () {},
+                          favoriteTapped: () =>
+                              controller.handlefavoriteTapped(),
+                          addToCartTapped: () =>
+                              controller.handleAddToCartTapped(),
+                          buyNowTapped: () => controller.handleBuyNowTapped(),
                         ),
                       ],
                     )
@@ -229,13 +231,9 @@ class _ProductPageState extends ViewState<ProductPage, ProductController> {
                         marginTop: 8,
                         view: ProductSpecRowWidget(
                           product: product,
+                          params: controller.selectedSpecParams,
                         ),
-                        moreTapped: () => context.pushNamed(specName, params: {
-                              QueryKey.goodsNo: product.no!
-                            }, extra: {
-                              QueryKey.product: product,
-                              QueryKey.productController: controller
-                            })),
+                        moreTapped: () => controller.openSpecPage()),
 
                   // 加購品
                   if (product.addonInfo?.isNotEmpty == true)
