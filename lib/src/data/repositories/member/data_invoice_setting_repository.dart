@@ -27,20 +27,27 @@ class DataInvoiceSettingRepository extends InvoiceSettingRepository {
   }
 
   @override
-  Future submitDonationCode(code) async {
+  Future submitDonationCode(id, code) async {
+    dynamic params = {
+      "invoice_type": "donation",
+      "donation_npoban": [
+        {
+          "npoban_no": code,
+          "npoban_name": '',
+          "is_enabled": 1,
+        }
+      ],
+      "is_default": 1
+    };
+    if (id != null) {
+      params["main_id"] = id;
+    }
+
+    /// 有流水號(id)則呼叫更新載具的 API，反之，呼叫新增載具的 API
+    String path = id == null ? Api.addCarrier : Api.updateCarrier;
     try {
-      final response = await HttpUtils.instance.post(Api.addCarrier, params: {
-        "invoice_type": "donation",
-        "donation_npoban": [
-          {
-            "npoban_no": code,
-            "is_enabled": 1,
-          }
-        ],
-        "is_default": 1
-      });
-      if (response.isSuccess) return BaseResponse.fromJson(response);
-      throw Exception('Failed to add carrier.');
+      final response = await HttpUtils.instance.post(path, params: params);
+      return response.isSuccess;
     } catch (e) {
       debugPrint(e.toString());
       throw Exception('Failed to add carrier.');

@@ -3,7 +3,7 @@ import '../../entities/member/invoice.dart';
 abstract class InvoiceSettingRepository {
   Future<dynamic> getInvoiceSetting();
 
-  Future<dynamic> submitDonationCode(code);
+  Future<dynamic> submitDonationCode(id, code);
 
   Future<dynamic> submitMobileCarrier(id, carrier);
 

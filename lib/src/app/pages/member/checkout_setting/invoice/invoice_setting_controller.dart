@@ -36,8 +36,8 @@ class InvoiceSettingController extends Controller {
       debugPrint('Could not retrieve member invoice.');
     };
 
-    invoiceInfoPresenter.submitDonationCodeOnNext = () {
-      refreshUI();
+    invoiceInfoPresenter.submitDonationCodeOnNext = (bool isSuccess) {
+      if (isSuccess) refreshUI();
     };
 
     invoiceInfoPresenter.submitDonationCodeOnComplete = () {
@@ -105,8 +105,8 @@ class InvoiceSettingController extends Controller {
   void getInvoiceSetting() => invoiceInfoPresenter.getInvoiceSetting();
 
   /// 常用發票新增愛心捐贈
-  void submitDonationCode(code) =>
-      invoiceInfoPresenter.submitDonationCode(code);
+  void submitDonationCode(code) => invoiceInfoPresenter.submitDonationCode(
+      _invoiceInfos?.donationNPO?.id, code);
 
   /// 計算手機載具卡片需要高度
   double mobileCarrierCardHeight(

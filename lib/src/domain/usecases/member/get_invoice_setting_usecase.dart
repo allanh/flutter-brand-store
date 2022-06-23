@@ -54,7 +54,7 @@ class SubmitDonationCodeUseCase extends UseCase<
 
     try {
       // Submit donation code.
-      final response = await repo.submitDonationCode(params!.code);
+      final response = await repo.submitDonationCode(params?.id, params!.code);
       // Adding it triggers the .onNext() in the 'Observer'
       // It is usually better to wrap the response inside a response object.
       controller.add(SubmitDonationCodeUseCaseResponse(response));
@@ -70,13 +70,14 @@ class SubmitDonationCodeUseCase extends UseCase<
 }
 
 class SubmitDonationCodeUseCaseResponse {
-  final BaseResponse response;
-  SubmitDonationCodeUseCaseResponse(this.response);
+  final bool result;
+  SubmitDonationCodeUseCaseResponse(this.result);
 }
 
 class SubmitDonationCodeUseCaseParams {
+  String? id;
   String code;
-  SubmitDonationCodeUseCaseParams(this.code);
+  SubmitDonationCodeUseCaseParams(this.id, this.code);
 }
 
 class SubmitMobileCarrierUseCase extends UseCase<

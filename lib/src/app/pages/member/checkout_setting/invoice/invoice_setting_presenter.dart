@@ -29,10 +29,10 @@ class InvoiceSettingPresenter extends Presenter {
 
   final SubmitDonationCodeUseCase submitDonationCodeUseCase;
 
-  void submitDonationCode(code) {
+  void submitDonationCode(id, code) {
     submitDonationCodeUseCase.execute(
       _SubmitDonationCodeUseCaseObserver(this),
-      SubmitDonationCodeUseCaseParams(code),
+      SubmitDonationCodeUseCaseParams(id, code),
     );
   }
 
@@ -128,7 +128,7 @@ class _SubmitDonationCodeUseCaseObserver
 
   @override
   void onNext(response) {
-    presenter.submitDonationCodeOnNext(response);
+    presenter.submitDonationCodeOnNext(response?.result);
   }
 }
 
