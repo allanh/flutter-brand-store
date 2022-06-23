@@ -36,15 +36,6 @@ class _MembershipCarrierInfoState extends State<MembershipCarrierInfo> {
       style: Theme.of(context).textTheme.caption!.copyWith(color: _themeColor),
     );
 
-    SizedBox _actionButton = SizedBox(
-      height: 24.0,
-      width: 88.0,
-      child: OutlinedButton(
-        onPressed: () => widget.handleMembershipCarrierRegister(),
-        child: _actionTitle,
-      ),
-    );
-
     Text _carrierId = Text(
       '會員載具   ID:${widget.id}',
       style: Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 14.0),
@@ -55,20 +46,31 @@ class _MembershipCarrierInfoState extends State<MembershipCarrierInfo> {
       style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
     );
 
-    var _topRow = Padding(
+    SizedBox _actionButton = SizedBox(
+      height: 24.0,
+      width: 88.0,
+      child: OutlinedButton(
+        onPressed: () => widget.handleMembershipCarrierRegister(),
+        child: _actionTitle,
+      ),
+    );
+
+    Padding _topRow = Padding(
       padding: const EdgeInsets.only(top: 12.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [_carrierId, _actionButton],
       ),
     );
-    var _hintMessageRow = Expanded(
+
+    Expanded _hintMessageRow = Expanded(
       child: SizedBox(
         height: 34.0,
         child: _hintMessage,
       ),
     );
-    var _bottomRow = Padding(
+
+    Padding _bottomRow = Padding(
       padding: const EdgeInsets.only(bottom: 15.0),
       child: Row(
         mainAxisAlignment: widget.isDefault
@@ -77,6 +79,7 @@ class _MembershipCarrierInfoState extends State<MembershipCarrierInfo> {
         children: widget.isDefault ? [const DefaultIndicator()] : [],
       ),
     );
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Column(

@@ -59,7 +59,7 @@ class _InvoiceSettingPageState
           controller.invoiceInfos?.vatCarrier?.carrierId?.toString();
       String? _valueAddedTaxTitle = controller.invoiceInfos?.vatCarrier?.title;
 
-      /// 控制卡片
+      /// 控制卡片收合/展開
       void handleCarrierExpand(CarrierType type, bool isExpand) {
         setState(() {
           switch (type) {
@@ -79,16 +79,6 @@ class _InvoiceSettingPageState
               break;
           }
         });
-      }
-
-      /// 收合卡片
-      void handleCollapse(CarrierType type) {
-        handleCarrierExpand(type, false);
-      }
-
-      /// 展開卡片
-      void handleExpand(CarrierType type) {
-        handleCarrierExpand(type, true);
       }
 
       /// 調整卡片類別陣列排序
@@ -228,9 +218,10 @@ class _InvoiceSettingPageState
                     isValid:
                         controller.isValidMobileCarrier(_mobileCarrier ?? ''),
                     code: _mobileCarrier,
-                    handleCollapse: () =>
-                        handleCollapse(CarrierType.mobileCarrier),
-                    handleEapand: () => handleExpand(CarrierType.mobileCarrier),
+                    handleEapand: () => handleCarrierExpand(
+                      CarrierType.mobileCarrier,
+                      !_isExpandedMobileCarrier,
+                    ),
                     handleSubmit: (code) => handleSubmitMobileCarrier(code),
                     handleCarrierChange: (text) =>
                         handleMobileCarrierChange(text),
@@ -249,10 +240,10 @@ class _InvoiceSettingPageState
                     isValid: controller.isValidCitizenDigitalCarrier(
                         _citizenDigitalCarrier ?? ''),
                     code: _citizenDigitalCarrier,
-                    handleCollapse: () =>
-                        handleCollapse(CarrierType.citizenDigitalCarrier),
-                    handleExpand: () =>
-                        handleExpand(CarrierType.citizenDigitalCarrier),
+                    handleExpand: () => handleCarrierExpand(
+                      CarrierType.citizenDigitalCarrier,
+                      !_isExpandedCitizenDigitalCertificateCarrier,
+                    ),
                     handleSubmit: (code) =>
                         handleSubmitCitizenDigitalCertificateCarrier(code),
                     handleCarrierChange: (text) =>
@@ -271,10 +262,10 @@ class _InvoiceSettingPageState
                     isExpand: _isExpandedValueAddedTaxCarrier,
                     code: _valueAddedTaxId,
                     title: _valueAddedTaxTitle,
-                    handleCollapse: () =>
-                        handleCollapse(CarrierType.valueAddedTaxCarrier),
-                    handleExpand: () =>
-                        handleExpand(CarrierType.valueAddedTaxCarrier),
+                    handleExpand: () => handleCarrierExpand(
+                      CarrierType.valueAddedTaxCarrier,
+                      !_isExpandedValueAddedTaxCarrier,
+                    ),
                     handleSubmit: (code, title) =>
                         handleSubmitValueAddedTaxCarrier,
                   ),
@@ -307,8 +298,10 @@ class _InvoiceSettingPageState
                     isDefault: index == 0,
                     isExpand: _isExpandedDonationInvoice,
                     npos: controller.invoiceInfos?.donationNPO?.npos,
-                    handleCollpase: () => handleCollapse(CarrierType.donate),
-                    handleExpand: () => handleExpand(CarrierType.donate),
+                    handleExpand: () => handleCarrierExpand(
+                      CarrierType.donate,
+                      !_isExpandedDonationInvoice,
+                    ),
                     handleSubmit: handleSubmitDonationCode,
                     handleOpenDonationCodeWeb: () =>
                         handleOpenDonationCodeWeb(),

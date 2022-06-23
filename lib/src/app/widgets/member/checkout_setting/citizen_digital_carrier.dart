@@ -16,7 +16,6 @@ class CitizenDigitalCarrierInfo extends StatefulWidget
     this.isExpand = false,
     this.code = '',
     required this.isValid,
-    required this.handleCollapse,
     required this.handleExpand,
     required this.handleSubmit,
     required this.handleCarrierChange,
@@ -29,8 +28,6 @@ class CitizenDigitalCarrierInfo extends StatefulWidget
   bool isExpand;
 
   bool isValid;
-
-  Function handleCollapse;
 
   Function handleExpand;
 
@@ -55,14 +52,38 @@ class _CitizenDigitalCarrierInfoState extends State<CitizenDigitalCarrierInfo> {
   @override
   Widget build(BuildContext context) {
     void handleReset() {
-      _controller.clear();
-      widget.code = null;
+      setState(() {
+        _controller.clear();
+        widget.code = null;
+      });
     }
+
+    Text _hintMessage = Text(
+      '自然人憑證條碼為卡片右下方，前兩碼為大寫英文，後14碼為數字，共16碼。',
+      style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
+    );
+
+    Text _title = Text(
+      '個人-自然人憑證',
+      style: Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 14.0),
+    );
+
+    Text _subtitle = Text(
+      widget.code ?? '',
+      style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
+    );
 
     TextStyle _hintStyle = Theme.of(context)
         .textTheme
         .caption!
         .copyWith(color: UdiColors.brownGrey2);
+
+    CarrierActionButtons _carrierActionButtons = CarrierActionButtons(
+      handleReset: () => handleReset(),
+      handleSubmit: widget.code != null && widget.code!.isNotEmpty
+          ? () => widget.handleSubmit(widget.code)
+          : null,
+    );
 
     SizedBox _certificateCodeInputTile = SizedBox(
       height: widget.isValid ? 36.0 : 66.0,
@@ -94,35 +115,13 @@ class _CitizenDigitalCarrierInfoState extends State<CitizenDigitalCarrierInfo> {
       ),
     );
 
-    Text _hintMessage = Text(
-      '自然人憑證條碼為卡片右下方，前兩碼為大寫英文，後14碼為數字，共16碼。',
-      style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
-    );
-
-    Text _title = Text(
-      '個人-自然人憑證',
-      style: Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 14.0),
-    );
-
-    Text _subtitle = Text(
-      widget.code ?? '',
-      style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
-    );
-
-    CarrierActionButtons _carrierActionButtons = CarrierActionButtons(
-      handleReset: () => handleReset(),
-      handleSubmit: widget.code != null && widget.code!.isNotEmpty
-          ? () => widget.handleSubmit(widget.code)
-          : null,
-    );
-
     Row _topRow = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         _title,
         widget.isExpand
             ? CloseButton(
-                onPressed: () => widget.handleCollapse(),
+                onPressed: () => widget.handleExpand(),
               )
             : IconButton(
                 onPressed: () => widget.handleExpand(),
@@ -131,7 +130,8 @@ class _CitizenDigitalCarrierInfoState extends State<CitizenDigitalCarrierInfo> {
               )
       ],
     );
-    var _bottomRow = Row(
+
+    Row _bottomRow = Row(
       mainAxisAlignment: widget.isDefault
           ? MainAxisAlignment.spaceBetween
           : MainAxisAlignment.end,
@@ -144,6 +144,7 @@ class _CitizenDigitalCarrierInfoState extends State<CitizenDigitalCarrierInfo> {
               _carrierActionButtons,
             ],
     );
+
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12.0),
         child: Column(

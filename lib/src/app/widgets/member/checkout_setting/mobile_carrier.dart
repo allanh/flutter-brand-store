@@ -16,7 +16,6 @@ class MobileCarrierInfo extends StatefulWidget
     this.isExpand = false,
     this.code = '',
     required this.isValid,
-    required this.handleCollapse,
     required this.handleEapand,
     required this.handleSubmit,
     required this.handleCarrierChange,
@@ -30,8 +29,6 @@ class MobileCarrierInfo extends StatefulWidget
   bool isExpand;
 
   bool isValid;
-
-  Function handleCollapse;
 
   Function handleEapand;
 
@@ -120,6 +117,22 @@ class _MobileCarrierInfoState extends State<MobileCarrierInfo> {
           : null,
     );
 
+    Row _topRow = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _title,
+        widget.isExpand
+            ? CloseButton(
+                onPressed: () => widget.handleEapand(),
+              )
+            : IconButton(
+                onPressed: () => widget.handleEapand(),
+                icon: const Icon(Icons.edit_rounded),
+                color: UdiColors.brownGrey,
+              )
+      ],
+    );
+
     Row _bottomRow = Row(
       mainAxisAlignment: widget.isDefault
           ? MainAxisAlignment.spaceBetween
@@ -132,22 +145,6 @@ class _MobileCarrierInfoState extends State<MobileCarrierInfo> {
           : [
               _carrierActionButtons,
             ],
-    );
-
-    Row _topRow = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _title,
-        widget.isExpand
-            ? CloseButton(
-                onPressed: () => widget.handleCollapse(),
-              )
-            : IconButton(
-                onPressed: () => widget.handleEapand(),
-                icon: const Icon(Icons.edit_rounded),
-                color: UdiColors.brownGrey,
-              )
-      ],
     );
 
     return Padding(

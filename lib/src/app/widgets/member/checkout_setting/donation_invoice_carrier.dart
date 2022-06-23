@@ -16,7 +16,6 @@ class DonationInvoiceCarrier extends StatefulWidget
     required this.isDefault,
     this.isExpand = false,
     this.npos,
-    required this.handleCollpase,
     required this.handleExpand,
     required this.handleSubmit,
     required this.handleOpenDonationCodeWeb,
@@ -28,8 +27,6 @@ class DonationInvoiceCarrier extends StatefulWidget
   List<NPO>? npos;
 
   bool isExpand;
-
-  Function handleCollpase;
 
   Function handleExpand;
 
@@ -88,6 +85,32 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
       _selectedId = defaultNPO.first.npoId;
     }
 
+    void handleReset() {
+      setState(() {
+        _selectedId = '';
+        _controller.clear();
+        handleEnabledStatusChange('');
+      });
+    }
+
+    void handleDonationChange(donation) {
+      debugPrint(donation);
+      setState(() {
+        _selectedId = donation;
+        widget.npos?.last.npoId = _selectedId;
+        handleEnabledStatusChange(donation);
+      });
+    }
+
+    bool handleEnableSubmit() {
+      /// 如果選擇其他機構但是沒有輸入捐贈碼
+      /// 必須將儲存按鈕反灰
+      bool disable =
+          _selectedNPO?.isEnabled == false && _controller.text.isEmpty;
+
+      return disable;
+    }
+
     Text _searchButtonTitle = Text(
       '捐贈碼查詢',
       style: TextStyle(
@@ -111,52 +134,19 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
       style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
     );
 
-    void handleReset() {
-      setState(() {
-        _selectedId = '';
-        _controller.clear();
-        handleEnabledStatusChange('');
-      });
-    }
-
-    bool handleEnableSubmit() {
-      /// 如果選擇其他機構但是沒有輸入捐贈碼
-      /// 必須將儲存按鈕反灰
-      bool disable =
-          _selectedNPO?.isEnabled == false && _controller.text.isEmpty;
-
-      return disable;
-    }
-
-    void handleDonationChange(donation) {
-      debugPrint(donation);
-      setState(() {
-        _selectedId = donation;
-        widget.npos?.last.npoId = _selectedId;
-        handleEnabledStatusChange(donation);
-      });
-    }
-
-    Row _topRow = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _donationTitle,
-        widget.isExpand
-            ? CloseButton(
-                onPressed: () => widget.handleCollpase(),
-              )
-            : IconButton(
-                onPressed: () => widget.handleExpand(),
-                icon: const Icon(Icons.edit_rounded),
-                color: UdiColors.brownGrey,
-              ),
-      ],
-    );
-
     TextStyle _hintStyle = Theme.of(context).textTheme.caption!.copyWith(
           color: UdiColors.brownGrey2,
           fontSize: 12.0,
         );
+
+    CarrierActionButtons _carrierActionButtons = CarrierActionButtons(
+      handleReset: () => handleReset(),
+      handleSubmit:
+
+          /// 如果選擇其他機構但是沒有輸入捐贈碼
+          /// 必須將儲存按鈕反灰
+          handleEnableSubmit() ? null : () => widget.handleSubmit(_selectedId),
+    );
 
     Row inputCodeRow = Row(children: [
       Padding(
@@ -187,13 +177,20 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
       ),
     ]);
 
-    CarrierActionButtons _carrierActionButtons = CarrierActionButtons(
-      handleReset: () => handleReset(),
-      handleSubmit:
-
-          /// 如果選擇其他機構但是沒有輸入捐贈碼
-          /// 必須將儲存按鈕反灰
-          handleEnableSubmit() ? null : () => widget.handleSubmit(_selectedId),
+    Row _topRow = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _donationTitle,
+        widget.isExpand
+            ? CloseButton(
+                onPressed: () => widget.handleExpand(),
+              )
+            : IconButton(
+                onPressed: () => widget.handleExpand(),
+                icon: const Icon(Icons.edit_rounded),
+                color: UdiColors.brownGrey,
+              ),
+      ],
     );
 
     Row _bottomRow = Row(
@@ -237,6 +234,7 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
                   _subtitle,
                 ];
     }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Column(

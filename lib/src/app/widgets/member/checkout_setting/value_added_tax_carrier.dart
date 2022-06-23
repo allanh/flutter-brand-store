@@ -16,7 +16,6 @@ class ValueAddedTaxCarrierInfo extends StatefulWidget
     this.isExpand = false,
     this.code = '',
     this.title = '',
-    required this.handleCollapse,
     required this.handleExpand,
     required this.handleSubmit,
   }) : super(key: key);
@@ -28,8 +27,6 @@ class ValueAddedTaxCarrierInfo extends StatefulWidget
   String? title;
 
   bool isExpand;
-
-  Function handleCollapse;
 
   Function handleExpand;
 
@@ -52,6 +49,40 @@ class _ValueAddedTaxCarrierInfoState extends State<ValueAddedTaxCarrierInfo> {
 
   @override
   Widget build(BuildContext context) {
+    void handleReset() {
+      setState(() {
+        _vatIdController.clear();
+        _vatTitleController.clear();
+        widget.title = null;
+        widget.code = null;
+      });
+    }
+
+    Text _title = Text(
+      '公司-三聯式電子發票',
+      style: Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 14.0),
+    );
+
+    Text _hintMessage = Text(
+      '於鑑賞期過後寄出電子發票至訂購人Email。',
+      style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
+    );
+
+    Text _subtitle = Text(
+      '${widget.code}, ${widget.title}',
+      style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
+    );
+
+    Text _taxIdTitle = Text(
+      '統一編號*',
+      style: Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 14.0),
+    );
+
+    Text _companyTitle = Text(
+      '發票抬頭',
+      style: Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 14.0),
+    );
+
     TextStyle _hintStyle = Theme.of(context)
         .textTheme
         .caption!
@@ -100,40 +131,6 @@ class _ValueAddedTaxCarrierInfoState extends State<ValueAddedTaxCarrierInfo> {
       ),
     );
 
-    Text _title = Text(
-      '公司-三聯式電子發票',
-      style: Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 14.0),
-    );
-
-    Text _hintMessage = Text(
-      '於鑑賞期過後寄出電子發票至訂購人Email。',
-      style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
-    );
-
-    Text _subtitle = Text(
-      '${widget.code}, ${widget.title}',
-      style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 12.0),
-    );
-
-    Text _taxIdTitle = Text(
-      '統一編號*',
-      style: Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 14.0),
-    );
-
-    Text _companyTitle = Text(
-      '發票抬頭',
-      style: Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 14.0),
-    );
-
-    void handleReset() {
-      setState(() {
-        _vatIdController.clear();
-        _vatTitleController.clear();
-        widget.title = null;
-        widget.code = null;
-      });
-    }
-
     CarrierActionButtons _carrierActionButtons = CarrierActionButtons(
       handleReset: () => handleReset(),
       handleSubmit: widget.code != null &&
@@ -153,7 +150,7 @@ class _ValueAddedTaxCarrierInfoState extends State<ValueAddedTaxCarrierInfo> {
         _title,
         widget.isExpand
             ? CloseButton(
-                onPressed: () => widget.handleCollapse(),
+                onPressed: () => widget.handleExpand(),
               )
             : IconButton(
                 onPressed: () => widget.handleExpand(),
@@ -162,6 +159,7 @@ class _ValueAddedTaxCarrierInfoState extends State<ValueAddedTaxCarrierInfo> {
               )
       ],
     );
+
     Row _bottomRow = Row(
       mainAxisAlignment: widget.isDefault
           ? MainAxisAlignment.spaceBetween
@@ -173,6 +171,7 @@ class _ValueAddedTaxCarrierInfoState extends State<ValueAddedTaxCarrierInfo> {
             ]
           : [_carrierActionButtons],
     );
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Column(
