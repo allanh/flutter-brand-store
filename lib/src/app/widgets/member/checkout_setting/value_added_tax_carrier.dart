@@ -36,7 +36,8 @@ class ValueAddedTaxCarrierInfo extends StatefulWidget
   Function handleSubmit;
 
   @override
-  State<ValueAddedTaxCarrierInfo> createState() => _ValueAddedTaxCarrierInfoState();
+  State<ValueAddedTaxCarrierInfo> createState() =>
+      _ValueAddedTaxCarrierInfoState();
 }
 
 class _ValueAddedTaxCarrierInfoState extends State<ValueAddedTaxCarrierInfo> {
@@ -126,8 +127,8 @@ class _ValueAddedTaxCarrierInfoState extends State<ValueAddedTaxCarrierInfo> {
 
     void handleReset() {
       setState(() {
-        _vatIdController.text = '';
-        _vatTitleController.text = '';
+        _vatIdController.clear();
+        _vatTitleController.clear();
         widget.title = null;
         widget.code = null;
       });

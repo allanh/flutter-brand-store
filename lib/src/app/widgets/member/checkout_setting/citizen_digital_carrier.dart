@@ -33,7 +33,8 @@ class CitizenDigitalCarrierInfo extends StatefulWidget
   Function handleSubmit;
 
   @override
-  State<CitizenDigitalCarrierInfo> createState() => _CitizenDigitalCarrierInfoState();
+  State<CitizenDigitalCarrierInfo> createState() =>
+      _CitizenDigitalCarrierInfoState();
 }
 
 class _CitizenDigitalCarrierInfoState extends State<CitizenDigitalCarrierInfo> {
@@ -48,7 +49,7 @@ class _CitizenDigitalCarrierInfoState extends State<CitizenDigitalCarrierInfo> {
   @override
   Widget build(BuildContext context) {
     void handleReset() {
-      _controller.text = '';
+      _controller.clear();
       widget.code = null;
     }
 

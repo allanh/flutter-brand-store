@@ -56,7 +56,7 @@ class _MobileCarrierInfoState extends State<MobileCarrierInfo> {
   Widget build(BuildContext context) {
     void handleReset() {
       setState(() {
-        _controller.text = '';
+        _controller.clear();
         widget.code = null;
       });
     }

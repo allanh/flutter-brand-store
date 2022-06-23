@@ -114,7 +114,7 @@ class _DonationInvoiceCarrierState extends State<DonationInvoiceCarrier> {
     void handleReset() {
       setState(() {
         _selectedId = '';
-        _controller.text = '';
+        _controller.clear();
         handleEnabledStatusChange('');
       });
     }
