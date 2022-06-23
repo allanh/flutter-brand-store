@@ -37,8 +37,6 @@ class _InvoiceSettingPageState
   bool _isExpandedValueAddedTaxCarrier = false;
   bool _isExpandedDonationInvoice = false;
 
-  bool _isValidMobileCarrier = true;
-
   List<CarrierType> invoiceTypes = [
     CarrierType.membershipCarrier,
     CarrierType.mobileCarrier,
@@ -179,7 +177,6 @@ class _InvoiceSettingPageState
       /// 控制捐贈碼輸入
       void handleCarrierChange(String text) {
         setState(() {
-          _isValidMobileCarrier = controller.isValidMobileCarrier(text);
           _mobileCarrier = text;
           controller.invoiceInfos?.mobileCarrier?.carrierId = _mobileCarrier;
         });
@@ -192,13 +189,6 @@ class _InvoiceSettingPageState
           builder: (BuildContext context) => const CarrierRegisterDialog(),
         );
       }
-
-      /// 計算手機載具卡片高度
-      double mobileCarrierCardHeight = _isExpandedMobileCarrier
-          ? 171.0 + (_isValidMobileCarrier ? 0.0 : 30.0)
-          : _mobileCarrier != null && _mobileCarrier!.isNotEmpty
-              ? 88.0
-              : 56.0;
 
       /// 建立卡片
       List<ReorderableCard> _buildReorderableCards(
@@ -225,6 +215,8 @@ class _InvoiceSettingPageState
                   item: MobileCarrierInfo(
                     isDefault: index == 0,
                     isExpand: _isExpandedMobileCarrier,
+                    isValid:
+                        controller.isValidMobileCarrier(_mobileCarrier ?? ''),
                     code: _mobileCarrier,
                     handleCollapse: () =>
                         handleCollapse(CarrierType.mobileCarrier),
@@ -232,7 +224,8 @@ class _InvoiceSettingPageState
                     handleSubmit: (code) => handleSubmitMobileCarrier(code),
                     handleCarrierChange: (text) => handleCarrierChange(text),
                   ),
-                  height: mobileCarrierCardHeight,
+                  height: controller
+                      .mobileCarrierCardHeight(_isExpandedMobileCarrier),
                   isSelected: index == 0);
 
             /// 個人-自然人憑證

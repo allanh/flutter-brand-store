@@ -8,12 +8,14 @@ import 'reorderable_card.dart';
 import 'default_indicator.dart';
 
 /// 個人-手機條碼載具
-class MobileCarrierInfo extends StatefulWidget implements DefaultCarrierInterface {
+class MobileCarrierInfo extends StatefulWidget
+    implements DefaultCarrierInterface {
   MobileCarrierInfo({
     Key? key,
     required this.isDefault,
     this.isExpand = false,
     this.code = '',
+    required this.isValid,
     required this.handleCollapse,
     required this.handleEapand,
     required this.handleSubmit,
@@ -26,6 +28,8 @@ class MobileCarrierInfo extends StatefulWidget implements DefaultCarrierInterfac
   String? code;
 
   bool isExpand;
+
+  bool isValid;
 
   Function handleCollapse;
 
@@ -57,9 +61,7 @@ class _MobileCarrierInfoState extends State<MobileCarrierInfo> {
       });
     }
 
-    bool isValid = _controller.text.startsWith('/') || _controller.text.isEmpty;
-
-    double height = 36.0 + (isValid ? 0 : 30.0);
+    double height = 36.0 + (widget.isValid ? 0 : 30.0);
 
     Text _title = Text(
       '個人-手機條碼載具',
@@ -96,7 +98,7 @@ class _MobileCarrierInfoState extends State<MobileCarrierInfo> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 18.0),
           hintText: '請輸入手機條碼',
           hintStyle: _hintStyle,
-          errorText: isValid ? null : '請輸入有效手機條碼!',
+          errorText: widget.isValid ? null : '請輸入有效手機條碼!',
           errorStyle: Theme.of(context).textTheme.caption?.copyWith(
                 color: UdiColors.strawberry,
                 fontSize: 12.0,

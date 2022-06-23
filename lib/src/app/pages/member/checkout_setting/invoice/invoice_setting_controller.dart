@@ -95,8 +95,25 @@ class InvoiceSettingController extends Controller {
   void submitDonationCode(code) =>
       invoiceInfoPresenter.submitDonationCode(code);
 
+  /// 計算手機載具卡片需要高度
+  double mobileCarrierCardHeight(
+    bool isExpand,
+  ) =>
+      isExpand
+          ? 171.0 +
+              (isValidMobileCarrier(
+                      _invoiceInfos!.mobileCarrier!.carrierId ?? '')
+                  ? 0.0
+                  : 30.0)
+          : _invoiceInfos?.mobileCarrier?.carrierId != null &&
+                  _invoiceInfos!.mobileCarrier!.carrierId!.isNotEmpty
+              ? 88.0
+              : 56.0;
+
   bool isValidMobileCarrier(String carrier) =>
-      carrier.startsWith('/') || carrier.isEmpty;
+      carrier.length < 8 ||
+      carrier.startsWith(RegExp(r'^\/{1}[\d0-9A-Z.+-]{7}$')) ||
+      carrier.isEmpty;
 
   void submitMobileCarrier(carrier) => invoiceInfoPresenter.submitMobileCarrier(
         _invoiceInfos?.mobileCarrier?.id,
