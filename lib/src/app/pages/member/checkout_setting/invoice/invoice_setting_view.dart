@@ -179,6 +179,14 @@ class _InvoiceSettingPageState
       /// 儲存公司統編載具
       void handleSubmitValueAddedTaxCarrier(String code, String title) {}
 
+      void handleVatIdChange(id) {
+        setState(() {
+          _valueAddedTaxId = id;
+          controller.invoiceInfos?.vatCarrier?.carrierId = id;
+          controller.isValidVatId(id);
+        });
+      }
+
       /// 儲存愛心捐贈碼
       void handleSubmitDonationCode(String code) {
         debugPrint(code);
@@ -258,21 +266,23 @@ class _InvoiceSettingPageState
               return ReorderableCard(
                   key: ValueKey(index),
                   item: ValueAddedTaxCarrierInfo(
-                    isDefault: index == 0,
-                    isExpand: _isExpandedValueAddedTaxCarrier,
-                    code: _valueAddedTaxId,
-                    title: _valueAddedTaxTitle,
-                    handleExpand: () => handleCarrierExpand(
-                      CarrierType.valueAddedTaxCarrier,
-                      !_isExpandedValueAddedTaxCarrier,
-                    ),
-                    handleSubmit: (code, title) =>
-                        handleSubmitValueAddedTaxCarrier,
-                  ),
+                      isDefault: index == 0,
+                      isExpand: _isExpandedValueAddedTaxCarrier,
+                      code: _valueAddedTaxId,
+                      title: _valueAddedTaxTitle,
+                      isValidVatId:
+                          controller.isValidVatId(_valueAddedTaxId ?? ''),
+                      handleExpand: () => handleCarrierExpand(
+                            CarrierType.valueAddedTaxCarrier,
+                            !_isExpandedValueAddedTaxCarrier,
+                          ),
+                      handleSubmit: (code, title) =>
+                          handleSubmitValueAddedTaxCarrier,
+                      handleVatIdChange: (id) => handleVatIdChange(id)),
                   height: _isExpandedValueAddedTaxCarrier
                       ? 305.0
                       : _valueAddedTaxId != null &&
-                              _valueAddedTaxId.isNotEmpty &&
+                              _valueAddedTaxId!.isNotEmpty &&
                               _valueAddedTaxTitle != null &&
                               _valueAddedTaxTitle.isNotEmpty
                           ? 88.0

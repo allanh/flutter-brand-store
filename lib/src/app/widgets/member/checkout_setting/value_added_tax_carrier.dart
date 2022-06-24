@@ -16,8 +16,10 @@ class ValueAddedTaxCarrierInfo extends StatefulWidget
     this.isExpand = false,
     this.code = '',
     this.title = '',
+    required this.isValidVatId,
     required this.handleExpand,
     required this.handleSubmit,
+    required this.handleVatIdChange,
   }) : super(key: key);
   @override
   bool isDefault;
@@ -31,6 +33,10 @@ class ValueAddedTaxCarrierInfo extends StatefulWidget
   Function handleExpand;
 
   Function handleSubmit;
+
+  bool isValidVatId;
+
+  Function handleVatIdChange;
 
   @override
   State<ValueAddedTaxCarrierInfo> createState() =>
@@ -94,7 +100,7 @@ class _ValueAddedTaxCarrierInfoState extends State<ValueAddedTaxCarrierInfo> {
         controller: _vatIdController,
         textInputAction: TextInputAction.send,
         maxLength: 8,
-        onChanged: (text) => setState(() => widget.code = text),
+        onChanged: (text) => widget.handleVatIdChange(text),
         cursorColor: UdiColors.veryLightGrey2,
         decoration: InputDecoration(
           labelText: widget.code,

@@ -161,6 +161,48 @@ class SubmitCitizenDigitalCarrierUseCaseResponse {
   SubmitCitizenDigitalCarrierUseCaseResponse(this.result);
 }
 
+class SubmitValueAddedTaxCarrierUseCase extends UseCase<
+    SubmitValueAddedTaxCarrierUseCaseResponse,
+    SubmitValueAddedTaxCarrierUseCaseParams> {
+  final InvoiceSettingRepository repo;
+  SubmitValueAddedTaxCarrierUseCase(this.repo);
+
+  @override
+  Future<Stream<SubmitValueAddedTaxCarrierUseCaseResponse?>> buildUseCaseStream(
+      SubmitValueAddedTaxCarrierUseCaseParams? params) async {
+    final controller =
+        StreamController<SubmitValueAddedTaxCarrierUseCaseResponse>();
+
+    try {
+      // Submit citizen digital carrier.
+      final response = await repo.submitValueAddedTaxCarrier(
+          params?.id, params!.carrier, params.title);
+      // Adding it triggers the .onNext() in the 'Observer'
+      // It is usually better to wrap the response inside a response object.
+      controller.add(SubmitValueAddedTaxCarrierUseCaseResponse(response));
+      logger.finest('SubmitValueAddedTaxCarrierUseCaseResponse successful.');
+      controller.close();
+    } catch (e) {
+      logger.severe('SubmitValueAddedTaxCarrierUseCaseResponse failure.');
+      // Trigger .onError
+      controller.addError(e);
+    }
+    return controller.stream;
+  }
+}
+
+class SubmitValueAddedTaxCarrierUseCaseParams {
+  String? id;
+  String carrier;
+  String title;
+  SubmitValueAddedTaxCarrierUseCaseParams(this.id, this.carrier, this.title);
+}
+
+class SubmitValueAddedTaxCarrierUseCaseResponse {
+  final bool result;
+  SubmitValueAddedTaxCarrierUseCaseResponse(this.result);
+}
+
 class ChangeDefaultCarrierUseCase extends UseCase<
     ChangeDefaultCarrierUseCaseResponse, ChangeDefaultCarrierUseCaseParams> {
   final InvoiceSettingRepository repo;

@@ -6,9 +6,11 @@ class InvoiceSettingPresenter extends Presenter {
       : getInvoiceSettingUseCase = GetInvoiceSettingUseCase(repo),
         submitDonationCodeUseCase = SubmitDonationCodeUseCase(repo),
         submitMobileCarrierUseCase = SubmitMobileCarrierUseCase(repo),
-        changeDefaultCarrierUseCase = ChangeDefaultCarrierUseCase(repo),
         submitCitizenDigitalCarrierUseCase =
-            SubmitCitizenDigitalCarrierUseCase(repo);
+            SubmitCitizenDigitalCarrierUseCase(repo),
+        submitValueAddedTaxCarrierUseCase =
+            SubmitValueAddedTaxCarrierUseCase(repo),
+        changeDefaultCarrierUseCase = ChangeDefaultCarrierUseCase(repo);
 
   late Function getInvoiceSettingOnNext;
   late Function getInvoiceSettingOnComplete;
@@ -59,6 +61,19 @@ class InvoiceSettingPresenter extends Presenter {
     submitCitizenDigitalCarrierUseCase.execute(
       _SubmitCitizenDigitalCarrierUseCaseObserver(this),
       SubmitCitizenDigitalCarrierUseCaseParams(id, carrier),
+    );
+  }
+
+  late Function submitValueAddedTaxCarrierOnNext;
+  late Function submitValueAddedTaxCarrierOnComplete;
+  late Function submitValueAddedTaxCarrierOnError;
+
+  final SubmitValueAddedTaxCarrierUseCase submitValueAddedTaxCarrierUseCase;
+
+  void submitValueAddedTaxCarrier(id, carrier, title) {
+    submitValueAddedTaxCarrierUseCase.execute(
+      _SubmitValueAddedTaxCarrierUseCaseObserver(this),
+      SubmitValueAddedTaxCarrierUseCaseParams(id, carrier, title),
     );
   }
 
@@ -171,6 +186,27 @@ class _SubmitCitizenDigitalCarrierUseCaseObserver
   @override
   void onNext(response) {
     presenter.submitCitizenDigitalCarrierOnNext(response?.result);
+  }
+}
+
+class _SubmitValueAddedTaxCarrierUseCaseObserver
+    extends Observer<SubmitValueAddedTaxCarrierUseCaseResponse> {
+  final InvoiceSettingPresenter presenter;
+  _SubmitValueAddedTaxCarrierUseCaseObserver(this.presenter);
+
+  @override
+  void onComplete() {
+    presenter.submitValueAddedTaxCarrierOnComplete();
+  }
+
+  @override
+  void onError(e) {
+    presenter.submitValueAddedTaxCarrierOnError(e);
+  }
+
+  @override
+  void onNext(response) {
+    presenter.submitValueAddedTaxCarrierOnNext(response?.result);
   }
 }
 
