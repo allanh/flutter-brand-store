@@ -72,6 +72,18 @@ class InvoiceSettingController extends Controller {
       debugPrint('Could not citizen digital code cause: $e');
     };
 
+    invoiceInfoPresenter.submitValueAddedTaxCarrierOnNext = (bool isSuccess) {
+      if (isSuccess) refreshUI();
+    };
+
+    invoiceInfoPresenter.submitValueAddedTaxCarrierOnComplete = () {
+      debugPrint('Submit vat code completed.');
+    };
+
+    invoiceInfoPresenter.submitValueAddedTaxCarrierOnError = (e) {
+      debugPrint('Could not submit vat code cause: $e');
+    };
+
     invoiceInfoPresenter.changeDefaultCarrierOnNext = (bool isSuccess) {
       if (isSuccess) refreshUI();
     };
@@ -103,10 +115,6 @@ class InvoiceSettingController extends Controller {
 
   /// 取得發票列表
   void getInvoiceSetting() => invoiceInfoPresenter.getInvoiceSetting();
-
-  /// 常用發票新增愛心捐贈
-  void submitDonationCode(code) => invoiceInfoPresenter.submitDonationCode(
-      _invoiceInfos?.donationNPO?.id, code);
 
   /// 計算手機載具卡片需要高度
   double mobileCarrierCardHeight(
@@ -237,6 +245,31 @@ class InvoiceSettingController extends Controller {
     return total % divided == 0;
   }
 
+  /// 檢查是否有效的發票抬頭
+  bool isValidVatTitle(String title) => title.length < 26;
+
+  /// 三聯式電子發票卡片高度
+  double valueAddedTaxCardHeight(bool isExpand) => isExpand
+      ? 305.0 +
+          (isValidVatId(_invoiceInfos?.vatCarrier?.carrierId ?? '')
+              ? 0.0
+              : 30.0) +
+          (isValidVatTitle(_invoiceInfos?.vatCarrier?.title ?? '') ? 0.0 : 30.0)
+      : _invoiceInfos?.vatCarrier?.id != null &&
+              _invoiceInfos!.vatCarrier!.id!.isNotEmpty &&
+              _invoiceInfos?.vatCarrier?.title != null &&
+              _invoiceInfos!.vatCarrier!.title!.isNotEmpty
+          ? 88.0
+          : 56.0;
+
+  /// 儲存三聯式電子發票載具
+  void submitValueAddedTax(carrierId, title) =>
+      invoiceInfoPresenter.submitValueAddedTaxCarrier(
+        _invoiceInfos?.vatCarrier?.id,
+        carrierId,
+        title,
+      );
+
   /// 檢查是否有三聯式電子發票載具資料
   bool hasValueAddedTaxCarrier() =>
       _invoiceInfos?.vatCarrier?.id != null &&
@@ -265,4 +298,8 @@ class InvoiceSettingController extends Controller {
         carrierId: _invoiceInfos?.donationNPO?.npoId,
         title: _invoiceInfos?.donationNPO?.title,
       );
+
+  /// 常用發票新增愛心捐贈
+  void submitDonationCode(code) => invoiceInfoPresenter.submitDonationCode(
+      _invoiceInfos?.donationNPO?.id, code);
 }

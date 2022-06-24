@@ -16,10 +16,12 @@ class ValueAddedTaxCarrierInfo extends StatefulWidget
     this.isExpand = false,
     this.code = '',
     this.title = '',
-    required this.isValidVatId,
+    required this.isValidId,
+    required this.isValidTitle,
     required this.handleExpand,
     required this.handleSubmit,
-    required this.handleVatIdChange,
+    required this.handleIdChange,
+    required this.handleTitleChange,
   }) : super(key: key);
   @override
   bool isDefault;
@@ -34,9 +36,13 @@ class ValueAddedTaxCarrierInfo extends StatefulWidget
 
   Function handleSubmit;
 
-  bool isValidVatId;
+  bool isValidId;
 
-  Function handleVatIdChange;
+  Function handleIdChange;
+
+  bool isValidTitle;
+
+  Function handleTitleChange;
 
   @override
   State<ValueAddedTaxCarrierInfo> createState() =>
@@ -95,12 +101,12 @@ class _ValueAddedTaxCarrierInfoState extends State<ValueAddedTaxCarrierInfo> {
         .copyWith(color: UdiColors.brownGrey2);
 
     SizedBox _vatIdInputTile = SizedBox(
-      height: 36.0,
+      height: 36.0 + (widget.isValidId ? 0.0 : 30.0),
       child: TextField(
         controller: _vatIdController,
         textInputAction: TextInputAction.send,
         maxLength: 8,
-        onChanged: (text) => widget.handleVatIdChange(text),
+        onChanged: (text) => widget.handleIdChange(text),
         cursorColor: UdiColors.veryLightGrey2,
         decoration: InputDecoration(
           labelText: widget.code,
@@ -109,19 +115,27 @@ class _ValueAddedTaxCarrierInfoState extends State<ValueAddedTaxCarrierInfo> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 18.0),
           hintText: '請輸入統一編號',
           hintStyle: _hintStyle,
-          border: _buildTextFieldBorder(),
-          enabledBorder: _buildTextFieldBorder(),
-          focusedBorder: _buildTextFieldBorder(),
+          errorText: widget.isValidId ? null : '請輸入有效統一編號!',
+          errorStyle: Theme.of(context).textTheme.caption?.copyWith(
+                color: UdiColors.strawberry,
+                fontSize: 12.0,
+              ),
+          errorBorder: _buildTextFieldBorder(color: UdiColors.strawberry),
+          focusedErrorBorder:
+              _buildTextFieldBorder(color: UdiColors.strawberry),
+          border: _buildTextFieldBorder(color: UdiColors.veryLightGrey2),
+          enabledBorder: _buildTextFieldBorder(color: UdiColors.veryLightGrey2),
+          focusedBorder: _buildTextFieldBorder(color: UdiColors.veryLightGrey2),
         ),
       ),
     );
 
     SizedBox _titleInputTile = SizedBox(
-      height: 36.0,
+      height: 36.0 + (widget.isValidTitle ? 0.0 : 30.0),
       child: TextField(
         controller: _vatTitleController,
         textInputAction: TextInputAction.send,
-        onChanged: (text) => setState(() => widget.title = text),
+        onChanged: (text) => widget.handleTitleChange(text),
         cursorColor: UdiColors.veryLightGrey2,
         decoration: InputDecoration(
           labelText: widget.title,
@@ -130,9 +144,17 @@ class _ValueAddedTaxCarrierInfoState extends State<ValueAddedTaxCarrierInfo> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 18.0),
           hintText: '請輸入發票抬頭',
           hintStyle: _hintStyle,
-          border: _buildTextFieldBorder(),
-          enabledBorder: _buildTextFieldBorder(),
-          focusedBorder: _buildTextFieldBorder(),
+          errorText: widget.isValidTitle ? null : '請輸入有效發票抬頭!',
+          errorStyle: Theme.of(context).textTheme.caption?.copyWith(
+                color: UdiColors.strawberry,
+                fontSize: 12.0,
+              ),
+          errorBorder: _buildTextFieldBorder(color: UdiColors.strawberry),
+          focusedErrorBorder:
+              _buildTextFieldBorder(color: UdiColors.strawberry),
+          border: _buildTextFieldBorder(color: UdiColors.veryLightGrey2),
+          enabledBorder: _buildTextFieldBorder(color: UdiColors.veryLightGrey2),
+          focusedBorder: _buildTextFieldBorder(color: UdiColors.veryLightGrey2),
         ),
       ),
     );
@@ -214,9 +236,9 @@ class _ValueAddedTaxCarrierInfoState extends State<ValueAddedTaxCarrierInfo> {
     );
   }
 
-  OutlineInputBorder _buildTextFieldBorder() {
+  OutlineInputBorder _buildTextFieldBorder({required Color color}) {
     return OutlineInputBorder(
-      borderSide: const BorderSide(color: UdiColors.veryLightGrey2, width: 1.0),
+      borderSide: BorderSide(color: color, width: 1.0),
       borderRadius: BorderRadius.circular(4.0),
     );
   }

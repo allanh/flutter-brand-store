@@ -103,7 +103,7 @@ class DataInvoiceSettingRepository extends InvoiceSettingRepository {
     dynamic params = {
       "invoice_type": "company",
       "vat_no": carrierId,
-      "vat_title":"title",
+      "vat_title": title,
       "is_default": 0
     };
     if (id != null) {

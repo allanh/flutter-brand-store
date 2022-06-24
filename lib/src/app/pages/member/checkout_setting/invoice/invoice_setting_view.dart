@@ -177,13 +177,23 @@ class _InvoiceSettingPageState
       }
 
       /// 儲存公司統編載具
-      void handleSubmitValueAddedTaxCarrier(String code, String title) {}
+      void handleSubmitValueAddedTaxCarrier(String code, String title) {
+        controller.submitValueAddedTax(code, title);
+      }
 
       void handleVatIdChange(id) {
         setState(() {
           _valueAddedTaxId = id;
           controller.invoiceInfos?.vatCarrier?.carrierId = id;
           controller.isValidVatId(id);
+        });
+      }
+
+      void handleTitleChange(title) {
+        setState(() {
+          _valueAddedTaxTitle = title;
+          controller.invoiceInfos?.vatCarrier?.title = title;
+          controller.isValidVatTitle(title);
         });
       }
 
@@ -266,27 +276,24 @@ class _InvoiceSettingPageState
               return ReorderableCard(
                   key: ValueKey(index),
                   item: ValueAddedTaxCarrierInfo(
-                      isDefault: index == 0,
-                      isExpand: _isExpandedValueAddedTaxCarrier,
-                      code: _valueAddedTaxId,
-                      title: _valueAddedTaxTitle,
-                      isValidVatId:
-                          controller.isValidVatId(_valueAddedTaxId ?? ''),
-                      handleExpand: () => handleCarrierExpand(
-                            CarrierType.valueAddedTaxCarrier,
-                            !_isExpandedValueAddedTaxCarrier,
-                          ),
-                      handleSubmit: (code, title) =>
-                          handleSubmitValueAddedTaxCarrier,
-                      handleVatIdChange: (id) => handleVatIdChange(id)),
-                  height: _isExpandedValueAddedTaxCarrier
-                      ? 305.0
-                      : _valueAddedTaxId != null &&
-                              _valueAddedTaxId!.isNotEmpty &&
-                              _valueAddedTaxTitle != null &&
-                              _valueAddedTaxTitle.isNotEmpty
-                          ? 88.0
-                          : 56.0,
+                    isDefault: index == 0,
+                    isExpand: _isExpandedValueAddedTaxCarrier,
+                    code: _valueAddedTaxId,
+                    title: _valueAddedTaxTitle,
+                    isValidId: controller.isValidVatId(_valueAddedTaxId ?? ''),
+                    isValidTitle:
+                        controller.isValidVatTitle(_valueAddedTaxTitle ?? ''),
+                    handleExpand: () => handleCarrierExpand(
+                      CarrierType.valueAddedTaxCarrier,
+                      !_isExpandedValueAddedTaxCarrier,
+                    ),
+                    handleSubmit: (code, title) =>
+                        handleSubmitValueAddedTaxCarrier(code, title),
+                    handleIdChange: (id) => handleVatIdChange(id),
+                    handleTitleChange: (title) => handleTitleChange(title),
+                  ),
+                  height: controller
+                      .valueAddedTaxCardHeight(_isExpandedValueAddedTaxCarrier),
                   isSelected: index == 0);
 
             /// 捐贈發票
