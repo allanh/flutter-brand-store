@@ -14,6 +14,8 @@ abstract class AccountRepository {
   Future<BaseResponse> resetPassword(
       String mobileCode, String mobile, String email, String password);
 
+  Future<BaseResponse> setPassword(String oldPassword, String password);
+
   Future<bool> accountIsExist(String mobileCode, String mobile, String email);
 
   Future<BaseResponse> registerMobile({
