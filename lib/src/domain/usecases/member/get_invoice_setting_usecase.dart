@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:brandstores/src/data/utils/dio/base_res.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
 import '../../entities/member/invoice.dart';

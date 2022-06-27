@@ -27,6 +27,7 @@ import 'pages/member/account_change/account_change_view.dart';
 import 'pages/member/products/member_products_view.dart';
 import 'pages/member/checkout_setting/invoice/invoice_setting_view.dart';
 import 'pages/member/checkout_setting/checkout_setting_view.dart';
+import 'pages/member/checkout_setting/shipping/shipping_address_view.dart';
 
 class MyPlusRouter {
   final LoginState loginState;
@@ -300,6 +301,16 @@ class MyPlusRouter {
               javascriptMode: JavascriptMode.unrestricted,
             ),
           ),
+        ),
+      ),
+
+      /// 常用收件地址
+      GoRoute(
+        name: shippingAddressRouteName,
+        path: '/shipping-address',
+        pageBuilder: (context, state) => MaterialPage<void>(
+          key: state.pageKey,
+          child: ShippingAddressPage(),
         ),
       ),
 
