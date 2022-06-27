@@ -1,13 +1,13 @@
-import 'package:brandstores/src/app/widgets/udi_style/udi_button.dart';
-import 'package:brandstores/src/app/widgets/udi_style/udi_tab_bar.dart';
-import 'package:brandstores/src/app/widgets/udi_style/email_field.dart';
 import 'package:brandstores/src/app/widgets/udi_style/mobile_field.dart';
 import 'package:brandstores/src/app/widgets/udi_style/password_field.dart';
+import 'package:brandstores/src/app/widgets/udi_style/udi_button.dart';
+import 'package:brandstores/src/app/widgets/udi_style/udi_tab_bar.dart';
 import 'package:brandstores/src/data/repositories/data_account_repository.dart';
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
+import '../../../widgets/udi_style/udi_field.dart';
 import 'login_controller.dart';
 
 class LoginPage extends View {
@@ -55,7 +55,8 @@ class _PageState extends ViewState<LoginPage, LoginController> {
       onFocusChange: (isFocus) => setState(() => controller.checkMobile()),
       errorMessage: controller.mobileError);
 
-  EmailField _emailWidget(LoginController controller) => EmailField(
+  Widget _emailWidget(LoginController controller) => UdiField(
+      startIcon: Icons.email,
       defaultValue: controller.inputEmail,
       onValueChange: (email) => setState(() => controller.onEmailChange(email)),
       onFocusChange: (isFocus) => setState(() => controller.checkEmail()),

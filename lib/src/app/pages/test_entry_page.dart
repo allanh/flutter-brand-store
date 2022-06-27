@@ -1,7 +1,6 @@
 import 'package:brandstores/login_state.dart';
 import 'package:brandstores/src/app/pages/static_view.dart';
 import 'package:brandstores/src/app/widgets/udi_style/address_field.dart';
-import 'package:brandstores/src/app/widgets/udi_style/email_field.dart';
 import 'package:brandstores/src/app/widgets/udi_style/error_text.dart';
 import 'package:brandstores/src/app/widgets/udi_style/mobile_field.dart';
 import 'package:brandstores/src/app/widgets/udi_style/password_field.dart';
@@ -47,13 +46,7 @@ class _TestPageState extends State<TestPage> {
               createBtn('登入', () => doLogin()),
               createBtn('會員資料', () => getMemberData()),
               createBtn('登出', () => doLogout()),
-              createBtn('print storage', () =>
-                  _storage.readAll().then((value) {
-                    value.forEach((key, value) {
-                      debugPrint('storage => $key: $value');
-                    });
-                  })
-                  ),
+              createBtn('Storage', () => printStorageData()),
             ],
           ),
           const SizedBox(height: 50),
@@ -63,17 +56,7 @@ class _TestPageState extends State<TestPage> {
             spacing: 8.0,
             runSpacing: 4.0,
             children: [
-              pushBtn('忘記密碼', forgetPasswordRouteName),
-              pushBtn('手機驗證', verifyMobileCodeRouteName, queryParams: {
-                "verifyType": VerifyType.resetPassword.value,
-                "mobileCode": "886",
-                "mobile": "0999999999",
-              }),
-              pushBtn('變更密碼', resetPasswordRouteName, queryParams: {
-                "mobileCode": "886",
-                "mobile": "0999999999",
-              }),
-              pushBtn('註冊頁', registerRouteName),
+              pushBtn('登入', loginRouteName),
             ],
           ),
           const SizedBox(height: 50),
@@ -84,18 +67,22 @@ class _TestPageState extends State<TestPage> {
             runSpacing: 4.0,
             children: [
               // 靜態頁
-              staticPage('預設'),
-              staticPage('網站維護', pageType: StaticPageType.maintenance),
-              staticPage('網路連線異常', pageType: StaticPageType.noConnection),
-              staticPage('500 error', pageType: StaticPageType.error500),
-              staticPage('api error', pageType: StaticPageType.apiError),
-              staticPage('暫停服務', pageType: StaticPageType.shopClosed),
+              pushBtn('預設', staticRouteName),
+              pushBtn('網站維護', staticRouteName, extra: StaticPageType.maintenance, queryParams: {
+                "message": "預定維護時間：\n2019/11/1 00:00 ~ 2019/11/2 12:00\n如有任何問題歡迎聯繫我們，\n客服人員將誠摯為您服務!",
+              }),
+              pushBtn('網路連線異常', staticRouteName, extra: StaticPageType.noConnection),
+              pushBtn('系統錯誤', staticRouteName, extra: StaticPageType.error500),
+              pushBtn('API錯誤', staticRouteName, extra: StaticPageType.apiError),
+              pushBtn('暫停服務', staticRouteName, extra: StaticPageType.shopClosed, queryParams: {
+                "message": "預定暫停時間：\n2019/11/1  00:00 ~ 2019/11/2  12:00",
+              }),
               // 其它
-              staticPage('手機門號停用', pageType: StaticPageType.mobileStop),
-              staticPage('電子信箱停用', pageType: StaticPageType.emailStop),
-              staticPage('密碼設定成功', pageType: StaticPageType.resetPasswordSuccess),
-              staticPage('手機註冊成功', pageType: StaticPageType.mobileRegisterSuccess),
-              staticPage('Email註冊成功', pageType: StaticPageType.emailRegisterSuccess),
+              pushBtn('手機門號停用', staticRouteName, extra: StaticPageType.mobileStop),
+              pushBtn('電子信箱停用', staticRouteName, extra: StaticPageType.emailStop),
+              pushBtn('密碼設定成功', staticRouteName, extra: StaticPageType.resetPasswordSuccess),
+              pushBtn('手機註冊成功', staticRouteName, extra: StaticPageType.mobileRegisterSuccess),
+              pushBtn('Email註冊成功', staticRouteName, extra: StaticPageType.emailRegisterSuccess),
             ],
           ),
           const SizedBox(height: 50),
@@ -111,7 +98,18 @@ class _TestPageState extends State<TestPage> {
               pushBtn('會員服務條款', termsRouteName),
               pushBtn('隱私權條款', privacyRouteName),
               pushBtn('關於我們', aboutRouteName),
-              pushBtn('登入', loginRouteName),
+              pushBtn('忘記密碼', forgetPasswordRouteName),
+              pushBtn('手機驗證', verifyMobileCodeRouteName, queryParams: {
+                "verifyType": VerifyType.resetPassword.value,
+                "mobileCode": "886",
+                "mobile": "0999999999",
+              }),
+              pushBtn('變更密碼(忘記密碼第三步驟)', resetPasswordRouteName, queryParams: {
+                "mobileCode": "886",
+                "mobile": "0999999999",
+              }),
+              pushBtn('變更密碼(會員中心)', resetPasswordRouteName),
+              pushBtn('註冊頁', registerRouteName),
             ],
           ),
           const SizedBox(height: 50),
@@ -150,9 +148,6 @@ class _TestPageState extends State<TestPage> {
           const Text('MobileField'),
           const MobileField(),
           const SizedBox(height: 30),
-          const Text('EmailField(這個之後會移除，改用UdiField)'),
-          const EmailField(),
-          const SizedBox(height: 30),
           const Text('PasswordField: '),
           PasswordField(
               onFocusChange: (isFocus) => setState(() {}),
@@ -186,10 +181,6 @@ class _TestPageState extends State<TestPage> {
           const SizedBox(height: 30),
         ]),
       ));
-
-  Widget staticPage(String buttonName, {StaticPageType pageType = StaticPageType.error}) {
-    return pushBtn(buttonName, staticRouteName, extra: pageType);
-  }
 
   Widget pushBtn(
     String buttonName,
@@ -240,8 +231,7 @@ class _TestPageState extends State<TestPage> {
     Provider.of<LoginState>(context, listen: false).loggedIn = false;
   }
 
-  void printStorageData(){
-    debugPrint('storage: ${_storage.readAll()}');
-
+  void printStorageData() {
+    _storage.readAll().then((value) => value.forEach((key, value) => debugPrint('storage => $key: $value')));
   }
 }

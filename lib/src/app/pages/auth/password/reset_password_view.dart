@@ -20,17 +20,18 @@ class ResetPasswordPage extends View {
       });
 
   @override
-  _PageState createState() => _PageState();
+  // ignore: no_logic_in_create_state
+  _PageState createState() => _PageState(verifyMethod);
 }
 
 class _PageState extends ViewState<ResetPasswordPage, ResetPasswordController> {
-  _PageState() : super(ResetPasswordController(DataAccountRepository()));
+  _PageState(verifyMethod) : super(ResetPasswordController(DataAccountRepository(), verifyMethod));
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget get view => Scaffold(
       key: globalKey,
-      appBar: AppBar(title: const Text('忘記密碼')),
+      appBar: AppBar(title:  Text(widget.verifyMethod == VerifyMethod.password ? '修改密碼' : '忘記密碼')),
       body: Padding(
           padding: const EdgeInsets.fromLTRB(24, 36, 24, 24),
           child: Form(
@@ -43,11 +44,23 @@ class _PageState extends ViewState<ResetPasswordPage, ResetPasswordController> {
     return Column(
       children: [
         const SizedBox(height: 36),
+        _oldPasswordWidget(controller),
         _passwordWidget(controller),
         _passwordConfirmWidget(controller),
         const SizedBox(height: 24),
         _submitButton(controller),
       ],
+    );
+  }
+
+  Widget _oldPasswordWidget(ResetPasswordController controller) {
+    return Visibility(
+      visible: widget.verifyMethod == VerifyMethod.password,
+      child: PasswordField(
+        onValueChange: (value) => setState(() => controller.onOldPasswordChange(value)),
+        hintText: '請輸入現在的密碼',
+        errorMessage: controller.oldPasswordError,
+      ),
     );
   }
 
@@ -72,8 +85,7 @@ class _PageState extends ViewState<ResetPasswordPage, ResetPasswordController> {
         child: UdiButton(
           text: '確定',
           onPressed: controller.isEnableButton
-              ? () => controller.modifyPassword(
-                  widget.verifyMethod, widget.getMobileCode(), widget.mobile, widget.email)
+              ? () => controller.modifyPassword(widget.getMobileCode(), widget.mobile, widget.email)
               : null,
         ));
   }

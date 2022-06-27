@@ -24,6 +24,11 @@ class ResetPasswordPresenter extends Presenter {
     _useCase.execute(_Observer(this),
         ResetPasswordParams(VerifyMethod.mobile, password, mobileCode: mobileCode, mobile: mobile));
   }
+
+  void resetPassword(String oldPassword, String password) {
+    _useCase.execute(_Observer(this),
+        ResetPasswordParams(VerifyMethod.password, password, oldPassword: oldPassword));
+  }
 }
 
 class _Observer extends Observer<ResetPasswordResponse> {
