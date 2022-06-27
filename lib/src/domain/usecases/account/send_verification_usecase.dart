@@ -41,6 +41,7 @@ class SendVerificationUseCase
         break;
 
       case VerifyMethod.mobile:
+      default:
         var mobile = params.mobile;
         var mobileCode = params.mobileCode;
         if (mobile == null || mobile.isEmpty) {

@@ -53,6 +53,21 @@ class ResetPasswordUseCase extends UseCase<ResetPasswordResponse, ResetPasswordP
           }
         }
         break;
+      case VerifyMethod.password:
+        var oldPassword = params.oldPassword;
+        if (oldPassword == null || oldPassword.isEmpty) {
+          controller.addError(Exception('please input current password'));
+        } else {
+          try {
+            final response =
+            await repository.setPassword(oldPassword, params.password);
+            controller.add(ResetPasswordResponse(response.isSuccess, response.error?.message));
+            controller.close();
+          } catch (e) {
+            controller.addError(e);
+          }
+        }
+        break;
     }
 
     return controller.stream;
@@ -65,8 +80,9 @@ class ResetPasswordParams {
   final String? mobileCode;
   final String? mobile;
   final String? email;
+  final String? oldPassword;
 
-  ResetPasswordParams(this.verifyMethod, this.password, {this.mobileCode, this.mobile, this.email});
+  ResetPasswordParams(this.verifyMethod, this.password, {this.mobileCode, this.mobile, this.email, this.oldPassword});
 }
 
 class ResetPasswordResponse {

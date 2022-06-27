@@ -7,6 +7,7 @@ import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../domain/usecases/account/check_account_is_exist_usecase.dart';
+import '../../static_view.dart';
 import 'register_presenter.dart';
 
 class RegisterController extends Controller {
@@ -115,13 +116,6 @@ class RegisterController extends Controller {
     }
 
     isEnableButton = isEnable;
-    debugPrint('isEnableButton: $isEnableButton,'
-        ' tabIndex: $tabIndex,'
-        ' mobile: ${mobile.isValidMobile()},'
-        ' email: ${email.isValidEmail()},'
-        ' name: ${name.isValidName()},'
-        ' password: ${password.isValidPwd()},'
-        ' passwordConfirm: ${password == passwordConfirm}');
   }
 
   void onEmailChange(String value) {
@@ -216,7 +210,10 @@ class RegisterController extends Controller {
 
   void _onSuccess() {
     if (tabIndex == 1) {
-      // 註冊成功，請前網電子信用收取驗證信
+      getContext().pushNamed(
+        staticRouteName,
+        extra: StaticPageType.emailRegisterSuccess,
+      );
     } else {
       getContext().pushNamed(verifyMobileCodeRouteName, queryParams: {
         "verifyType": VerifyType.addMember.value,

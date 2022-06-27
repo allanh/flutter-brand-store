@@ -223,7 +223,7 @@ class _InvoiceSettingPageState
                       id: _membershipCarrier,
                       handleMembershipCarrierRegister: () =>
                           handleMembershipCarrierRegister()),
-                  height: index == 0 ? 120.0 : 90.0,
+                  height: index == 0 ? 130.0 : 100.0,
                   isSelected: index == 0);
 
             /// 個人-手機條碼載具
