@@ -5,15 +5,15 @@ import 'package:brandstores/src/data/utils/dio/api.dart';
 
 import '../../../domain/entities/member/shipping_info.dart';
 
-class DataShippingInfoRepository extends ShippingInfoRepository {
-  static final DataShippingInfoRepository _instance =
-      DataShippingInfoRepository._internal();
+class DataShippingAddressRepository extends ShippingAddressRepository {
+  static final DataShippingAddressRepository _instance =
+      DataShippingAddressRepository._internal();
 
-  DataShippingInfoRepository._internal();
-  factory DataShippingInfoRepository() => _instance;
+  DataShippingAddressRepository._internal();
+  factory DataShippingAddressRepository() => _instance;
 
   @override
-  Future getShippingInfo() async {
+  Future getShippingAddress() async {
     try {
       final response = await HttpUtils.instance.get(Api.shippingInfo);
       if (response.isSuccess) {

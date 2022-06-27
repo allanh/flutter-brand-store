@@ -1,3 +1,3 @@
-abstract class ShippingInfoRepository {
-  Future<dynamic> getShippingInfo();
+abstract class ShippingAddressRepository {
+  Future<dynamic> getShippingAddress();
 }

@@ -1,5 +1,5 @@
 import 'package:brandstores/src/data/repositories/member/data_invoice_setting_repository.dart';
-import 'package:brandstores/src/data/repositories/member/data_shipping_info_repository.dart';
+import 'package:brandstores/src/data/repositories/member/data_shipping_address_repository.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
@@ -23,7 +23,7 @@ class _CheckoutSettingPageState
   _CheckoutSettingPageState()
       : super(
           CheckoutSettingController(
-            DataShippingInfoRepository(),
+            DataShippingAddressRepository(),
             DataInvoiceSettingRepository(),
           ),
         );
