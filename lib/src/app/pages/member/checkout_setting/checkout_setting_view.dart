@@ -1,5 +1,5 @@
 import 'package:brandstores/src/data/repositories/member/data_invoice_setting_repository.dart';
-import 'package:brandstores/src/data/repositories/member/data_shipping_address_repository.dart';
+import 'package:brandstores/src/data/repositories/member/data_shipping_infos_repository.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
 import 'package:brandstores/src/device/utils/my_plus_colors.dart';
@@ -23,16 +23,24 @@ class _CheckoutSettingPageState
   _CheckoutSettingPageState()
       : super(
           CheckoutSettingController(
-            DataShippingAddressRepository(),
+            DataShippingInfosRepository(),
             DataInvoiceSettingRepository(),
           ),
         );
 
-  void handleOpenPage(BuildContext context, CheckoutSettingType type) {
+  void handleOpenPage(
+    BuildContext context,
+    CheckoutSettingController controller,
+    CheckoutSettingType type,
+  ) {
     switch (type) {
       case CheckoutSettingType.credit:
         break;
       case CheckoutSettingType.address:
+        context.pushNamed(
+          shippingAddressRouteName,
+          extra: controller.shippingInfos,
+        );
         break;
       case CheckoutSettingType.store:
         break;
@@ -62,20 +70,20 @@ class _CheckoutSettingPageState
           ),
           body: ListView(
             children: [
-              _buildListTile(
-                  context, '常用信用卡', CheckoutSettingType.credit, handleOpenPage,
+              _buildListTile(context, controller, '常用信用卡',
+                  CheckoutSettingType.credit, handleOpenPage,
                   badge: 4123),
               const Divider(thickness: 1.0, color: UdiColors.veryLightGrey2),
-              _buildListTile(context, '常用收件地址', CheckoutSettingType.address,
-                  handleOpenPage,
+              _buildListTile(context, controller, '常用收件地址',
+                  CheckoutSettingType.address, handleOpenPage,
                   badge: controller.shippingInfos?.length ?? 0),
               const Divider(thickness: 1.0, color: UdiColors.veryLightGrey2),
-              _buildListTile(
-                  context, '常用超商門市', CheckoutSettingType.store, handleOpenPage,
+              _buildListTile(context, controller, '常用超商門市',
+                  CheckoutSettingType.store, handleOpenPage,
                   badge: 1067894567),
               const Divider(thickness: 1.0, color: UdiColors.veryLightGrey2),
-              _buildListTile(
-                  context, '發票設定', CheckoutSettingType.invoice, handleOpenPage,
+              _buildListTile(context, controller, '發票設定',
+                  CheckoutSettingType.invoice, handleOpenPage,
                   badge: invoicesBadge),
               const Divider(thickness: 1.0, color: UdiColors.veryLightGrey2),
             ],
@@ -85,8 +93,12 @@ class _CheckoutSettingPageState
     );
   }
 
-  SizedBox _buildListTile(BuildContext context, String title,
-      CheckoutSettingType type, Function handleOpenPage,
+  SizedBox _buildListTile(
+      BuildContext context,
+      CheckoutSettingController controller,
+      String title,
+      CheckoutSettingType type,
+      Function handleOpenPage,
       {int badge = 0}) {
     List<Widget> items = [
       const Icon(Icons.arrow_forward_ios_rounded,
@@ -119,7 +131,7 @@ class _CheckoutSettingPageState
     return SizedBox(
       height: 52.0,
       child: ListTile(
-        onTap: () => handleOpenPage(context, type),
+        onTap: () => handleOpenPage(context, controller, type),
         contentPadding: const EdgeInsets.only(left: 24.0, right: 16.0),
         title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

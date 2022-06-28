@@ -1,4 +1,5 @@
 import 'package:brandstores/src/domain/entities/enum/verify_type.dart';
+import 'package:brandstores/src/domain/entities/member/shipping_info.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -27,7 +28,7 @@ import 'pages/member/account_change/account_change_view.dart';
 import 'pages/member/products/member_products_view.dart';
 import 'pages/member/checkout_setting/invoice/invoice_setting_view.dart';
 import 'pages/member/checkout_setting/checkout_setting_view.dart';
-import 'pages/member/checkout_setting/shipping/shipping_address_view.dart';
+import 'pages/member/checkout_setting/shipping/shipping_infos_view.dart';
 
 class MyPlusRouter {
   final LoginState loginState;
@@ -93,7 +94,11 @@ class MyPlusRouter {
           return MaterialPage<void>(
             key: state.pageKey,
             child: ResetPasswordPage(
-              email.isEmpty ? (mobile.isEmpty ? VerifyMethod.password : VerifyMethod.mobile) : VerifyMethod.email,
+              email.isEmpty
+                  ? (mobile.isEmpty
+                      ? VerifyMethod.password
+                      : VerifyMethod.mobile)
+                  : VerifyMethod.email,
               mobileCode: state.queryParams['mobileCode'] ?? '',
               mobile: mobile,
               email: email,
@@ -311,7 +316,9 @@ class MyPlusRouter {
         path: '/shipping-address',
         pageBuilder: (context, state) => MaterialPage<void>(
           key: state.pageKey,
-          child: ShippingAddressPage(),
+          child: ShippingInfosPage(
+            infos: state.extra as List<ShippingInfo>,
+          ),
         ),
       ),
 

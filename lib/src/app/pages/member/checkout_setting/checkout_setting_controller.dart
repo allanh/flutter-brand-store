@@ -1,4 +1,4 @@
-import 'package:brandstores/src/data/repositories/member/data_shipping_address_repository.dart';
+import 'package:brandstores/src/data/repositories/member/data_shipping_infos_repository.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:flutter/material.dart';
 
@@ -7,21 +7,21 @@ import '../../../../domain/entities/member/invoice.dart';
 import '../../../../domain/entities/member/shipping_info.dart';
 
 import 'invoice/invoice_setting_presenter.dart';
-import 'shipping/shipping_address_presenter.dart';
+import 'shipping/shipping_infos_presenter.dart';
 
 class CheckoutSettingController extends Controller {
   CheckoutSettingController(
-    DataShippingAddressRepository dataShippingInfoRepository,
+    DataShippingInfosRepository dataShippingInfoRepository,
     DataInvoiceSettingRepository dataInvoiceSettingRepository,
   )   : shippingAddressPresenter =
-            ShippingAddressPresenter(dataShippingInfoRepository),
+            ShippingInfosPresenter(dataShippingInfoRepository),
         invoiceInfoPresenter =
             InvoiceSettingPresenter(dataInvoiceSettingRepository);
 
   List<ShippingInfo>? _shippingInfos;
   List<ShippingInfo>? get shippingInfos => _shippingInfos;
 
-  final ShippingAddressPresenter shippingAddressPresenter;
+  final ShippingInfosPresenter shippingAddressPresenter;
 
   InvoicesInfo? _invoiceInfos;
   InvoicesInfo? get invoiceInfos => _invoiceInfos;
@@ -37,17 +37,17 @@ class CheckoutSettingController extends Controller {
 
   @override
   void initListeners() {
-    shippingAddressPresenter.getShippingAddressOnNext =
+    shippingAddressPresenter.getShippingInfosOnNext =
         (List<ShippingInfo> shippingInfos) {
       _shippingInfos = shippingInfos;
       refreshUI();
     };
 
-    shippingAddressPresenter.getShippingAddressOnComplete = () {
+    shippingAddressPresenter.getShippingInfosOnComplete = () {
       debugPrint('Shipping info retrieved');
     };
 
-    shippingAddressPresenter.getShippingAddressOnError = (e) {
+    shippingAddressPresenter.getShippingInfosOnError = (e) {
       debugPrint('Could not retrieve shipping info.');
     };
 
@@ -82,7 +82,7 @@ class CheckoutSettingController extends Controller {
   @override
   void onDeactivated() => debugPrint('View is about to be deactivated');
 
-  void getShippingAddress() => shippingAddressPresenter.getShippingAddress();
+  void getShippingAddress() => shippingAddressPresenter.getShippingInfos();
 
   void getInvoiceSetting() => invoiceInfoPresenter.getInvoiceSetting();
 }

@@ -70,6 +70,9 @@ class MyApp extends StatelessWidget {
         backgroundColor: setting.layout.sidebar.footerBackground,
       ),
       primaryColor: setting.layout.setting.theme,
+      colorScheme: base.colorScheme.copyWith(
+        secondary: setting.layout.sidebar.logoBackground,
+      ),
       focusColor: setting.layout.setting.focus,
       textTheme: _buildMyPlusTextTheme(base.textTheme, setting),
       textSelectionTheme:
