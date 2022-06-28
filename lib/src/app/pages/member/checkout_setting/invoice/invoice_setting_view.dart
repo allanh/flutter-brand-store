@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../../data/repositories/member/data_invoice_setting_repository.dart';
 import '../../../../utils/constants.dart';
-import '../../../../widgets/member/checkout_setting/carrier_register_dialog.dart';
+import '../../../../widgets/member/dialog_wrapper.dart';
 import '../../../../widgets/member/checkout_setting/reorderable_card.dart';
 import '../../../../widgets/member/checkout_setting/citizen_digital_carrier.dart';
 import '../../../../widgets/member/checkout_setting/donation_invoice_carrier.dart';
@@ -143,10 +143,19 @@ class _InvoiceSettingPageState
 
       /// 發票歸戶
       void handleMembershipCarrierRegister() {
-        showDialog<String>(
-          context: context,
-          builder: (BuildContext context) => const CarrierRegisterDialog(),
-        );
+        DialogWrapper().showTwoButtonsDialog(
+            context: context,
+            title: '發票歸戶作業',
+            content:
+                '即將前往「財政部電子發票整合服務平台」，完成歸戶後，將由「財政部電子發票整合服務平台」進行發票兌獎、領獎通知及相關作業；品牌商店名稱不另行通知與寄送中獎發票。',
+            contentPadding:
+                const EdgeInsets.only(left: 24.0, right: 24.0, top: 24.0),
+            textAlign: TextAlign.justify,
+            handleCancel: () => Navigator.pop(context, '取消'),
+            handleSubmit: () {
+              Navigator.pop(context, '確定');
+              context.pushNamed(carrierRegisterWebRouteName);
+            });
       }
 
       /// 儲存手機載具
@@ -223,7 +232,7 @@ class _InvoiceSettingPageState
                       id: _membershipCarrier,
                       handleMembershipCarrierRegister: () =>
                           handleMembershipCarrierRegister()),
-                  height: index == 0 ? 120.0 : 90.0,
+                  height: index == 0 ? 130.0 : 100.0,
                   isSelected: index == 0);
 
             /// 個人-手機條碼載具

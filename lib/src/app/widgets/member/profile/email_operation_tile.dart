@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:brandstores/src/device/utils/my_plus_colors.dart';
 import 'package:brandstores/src/app/widgets/member/profile/common.dart';
 
 /// 建立Email驗證、變更區塊

@@ -56,6 +56,20 @@ class ShippingInfo {
   @JsonKey(name: 'post_name')
   String? name;
 
+  String get sensitiveName {
+    return name?.length == 2
+
+        /// 單名的時候隱碼最後一個字
+        ? '${name?.replaceRange(1, 1, '*')}'
+        : name?.length == 3
+
+            /// 姓名三個字時，隱碼中間一個字
+            ? '${name?.replaceRange(1, 2, '*')}'
+
+            /// 姓名超過三個字的時候，隱碼兩個字
+            : '${name?.replaceRange(1, 3, '*')}';
+  }
+
   /// 國碼
   @JsonKey(name: 'post_country_code')
   String? countryCode;
@@ -63,6 +77,10 @@ class ShippingInfo {
   /// 收件人手機
   @JsonKey(name: 'post_mobile')
   String? mobile;
+
+  String get sensitiveMobile {
+    return '+$countryCode ${mobile?.replaceRange(2, 7, '** *** ')}';
+  }
 
   /// 收件人市話區碼
   @JsonKey(name: 'post_area_code')
@@ -75,6 +93,10 @@ class ShippingInfo {
   /// 收件人市話分機號碼
   @JsonKey(name: 'post_tel_ext')
   String? ext;
+
+  String get sensitivePhone {
+    return '+$area-${tel?.replaceRange(2, 7, '** **')} # $ext';
+  }
 
   /// 收件人郵遞區號
   @JsonKey(name: 'post_zipcode')
@@ -91,6 +113,10 @@ class ShippingInfo {
   /// 收件人地址
   @JsonKey(name: 'post_address')
   String? address;
+
+  String get sensitiveAddress {
+    return '$zipCode $county$district ${address?.replaceRange(6, null, '*****')}';
+  }
 
   @JsonKey(
       name: 'is_default',

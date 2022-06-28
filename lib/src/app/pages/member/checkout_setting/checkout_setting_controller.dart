@@ -1,26 +1,27 @@
-import 'package:brandstores/src/data/repositories/member/data_shipping_info_repository.dart';
+import 'package:brandstores/src/data/repositories/member/data_shipping_infos_repository.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../data/repositories/member/data_invoice_setting_repository.dart';
 import '../../../../domain/entities/member/invoice.dart';
 import '../../../../domain/entities/member/shipping_info.dart';
-import 'checkout_setting_presenter.dart';
+
 import 'invoice/invoice_setting_presenter.dart';
+import 'shipping/shipping_infos_presenter.dart';
 
 class CheckoutSettingController extends Controller {
   CheckoutSettingController(
-    DataShippingInfoRepository dataShippingInfoRepository,
+    DataShippingInfosRepository dataShippingInfoRepository,
     DataInvoiceSettingRepository dataInvoiceSettingRepository,
-  )   : shippingInfoPresenter =
-            ShippingInfoPresenter(dataShippingInfoRepository),
+  )   : shippingAddressPresenter =
+            ShippingInfosPresenter(dataShippingInfoRepository),
         invoiceInfoPresenter =
             InvoiceSettingPresenter(dataInvoiceSettingRepository);
 
-  final ShippingInfoPresenter shippingInfoPresenter;
-
   List<ShippingInfo>? _shippingInfos;
   List<ShippingInfo>? get shippingInfos => _shippingInfos;
+
+  final ShippingInfosPresenter shippingAddressPresenter;
 
   InvoicesInfo? _invoiceInfos;
   InvoicesInfo? get invoiceInfos => _invoiceInfos;
@@ -29,24 +30,24 @@ class CheckoutSettingController extends Controller {
 
   @override
   void onInitState() {
-    getShippingInfo();
+    getShippingAddress();
 
     getInvoiceSetting();
   }
 
   @override
   void initListeners() {
-    shippingInfoPresenter.getShippingInfoOnNext =
+    shippingAddressPresenter.getShippingInfosOnNext =
         (List<ShippingInfo> shippingInfos) {
       _shippingInfos = shippingInfos;
       refreshUI();
     };
 
-    shippingInfoPresenter.getShippingInfoOnComplete = () {
+    shippingAddressPresenter.getShippingInfosOnComplete = () {
       debugPrint('Shipping info retrieved');
     };
 
-    shippingInfoPresenter.getShippingInfoOnError = (e) {
+    shippingAddressPresenter.getShippingInfosOnError = (e) {
       debugPrint('Could not retrieve shipping info.');
     };
 
@@ -68,7 +69,7 @@ class CheckoutSettingController extends Controller {
   void onDisposed() {
     // don't forget to dispose of the presenter
     invoiceInfoPresenter.dispose();
-    shippingInfoPresenter.dispose();
+    shippingAddressPresenter.dispose();
     super.onDisposed();
   }
 
@@ -81,7 +82,7 @@ class CheckoutSettingController extends Controller {
   @override
   void onDeactivated() => debugPrint('View is about to be deactivated');
 
-  void getShippingInfo() => shippingInfoPresenter.getShippingInfo();
+  void getShippingAddress() => shippingAddressPresenter.getShippingInfos();
 
   void getInvoiceSetting() => invoiceInfoPresenter.getInvoiceSetting();
 }
