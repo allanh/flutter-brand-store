@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'two_buttons_dialog.dart';
 
 class DialogWrapper {
+  /// 取消、確定按鈕對話視窗
+  /// 
+  /// [title] 有值時，會出現標題列以及關閉按鈕
   Future<String?> showTwoButtonsDialog({
     required BuildContext context,
     String? title,
