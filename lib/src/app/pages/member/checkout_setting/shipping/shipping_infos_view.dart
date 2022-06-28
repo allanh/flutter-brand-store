@@ -1,10 +1,12 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:brandstores/src/domain/entities/member/shipping_info.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
 import '../../../../../device/utils/my_plus_colors.dart';
+import '../../../../widgets/member/checkout_setting/dialog_wrapper.dart';
 import '../../../../widgets/member/checkout_setting/reorderable_card.dart';
 import '../../../../widgets/member/checkout_setting/shipping_info_view.dart';
 import 'shipping_infos_controller.dart';
@@ -40,7 +42,14 @@ class _ShippingInfosPageState
 
   /// 刪除地址
   void handleDelete(ShippingInfo info) {
-    debugPrint('Delete ${info.infoName}');
+    DialogWrapper().showDialogView(
+      context: context,
+      content: '確定要刪除「${info.infoName}」？',
+      contentPadding: const EdgeInsets.fromLTRB(30.0, 66.0, 30.0, 36.0),
+      textAlign: TextAlign.center,
+      handleCancel: () => Navigator.pop(context, '取消'),
+      handleSubmit: () => Navigator.pop(context, '確定'),
+    );
   }
 
   /// 排序收件地址
