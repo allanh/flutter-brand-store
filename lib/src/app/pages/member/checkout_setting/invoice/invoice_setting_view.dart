@@ -143,7 +143,7 @@ class _InvoiceSettingPageState
 
       /// 發票歸戶
       void handleMembershipCarrierRegister() {
-        DialogWrapper().showDialogView(
+        DialogWrapper().showTwoButtonsDialog(
             context: context,
             title: '發票歸戶作業',
             content:

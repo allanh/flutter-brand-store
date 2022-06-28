@@ -42,7 +42,7 @@ class _ShippingInfosPageState
 
   /// 刪除地址
   void handleDelete(ShippingInfo info) {
-    DialogWrapper().showDialogView(
+    DialogWrapper().showTwoButtonsDialog(
       context: context,
       content: '確定要刪除「${info.infoName}」？',
       contentPadding: const EdgeInsets.fromLTRB(30.0, 66.0, 30.0, 36.0),

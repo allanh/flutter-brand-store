@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'two_buttons_dialog.dart';
 
 class DialogWrapper {
-  Future<String?> showDialogView({
+  Future<String?> showTwoButtonsDialog({
     required BuildContext context,
     String? title,
     required String content,
