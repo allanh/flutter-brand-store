@@ -25,8 +25,7 @@ class CarrierRegisterDialog extends StatelessWidget {
                 Expanded(
                     child: Center(
                         child: Text('發票歸戶作業',
-                            style:
-                                Theme.of(context).textTheme.bodyText1))),
+                            style: Theme.of(context).textTheme.bodyText1))),
                 SizedBox(
                   width: 20.0,
                   child: CloseButton(
@@ -50,27 +49,33 @@ class CarrierRegisterDialog extends StatelessWidget {
           style: Theme.of(context).textTheme.caption),
       actions: <Widget>[
         SizedBox(
-          width: 117.0,
+          width: 110.0,
           height: 36.0,
-          child: OutlinedButton(
-            onPressed: () => Navigator.pop(context, '取消'),
-            child: const Text('取消'),
-            style: OutlinedButton.styleFrom(
-                primary: Theme.of(context).appBarTheme.backgroundColor),
-          ),
+          child: FractionallySizedBox(
+              widthFactor: 0.9,
+              heightFactor: 1.0,
+              child: OutlinedButton(
+                onPressed: () => Navigator.pop(context, '取消'),
+                child: const Text('取消'),
+                style: OutlinedButton.styleFrom(
+                    primary: Theme.of(context).appBarTheme.backgroundColor),
+              )),
         ),
         SizedBox(
-          width: 117.0,
+          width: 110.0,
           height: 36.0,
-          child: ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context, '確定');
-                context.pushNamed(carrierRegisterWebRouteName);
-              },
-              child: const Text('確定'),
-              style: ElevatedButton.styleFrom(
-                primary: Theme.of(context).appBarTheme.backgroundColor,
-              )),
+          child: FractionallySizedBox(
+              widthFactor: 0.9,
+              heightFactor: 1.0,
+              child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context, '確定');
+                    context.pushNamed(carrierRegisterWebRouteName);
+                  },
+                  child: const Text('確定'),
+                  style: ElevatedButton.styleFrom(
+                    primary: Theme.of(context).appBarTheme.backgroundColor,
+                  ))),
         ),
       ],
     );
