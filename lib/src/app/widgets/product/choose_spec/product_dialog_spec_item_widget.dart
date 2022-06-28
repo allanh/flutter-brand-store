@@ -6,7 +6,7 @@ import '../../../../domain/entities/product/spec_sku.dart';
 import '../../common/aspect_ratio_image_widget.dart';
 
 /// 單一規格
-class SpecItemWidget extends StatelessWidget {
+class ProductDialogSpecItemWidget extends StatelessWidget {
   // 顯示類型
   final SpecDisplay displayType;
   final String? text;
@@ -16,7 +16,7 @@ class SpecItemWidget extends StatelessWidget {
   final bool isSelected;
   final VoidCallback? onItemSelected;
 
-  const SpecItemWidget(
+  const ProductDialogSpecItemWidget(
       {Key? key,
       required this.displayType,
       this.text,
@@ -46,7 +46,7 @@ class SpecItemWidget extends StatelessWidget {
                         isSelected ? _primaryColor : UdiColors.veryLightGrey2),
                 borderRadius: BorderRadius.circular(4.0),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 7),
+              padding: const EdgeInsets.symmetric(horizontal: 8.5),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[

@@ -28,31 +28,14 @@ class ProductSpecRowWidget extends StatelessWidget {
             const TextStyle(),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           // 提示文字
-          Wrap(children: [
-            Text(product.getDefaultSpecText(params?.deliveryDate))
-          ]),
+          Wrap(children: [Text(product.getSpecRowText(params))]),
           if (_preorderDate?.isNotEmpty == true)
             SizedBox(
               height: 5 * SizeConfig.screenRatio,
             ),
-          if (_preorderDate?.isNotEmpty == true) Text(_preorderDate!),
 
-          /*
-              selectedAddons.isNotEmpty
-                  ? Text.rich(TextSpan(children: [
-                      const TextSpan(text: "已選購 "),
-                      TextSpan(
-                          text: selectedAddons.length.toString(),
-                          style: _strawberryStyle),
-                      const TextSpan(text: " 件，共 "),
-                      TextSpan(
-                          text: selectedAddons
-                              .sumBy((e) => e.addonPrice ?? 0)
-                              .toDollarString(),
-                          style: _strawberryStyle),
-                    ]))
-                  : const Text('一起買，更優惠')),
-*/
+          // 預購/訂製/客約 日期
+          if (_preorderDate?.isNotEmpty == true) Text(_preorderDate!),
         ]));
   }
 }

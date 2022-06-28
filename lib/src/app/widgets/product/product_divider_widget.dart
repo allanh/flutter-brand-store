@@ -1,18 +1,23 @@
-import 'package:brandstores/src/app/utils/screen_config.dart';
 import 'package:flutter/material.dart';
 
 import '../../../device/utils/my_plus_colors.dart';
 
-class ProductDividerWidget extends StatelessWidget {
-  const ProductDividerWidget({Key? key, this.dividerWidth}) : super(key: key);
+enum ProductDividerType { short, long }
 
-  final double? dividerWidth;
+class ProductDividerWidget extends StatelessWidget {
+  const ProductDividerWidget({Key? key, this.type = ProductDividerType.short})
+      : super(key: key);
+
+  final ProductDividerType type;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: dividerWidth ?? SizeConfig.screenWidth - 24,
-        height: 1,
-        decoration: const BoxDecoration(color: UdiColors.defaultBorder));
+    return Divider(
+      height: 1,
+      thickness: 1,
+      color: UdiColors.veryLightGrey2,
+      indent: type == ProductDividerType.short ? 12 : 0,
+      endIndent: type == ProductDividerType.short ? 12 : 0,
+    );
   }
 }

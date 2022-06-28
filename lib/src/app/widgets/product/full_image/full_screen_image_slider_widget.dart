@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-import '../gallery_small_image_widget.dart';
+import 'gallery_small_image_widget.dart';
 
 /// 全螢幕的畫廊
 class FullScreenImageSliderWidget extends StatefulWidget {

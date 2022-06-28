@@ -1,4 +1,3 @@
-import 'package:brandstores/src/domain/entities/product/shipped_method.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'spec_sku.g.dart';
 

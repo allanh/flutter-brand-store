@@ -2,8 +2,8 @@ import 'package:brandstores/src/app/widgets/product/product_video_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../../domain/entities/product/image_info.dart';
-import '../../utils/screen_config.dart';
+import '../../../../domain/entities/product/image_info.dart';
+import '../../../utils/screen_config.dart';
 
 class ImageSliderWidget extends StatefulWidget {
   final List<MyPlusImageInfo> imageList;

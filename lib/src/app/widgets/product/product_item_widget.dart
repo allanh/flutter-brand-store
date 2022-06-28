@@ -19,7 +19,7 @@ class ProductItemWidget extends StatelessWidget {
   String get _price {
     int? _price;
     if (productId != null) {
-      _price = product.getProudctInfo(productId!)?.proposedPrice;
+      _price = product.getProudctInfo(productId: productId!)?.proposedPrice;
     } else if (product.productInfo?.isNotEmpty == true) {
       _price = product.productInfo?.first.proposedPrice;
     }

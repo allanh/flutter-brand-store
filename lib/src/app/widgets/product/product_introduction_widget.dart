@@ -91,9 +91,7 @@ class ProductIntroductionWidget extends StatelessWidget {
         const SizedBox(
           height: 10,
         ),
-        ProductDividerWidget(
-          dividerWidth: SizeConfig.screenWidth,
-        )
+        const ProductDividerWidget(type: ProductDividerType.long)
       ]));
 
   // 商品圖片

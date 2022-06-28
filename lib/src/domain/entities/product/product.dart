@@ -1,5 +1,9 @@
+import 'dart:collection';
+import 'dart:math';
+
 import 'package:brandstores/src/app/utils/constants.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'category_main.dart';
@@ -13,6 +17,7 @@ import 'event.dart';
 import '../status.dart';
 import '../../../extension/iterable_extension.dart';
 import 'package:brandstores/src/extension/string_extension.dart';
+import 'package:brandstores/src/extension/iterable_extension.dart';
 part 'product.g.dart';
 
 /// 商品狀態
@@ -69,6 +74,13 @@ enum Store {
   momo, // MOMO
   @JsonValue('SHOPEE')
   shopee, // 蝦⽪
+}
+
+// 選規項目類型
+enum SpecItemType {
+  date, // 日期
+  spec1, // 規格1
+  spec2 // 規格2
 }
 
 @JsonSerializable()
@@ -307,22 +319,49 @@ class Product {
           ?.any((element) => element.proposedPrice != minProposedPrice) ??
       false;
 
-  /// default specification text
-  String getDefaultSpecText(String? preorderDate) {
+  /// 商品主頁規格列資訊
+  String getSpecRowText(AddToCartParams? params) {
     final buffer = StringBuffer();
-    buffer.write('請選擇 ');
-
-    if (ShippedType.preorder == shippedType && preorderDate == null) {
-      buffer.write('出貨日期/');
+    // 若有未選取規格需顯示請選擇
+    if (params?.productId == null || (params?.quantity ?? 0) == 0) {
+      buffer.write('請選擇 ');
     }
-    if (specLv1Title?.isNotEmpty == true) {
-      buffer.write('$specLv1Title/');
+    // 預購日期
+    if (ShippedType.preorder == shippedType &&
+        params?.deliveryDate?.isNotEmpty != true) {
+      buffer.write("出貨日期/");
     }
-    if (specLv2Title?.isNotEmpty == true) {
-      buffer.write('$specLv2Title/');
+    // 規格1
+    if (SpecType.none != specType) {
+      final name = params?.selectedProductInfo?.specLv1Name;
+      buffer.write("${name?.isNotEmpty == true ? name! : specLv1Title}/");
+    }
+    // 規格2
+    if (SpecType.double == specType) {
+      final name = params?.selectedProductInfo?.specLv2Name;
+      buffer.write("${name?.isNotEmpty == true ? name! : specLv2Title}/");
     }
     buffer.write('數量');
     return buffer.toString();
+  }
+
+  // 取得出貨日期、規格1或規格2的索引，若找不到返回 -1
+  // 只需要傳一個參數
+  int getSelectedSpecIndex({String? preorderDate, int? spec1Id, int? spec2Id}) {
+    int? index = -1;
+    // 預購日期
+    if (preorderDate != null) {
+      index = shippedPreorderDate?.indexOf(preorderDate);
+    }
+    // 規格1
+    if (spec1Id != null) {
+      index = specInfo1?.indexWhere((e) => e.specLv1Id == spec1Id);
+    }
+    // 規格2
+    if (spec2Id != null) {
+      index = specInfo2?.indexWhere((e) => e.specLv2Id == spec2Id);
+    }
+    return index ?? -1;
   }
 
   /**
@@ -364,22 +403,59 @@ class Product {
       ? (expiry == Expiry.ever ? '永久' : '$expireDate$expireDateType')
       : null;
 
-  // 取得規格商品
-  ProductInfo? getProudctInfo(int? productId) => productId != null
-      ? productInfo?.firstWhereOrNull((info) => info.productId == productId)
-      : null;
+  // 取得已選規格的參數, 若無 productId 會取 productInfo 第一個可銷售的商品
+  AddToCartParams getAddToCartParams(int? productId) {
+    final selectedProductInfo =
+        getProudctInfo(productId: productId ?? productInfo?.first.productId) ??
+            getFirstAvaliabedProudctInfo();
+    final firstPreorderDate = shippedPreorderDate?.first;
+
+    return AddToCartParams(
+        no: no,
+        productId: productId,
+        deliveryDate: firstPreorderDate,
+        specLv1Id: selectedProductInfo?.specLv1Id,
+        specLv2Id: selectedProductInfo?.specLv2Id,
+        selectedProductInfo: selectedProductInfo);
+  }
+
+  // 取得規格商品, 可傳入
+  ProductInfo? getProudctInfo(
+          {int? productId, int? specLv1Id, int? specLv2Id}) =>
+      productInfo?.firstWhereOrNull((info) =>
+          (productId != null ? info.productId == productId : true) &&
+          (specLv1Id != null ? info.specLv1Id == specLv1Id : true) &&
+          (specLv2Id != null ? info.specLv2Id == specLv2Id : true));
 
   // 取得第一個可銷售的商品
   ProductInfo? getFirstAvaliabedProudctInfo() =>
       productInfo?.firstWhereOrNull((info) => (info.quantity ?? 0) > 0);
 
-  // 取得已選規格的參數, 若無 productId 會取 productInfo 第一個可銷售的商品
-  AddToCartParams getAddToCartParams(int? productId) => AddToCartParams(
-      no: no,
-      productId: productId,
-      selectedProductInfo:
-          getProudctInfo(productId ?? productInfo?.first.productId) ??
-              getFirstAvaliabedProudctInfo());
+  // 取得規格項目文字
+  String? getSpecText(SpecItemType type, int index) {
+    String? text;
+    switch (type) {
+      case SpecItemType.spec1:
+        text = specInfo1?[index].specName;
+        break;
+      case SpecItemType.spec2:
+        text = specInfo2?[index].specName;
+        break;
+      default:
+        if (ShippedType.preorder == shippedType) {
+          text = shippedPreorderDate?[index]
+              .convertDateFormat(serverDateFormat, shortDateFormat);
+        }
+    }
+    return text;
+  }
+
+  // 規格項目是否啟用
+  bool isSpecItemEnabled({int? specLv1Id, int? specLv2Id}) {
+    final info = getProudctInfo(specLv1Id: specLv1Id, specLv2Id: specLv2Id);
+    int quantity = info?.quantity ?? 0;
+    return quantity > 0;
+  }
 }
 
 @JsonSerializable()
@@ -485,6 +561,11 @@ class AddToCartParams {
   @JsonKey(name: 'addon')
   List<AddToCartParams>? addon;
 
+  @JsonKey(name: 'spec_lv_1_id')
+  int? specLv1Id;
+  @JsonKey(name: 'spec_lv_2_id')
+  int? specLv2Id;
+
   // 加購品價格
   int? addonPrice;
   // productId 對應的 ProductInfo
@@ -496,6 +577,8 @@ class AddToCartParams {
     this.quantity,
     this.deliveryDate,
     this.addon,
+    this.specLv1Id,
+    this.specLv2Id,
     this.addonPrice,
     this.selectedProductInfo,
   });
@@ -503,6 +586,13 @@ class AddToCartParams {
   factory AddToCartParams.fromJson(Map<String, dynamic> json) =>
       _$AddToCartParamsFromJson(json);
   Map<String, dynamic> toJson() => _$AddToCartParamsToJson(this);
+
+  // 更新已選取的商品
+  void updateProductInfo(ProductInfo? info) {
+    productId = info?.productId;
+    specLv1Id = info?.specLv1Id;
+    specLv2Id = info?.specLv2Id;
+  }
 }
 
 /// 測試用
@@ -535,4 +625,103 @@ extension MockProduct on Product {
 
   // 鑑賞期
   String? get orderHesitate => '7天';
+
+  List<ProductInfo> get mockProducts => [
+        ProductInfo(
+            productStatus: EnabledStatus.on,
+            productId: 57634,
+            productNo: 'favor0005',
+            productName: '粟一燒 - 燒烤3包',
+            specNo: 'M03001000030159S201',
+            specLv1Id: 31274,
+            specLv1Name: '家庭裝',
+            specLv2Id: 31276,
+            specLv2Name: '燒烤',
+            quantity: 100,
+            safeStock: 50,
+            saleLimit: 10,
+            marketPrice: 250,
+            proposedPrice: 220,
+            promotionPriceApp: 0,
+            imageUrl:
+                'https://storage.googleapis.com/udi_upload/7cec4098f0dc2a1497a7bc166e55e702',
+            imageInfo: [
+              MyPlusImageInfo(
+                  type: ImageType.image,
+                  url:
+                      'https://storage.googleapis.com/udi_upload/7cec4098f0dc2a1497a7bc166e55e702')
+            ]),
+        ProductInfo(
+            productStatus: EnabledStatus.on,
+            productId: 57635,
+            productNo: '11100002',
+            productName: '粟一燒 - 上湯龍蝦伊麵 3包',
+            specNo: 'M03001000030159S202',
+            specLv1Id: 31274,
+            specLv1Name: '家庭裝',
+            specLv2Id: 31277,
+            specLv2Name: '上湯龍蝦伊麵',
+            quantity: 100,
+            safeStock: 50,
+            saleLimit: 10,
+            marketPrice: 250,
+            proposedPrice: 220,
+            promotionPriceApp: 0,
+            imageUrl:
+                "https://storage.googleapis.com/udi_upload/0bcd9f0675121613553eeff2d246d9a5",
+            imageInfo: [
+              MyPlusImageInfo(
+                  type: ImageType.image,
+                  url:
+                      "https://storage.googleapis.com/udi_upload/0bcd9f0675121613553eeff2d246d9a5")
+            ]),
+        ProductInfo(
+            productStatus: EnabledStatus.on,
+            productId: 57636,
+            productNo: '11100002',
+            productName: '粟一燒 - 燒烤',
+            specNo: 'M03001000030159S203',
+            specLv1Id: 31275,
+            specLv1Name: '小包裝',
+            specLv2Id: 31276,
+            specLv2Name: '燒烤',
+            quantity: 200,
+            safeStock: 100,
+            saleLimit: 10,
+            marketPrice: 160,
+            proposedPrice: 100,
+            promotionPriceApp: 0,
+            imageUrl:
+                "https://storage.googleapis.com/udi_upload/7ea8c0c8f6609a042420fc714f9031cd",
+            imageInfo: [
+              MyPlusImageInfo(
+                  type: ImageType.image,
+                  url:
+                      "https://storage.googleapis.com/udi_upload/7ea8c0c8f6609a042420fc714f9031cd")
+            ]),
+        ProductInfo(
+            productStatus: EnabledStatus.on,
+            productId: 57637,
+            productNo: 'favor0003',
+            productName: '粟一燒 - 上湯龍蝦伊麵',
+            specNo: 'M03001000030159S204',
+            specLv1Id: 31275,
+            specLv1Name: '小包裝',
+            specLv2Id: 31277,
+            specLv2Name: '上湯龍蝦伊麵',
+            quantity: 0,
+            safeStock: 100,
+            saleLimit: 10,
+            marketPrice: 160,
+            proposedPrice: 100,
+            promotionPriceApp: 0,
+            imageUrl:
+                "https://storage.googleapis.com/udi_upload/80496ae9708496297e07604a743b4902",
+            imageInfo: [
+              MyPlusImageInfo(
+                  type: ImageType.image,
+                  url:
+                      "https://storage.googleapis.com/udi_upload/80496ae9708496297e07604a743b4902")
+            ]),
+      ];
 }

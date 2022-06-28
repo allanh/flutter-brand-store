@@ -1,6 +1,7 @@
 import 'package:brandstores/src/app/utils/screen_config.dart';
-import 'package:brandstores/src/app/widgets/product/dialog/product_dialog_title_widget.dart';
 import 'package:flutter/material.dart';
+
+import 'choose_spec/product_dialog_title_widget.dart';
 
 class BaseProductDialogWidget extends StatelessWidget {
   final String? title;

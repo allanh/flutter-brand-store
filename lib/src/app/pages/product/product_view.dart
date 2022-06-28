@@ -12,7 +12,7 @@ import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:go_router/go_router.dart';
 import '../../widgets/product/base_product_row_widget.dart';
-import '../../widgets/product/image_slider_widget.dart';
+import '../../widgets/product/full_image/image_slider_widget.dart';
 import '../../widgets/product/product_bottom_bar_widget.dart';
 import '../../widgets/product/product_category_row_widget.dart';
 import '../../widgets/product/product_divider_widget.dart';

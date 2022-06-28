@@ -33,7 +33,9 @@ import 'pages/member/checkout_setting/shipping/shipping_infos_view.dart';
 
 import 'widgets/product/full_screen_image_slider_widget.dart';
 
-import 'widgets/product/dialog/full_screen_image_slider_widget.dart';
+import 'widgets/product/base_product_dialog.dart';
+import 'widgets/product/full_image/full_screen_image_slider_widget.dart';
+import 'widgets/product/choose_spec/product_dialog_spec_widget.dart';
 
 class MyPlusRouter {
   final LoginState loginState;
@@ -390,6 +392,39 @@ class MyPlusRouter {
                     imagePaths: imagePaths,
                     currentIndex: index,
                   ));
+            },
+          ),
+
+          // 規格頁
+          GoRoute(
+            name: specName,
+            path: 'spec',
+            pageBuilder: (context, state) {
+              final Map<String, Object?> params =
+                  state.extra! as Map<String, Object?>;
+              // 商品頁的 controller,
+              if (params.containsKey(QueryKey.productController)) {
+                final controller =
+                    params[QueryKey.productController] as ProductController;
+
+                return MaterialPage<void>(
+                    key: state.pageKey,
+                    child: BaseProductDialogWidget(
+                      // 規格頁
+                      child: ProductSpecWidget(
+                        product: controller.product!,
+                        initParams: controller.selectedSpecParams,
+                        specChoosed: (params) =>
+                            controller.handleSpecChoosed(params),
+                        favoriteTapped: () => controller.handlefavoriteTapped(),
+                        addToCartTapped: () =>
+                            controller.handleAddToCartTapped(),
+                      ),
+                    ));
+              } else {
+                return MaterialPage<void>(
+                    key: state.pageKey, child: StaticPage());
+              }
             },
           ),
         ],

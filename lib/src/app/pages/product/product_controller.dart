@@ -38,12 +38,8 @@ class ProductController extends Controller {
     productPresenter.getProductOnNext = (Product product) {
       debugPrint(product.toString());
       _product = product;
-      // 根據 productId 取得規格參數，若無 productId 則取第一個可購買的規格品
-      _selectedSpecParams = AddToCartParams(
-          no: product.no,
-          productId: _productId,
-          selectedProductInfo: product.getProudctInfo(_productId) ??
-              product.getFirstAvaliabedProudctInfo());
+      // 建立可加入購物車的規格參數
+      _selectedSpecParams = product.getAddToCartParams(_productId);
       refreshUI(); // Refreshes the UI manually
     };
     productPresenter.getProductOnComplete = () {
@@ -132,7 +128,6 @@ class ProductController extends Controller {
         QueryKey.goodsNo: _product?.no ?? ''
       }, extra: {
         QueryKey.productController: this,
-        QueryKey.productId: _productId?.toString() ?? ''
       });
 
   // 選擇規格

@@ -7,13 +7,13 @@ import '../../../../domain/entities/product/spec_sku.dart';
 import '../../../../extension/num_extension.dart';
 
 import '../../../../domain/entities/product/product.dart';
+import '../../../utils/screen_config.dart';
 
 /// 選規 Dialog 的標題列
 class ProductDialogSpecTopBarWidget extends StatelessWidget {
   final AddToCartParams selectedParams; // 已選的規格
   final SpecType? specType; // 規格類型
   final double? promotionRate; // 折數
-  final AddToCartParams? selectedSpec;
 
   ProductInfo? get _info => selectedParams.selectedProductInfo;
 
@@ -22,15 +22,14 @@ class ProductDialogSpecTopBarWidget extends StatelessWidget {
     required this.selectedParams,
     this.specType = SpecType.none,
     this.promotionRate,
-    this.selectedSpec,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final _theme = Theme.of(context);
 
-    return SizedBox(
-        height: 125,
+    return LimitedBox(
+        maxHeight: 145 * SizeConfig.screenRatio,
         child: Stack(
           children: [
             // 背景
@@ -65,7 +64,7 @@ class ProductDialogSpecTopBarWidget extends StatelessWidget {
 
                     // 已選規格字串
                     if (SpecType.none != specType ||
-                        selectedSpec?.quantity != null)
+                        selectedParams.quantity != null)
                       _buildSelectedSpec(context),
                   ],
                 )),
@@ -158,24 +157,31 @@ class ProductDialogSpecTopBarWidget extends StatelessWidget {
                       style: Theme.of(context).textTheme.caption?.copyWith(
                           fontSize: 14.0, color: UdiColors.brownGrey)),
                   // 出貨日期
-                  if (selectedSpec?.deliveryDate?.isNotEmpty == true)
-                    TextSpan(text: '${selectedSpec?.deliveryDate}, '),
+                  if (selectedParams.deliveryDate?.isNotEmpty == true)
+                    TextSpan(text: '${selectedParams.deliveryDate}, '),
 
                   // 規格1
-                  if (_info?.specLv1Name?.isNotEmpty == true)
-                    TextSpan(text: _info?.specLv1Name!),
+                  if (selectedParams
+                          .selectedProductInfo?.specLv1Name?.isNotEmpty ==
+                      true)
+                    TextSpan(
+                        text: selectedParams.selectedProductInfo!.specLv1Name!),
 
                   // 規格2
-                  if (_info?.specLv2Name?.isNotEmpty == true)
-                    TextSpan(text: ', ${_info?.specLv2Name!}'),
+                  if (selectedParams
+                          .selectedProductInfo?.specLv2Name?.isNotEmpty ==
+                      true)
+                    TextSpan(
+                        text:
+                            ', ${selectedParams.selectedProductInfo!.specLv2Name!}'),
 
                   // 數量
-                  if (selectedSpec?.quantity != null)
+                  if (selectedParams.quantity != null)
                     TextSpan(
-                        text: ', ${selectedSpec?.quantity}',
+                        text: ', ${selectedParams.quantity}',
                         style: Theme.of(context).textTheme.caption?.copyWith(
                             fontSize: 14.0, color: UdiColors.strawberry)),
-                  if (selectedSpec?.quantity != null)
+                  if (selectedParams.quantity != null)
                     const TextSpan(text: " 件"),
                 ]),
                 maxLines: 2,
