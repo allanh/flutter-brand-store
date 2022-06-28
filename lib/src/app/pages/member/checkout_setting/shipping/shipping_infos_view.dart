@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
 
 import '../../../../../device/utils/my_plus_colors.dart';
-import '../../../../widgets/member/checkout_setting/dialog_wrapper.dart';
+import '../../../../widgets/member/dialog_wrapper.dart';
 import '../../../../widgets/member/checkout_setting/reorderable_card.dart';
 import '../../../../widgets/member/checkout_setting/shipping_info_view.dart';
 import 'shipping_infos_controller.dart';

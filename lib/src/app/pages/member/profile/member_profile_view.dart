@@ -22,8 +22,8 @@ import 'package:brandstores/src/app/widgets/member/profile/binding_tile.dart';
 import 'package:brandstores/src/app/widgets/member/profile/mobile_tile.dart';
 import 'package:brandstores/src/app/widgets/member/profile/email_tile.dart';
 
+import '../../../widgets/member/dialog_wrapper.dart';
 import '../../../widgets/member/profile/binding_completed_view.dart';
-import '../../../widgets/member/profile/binding_dialog.dart';
 
 import '../../../utils/constants.dart';
 
@@ -149,12 +149,17 @@ class _MemberProfilePageState
                 ),
               );
             } else {
-              showDialog<String>(
+              DialogWrapper().showTwoButtonsDialog(
                 context: context,
-                builder: (BuildContext context) => BindingDialog(
-                  controller: controller,
-                  name: name,
-                ),
+                content: '確定要解除綁定？',
+                contentPadding:
+                    const EdgeInsets.fromLTRB(30.0, 66.0, 30.0, 36.0),
+                textAlign: TextAlign.center,
+                handleCancel: () => Navigator.pop(context, '取消'),
+                handleSubmit: () {
+                  controller.handleUnbinding(name);
+                  Navigator.pop(context, '確定');
+                },
               );
             }
           }

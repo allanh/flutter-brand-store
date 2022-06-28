@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../../data/repositories/member/data_invoice_setting_repository.dart';
 import '../../../../utils/constants.dart';
-import '../../../../widgets/member/checkout_setting/dialog_wrapper.dart';
+import '../../../../widgets/member/dialog_wrapper.dart';
 import '../../../../widgets/member/checkout_setting/reorderable_card.dart';
 import '../../../../widgets/member/checkout_setting/citizen_digital_carrier.dart';
 import '../../../../widgets/member/checkout_setting/donation_invoice_carrier.dart';

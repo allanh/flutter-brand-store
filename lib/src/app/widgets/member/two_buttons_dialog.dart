@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../device/utils/my_plus_colors.dart';
+import '../../../device/utils/my_plus_colors.dart';
 
 class TwoButtonsDialog extends StatelessWidget {
   TwoButtonsDialog({
