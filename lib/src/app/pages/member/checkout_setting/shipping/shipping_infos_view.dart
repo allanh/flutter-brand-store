@@ -1,9 +1,11 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:brandstores/src/app/utils/constants.dart';
 import 'package:brandstores/src/domain/entities/member/shipping_info.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_clean_architecture/flutter_clean_architecture.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../../device/utils/my_plus_colors.dart';
 import '../../../../widgets/member/dialog_wrapper.dart';
@@ -33,7 +35,11 @@ class _ShippingInfosPageState
   BuildContext? _context;
 
   /// 新增收件地址
-  void handleAddShippingInfo() {}
+  void handleAddShippingInfo(ShippingInfo? info) {
+    info == null
+        ? context.pushNamed(shippingInfoDetailRouteName)
+        : context.pushNamed(shippingInfoDetailRouteName, extra: info);
+  }
 
   /// 編輯地址
   void handleEdit(ShippingInfo info) {
@@ -88,7 +94,7 @@ class _ShippingInfosPageState
           final _addButton = Padding(
               padding: const EdgeInsets.all(12.0),
               child: OutlinedButton(
-                onPressed: () => handleAddShippingInfo(),
+                onPressed: () => handleAddShippingInfo(null),
                 child: const Text('新增'),
                 style: OutlinedButton.styleFrom(
                   primary: Colors.white,

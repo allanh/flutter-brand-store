@@ -1,3 +1,4 @@
+import 'package:brandstores/src/app/pages/member/checkout_setting/shipping/shipping_info_detail_view.dart';
 import 'package:brandstores/src/domain/entities/enum/verify_type.dart';
 import 'package:brandstores/src/domain/entities/member/shipping_info.dart';
 import 'package:flutter/material.dart';
@@ -312,13 +313,25 @@ class MyPlusRouter {
 
       /// 常用收件地址
       GoRoute(
-        name: shippingAddressRouteName,
-        path: '/shipping-address',
+        name: shippingInfosRouteName,
+        path: '/$shippingInfosRouteName',
         pageBuilder: (context, state) => MaterialPage<void>(
           key: state.pageKey,
           child: ShippingInfosPage(
             infos: state.extra as List<ShippingInfo>,
           ),
+        ),
+      ),
+
+      /// 新增常用收件地址
+      GoRoute(
+        name: shippingInfoDetailRouteName,
+        path: '/$shippingInfoDetailRouteName',
+        pageBuilder: (context, state) => MaterialPage<void>(
+          key: state.pageKey,
+          child: state.extra != null
+              ? ShippingInfoDetailPage(info: state.extra as ShippingInfo)
+              : ShippingInfoDetailPage(info: null),
         ),
       ),
 

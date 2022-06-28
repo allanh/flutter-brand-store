@@ -40,7 +40,8 @@ const String checkoutSettingRouteName = 'checkout-setting'; // 結帳設定
 const String invoiceSettingRouteName = 'invoice-setting'; // 發票設定
 const String donationCodeWebRouteName = 'donation-code-web'; // 捐贈碼查詢
 const String carrierRegisterWebRouteName = 'carrier-register-web'; // 載具歸戶網頁
-const String shippingAddressRouteName = 'shipping-address'; // 常用收件地址
+const String shippingInfosRouteName = 'shipping-infos'; // 常用收件地址
+const String shippingInfoDetailRouteName = 'shipping-info-detail'; // 新增常用收件地址
 
 // DeepLink
 const String profileMoreInfoRouteName = 'profile-moreInfo';

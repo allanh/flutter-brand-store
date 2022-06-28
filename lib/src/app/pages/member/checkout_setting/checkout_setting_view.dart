@@ -38,7 +38,7 @@ class _CheckoutSettingPageState
         break;
       case CheckoutSettingType.address:
         context.pushNamed(
-          shippingAddressRouteName,
+          shippingInfosRouteName,
           extra: controller.shippingInfos,
         );
         break;
