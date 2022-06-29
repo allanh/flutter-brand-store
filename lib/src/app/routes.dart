@@ -17,6 +17,7 @@ import 'pages/auth/password/forget_password_view.dart';
 import 'pages/auth/password/otp_view.dart';
 import 'pages/auth/password/reset_password_view.dart';
 import 'pages/auth/register/register_view.dart';
+import 'pages/product/product_controller.dart';
 import 'pages/static_view.dart';
 import 'pages/helper_center/article/article_view.dart';
 import 'pages/helper_center/bulletin/bulletin_view.dart';
@@ -30,12 +31,9 @@ import 'pages/member/products/member_products_view.dart';
 import 'pages/member/checkout_setting/invoice/invoice_setting_view.dart';
 import 'pages/member/checkout_setting/checkout_setting_view.dart';
 import 'pages/member/checkout_setting/shipping/shipping_infos_view.dart';
-
-import 'widgets/product/full_screen_image_slider_widget.dart';
-
 import 'widgets/product/base_product_dialog.dart';
-import 'widgets/product/full_image/full_screen_image_slider_widget.dart';
 import 'widgets/product/choose_spec/product_dialog_spec_widget.dart';
+import 'widgets/product/full_image/full_screen_image_slider_widget.dart';
 
 class MyPlusRouter {
   final LoginState loginState;
