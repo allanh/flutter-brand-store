@@ -419,7 +419,7 @@ class Product {
         selectedProductInfo: selectedProductInfo);
   }
 
-  // 取得規格商品, 可傳入
+  /// 取得規格商品, 可傳入[productId]或[specLv1Id]或[specLv2Id]
   ProductInfo? getProudctInfo(
           {int? productId, int? specLv1Id, int? specLv2Id}) =>
       productInfo?.firstWhereOrNull((info) =>

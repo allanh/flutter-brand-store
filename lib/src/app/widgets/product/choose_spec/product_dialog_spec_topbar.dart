@@ -29,7 +29,7 @@ class ProductDialogSpecTopBarWidget extends StatelessWidget {
     final _theme = Theme.of(context);
 
     return LimitedBox(
-        maxHeight: 145 * SizeConfig.screenRatio,
+        maxHeight: 110 * SizeConfig.screenRatio,
         child: Stack(
           children: [
             // 背景

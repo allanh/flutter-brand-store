@@ -135,9 +135,8 @@ class _ProductSpecWidgetState extends State<ProductSpecWidget> {
                             specSelected: (info) {
                               // 更新規格2和商品資訊
                               setState(() {
-                                _selectedParams
-                                  ..updateProductInfo(info)
-                                  ..selectedProductInfo = info;
+                                _selectedParams..updateProductInfo(info)
+                                ..selectedProductInfo = info;
                               });
                               if (widget.specChoosed != null) {
                                 widget.specChoosed!(_selectedParams);
