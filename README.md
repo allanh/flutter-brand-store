@@ -1,7 +1,7 @@
-# My+ App
+# Brand Store App
 
 ## Overview
-A My+ App project implements [Uncle Bob's Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) in Flutter. This project provides basic classes that are tuned to work with Flutter and are designed according to the Clean Architecture.
+A Brand Store App project implements [Uncle Bob's Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) in Flutter. This project provides basic classes that are tuned to work with Flutter and are designed according to the Clean Architecture.
 
 ## Installation
 
